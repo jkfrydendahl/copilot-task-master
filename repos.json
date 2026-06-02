@@ -1,0 +1,17 @@
+[
+  {
+    "name": "Customer A - Business Central Extension",
+    "type": "Business Central / AL",
+    "path": "C:\\Work\\Repos\\customer-a-bc"
+  },
+  {
+    "name": "Internal CE Integration",
+    "type": "D365 CE / Plugins / APIs",
+    "path": "C:\\Work\\Repos\\internal-ce-integration"
+  },
+  {
+    "name": "D365 DevOps Tools",
+    "type": "Azure DevOps / Tooling",
+    "path": "C:\\Work\\Repos\\d365-devops-tools"
+  }
+]
