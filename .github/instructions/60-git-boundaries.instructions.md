@@ -38,3 +38,16 @@ Never run unless explicitly requested:
 - force push
 
 After making code changes, tell the user to review the diff in VS Code before committing.
+
+## Sanctioned exception: release / TDD skills
+
+Two shared skills perform git operations **by design**, and invoking them counts as the
+user's explicit request to do so:
+
+- **`/create-release`** — creates a release branch and runs `git checkout`, `git commit`, and
+  `git push` (via `Prepare-Release.ps1`) as part of the documented release procedure.
+- **`/tdd-implement`** — creates a feature branch and a draft PR in its Setup phase.
+
+When the user explicitly invokes one of these skills, follow the skill's git steps without
+re-asking for each command. Outside these skills, the rules above still apply in full. Even
+within them, never force-push or rewrite history, and summarize what was pushed/created.

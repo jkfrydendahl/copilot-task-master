@@ -4,6 +4,41 @@ $MasterPath = Split-Path -Parent $MyInvocation.MyCommand.Path
 $RepoIndex = Join-Path $MasterPath "repos.json"
 $ProfileIndex = Join-Path $MasterPath "task-profiles.json"
 
+function Sync-PersonalSkills {
+    # The CLI reads personal skills from ~/.copilot/skills in every repo. Keep that path
+    # pointed at this folder's skills\ directory via a junction so the master folder stays
+    # the single source of truth. Self-healing and non-fatal.
+    param([string]$MasterPath)
+
+    $skillsSource = Join-Path $MasterPath "skills"
+    if (!(Test-Path $skillsSource)) { return }
+
+    $personalSkills = Join-Path $env:USERPROFILE ".copilot\skills"
+
+    try {
+        if (Test-Path $personalSkills) {
+            $item = Get-Item $personalSkills -Force
+            if ($item.LinkType -eq "Junction") {
+                $current = @($item.Target)[0]
+                if ($current -eq $skillsSource) { return }
+                # Junction points elsewhere -> repoint it.
+                $item.Delete()
+                New-Item -ItemType Junction -Path $personalSkills -Target $skillsSource | Out-Null
+                Write-Host "Re-pointed ~/.copilot/skills -> $skillsSource" -ForegroundColor DarkGray
+            } else {
+                # A real directory already exists; don't clobber the user's own skills.
+                Write-Host "~/.copilot/skills exists and is not a junction; leaving it untouched." -ForegroundColor Yellow
+                Write-Host "  Shared skills in '$skillsSource' will not be auto-linked." -ForegroundColor DarkGray
+            }
+        } else {
+            New-Item -ItemType Junction -Path $personalSkills -Target $skillsSource | Out-Null
+            Write-Host "Linked ~/.copilot/skills -> $skillsSource" -ForegroundColor DarkGray
+        }
+    } catch {
+        Write-Host "Could not sync personal skills (non-fatal): $($_.Exception.Message)" -ForegroundColor Yellow
+    }
+}
+
 function Get-ValidCopilotModels {
     # Discover the authoritative model list from the CLI itself so it never goes stale.
     try {
@@ -96,6 +131,9 @@ if (!(Test-Path $repoPath)) {
 
 # Tell Copilot CLI where your shared master instructions live.
 $env:COPILOT_CUSTOM_INSTRUCTIONS_DIRS = $MasterPath
+
+# Ensure shared skills are linked into the personal skills dir the CLI reads everywhere.
+Sync-PersonalSkills -MasterPath $MasterPath
 
 Set-Location $repoPath
 

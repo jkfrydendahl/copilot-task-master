@@ -3,8 +3,9 @@
 A small Windows/PowerShell launcher that starts the **GitHub Copilot CLI** inside one of
 your project repositories with a consistent, shared set of workflow instructions injected.
 
-It is a personal workflow harness — not application code. The "payload" is the rule set in
-`AGENTS.md` and `.github/instructions/`, which gets applied to whatever repo you launch into.
+It is a personal workflow harness — not application code. The "payload" is the shared rule set
+in `AGENTS.md` and `.github/instructions/`, plus the reusable **skills** in `skills/`, all of
+which get applied to whatever repo you launch into.
 
 ## What's here
 
@@ -15,7 +16,9 @@ It is a personal workflow harness — not application code. The "payload" is the
 | `task-profiles.json` | Maps each task class → `{ model, effort, context }`. The source of truth for model selection. |
 | `usage-log.csv` | Local, git-ignored cost-audit log appended after each session (created on first run). |
 | `AGENTS.md` | Baseline plan-first workflow rules. |
-| `.github/instructions/*.instructions.md` | Scoped rules (model selection, planning, Git boundaries, D365 BC/CE). |
+| `.github/instructions/*.instructions.md` | Scoped rules (model selection, planning, skills routing, code review, Git boundaries, D365 BC/CE). |
+| `.github/config/review-models.md` | Models + `/review` command used for multi-model code review. |
+| `skills/` | Reusable agent skills (slash commands) linked into `~/.copilot/skills` so they're available in every repo. |
 | `LICENSE` | MIT. |
 
 ## Usage
@@ -115,6 +118,25 @@ Treat the **master rules as the baseline** and the **target repo's rules as over
 guidance conflicts, the target repo wins because it has project-specific context. Keep the
 master rules general (workflow discipline, Git boundaries, model selection) and leave
 project-specific detail to each repo.
+
+## Shared skills (slash commands)
+
+The `skills/` folder holds reusable [agent skills](https://docs.github.com/en/copilot/concepts/agents/about-agent-skills)
+— `/grill-me`, `/refine-requirements`, `/estimate-task`, `/tdd-implement`, `/reference-lookup`,
+`/code-review`, `/create-release`, `/update-readme`.
+
+The Copilot CLI loads **personal skills** from `~/.copilot/skills` in *every* repo. To keep this
+folder the single source of truth (no per-repo copies), the launcher creates a Windows
+**directory junction** `~/.copilot/skills` → `<this-folder>/skills` and self-heals it on each
+run (`Sync-PersonalSkills`). So the skills live and are version-controlled here, but are active
+everywhere automatically.
+
+- If `~/.copilot/skills` already exists as a **real directory** (your own skills), the launcher
+  leaves it untouched rather than clobbering it, and prints a notice.
+- Because the junction makes skills active in **every** session, a broken skill affects all
+  repos — edit them deliberately.
+- When to reach for which skill is described in
+  `.github/instructions/45-skills-and-review.instructions.md`.
 
 ## Requirements
 
