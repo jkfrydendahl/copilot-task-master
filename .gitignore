@@ -1,0 +1,5 @@
+# Local cost-audit log written by Start-CopilotWork.ps1 (personal, churns often)
+usage-log.csv
+
+# Seen-models cache for the new-model nudge (local state)
+.known-models.json

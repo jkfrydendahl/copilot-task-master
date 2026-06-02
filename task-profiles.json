@@ -1,0 +1,58 @@
+[
+  {
+    "key": "quick",
+    "label": "Quick",
+    "description": "Syntax questions, small explanations, tiny isolated edits, formatting, naming.",
+    "model": "claude-haiku-4.5",
+    "effort": "low",
+    "context": "default"
+  },
+  {
+    "key": "default-development",
+    "label": "Default development",
+    "description": "Ordinary bug fixes, normal feature work, straightforward refactors, small D365 changes.",
+    "model": "claude-sonnet-4.6",
+    "effort": "medium",
+    "context": "default"
+  },
+  {
+    "key": "agentic-implementation",
+    "label": "Agentic implementation",
+    "description": "Multi-file implementation, edit/test loops, repo exploration, coordinated layered changes.",
+    "model": "gpt-5.3-codex",
+    "effort": "high",
+    "context": "default"
+  },
+  {
+    "key": "deep-reasoning",
+    "label": "Deep reasoning",
+    "description": "Architecture, unclear bugs, integration design, data-model/security/perf-sensitive work.",
+    "model": "claude-opus-4.8",
+    "effort": "high",
+    "context": "long_context"
+  },
+  {
+    "key": "review",
+    "label": "Review",
+    "description": "Ordinary diff review. For risky/large/business-critical diffs, use Deep reasoning instead.",
+    "model": "claude-sonnet-4.6",
+    "effort": "medium",
+    "context": "default"
+  },
+  {
+    "key": "visual-ui",
+    "label": "Visual / UI",
+    "description": "UI/layout-oriented work where visual reasoning matters.",
+    "model": "claude-sonnet-4.6",
+    "effort": "medium",
+    "context": "default"
+  },
+  {
+    "key": "mechanical",
+    "label": "Mechanical",
+    "description": "Repetitive bulk edits after a plan is approved; no real reasoning required.",
+    "model": "claude-haiku-4.5",
+    "effort": "low",
+    "context": "default"
+  }
+]

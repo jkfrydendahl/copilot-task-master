@@ -20,9 +20,9 @@ Briefly classify the task:
 
 ## 2. Model check
 
-State whether the current model is sufficient.
-
-If a different model would be better, recommend it before continuing.
+Model/effort/context were set at launch via the task class (see Model Selection Rules).
+Only flag the model if the work clearly belongs to a **different task class** than the one
+launched — then say so once and suggest relaunching or `/model`. Otherwise skip this step.
 
 ## 3. Context check
 

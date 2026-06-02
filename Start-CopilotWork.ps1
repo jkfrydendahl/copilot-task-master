@@ -2,6 +2,19 @@
 
 $MasterPath = Split-Path -Parent $MyInvocation.MyCommand.Path
 $RepoIndex = Join-Path $MasterPath "repos.json"
+$ProfileIndex = Join-Path $MasterPath "task-profiles.json"
+
+function Get-ValidCopilotModels {
+    # Discover the authoritative model list from the CLI itself so it never goes stale.
+    try {
+        $helpText = (copilot help config 2>&1 | Out-String)
+    } catch {
+        return @()
+    }
+
+    $matches = [regex]::Matches($helpText, '"(claude-[\w.\-]+|gpt-[\w.\-]+)"')
+    return $matches | ForEach-Object { $_.Groups[1].Value } | Select-Object -Unique
+}
 
 if (!(Test-Path $RepoIndex)) {
     Write-Host "Missing repos.json in $MasterPath" -ForegroundColor Red
@@ -21,6 +34,23 @@ if ($null -eq $repos) {
 
 # Normalize to an array so .Count and indexing work for a single-entry file.
 $repos = @($repos)
+
+if (!(Test-Path $ProfileIndex)) {
+    Write-Host "Missing task-profiles.json in $MasterPath" -ForegroundColor Red
+    exit 1
+}
+
+try {
+    $profiles = @(Get-Content $ProfileIndex -Raw | ConvertFrom-Json)
+} catch {
+    Write-Host "task-profiles.json is not valid JSON: $($_.Exception.Message)" -ForegroundColor Red
+    exit 1
+}
+
+if ($profiles.Count -eq 0) {
+    Write-Host "task-profiles.json contains no task profiles." -ForegroundColor Red
+    exit 1
+}
 
 Write-Host ""
 Write-Host "=== Copilot Workbench ===" -ForegroundColor Cyan
@@ -80,6 +110,94 @@ Write-Host "Repo type:" -ForegroundColor DarkGray
 Write-Host "  $repoType"
 Write-Host ""
 
+# --- Task class -> model / effort / context selection ---
+Write-Host "Select task class:" -ForegroundColor Cyan
+Write-Host ""
+
+for ($i = 0; $i -lt $profiles.Count; $i++) {
+    $p = $profiles[$i]
+    Write-Host "$($i + 1). $($p.label)  ->  $($p.model) | effort=$($p.effort) | context=$($p.context)"
+    Write-Host "     $($p.description)" -ForegroundColor DarkGray
+}
+
+Write-Host ""
+$taskChoice = Read-Host "Task class"
+
+if ($taskChoice -notmatch '^\d+$') {
+    Write-Host "Invalid choice." -ForegroundColor Red
+    exit 1
+}
+
+$tIndex = [int]$taskChoice - 1
+
+if ($tIndex -lt 0 -or $tIndex -ge $profiles.Count) {
+    Write-Host "Choice out of range." -ForegroundColor Red
+    exit 1
+}
+
+$selectedProfile = $profiles[$tIndex]
+
+if ([string]::IsNullOrWhiteSpace($selectedProfile.model)) {
+    Write-Host "Profile '$($selectedProfile.label)' has no model set in task-profiles.json." -ForegroundColor Red
+    exit 1
+}
+
+# Validate the chosen model against the CLI's own current list.
+$validModels = Get-ValidCopilotModels
+
+if ($validModels.Count -gt 0 -and ($validModels -notcontains $selectedProfile.model)) {
+    Write-Host ""
+    Write-Host "Model '$($selectedProfile.model)' is not in the CLI's current model list:" -ForegroundColor Yellow
+    Write-Host "  $($validModels -join ', ')" -ForegroundColor DarkGray
+    $proceed = Read-Host "Launch anyway? y/n"
+    if ($proceed -ne "y" -and $proceed -ne "Y") {
+        Write-Host "Aborted. Update task-profiles.json." -ForegroundColor Red
+        exit 1
+    }
+}
+
+# Nudge: announce models the CLI has *newly* started offering since the last run, so you can
+# decide whether to adopt them. Informational only; the config is never edited automatically.
+# A small seen-models cache (.known-models.json) keeps this from listing every unused model.
+if ($validModels.Count -gt 0) {
+    $knownFile = Join-Path $MasterPath ".known-models.json"
+    $firstRun = -not (Test-Path $knownFile)
+
+    $known = @()
+    if (-not $firstRun) {
+        try { $known = @(Get-Content $knownFile -Raw | ConvertFrom-Json) } catch { $known = @() }
+    }
+
+    $usedModels = $profiles | ForEach-Object { $_.model } | Where-Object { $_ } | Select-Object -Unique
+    $newModels = $validModels | Where-Object { $known -notcontains $_ -and $usedModels -notcontains $_ }
+
+    if (-not $firstRun -and $newModels.Count -gt 0) {
+        Write-Host ""
+        Write-Host "i  New model(s) now offered by the CLI, not used in any profile:" -ForegroundColor Cyan
+        Write-Host "     $($newModels -join ', ')" -ForegroundColor DarkGray
+        Write-Host "   Review against the model-comparison docs and update task-profiles.json if useful:" -ForegroundColor DarkGray
+        Write-Host "     https://docs.github.com/en/copilot/reference/ai-models/model-comparison" -ForegroundColor DarkGray
+    }
+
+    # Refresh the baseline so each new model is announced once, when it first appears.
+    try { $validModels | ConvertTo-Json | Set-Content $knownFile } catch { }
+}
+
+Write-Host ""
+Write-Host "Task class:" -ForegroundColor DarkGray
+Write-Host "  $($selectedProfile.label)"
+Write-Host "Model / effort / context:" -ForegroundColor DarkGray
+Write-Host "  $($selectedProfile.model) | effort=$($selectedProfile.effort) | context=$($selectedProfile.context)"
+Write-Host ""
+
+# Expose the launched task class to the session so the agent can detect drift
+# (see Model Selection Rules: mismatch banner).
+$env:COPILOT_TASK_CLASS = $selectedProfile.key
+$env:COPILOT_TASK_LABEL = $selectedProfile.label
+$env:COPILOT_TASK_MODEL = $selectedProfile.model
+$env:COPILOT_TASK_EFFORT = $selectedProfile.effort
+$env:COPILOT_TASK_CONTEXT = $selectedProfile.context
+
 $openVsCode = Read-Host "Open VS Code for Git/source-control review? y/n"
 
 if ($openVsCode -eq "y" -or $openVsCode -eq "Y") {
@@ -98,7 +216,59 @@ if (-not (Get-Command copilot -ErrorAction SilentlyContinue)) {
     exit 1
 }
 
+# Build launch arguments deterministically from the selected profile.
+$copilotArgs = @("--model", $selectedProfile.model)
+
+if (-not [string]::IsNullOrWhiteSpace($selectedProfile.effort)) {
+    $copilotArgs += @("--effort", $selectedProfile.effort)
+}
+
+if (-not [string]::IsNullOrWhiteSpace($selectedProfile.context)) {
+    $copilotArgs += @("--context", $selectedProfile.context)
+}
+
 Write-Host "Starting Copilot CLI inside target repo..." -ForegroundColor Cyan
+Write-Host "  copilot $($copilotArgs -join ' ')" -ForegroundColor DarkGray
 Write-Host ""
 
-copilot
+$sessionStart = Get-Date
+copilot @copilotArgs
+$sessionEnd = Get-Date
+
+# --- Lightweight usage logging (cost audit) ---
+# Wall-clock duration is a proxy, not token spend. Use /usage in-session for real token stats.
+try {
+    $invariant = [System.Globalization.CultureInfo]::InvariantCulture
+    $durationMin = [math]::Round(($sessionEnd - $sessionStart).TotalMinutes, 1)
+    $logPath = Join-Path $MasterPath "usage-log.csv"
+
+    [pscustomobject]@{
+        timestamp_start = $sessionStart.ToString("s")
+        timestamp_end   = $sessionEnd.ToString("s")
+        duration_min    = $durationMin.ToString($invariant)
+        repo_name       = $repoName
+        repo_type       = $repoType
+        task_class      = $selectedProfile.key
+        task_label      = $selectedProfile.label
+        model           = $selectedProfile.model
+        effort          = $selectedProfile.effort
+        context         = $selectedProfile.context
+    } | Export-Csv -Path $logPath -Append -NoTypeInformation
+
+    Write-Host ""
+    Write-Host "Logged to usage-log.csv ($durationMin min on $($selectedProfile.label) / $($selectedProfile.model))." -ForegroundColor DarkGray
+
+    $all = @(Import-Csv -Path $logPath)
+    if ($all.Count -gt 0) {
+        Write-Host ""
+        Write-Host "Session mix so far (count | total min) by task class:" -ForegroundColor Cyan
+        $all | Group-Object task_label | Sort-Object Count -Descending | ForEach-Object {
+            $mins = ($_.Group | ForEach-Object {
+                [double]::Parse($_.duration_min, $invariant)
+            } | Measure-Object -Sum).Sum
+            Write-Host ("  {0,-22} {1,4} | {2,6} min" -f $_.Name, $_.Count, [math]::Round($mins, 0))
+        }
+    }
+} catch {
+    Write-Host "Usage logging failed (non-fatal): $($_.Exception.Message)" -ForegroundColor Yellow
+}

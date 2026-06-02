@@ -23,7 +23,7 @@ For every user request:
 
 1. Classify the task.
 2. Decide whether planning is required.
-3. Decide whether the current model is appropriate.
+3. Confirm the launched model fits the task class (only flag a clear mismatch).
 4. Briefly state the intended approach.
 5. For non-trivial work, plan before editing.
 6. Before editing files, identify likely affected files.
