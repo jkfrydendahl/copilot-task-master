@@ -3,6 +3,7 @@
     "key": "quick",
     "label": "Quick",
     "description": "Syntax questions, small explanations, tiny isolated edits, formatting, naming.",
+    "hint": "When you open the chat, just ask your question directly.",
     "model": "claude-haiku-4.5",
     "effort": "low",
     "context": "default"
@@ -11,6 +12,7 @@
     "key": "default-development",
     "label": "Default development",
     "description": "Ordinary bug fixes, normal feature work, straightforward refactors, small D365 changes.",
+    "hint": "When you open the chat, describe what you want to fix or build. The agent will plan before coding.",
     "model": "claude-sonnet-4.6",
     "effort": "medium",
     "context": "default"
@@ -19,6 +21,7 @@
     "key": "agentic-implementation",
     "label": "Agentic implementation",
     "description": "Multi-file implementation, edit/test loops, repo exploration, coordinated layered changes.",
+    "hint": "When you open the chat, describe the feature or change. The agent will explore, plan, and implement across files.",
     "model": "gpt-5.3-codex",
     "effort": "high",
     "context": "default"
@@ -27,6 +30,7 @@
     "key": "deep-reasoning",
     "label": "Deep reasoning",
     "description": "Architecture, unclear bugs, integration design, data-model/security/perf-sensitive work.",
+    "hint": "When you open the chat, describe the problem or decision. Include any relevant constraints or context upfront.",
     "model": "claude-opus-4.8",
     "effort": "high",
     "context": "long_context"
@@ -35,6 +39,7 @@
     "key": "review",
     "label": "Review",
     "description": "Ordinary diff review. For risky/large/business-critical diffs, use Deep reasoning instead.",
+    "hint": "When you open the chat, run /review (or /code-review-synthesis for multi-model). Stage your changes first.",
     "model": "claude-sonnet-4.6",
     "effort": "medium",
     "context": "default"
@@ -43,6 +48,7 @@
     "key": "visual-ui",
     "label": "Visual / UI",
     "description": "UI/layout-oriented work where visual reasoning matters.",
+    "hint": "When you open the chat, describe the UI goal. Attach screenshots or mockups if you have them.",
     "model": "claude-sonnet-4.6",
     "effort": "medium",
     "context": "default"
@@ -51,6 +57,7 @@
     "key": "mechanical",
     "label": "Mechanical",
     "description": "Repetitive bulk edits after a plan is approved; no real reasoning required.",
+    "hint": "When you open the chat, provide the approved plan and the list of files/patterns to apply it to.",
     "model": "claude-haiku-4.5",
     "effort": "low",
     "context": "default"
@@ -59,8 +66,10 @@
     "key": "triage",
     "label": "Triage (not sure — estimate first)",
     "description": "Cheap session that runs /estimate-task on your task, then recommends which class to switch to.",
+    "hint": "When you open the chat, describe your task and the agent will run /estimate-task and recommend the right class.",
     "model": "claude-haiku-4.5",
     "effort": "low",
     "context": "default"
   }
 ]
+

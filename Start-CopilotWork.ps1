@@ -226,6 +226,10 @@ Write-Host "Task class:" -ForegroundColor DarkGray
 Write-Host "  $($selectedProfile.label)"
 Write-Host "Model / effort / context:" -ForegroundColor DarkGray
 Write-Host "  $($selectedProfile.model) | effort=$($selectedProfile.effort) | context=$($selectedProfile.context)"
+if (-not [string]::IsNullOrWhiteSpace($selectedProfile.hint)) {
+    Write-Host ""
+    Write-Host "💡 $($selectedProfile.hint)" -ForegroundColor Cyan
+}
 Write-Host ""
 
 # Expose the launched task class to the session so the agent can detect drift
