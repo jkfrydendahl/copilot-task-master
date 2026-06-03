@@ -31,7 +31,23 @@ which get applied to whatever repo you launch into.
    ]
    ```
 
-2. Run the launcher:
+2. Add a PowerShell alias so you can launch from any terminal (one-time setup):
+
+   Open your PowerShell profile (`$PROFILE`) and add:
+
+   ```powershell
+   function copilot-work { & "C:\Dev\00_MyStuff\copilot-task-master\Start-CopilotWork.ps1" @args }
+   ```
+
+   Then reload: `. $PROFILE`
+
+3. Run the launcher from any terminal:
+
+   ```powershell
+   copilot-work
+   ```
+
+   Or directly from the repo:
 
    ```powershell
    .\Start-CopilotWork.ps1
