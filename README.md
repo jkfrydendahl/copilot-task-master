@@ -56,9 +56,8 @@ which get applied to whatever repo you launch into.
 3. Pick a numbered repo or `C` for a custom path, then pick a **task class**. The script will:
    - Set `COPILOT_CUSTOM_INSTRUCTIONS_DIRS` to this folder so the master rules travel with you.
    - `cd` into the target repo.
-   - Look up the task class in `task-profiles.json` and **validate the model** against the CLI's current list.
-   - Optionally open VS Code for source-control review (skipped if `code` isn't on PATH).
-   - Launch `copilot --model <m> --effort <e> --context <c>` (errors out clearly if the CLI isn't installed).
+   - Sends a **kickoff message** into the session with the task class, model, effort, context, and class definition — so the agent knows its baseline from turn 0 without reading env vars.
+   - Launches `copilot --model <m> --effort <e> --context <c> --interactive "<kickoff>"` (errors out clearly if the CLI isn't installed).
 
 ## Startup flow
 
@@ -70,7 +69,7 @@ What happens, end to end, each time you launch:
 4. **Validates** the path exists, sets `COPILOT_CUSTOM_INSTRUCTIONS_DIRS` to this folder, and `cd`s into the repo.
 5. **Prompts: "Select task class"** — this is where the **model / effort / context** are decided (from the matching profile).
 6. **Validates** the profile's model against the live CLI list, and shows the new-model nudge if any.
-7. **Exports** `COPILOT_TASK_*` env vars (so the drift banner knows the launched class).
+7. **Sends a kickoff message** into the session with the task class key, label, model, effort, context, and class definition embedded as text — so the agent has a hard baseline in conversation history from turn 0. For triage, also triggers the inline estimation.
 8. **Prompts: "Open VS Code? y/n"** — optional source-control review.
 9. **Checks** `copilot` is on PATH, then **launches** `copilot --model … --effort … --context …` inside the repo.
 10. **On exit:** appends a row to `usage-log.csv` and prints the running cost mix.
@@ -112,10 +111,11 @@ rather than guessing.
 
 ### Drift detection within a session
 
-The launcher exports the chosen task class to the session (`COPILOT_TASK_CLASS` and related
-vars). If the work drifts into a **different** class than you launched as, the agent shows a
-high-visibility **⚠️ TASK-CLASS MISMATCH** banner at the top of its response, telling you which
-class/model to switch to and how (`Start-CopilotWork.ps1` relaunch or in-session `/model`).
+The launcher sends a kickoff message embedding the chosen task class and its definition into
+the conversation. On every turn the agent compares the actual work against that baseline. If
+the work drifts into a **different** class, the agent shows a high-visibility **⚠️ TASK-CLASS
+MISMATCH** banner at the top of its response, telling you which class/model to switch to and
+how (`Start-CopilotWork.ps1` relaunch or in-session `/model`).
 This works **both ways**: it flags *under-powered* sessions (a *Quick* launch that became an
 architecture change — switch up for quality) **and** *over-powered* ones (a *Deep reasoning*
 launch now doing a one-line rename — switch down to stop paying opus rates every turn). It does
@@ -138,12 +138,12 @@ project-specific detail to each repo.
 ### Not sure how heavy it is? Triage mode
 
 If you can't tell up front whether a task is light or heavy, pick the **Triage (not sure —
-estimate first)** class. It launches a cheap session (haiku) whose first action is to run the
-`/estimate-task` skill on what you describe, then recommend the right class with the exact
-model/effort/context to switch to. Switch **in-session** with `/model` (no relaunch, no lost
-context), or relaunch via the harness. If triage decides the task really is light, it just
-continues — no switch needed. This turns "I don't know which model" into a cheap, one-question
-step instead of a guess.
+estimate first)** class. It launches a cheap Sonnet/low session whose first action is to perform
+an **inline task estimate** — scoring size, uncertainty, and complexity — then recommend the
+right class with the exact model/effort/context to switch to. After showing the estimate it
+**stops and waits**: relaunch via the harness with the recommended class, or tell it to continue
+in-session. This turns "I don't know which model" into a cheap, one-question step instead of a
+guess.
 
 ## Shared skills (slash commands)
 

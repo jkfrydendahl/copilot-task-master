@@ -18,10 +18,10 @@ These are the shared vocabulary; each maps to a key in `task-profiles.json`:
 1. Quick — syntax questions, small explanations, tiny isolated edits, formatting, naming.
 2. Default development — ordinary bug fixes, normal feature work, straightforward refactors, small D365 changes.
 3. Agentic implementation — multi-file work, edit/test loops, repo exploration, coordinated layered changes.
-4. Deep reasoning — architecture, unclear bugs, integration design, data-model/security/performance-sensitive work, risky refactors.
+4. Deep reasoning — architecture, unclear bugs, integration design, data-model/security/performance-sensitive work, risky refactors. NOT for routine builds, deploys, or packaging steps even if the target system is complex.
 5. Review — ordinary diff review (use Deep reasoning for risky/large/business-critical diffs).
 6. Visual/UI — UI/layout-oriented work where visual reasoning matters.
-7. Mechanical — repetitive bulk edits after a plan is approved.
+7. Mechanical — repetitive bulk edits OR known operational steps (build, package, deploy, run migrations) after the approach is clear; no real design decisions required.
 8. Triage — a cheap "I'm not sure" launch that estimates the task first, then recommends one of the classes above (see Triage mode below).
 
 To change models, effort, or context tier, the **right action is to adjust the launch**:
@@ -30,36 +30,44 @@ relaunch via `Start-CopilotWork.ps1` with a different task class, or use the in-
 
 ## Knowing the launched task class
 
-The launcher exports the launched class into the environment:
+The launcher sends a kickoff message at session start that tells you the task class directly
+in the conversation — look for text like:
+> Session initialized: task class = **Label** (`key`), model = `...`, effort = `...`, context = `...`
 
-- `COPILOT_TASK_CLASS` (key, e.g. `quick`), `COPILOT_TASK_LABEL` (e.g. `Quick`)
-- `COPILOT_TASK_MODEL`, `COPILOT_TASK_EFFORT`, `COPILOT_TASK_CONTEXT`
+Treat everything in that message as the **user's declared launch baseline** — what they *thought*
+the task was when they chose a profile. It is **not** a pre-validated fit. You must still run the
+drift check on your first substantive turn and flag a mismatch if the actual work doesn't match
+the declared class. The kickoff settles the launched model/effort/context; it does not settle
+whether those settings are appropriate for the task the user actually describes.
 
-At the **start of a session** (your first response), read `COPILOT_TASK_CLASS` once
-(e.g. `echo $env:COPILOT_TASK_CLASS`) and treat it as the launched baseline for the rest
-of the session. If the variable is empty, the session was not started through the launcher —
+Do **not** re-read env vars to determine task class — the kickoff is the single source of truth.
+
+If no kickoff message is present, the session was not started through the launcher —
 do not show the banner, but you may mention once that launching via `Start-CopilotWork.ps1`
 enables task-aware model selection.
 
 ## Triage mode (auto-estimate)
 
-If `COPILOT_TASK_CLASS` is `triage`, the user launched cheaply on purpose because they were
-unsure how heavy the task is. **Before doing the actual work**, on your first substantive turn:
+If the launched task class (from the kickoff message) is `triage`, the user launched cheaply on purpose because they were
+unsure how heavy the task is. **Before doing the actual work**, on your first substantive turn,
+perform a streamlined inline task estimate — do NOT invoke the `/estimate-task` skill:
 
-1. Run the **`/estimate-task`** skill on the task the user describes. Keep it streamlined for
-   triage — ask only the one or two highest-value clarifying questions, then score and produce
-   a quick read (you don't need the full P20/P50/P80 ceremony unless the user wants it).
-2. Map the estimate to a recommended task class:
-   - **Trivial** (~≤1h, one-liners, config) → **Quick** (or **Mechanical** if it's approved repetitive bulk edits).
+1. Ask the one or two highest-value clarifying questions needed to score the task (skip this
+   if the user's description already makes the size obvious).
+2. Score the task across these dimensions (brief, not exhaustive):
+   - **Size** — roughly how many files/systems are touched?
+   - **Uncertainty** — is the approach clear or ambiguous?
+   - **Technical complexity** — any schema, security, perf, or cross-system concerns?
+3. Map the score to a recommended task class:
+   - **Trivial** (~≤1h, one-liners, config) → **Quick** (or **Mechanical** if approved repetitive bulk edits).
    - **Small** (~1–4h, localized bug/feature) → **Default development**.
    - **Medium** (~4–16h, multi-file, coordinated changes) → **Agentic implementation**.
    - **Large / high uncertainty** (≳16h, or high Uncertainty/Technical-Complexity, or architecture,
      cross-system, schema, security, or performance-sensitive work) → **Deep reasoning**.
    - **Kind overrides** (apply regardless of size): mostly reviewing a diff → **Review**;
      UI/layout/visual work → **Visual/UI**.
-3. Recommend the class with a clear call to switch. Read the exact `model` / `effort` / `context`
-   for the recommended class from `task-profiles.json` in the directory named by the
-   `COPILOT_CUSTOM_INSTRUCTIONS_DIRS` env var, and present them so the user can act:
+4. Read the exact `model` / `effort` / `context` for the recommended class from `task-profiles.json`
+   in the directory named by `COPILOT_CUSTOM_INSTRUCTIONS_DIRS`, then present the result:
 
 ```
 > [!NOTE]
@@ -67,12 +75,22 @@ unsure how heavy the task is. **Before doing the actual work**, on your first su
 >
 > **Estimate:** <one-line size/complexity read>.
 > **Recommended:** `<suggested model>` (effort `<effort>`, context `<context>`).
-> **Switch:** run `/model` → `<suggested model>`, or relaunch via `Start-CopilotWork.ps1` as *<suggested label>*. Switching in-session keeps this conversation.
+> **Switch:** relaunch via `Start-CopilotWork.ps1` as *<suggested label>*, or run `/model` → `<suggested model>` + set effort `<effort>` in-session. Switching in-session keeps this conversation.
 ```
 
-If the recommended class is **Quick** or **Mechanical** (i.e. the triage model is already
-appropriate), say so and just continue — no switch needed. After triage, if the user keeps
-working in the cheap triage model on heavier work, the normal drift banner below still applies.
+5. **STOP. Do not proceed.** After presenting the callout, your response ends. Do not add
+   next steps, do not start exploring the repo, do not ask follow-up questions about the task.
+   Wait silently for the user to either relaunch with the recommended profile or explicitly
+   say "continue here." Any output after the callout block is a violation of triage mode.
+
+Compare the **full profile** (model + effort + context) when deciding whether a switch is needed —
+not just the model name. If the recommended class has a different effort or context than triage
+(e.g. triage is `low`/`default` but Default development is `medium`/`default`), a switch is
+still warranted even if the model name is the same. Only skip the switch recommendation if the
+full profile is identical to triage.
+
+After triage, if the user keeps working in the triage session on heavier work, the normal drift
+banner below still applies.
 
 ## Drift detection — MANDATORY visual banner
 
@@ -97,6 +115,12 @@ Mismatch matters in **both directions**, and the cheaper direction matters at le
 Do **not** raise it for normal in-class variation, or merely because a different model *could*
 also work. Only raise it on a genuine class change, in either direction.
 
+**Ambiguity is also a drift signal.** If you cannot assess whether the task fits the launched
+class without significant upfront investigation (e.g. parsing large external files, reconstructing
+context from history, or the scope is genuinely unknown), treat that uncertainty itself as a
+mismatch. Show the banner and suggest Triage or a heavier class rather than silently proceeding
+on the assumption that it will turn out to be simple.
+
 When raised, the banner MUST be the **first thing** in your response, reproduced exactly in
 this format (it renders as a high-visibility callout in the terminal):
 
@@ -111,7 +135,7 @@ this format (it renders as a high-visibility callout in the terminal):
 ```
 
 Fill every placeholder from `task-profiles.json` (suggested model/effort/context for the
-suggested class) and the env vars (launched label/model). Keep it to that block — no extra
+suggested class) and the kickoff message (launched label/model). Keep it to that block — no extra
 preamble above it. After the banner, continue helping with the launched model unless the user
 switches; re-show the banner on later turns if the mismatch persists or recurs.
 

@@ -269,6 +269,19 @@ if (-not [string]::IsNullOrWhiteSpace($selectedProfile.context)) {
     $copilotArgs += @("--context", $selectedProfile.context)
 }
 
+# Build the session kickoff message so the agent knows its task class from turn 0.
+# This makes drift detection reliable (no env-var reading required) and triggers
+# triage estimation automatically.
+$kickoff = "Session initialized: task class = **$($selectedProfile.label)** (``$($selectedProfile.key)``), model = ``$($selectedProfile.model)``, effort = ``$($selectedProfile.effort)``, context = ``$($selectedProfile.context)``. Class definition: $($selectedProfile.description) Acknowledge briefly and await my task."
+
+if ($selectedProfile.key -eq "triage") {
+    $kickoff += " This is a triage session - before doing any work, perform an inline task estimate and show the TRIAGE ESTIMATE callout as described in your instructions."
+} else {
+    $kickoff += " On your FIRST response to my task (not this acknowledgment), start with a single line: 'Drift check: launched **$($selectedProfile.label)** ($($selectedProfile.description)) | this task: [one phrase] → [fits / MISMATCH: suggest X]'. If it is a mismatch, show the full drift banner immediately after. Then proceed with the work."
+}
+
+$copilotArgs += @("--interactive", $kickoff)
+
 Write-Host "Starting Copilot CLI inside target repo..." -ForegroundColor Cyan
 Write-Host "  copilot $($copilotArgs -join ' ')" -ForegroundColor DarkGray
 Write-Host ""

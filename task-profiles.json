@@ -29,7 +29,7 @@
   {
     "key": "deep-reasoning",
     "label": "Deep reasoning",
-    "description": "Architecture, unclear bugs, integration design, data-model/security/perf-sensitive work.",
+    "description": "Architecture, unclear/production bugs, integration design, data-model/security/perf-sensitive decisions. NOT for routine builds, deploys, packaging, or known operational steps — even if the target system is complex.",
     "hint": "When you open the chat, describe the problem or decision. Include any relevant constraints or context upfront.",
     "model": "claude-opus-4.8",
     "effort": "high",
@@ -56,7 +56,7 @@
   {
     "key": "mechanical",
     "label": "Mechanical",
-    "description": "Repetitive bulk edits after a plan is approved; no real reasoning required.",
+    "description": "Repetitive bulk edits OR known operational steps (build, package, deploy, run migrations) after the approach is clear; no real design decisions required.",
     "hint": "When you open the chat, provide the approved plan and the list of files/patterns to apply it to.",
     "model": "claude-haiku-4.5",
     "effort": "low",
@@ -65,11 +65,10 @@
   {
     "key": "triage",
     "label": "Triage (not sure — estimate first)",
-    "description": "Cheap session that runs /estimate-task on your task, then recommends which class to switch to.",
-    "hint": "When you open the chat, describe your task and the agent will run /estimate-task and recommend the right class.",
-    "model": "claude-haiku-4.5",
+    "description": "Not sure what class to use — runs an inline estimate of your task and recommends which class to relaunch as.",
+    "hint": "When you open the chat, describe your task and the agent will estimate the scope and recommend the right class before doing any work.",
+    "model": "claude-sonnet-4.6",
     "effort": "low",
     "context": "default"
   }
 ]
-
