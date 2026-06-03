@@ -22,6 +22,7 @@ These are the shared vocabulary; each maps to a key in `task-profiles.json`:
 5. Review — ordinary diff review (use Deep reasoning for risky/large/business-critical diffs).
 6. Visual/UI — UI/layout-oriented work where visual reasoning matters.
 7. Mechanical — repetitive bulk edits after a plan is approved.
+8. Triage — a cheap "I'm not sure" launch that estimates the task first, then recommends one of the classes above (see Triage mode below).
 
 To change models, effort, or context tier, the **right action is to adjust the launch**:
 relaunch via `Start-CopilotWork.ps1` with a different task class, or use the in-session
@@ -39,6 +40,39 @@ At the **start of a session** (your first response), read `COPILOT_TASK_CLASS` o
 of the session. If the variable is empty, the session was not started through the launcher —
 do not show the banner, but you may mention once that launching via `Start-CopilotWork.ps1`
 enables task-aware model selection.
+
+## Triage mode (auto-estimate)
+
+If `COPILOT_TASK_CLASS` is `triage`, the user launched cheaply on purpose because they were
+unsure how heavy the task is. **Before doing the actual work**, on your first substantive turn:
+
+1. Run the **`/estimate-task`** skill on the task the user describes. Keep it streamlined for
+   triage — ask only the one or two highest-value clarifying questions, then score and produce
+   a quick read (you don't need the full P20/P50/P80 ceremony unless the user wants it).
+2. Map the estimate to a recommended task class:
+   - **Trivial** (~≤1h, one-liners, config) → **Quick** (or **Mechanical** if it's approved repetitive bulk edits).
+   - **Small** (~1–4h, localized bug/feature) → **Default development**.
+   - **Medium** (~4–16h, multi-file, coordinated changes) → **Agentic implementation**.
+   - **Large / high uncertainty** (≳16h, or high Uncertainty/Technical-Complexity, or architecture,
+     cross-system, schema, security, or performance-sensitive work) → **Deep reasoning**.
+   - **Kind overrides** (apply regardless of size): mostly reviewing a diff → **Review**;
+     UI/layout/visual work → **Visual/UI**.
+3. Recommend the class with a clear call to switch. Read the exact `model` / `effort` / `context`
+   for the recommended class from `task-profiles.json` in the directory named by the
+   `COPILOT_CUSTOM_INSTRUCTIONS_DIRS` env var, and present them so the user can act:
+
+```
+> [!NOTE]
+> 🔎 **TRIAGE ESTIMATE** — this task looks like **<suggested label>**.
+>
+> **Estimate:** <one-line size/complexity read>.
+> **Recommended:** `<suggested model>` (effort `<effort>`, context `<context>`).
+> **Switch:** run `/model` → `<suggested model>`, or relaunch via `Start-CopilotWork.ps1` as *<suggested label>*. Switching in-session keeps this conversation.
+```
+
+If the recommended class is **Quick** or **Mechanical** (i.e. the triage model is already
+appropriate), say so and just continue — no switch needed. After triage, if the user keeps
+working in the cheap triage model on heavier work, the normal drift banner below still applies.
 
 ## Drift detection — MANDATORY visual banner
 

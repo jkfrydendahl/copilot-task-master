@@ -54,5 +54,13 @@
     "model": "claude-haiku-4.5",
     "effort": "low",
     "context": "default"
+  },
+  {
+    "key": "triage",
+    "label": "Triage (not sure — estimate first)",
+    "description": "Cheap session that runs /estimate-task on your task, then recommends which class to switch to.",
+    "model": "claude-haiku-4.5",
+    "effort": "low",
+    "context": "default"
   }
 ]

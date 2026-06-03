@@ -119,6 +119,16 @@ guidance conflicts, the target repo wins because it has project-specific context
 master rules general (workflow discipline, Git boundaries, model selection) and leave
 project-specific detail to each repo.
 
+### Not sure how heavy it is? Triage mode
+
+If you can't tell up front whether a task is light or heavy, pick the **Triage (not sure —
+estimate first)** class. It launches a cheap session (haiku) whose first action is to run the
+`/estimate-task` skill on what you describe, then recommend the right class with the exact
+model/effort/context to switch to. Switch **in-session** with `/model` (no relaunch, no lost
+context), or relaunch via the harness. If triage decides the task really is light, it just
+continues — no switch needed. This turns "I don't know which model" into a cheap, one-question
+step instead of a guess.
+
 ## Shared skills (slash commands)
 
 The `skills/` folder holds reusable [agent skills](https://docs.github.com/en/copilot/concepts/agents/about-agent-skills)
