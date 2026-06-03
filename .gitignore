@@ -3,3 +3,6 @@ usage-log.csv
 
 # Seen-models cache for the new-model nudge (local state)
 .known-models.json
+
+# Local machine repo paths (personal, not portable)
+repos.json
