@@ -3,7 +3,6 @@
 $MasterPath = Split-Path -Parent $MyInvocation.MyCommand.Path
 $RepoIndex = Join-Path $MasterPath "repos.json"
 $ProfileIndex = Join-Path $MasterPath "task-profiles.json"
-$PendingFile = Join-Path $MasterPath "usage-pending.json"
 $LogPath = Join-Path $MasterPath "usage-log.csv"
 
 function Sync-PersonalSkills {
@@ -42,39 +41,50 @@ function Sync-PersonalSkills {
 }
 
 function Resolve-AbandonedSession {
-    # If a previous session ended by closing the window (not graceful exit), the pending
-    # marker file is left behind. Log it as abandoned on the next launch.
-    param([string]$PendingFile, [string]$LogPath)
-    if (!(Test-Path $PendingFile)) { return }
+    # If previous sessions ended by closing the window (not graceful exit), their pending
+    # marker files are left behind. Log each one as abandoned on the next launch.
+    param([string]$MasterPath, [string]$LogPath)
 
-    try {
-        $pending = Get-Content $PendingFile -Raw | ConvertFrom-Json
-        $invariant = [System.Globalization.CultureInfo]::InvariantCulture
-        $startTime = [datetime]::Parse($pending.timestamp_start)
-        $endTime = Get-Date
-        $durationMin = [math]::Round(($endTime - $startTime).TotalMinutes, 1)
+    $pendingFiles = @(Get-ChildItem -Path $MasterPath -Filter "usage-pending-*.json" -ErrorAction SilentlyContinue)
+    if ($pendingFiles.Count -eq 0) { return }
 
-        [pscustomobject]@{
-            timestamp_start = $pending.timestamp_start
-            timestamp_end   = $endTime.ToString("s")
-            duration_min    = $durationMin.ToString($invariant)
-            repo_name       = $pending.repo_name
-            repo_type       = $pending.repo_type
-            task_class      = $pending.task_class
-            task_label      = $pending.task_label
-            model           = $pending.model
-            effort          = $pending.effort
-            context         = $pending.context
-            outcome         = "abandoned"
-            note            = "(window closed - logged on next launch)"
-        } | Export-Csv -Path $LogPath -Append -NoTypeInformation
+    $invariant = [System.Globalization.CultureInfo]::InvariantCulture
+    $endTime = Get-Date
+    $recovered = 0
 
-        Remove-Item $PendingFile -Force
-        Write-Host "⚠  Previous session was not closed gracefully — logged as abandoned in usage-log.csv." -ForegroundColor Yellow
+    foreach ($file in $pendingFiles) {
+        try {
+            $pending = Get-Content $file.FullName -Raw | ConvertFrom-Json
+            $startTime = [datetime]::Parse($pending.timestamp_start)
+            $durationMin = [math]::Round(($endTime - $startTime).TotalMinutes, 1)
+
+            [pscustomobject]@{
+                timestamp_start = $pending.timestamp_start
+                timestamp_end   = $endTime.ToString("s")
+                duration_min    = $durationMin.ToString($invariant)
+                repo_name       = $pending.repo_name
+                repo_type       = $pending.repo_type
+                task_class      = $pending.task_class
+                task_label      = $pending.task_label
+                model           = $pending.model
+                effort          = $pending.effort
+                context         = $pending.context
+                outcome         = "abandoned"
+                note            = "(window closed - logged on next launch)"
+            } | Export-Csv -Path $LogPath -Append -NoTypeInformation
+
+            Remove-Item $file.FullName -Force
+            $recovered++
+        } catch {
+            Write-Host "Could not resolve pending session '$($file.Name)' (non-fatal): $($_.Exception.Message)" -ForegroundColor Yellow
+            try { Remove-Item $file.FullName -Force } catch { }
+        }
+    }
+
+    if ($recovered -gt 0) {
+        $label = if ($recovered -eq 1) { "session" } else { "$recovered sessions" }
+        Write-Host "⚠  $recovered previous $label not closed gracefully — logged as abandoned in usage-log.csv." -ForegroundColor Yellow
         Write-Host ""
-    } catch {
-        Write-Host "Could not resolve pending session (non-fatal): $($_.Exception.Message)" -ForegroundColor Yellow
-        try { Remove-Item $PendingFile -Force } catch { }
     }
 }
 
@@ -130,7 +140,7 @@ Write-Host ""
 Write-Host "=== Copilot Workbench ===" -ForegroundColor Cyan
 Write-Host ""
 
-Resolve-AbandonedSession -PendingFile $PendingFile -LogPath $LogPath
+Resolve-AbandonedSession -MasterPath $MasterPath -LogPath $LogPath
 
 Write-Host "Select repo:"
 Write-Host ""
@@ -329,6 +339,7 @@ Write-Host "  copilot $($copilotArgs -join ' ')" -ForegroundColor DarkGray
 Write-Host ""
 
 $sessionStart = Get-Date
+$PendingFile = Join-Path $MasterPath "usage-pending-$($sessionStart.ToString('yyyyMMddTHHmmss')).json"
 
 # Write pending marker so a window-close is recoverable on next launch.
 try {
