@@ -3,6 +3,8 @@
 $MasterPath = Split-Path -Parent $MyInvocation.MyCommand.Path
 $RepoIndex = Join-Path $MasterPath "repos.json"
 $ProfileIndex = Join-Path $MasterPath "task-profiles.json"
+$PendingFile = Join-Path $MasterPath "usage-pending.json"
+$LogPath = Join-Path $MasterPath "usage-log.csv"
 
 function Sync-PersonalSkills {
     # The CLI reads personal skills from ~/.copilot/skills in every repo. Keep that path
@@ -36,6 +38,43 @@ function Sync-PersonalSkills {
         }
     } catch {
         Write-Host "Could not sync personal skills (non-fatal): $($_.Exception.Message)" -ForegroundColor Yellow
+    }
+}
+
+function Resolve-AbandonedSession {
+    # If a previous session ended by closing the window (not graceful exit), the pending
+    # marker file is left behind. Log it as abandoned on the next launch.
+    param([string]$PendingFile, [string]$LogPath)
+    if (!(Test-Path $PendingFile)) { return }
+
+    try {
+        $pending = Get-Content $PendingFile -Raw | ConvertFrom-Json
+        $invariant = [System.Globalization.CultureInfo]::InvariantCulture
+        $startTime = [datetime]::Parse($pending.timestamp_start)
+        $endTime = Get-Date
+        $durationMin = [math]::Round(($endTime - $startTime).TotalMinutes, 1)
+
+        [pscustomobject]@{
+            timestamp_start = $pending.timestamp_start
+            timestamp_end   = $endTime.ToString("s")
+            duration_min    = $durationMin.ToString($invariant)
+            repo_name       = $pending.repo_name
+            repo_type       = $pending.repo_type
+            task_class      = $pending.task_class
+            task_label      = $pending.task_label
+            model           = $pending.model
+            effort          = $pending.effort
+            context         = $pending.context
+            outcome         = "abandoned"
+            note            = "(window closed - logged on next launch)"
+        } | Export-Csv -Path $LogPath -Append -NoTypeInformation
+
+        Remove-Item $PendingFile -Force
+        Write-Host "⚠  Previous session was not closed gracefully — logged as abandoned in usage-log.csv." -ForegroundColor Yellow
+        Write-Host ""
+    } catch {
+        Write-Host "Could not resolve pending session (non-fatal): $($_.Exception.Message)" -ForegroundColor Yellow
+        try { Remove-Item $PendingFile -Force } catch { }
     }
 }
 
@@ -90,6 +129,9 @@ if ($profiles.Count -eq 0) {
 Write-Host ""
 Write-Host "=== Copilot Workbench ===" -ForegroundColor Cyan
 Write-Host ""
+
+Resolve-AbandonedSession -PendingFile $PendingFile -LogPath $LogPath
+
 Write-Host "Select repo:"
 Write-Host ""
 
@@ -287,15 +329,41 @@ Write-Host "  copilot $($copilotArgs -join ' ')" -ForegroundColor DarkGray
 Write-Host ""
 
 $sessionStart = Get-Date
+
+# Write pending marker so a window-close is recoverable on next launch.
+try {
+    [pscustomobject]@{
+        timestamp_start = $sessionStart.ToString("s")
+        repo_name       = $repoName
+        repo_type       = $repoType
+        task_class      = $selectedProfile.key
+        task_label      = $selectedProfile.label
+        model           = $selectedProfile.model
+        effort          = $selectedProfile.effort
+        context         = $selectedProfile.context
+    } | ConvertTo-Json | Set-Content $PendingFile
+} catch {
+    Write-Host "Could not write session marker (non-fatal): $($_.Exception.Message)" -ForegroundColor Yellow
+}
+
 copilot @copilotArgs
 $sessionEnd = Get-Date
+
+# Remove pending marker — session exited gracefully.
+try { Remove-Item $PendingFile -Force -ErrorAction SilentlyContinue } catch { }
+
+# Post-session prompts for outcome and optional note.
+Write-Host ""
+$outcomeChoice = Read-Host "Task outcome? (1=completed  2=partial  3=abandoned  Enter=skip)"
+$outcomeMap = @{ "1" = "completed"; "2" = "partial"; "3" = "abandoned" }
+$outcome = if ($outcomeMap.ContainsKey($outcomeChoice)) { $outcomeMap[$outcomeChoice] } else { "" }
+$note = Read-Host "Optional note (Enter to skip)"
 
 # --- Lightweight usage logging (cost audit) ---
 # Wall-clock duration is a proxy, not token spend. Use /usage in-session for real token stats.
 try {
     $invariant = [System.Globalization.CultureInfo]::InvariantCulture
     $durationMin = [math]::Round(($sessionEnd - $sessionStart).TotalMinutes, 1)
-    $logPath = Join-Path $MasterPath "usage-log.csv"
 
     [pscustomobject]@{
         timestamp_start = $sessionStart.ToString("s")
@@ -308,12 +376,14 @@ try {
         model           = $selectedProfile.model
         effort          = $selectedProfile.effort
         context         = $selectedProfile.context
-    } | Export-Csv -Path $logPath -Append -NoTypeInformation
+        outcome         = $outcome
+        note            = $note
+    } | Export-Csv -Path $LogPath -Append -NoTypeInformation
 
     Write-Host ""
     Write-Host "Logged to usage-log.csv ($durationMin min on $($selectedProfile.label) / $($selectedProfile.model))." -ForegroundColor DarkGray
 
-    $all = @(Import-Csv -Path $logPath)
+    $all = @(Import-Csv -Path $LogPath)
     if ($all.Count -gt 0) {
         Write-Host ""
         Write-Host "Session mix so far (count | total min) by task class:" -ForegroundColor Cyan

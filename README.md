@@ -182,8 +182,27 @@ Session mix so far (count | total min) by task class:
   Deep reasoning            1 |   55 min
 ```
 
-Each row records start/end time, wall-clock duration, repo, task class, and the
-model/effort/context used. The file is git-ignored (personal data, high churn).
+Each row records start/end time, wall-clock duration, repo, task class,
+model/effort/context, outcome, and an optional note. Both `usage-log.csv` and the
+transient `usage-pending.json` are git-ignored (personal data, high churn).
+
+### Outcome tracking
+
+On graceful exit (typing `/exit` or closing with Ctrl+C inside the CLI), the launcher
+prompts for a one-key outcome and an optional free-text note before writing the log row:
+
+```
+Task outcome? (1=completed  2=partial  3=abandoned  Enter=skip)
+Optional note (Enter to skip)
+```
+
+### Abandoned session recovery
+
+If you close the terminal window mid-session the log row is never written. To handle this,
+the launcher writes a `usage-pending.json` marker just before starting the CLI and removes
+it on clean exit. On the **next launch**, any leftover marker is detected and automatically
+logged as `outcome=abandoned` with a note indicating it was recovered, so no session falls
+through the cracks.
 
 **Caveat:** duration is a wall-clock **proxy**, not token spend — it shows whether your
 launches skew toward expensive classes, not exact cost. For real per-session token/cost
