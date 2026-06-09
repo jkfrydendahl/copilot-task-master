@@ -347,11 +347,6 @@ try {
         timestamp_start = $sessionStart.ToString("s")
         repo_name       = $repoName
         repo_type       = $repoType
-        task_class      = $selectedProfile.key
-        task_label      = $selectedProfile.label
-        model           = $selectedProfile.model
-        effort          = $selectedProfile.effort
-        context         = $selectedProfile.context
     } | ConvertTo-Json | Set-Content $PendingFile
 } catch {
     Write-Host "Could not write session marker (non-fatal): $($_.Exception.Message)" -ForegroundColor Yellow
@@ -363,15 +358,7 @@ $sessionEnd = Get-Date
 # Remove pending marker — session exited gracefully.
 try { Remove-Item $PendingFile -Force -ErrorAction SilentlyContinue } catch { }
 
-# Post-session prompts for outcome and optional note.
-Write-Host ""
-$outcomeChoice = Read-Host "Task outcome? (1=completed  2=partial  3=abandoned  Enter=skip)"
-$outcomeMap = @{ "1" = "completed"; "2" = "partial"; "3" = "abandoned" }
-$outcome = if ($outcomeMap.ContainsKey($outcomeChoice)) { $outcomeMap[$outcomeChoice] } else { "" }
-$note = Read-Host "Optional note (Enter to skip)"
-
-# --- Lightweight usage logging (cost audit) ---
-# Wall-clock duration is a proxy, not token spend. Use /usage in-session for real token stats.
+# --- Silent usage logging ---
 try {
     $invariant = [System.Globalization.CultureInfo]::InvariantCulture
     $durationMin = [math]::Round(($sessionEnd - $sessionStart).TotalMinutes, 1)
@@ -382,29 +369,10 @@ try {
         duration_min    = $durationMin.ToString($invariant)
         repo_name       = $repoName
         repo_type       = $repoType
-        task_class      = $selectedProfile.key
-        task_label      = $selectedProfile.label
-        model           = $selectedProfile.model
-        effort          = $selectedProfile.effort
-        context         = $selectedProfile.context
-        outcome         = $outcome
-        note            = $note
     } | Export-Csv -Path $LogPath -Append -NoTypeInformation
 
     Write-Host ""
-    Write-Host "Logged to usage-log.csv ($durationMin min on $($selectedProfile.label) / $($selectedProfile.model))." -ForegroundColor DarkGray
-
-    $all = @(Import-Csv -Path $LogPath)
-    if ($all.Count -gt 0) {
-        Write-Host ""
-        Write-Host "Session mix so far (count | total min) by task class:" -ForegroundColor Cyan
-        $all | Group-Object task_label | Sort-Object Count -Descending | ForEach-Object {
-            $mins = ($_.Group | ForEach-Object {
-                [double]::Parse($_.duration_min, $invariant)
-            } | Measure-Object -Sum).Sum
-            Write-Host ("  {0,-22} {1,4} | {2,6} min" -f $_.Name, $_.Count, [math]::Round($mins, 0))
-        }
-    }
+    Write-Host "Session ended. Duration: $durationMin min in $repoName." -ForegroundColor DarkGray
 } catch {
     Write-Host "Usage logging failed (non-fatal): $($_.Exception.Message)" -ForegroundColor Yellow
 }

@@ -14,7 +14,7 @@ which get applied to whatever repo you launch into.
 | `Start-CopilotWork.ps1` | Interactive picker: choose a repo **and a task class**, inject master instructions, optionally open VS Code, then launch `copilot` with the right model/effort/context. |
 | `repos.json` | Registry of your working repos (`name`, `type`, `path`). |
 | `task-profiles.json` | Maps each task class → `{ model, effort, context }`. The source of truth for model selection. |
-| `usage-log.csv` | Local, git-ignored cost-audit log appended after each session (created on first run). |
+| `usage-log.csv` | Silent session log: start/end time, duration, repo name+type (created on first run, git-ignored). |
 | `AGENTS.md` | Baseline plan-first workflow rules. |
 | `.github/instructions/*.instructions.md` | Scoped rules (model selection, planning, skills routing, code review, Git boundaries, D365 BC/CE). |
 | `.github/config/review-models.md` | Models + `/review` command used for multi-model code review. |
@@ -72,7 +72,7 @@ What happens, end to end, each time you launch:
 7. **Sends a kickoff message** into the session with the task class key, label, model, effort, context, and class definition embedded as text — so the agent has a hard baseline in conversation history from turn 0. For triage, also triggers the inline estimation.
 8. **Prompts: "Open VS Code? y/n"** — optional source-control review.
 9. **Checks** `copilot` is on PATH, then **launches** `copilot --model … --effort … --context …` inside the repo.
-10. **On exit:** appends a row to `usage-log.csv` and prints the running cost mix.
+10. **On exit:** silently appends a row to `usage-log.csv`.
 
 So the order is: **script → pick repo → pick task class (model) → optional VS Code → Copilot launches**.
 
@@ -170,44 +170,21 @@ everywhere automatically.
 - [GitHub Copilot CLI](https://github.com/github/copilot-cli) (`copilot` on PATH)
 - VS Code (`code` on PATH) — optional, only for the source-control review step
 
-## Verifying the savings (usage log)
+## Usage log
 
-Because "more cost-effective" should be measurable, the launcher appends one row to
-`usage-log.csv` after every session and prints a running mix by task class, e.g.:
-
-```
-Session mix so far (count | total min) by task class:
-  Quick                     8 |   31 min
-  Default development       5 |  120 min
-  Deep reasoning            1 |   55 min
-```
-
-Each row records start/end time, wall-clock duration, repo, task class,
-model/effort/context, outcome, and an optional note. Both `usage-log.csv` and the
-transient `usage-pending.json` are git-ignored (personal data, high churn).
-
-### Outcome tracking
-
-On graceful exit (typing `/exit` or closing with Ctrl+C inside the CLI), the launcher
-prompts for a one-key outcome and an optional free-text note before writing the log row:
-
-```
-Task outcome? (1=completed  2=partial  3=abandoned  Enter=skip)
-Optional note (Enter to skip)
-```
+The launcher silently appends one row to `usage-log.csv` after every session:
+`timestamp_start`, `timestamp_end`, `duration_min`, `repo_name`, `repo_type`.
+Both `usage-log.csv` and the transient `usage-pending-*.json` markers are git-ignored
+(personal data, high churn).
 
 ### Abandoned session recovery
 
 If you close the terminal window mid-session the log row is never written. To handle this,
-the launcher writes a `usage-pending.json` marker just before starting the CLI and removes
+the launcher writes a `usage-pending-*.json` marker just before starting the CLI and removes
 it on clean exit. On the **next launch**, any leftover marker is detected and automatically
-logged as `outcome=abandoned` with a note indicating it was recovered, so no session falls
-through the cracks.
+logged so no session falls through the cracks.
 
-**Caveat:** duration is a wall-clock **proxy**, not token spend — it shows whether your
-launches skew toward expensive classes, not exact cost. For real per-session token/cost
-figures use the in-session `/usage` command. If the mix shows lots of long Deep-reasoning or
-few Quick sessions, that's your signal to launch lighter or tune `task-profiles.json`.
+For token/cost details per session, use the in-session `/usage` command.
 
 ## Notes / limitations
 
