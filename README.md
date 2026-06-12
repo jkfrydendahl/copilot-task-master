@@ -173,16 +173,24 @@ everywhere automatically.
 ## Usage log
 
 The launcher silently appends one row to `usage-log.csv` after every session:
-`timestamp_start`, `timestamp_end`, `duration_min`, `repo_name`, `repo_type`.
-Both `usage-log.csv` and the transient `usage-pending-*.json` markers are git-ignored
-(personal data, high churn).
+`session_id`, `timestamp_start`, `timestamp_end`, `duration_min`, `repo_name`, `repo_type`, `task_class`, `task_label`, `abandoned`.
+
+Duration is capped at 10 hours to prevent forgotten open sessions from skewing totals.
+Both `usage-log.csv` and the transient `usage-pending-*.json` markers are git-ignored (personal data, high churn).
+
+### Session resume
+
+Each session gets a UUID printed at exit: `Session ended. Duration: 26.3 min in Guldager. (ID: 0cb916db)`.
+For triage sessions, the full UUID is also printed in cyan so you can copy it into the next launch.
+At the start of every launch, the launcher asks `Resume a previous session?` — paste the ID to
+continue with full conversation context in the new profile. This is especially useful after triage:
+relaunch with the recommended class and resume the triage session to keep all the analysis.
 
 ### Abandoned session recovery
 
-If you close the terminal window mid-session the log row is never written. To handle this,
-the launcher writes a `usage-pending-*.json` marker just before starting the CLI and removes
-it on clean exit. On the **next launch**, any leftover marker is detected and automatically
-logged so no session falls through the cracks.
+If you close the terminal window mid-session the log row is never written. The launcher writes a
+`usage-pending-*.json` marker before starting the CLI and removes it on clean exit. On the **next
+launch**, any leftover markers are detected and logged automatically with `abandoned = True`.
 
 For token/cost details per session, use the in-session `/usage` command.
 

@@ -55,10 +55,12 @@ function Resolve-AbandonedSession {
     foreach ($file in $pendingFiles) {
         try {
             $pending = Get-Content $file.FullName -Raw | ConvertFrom-Json
-            $startTime = [datetime]::Parse($pending.timestamp_start)
-            $durationMin = [math]::Round(($endTime - $startTime).TotalMinutes, 1)
+            $startTime = [datetime]$pending.timestamp_start
+            $rawMin = ($endTime - $startTime).TotalMinutes
+            $durationMin = [math]::Round([math]::Min($rawMin, 600), 1)
 
             [pscustomobject]@{
+                session_id      = $pending.session_id
                 timestamp_start = $pending.timestamp_start
                 timestamp_end   = $endTime.ToString("s")
                 duration_min    = $durationMin.ToString($invariant)
@@ -66,11 +68,7 @@ function Resolve-AbandonedSession {
                 repo_type       = $pending.repo_type
                 task_class      = $pending.task_class
                 task_label      = $pending.task_label
-                model           = $pending.model
-                effort          = $pending.effort
-                context         = $pending.context
-                outcome         = "abandoned"
-                note            = "(window closed - logged on next launch)"
+                abandoned       = $true
             } | Export-Csv -Path $LogPath -Append -NoTypeInformation
 
             Remove-Item $file.FullName -Force
@@ -83,7 +81,7 @@ function Resolve-AbandonedSession {
 
     if ($recovered -gt 0) {
         $label = if ($recovered -eq 1) { "session" } else { "$recovered sessions" }
-        Write-Host "⚠  $recovered previous $label not closed gracefully — logged as abandoned in usage-log.csv." -ForegroundColor Yellow
+        Write-Host "  $recovered previous $label not closed gracefully - logged in usage-log.csv." -ForegroundColor Yellow
         Write-Host ""
     }
 }
@@ -310,6 +308,13 @@ if (-not (Get-Command copilot -ErrorAction SilentlyContinue)) {
     exit 1
 }
 
+# Generate a session UUID upfront so it can be logged and displayed.
+$sessionId = [System.Guid]::NewGuid().ToString()
+
+# Offer to resume a previous session (e.g. continuing after a triage relaunch).
+Write-Host ""
+$resumeInput = Read-Host "Resume a previous session? (paste session ID or Enter to skip)"
+
 # Build launch arguments deterministically from the selected profile.
 $copilotArgs = @("--model", $selectedProfile.model)
 
@@ -321,33 +326,42 @@ if (-not [string]::IsNullOrWhiteSpace($selectedProfile.context)) {
     $copilotArgs += @("--context", $selectedProfile.context)
 }
 
+if (-not [string]::IsNullOrWhiteSpace($resumeInput)) {
+    $copilotArgs += @("--resume", $resumeInput)
+} else {
+    $copilotArgs += @("--session-id", $sessionId)
+}
+
 # Build the session kickoff message so the agent knows its task class from turn 0.
 # This makes drift detection reliable (no env-var reading required) and triggers
 # triage estimation automatically.
 $kickoff = "Session initialized: task class = **$($selectedProfile.label)** (``$($selectedProfile.key)``), model = ``$($selectedProfile.model)``, effort = ``$($selectedProfile.effort)``, context = ``$($selectedProfile.context)``. Class definition: $($selectedProfile.description) Acknowledge briefly and await my task."
 
 if ($selectedProfile.key -eq "triage") {
-    $kickoff += " This is a triage session - before doing any work, perform an inline task estimate and show the TRIAGE ESTIMATE callout as described in your instructions."
+    $kickoff += " This is a triage session. Your ENTIRE first response to the user's task must consist of only the TRIAGE ESTIMATE callout block and nothing else - no introduction, no answer, no code, no file walkthrough, no explanation. Do NOT answer the user's task, explain the repo, write code, or provide any substantive content before showing the callout - even if the task appears trivial or informational. After the callout, STOP and wait. Do not proceed under any circumstances until the user relaunches or explicitly says 'continue here'."
 } else {
-    $kickoff += " On your FIRST response to my task (not this acknowledgment), start with a single line: 'Drift check: launched **$($selectedProfile.label)** ($($selectedProfile.description)) | this task: [one phrase] → [fits / MISMATCH: suggest X]'. If it is a mismatch, show the full drift banner immediately after. Then proceed with the work."
+    $kickoff += " On your FIRST response to my task (not this acknowledgment), start with a single line: Drift check: launched **$($selectedProfile.label)** ($($selectedProfile.description)) | this task: [one phrase] -> [fits / MISMATCH: suggest X]. If it is a mismatch, show the full drift banner immediately after. Then proceed with the work."
 }
 
 $copilotArgs += @("--interactive", $kickoff)
 
+Write-Host ""
 Write-Host "Starting Copilot CLI inside target repo..." -ForegroundColor Cyan
-Write-Host "  copilot $($copilotArgs -join ' ')" -ForegroundColor DarkGray
+Write-Host "  copilot $($copilotArgs -join " ")" -ForegroundColor DarkGray
 Write-Host ""
 
+if ($selectedProfile.key -eq "triage") {
+    Write-Host "TRIAGE SESSION - Copilot must show the estimate callout before doing any work." -ForegroundColor Yellow
+    Write-Host "  If it skips straight to answering, say 'triage first' to redirect it." -ForegroundColor DarkGray
+    Write-Host ""
+}
+
 $sessionStart = Get-Date
-$PendingFile = Join-Path $MasterPath "usage-pending-$($sessionStart.ToString('yyyyMMddTHHmmss')).json"
+$PendingFile = Join-Path $MasterPath "usage-pending-$($sessionStart.ToString(`"yyyyMMddTHHmmss`")).json"
 
 # Write pending marker so a window-close is recoverable on next launch.
 try {
-    [pscustomobject]@{
-        timestamp_start = $sessionStart.ToString("s")
-        repo_name       = $repoName
-        repo_type       = $repoType
-    } | ConvertTo-Json | Set-Content $PendingFile
+    "{`"session_id`":`"$sessionId`",`"timestamp_start`":`"$($sessionStart.ToString('s'))`",`"repo_name`":`"$repoName`",`"repo_type`":`"$repoType`",`"task_class`":`"$($selectedProfile.key)`",`"task_label`":`"$($selectedProfile.label)`"}" | Set-Content $PendingFile
 } catch {
     Write-Host "Could not write session marker (non-fatal): $($_.Exception.Message)" -ForegroundColor Yellow
 }
@@ -358,21 +372,30 @@ $sessionEnd = Get-Date
 # Remove pending marker — session exited gracefully.
 try { Remove-Item $PendingFile -Force -ErrorAction SilentlyContinue } catch { }
 
-# --- Silent usage logging ---
+# --- Silent usage logging (duration capped at 10h to guard against forgotten sessions) ---
 try {
     $invariant = [System.Globalization.CultureInfo]::InvariantCulture
-    $durationMin = [math]::Round(($sessionEnd - $sessionStart).TotalMinutes, 1)
+    $rawMin = ($sessionEnd - $sessionStart).TotalMinutes
+    $durationMin = [math]::Round([math]::Min($rawMin, 600), 1)
 
     [pscustomobject]@{
+        session_id      = $sessionId
         timestamp_start = $sessionStart.ToString("s")
         timestamp_end   = $sessionEnd.ToString("s")
         duration_min    = $durationMin.ToString($invariant)
         repo_name       = $repoName
         repo_type       = $repoType
+        task_class      = $selectedProfile.key
+        task_label      = $selectedProfile.label
+        abandoned       = $false
     } | Export-Csv -Path $LogPath -Append -NoTypeInformation
 
     Write-Host ""
-    Write-Host "Session ended. Duration: $durationMin min in $repoName." -ForegroundColor DarkGray
+    $shortId = $sessionId.Substring(0, 8)
+    Write-Host "Session ended. Duration: $durationMin min in $repoName. (ID: $shortId)" -ForegroundColor DarkGray
+    if ($selectedProfile.key -eq "triage") {
+        Write-Host "  To continue with full context: relaunch and paste session ID: $sessionId" -ForegroundColor Cyan
+    }
 } catch {
     Write-Host "Usage logging failed (non-fatal): $($_.Exception.Message)" -ForegroundColor Yellow
 }
