@@ -1,5 +1,14 @@
 [
   {
+    "key": "orchestrator",
+    "label": "Orchestrator (route per task)",
+    "description": "Mixed or evolving workloads where one session should classify each request and route to task-class subagents without relaunching.",
+    "hint": "When you open the chat, describe the task. The session should choose inline vs @task-class agent routing per request.",
+    "model": "claude-sonnet-4.6",
+    "effort": "medium",
+    "context": "default"
+  },
+  {
     "key": "quick",
     "label": "Quick",
     "description": "Syntax questions, small explanations, tiny isolated edits, formatting, naming.",
@@ -60,15 +69,6 @@
     "hint": "When you open the chat, provide the approved plan and the list of files/patterns to apply it to.",
     "model": "claude-haiku-4.5",
     "effort": "low",
-    "context": "default"
-  },
-  {
-    "key": "orchestrator",
-    "label": "Orchestrator (route per task)",
-    "description": "Mixed or evolving workloads where one session should classify each request and route to task-class subagents without relaunching.",
-    "hint": "When you open the chat, describe the task. The session should choose inline vs @task-class agent routing per request.",
-    "model": "claude-sonnet-4.6",
-    "effort": "medium",
     "context": "default"
   },
   {
