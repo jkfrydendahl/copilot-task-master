@@ -12,7 +12,7 @@ which get applied to whatever repo you launch into.
 | File | Purpose |
 | ---- | ------- |
 | `Start-CopilotWork.ps1` | Interactive picker: choose a repo **and a task class**, inject master instructions, sync shared skills + generated task-class agents, optionally open VS Code, then launch `copilot` with the right model/effort/context. |
-| `repos.json` | Registry of your working repos (`name`, `type`, `path`; optional `team`). |
+| `repos.json` | Registry of your working repos (`name`, `type`, `path`). |
 | `task-profiles.json` | Maps each task class → `{ model, effort, context }`. The source of truth for model selection. |
 | `usage-log.csv` | Silent session log: start/end time, duration, repo name+type (created on first run, git-ignored). |
 | `AGENTS.md` | Baseline plan-first workflow rules. |
@@ -27,11 +27,9 @@ which get applied to whatever repo you launch into.
 
    ```json
    [
-     { "name": "Customer A - BC Extension", "type": "Business Central / AL", "path": "C:\\Work\\Repos\\customer-a-bc", "team": "Team Alpha" }
+     { "name": "Customer A - BC Extension", "type": "Business Central / AL", "path": "C:\\Work\\Repos\\customer-a-bc" }
    ]
    ```
-
-   The `team` field is optional. When present it appears in the repo picker list and is recorded in the usage log.
 
 2. Add a PowerShell alias so you can launch from any terminal (one-time setup):
 

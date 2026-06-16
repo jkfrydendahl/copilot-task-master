@@ -16,9 +16,9 @@ Choose the right workflow for the size of the task — don't over-ceremony small
 | **Small** (bug fixes, minor localized features) | Implement directly with tests. |
 | **Medium–Large** (new features, multi-file changes, design decisions) | `/refine-requirements` → `/tdd-implement`. |
 
-> **Exception:** If the launched task class (from the kickoff message) is `triage`, skip this routing table entirely.
-> Follow the Triage mode instructions in `10-model-selection.instructions.md` instead —
-> perform an inline estimation and show the `🔎 TRIAGE ESTIMATE` callout before doing any work.
+> **Exception:** If the launched task class (from the kickoff message) is `triage` **or** `orchestrator`, skip this routing table.
+> - `triage`: follow the Triage mode instructions in `10-model-selection.instructions.md` and show the `🔎 TRIAGE ESTIMATE` callout first.
+> - `orchestrator`: follow task-level routing rules in `15-orchestrator-mode.instructions.md` (`Routing: ...`, inline for trivial, `@agent-key` for non-trivial).
 
 This complements the plan-first rules in `AGENTS.md` and the planning-first instruction —
 it does not replace them. Respect those before editing.
