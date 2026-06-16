@@ -5,6 +5,16 @@ $RepoIndex = Join-Path $MasterPath "repos.json"
 $ProfileIndex = Join-Path $MasterPath "task-profiles.json"
 $LogPath = Join-Path $MasterPath "usage-log.csv"
 
+function Convert-ToYamlSingleQuoted {
+    param([string]$Value)
+
+    if ($null -eq $Value) {
+        return "''"
+    }
+
+    return "'" + ($Value -replace "'", "''") + "'"
+}
+
 function Sync-PersonalSkills {
     # The CLI reads personal skills from ~/.copilot/skills in every repo. Keep that path
     # pointed at this folder's skills\ directory via a junction so the master folder stays
@@ -37,6 +47,87 @@ function Sync-PersonalSkills {
         }
     } catch {
         Write-Host "Could not sync personal skills (non-fatal): $($_.Exception.Message)" -ForegroundColor Yellow
+    }
+}
+
+function Update-TaskClassAgents {
+    # Generate per-task-class custom agents in ~/.copilot/agents from task-profiles.json.
+    # This gives an "augment" path: keep launch-time model selection, but also allow
+    # task-level routing with explicit @agent keys inside an orchestrator session.
+    param([string]$MasterPath, [array]$Profiles)
+
+    $personalAgents = Join-Path $env:USERPROFILE ".copilot\agents"
+    $stateFile = Join-Path $personalAgents ".generated-task-class-agents.json"
+    $skipKeys = @("triage", "orchestrator")
+
+    $routeProfiles = @(
+        $Profiles | Where-Object {
+            $_ -and
+            -not [string]::IsNullOrWhiteSpace($_.key) -and
+            -not [string]::IsNullOrWhiteSpace($_.label) -and
+            -not [string]::IsNullOrWhiteSpace($_.description) -and
+            -not [string]::IsNullOrWhiteSpace($_.model) -and
+            ($skipKeys -notcontains $_.key)
+        }
+    )
+
+    if ($routeProfiles.Count -eq 0) { return }
+
+    try {
+        New-Item -ItemType Directory -Path $personalAgents -Force | Out-Null
+
+        $previousKeys = @()
+        if (Test-Path $stateFile) {
+            try { $previousKeys = @(Get-Content $stateFile -Raw | ConvertFrom-Json) } catch { $previousKeys = @() }
+        }
+
+        $currentKeys = @()
+
+        foreach ($profile in $routeProfiles) {
+            $key = [string]$profile.key
+            $label = [string]$profile.label
+            $description = [string]$profile.description
+            $model = [string]$profile.model
+            $agentPath = Join-Path $personalAgents "$key.agent.md"
+
+            $currentKeys += $key
+
+            $nameYaml = Convert-ToYamlSingleQuoted $key
+            $descYaml = Convert-ToYamlSingleQuoted ("Task-class specialist for {0}. Use when work matches: {1}" -f $label, $description)
+            $modelYaml = Convert-ToYamlSingleQuoted $model
+            $toolsLine = if ($key -eq "review") { "tools: ['read', 'search']`n" } else { "" }
+
+            $agentContent = @"
+---
+name: $nameYaml
+description: $descYaml
+model: $modelYaml
+$toolsLine---
+You are the **$label** specialist for my Copilot task-class workflow.
+
+Primary fit:
+- $description
+
+Operating rules:
+- Focus on requests that clearly match this class.
+- If a request appears out-of-class, say so briefly and recommend the better task-class agent key.
+- Keep responses concise, actionable, and execution-oriented.
+"@
+
+            Set-Content -Path $agentPath -Value $agentContent -Encoding UTF8
+        }
+
+        $staleKeys = @($previousKeys | Where-Object { $_ -and ($currentKeys -notcontains $_) })
+        foreach ($staleKey in $staleKeys) {
+            $stalePath = Join-Path $personalAgents "$staleKey.agent.md"
+            if (Test-Path $stalePath) {
+                Remove-Item $stalePath -Force
+            }
+        }
+
+        $currentKeys | ConvertTo-Json | Set-Content $stateFile -Encoding UTF8
+    } catch {
+        Write-Host "Could not sync task-class agents (non-fatal): $($_.Exception.Message)" -ForegroundColor Yellow
     }
 }
 
@@ -133,6 +224,10 @@ if ($profiles.Count -eq 0) {
     Write-Host "task-profiles.json contains no task profiles." -ForegroundColor Red
     exit 1
 }
+
+# Ensure task-class custom agents are kept in sync with task-profiles.json.
+# This is additive to launch-time model selection (not a replacement).
+Update-TaskClassAgents -MasterPath $MasterPath -Profiles $profiles
 
 Write-Host ""
 Write-Host "=== Copilot Workbench ===" -ForegroundColor Cyan
@@ -339,6 +434,8 @@ $kickoff = "Session initialized: task class = **$($selectedProfile.label)** (``$
 
 if ($selectedProfile.key -eq "triage") {
     $kickoff += " This is a triage session. Your ENTIRE first response to the user's task must consist of only the TRIAGE ESTIMATE callout block and nothing else - no introduction, no answer, no code, no file walkthrough, no explanation. Do NOT answer the user's task, explain the repo, write code, or provide any substantive content before showing the callout - even if the task appears trivial or informational. After the callout, STOP and wait. Do not proceed under any circumstances until the user relaunches or explicitly says 'continue here'."
+} elseif ($selectedProfile.key -eq "orchestrator") {
+    $kickoff += " This is an orchestrator session. For each request, classify quickly and route non-trivial work to the best task-class custom agent key: @quick, @default-development, @agentic-implementation, @deep-reasoning, @review, @visual-ui, or @mechanical. Use explicit @agent routing when quality or cost fit matters. Keep truly trivial one-liners inline. On your FIRST substantive response, start with: Routing: [inline or @<agent-key>] — [one-sentence reason]. If uncertain, ask one high-value clarifying question before routing."
 } else {
     $kickoff += " On your FIRST response to my task (not this acknowledgment), start with a single line: Drift check: launched **$($selectedProfile.label)** ($($selectedProfile.description)) | this task: [one phrase] -> [fits / MISMATCH: suggest X]. If it is a mismatch, show the full drift banner immediately after. Then proceed with the work."
 }

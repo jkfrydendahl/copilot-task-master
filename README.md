@@ -11,8 +11,8 @@ which get applied to whatever repo you launch into.
 
 | File | Purpose |
 | ---- | ------- |
-| `Start-CopilotWork.ps1` | Interactive picker: choose a repo **and a task class**, inject master instructions, optionally open VS Code, then launch `copilot` with the right model/effort/context. |
-| `repos.json` | Registry of your working repos (`name`, `type`, `path`). |
+| `Start-CopilotWork.ps1` | Interactive picker: choose a repo **and a task class**, inject master instructions, sync shared skills + generated task-class agents, optionally open VS Code, then launch `copilot` with the right model/effort/context. |
+| `repos.json` | Registry of your working repos (`name`, `type`, `path`; optional `team`). |
 | `task-profiles.json` | Maps each task class → `{ model, effort, context }`. The source of truth for model selection. |
 | `usage-log.csv` | Silent session log: start/end time, duration, repo name+type (created on first run, git-ignored). |
 | `AGENTS.md` | Baseline plan-first workflow rules. |
@@ -27,9 +27,11 @@ which get applied to whatever repo you launch into.
 
    ```json
    [
-     { "name": "Customer A - BC Extension", "type": "Business Central / AL", "path": "C:\\Work\\Repos\\customer-a-bc" }
+     { "name": "Customer A - BC Extension", "type": "Business Central / AL", "path": "C:\\Work\\Repos\\customer-a-bc", "team": "Team Alpha" }
    ]
    ```
+
+   The `team` field is optional. When present it appears in the repo picker list and is recorded in the usage log.
 
 2. Add a PowerShell alias so you can launch from any terminal (one-time setup):
 
@@ -55,6 +57,7 @@ which get applied to whatever repo you launch into.
 
 3. Pick a numbered repo or `C` for a custom path, then pick a **task class**. The script will:
    - Set `COPILOT_CUSTOM_INSTRUCTIONS_DIRS` to this folder so the master rules travel with you.
+   - Sync shared **skills** (`~/.copilot/skills` junction) and generate task-class custom agents in `~/.copilot/agents` from `task-profiles.json` (except `triage`/`orchestrator`).
    - `cd` into the target repo.
    - Sends a **kickoff message** into the session with the task class, model, effort, context, and class definition — so the agent knows its baseline from turn 0 without reading env vars.
    - Launches `copilot --model <m> --effort <e> --context <c> --interactive "<kickoff>"` (errors out clearly if the CLI isn't installed).
@@ -66,7 +69,7 @@ What happens, end to end, each time you launch:
 1. **Run `Start-CopilotWork.ps1`** in a terminal.
 2. **Loads + validates** `repos.json` and `task-profiles.json`.
 3. **Prompts: "Select repo"** — a numbered list from `repos.json`, or `C` for a custom path.
-4. **Validates** the path exists, sets `COPILOT_CUSTOM_INSTRUCTIONS_DIRS` to this folder, and `cd`s into the repo.
+4. **Validates** the path exists, sets `COPILOT_CUSTOM_INSTRUCTIONS_DIRS` to this folder, syncs skills, regenerates task-class custom agents, and `cd`s into the repo.
 5. **Prompts: "Select task class"** — this is where the **model / effort / context** are decided (from the matching profile).
 6. **Validates** the profile's model against the live CLI list, and shows the new-model nudge if any.
 7. **Sends a kickoff message** into the session with the task class key, label, model, effort, context, and class definition embedded as text — so the agent has a hard baseline in conversation history from turn 0. For triage, also triggers the inline estimation.
@@ -85,7 +88,7 @@ reasoning* opus session in another, side by side, each logged separately.
 
 ## Model selection (the point of this repo)
 
-Model choice is decided **at launch**, deterministically — not by asking the running model to
+Model choice is decided **at launch** by default — not by asking the running model to
 recommend a switch (it can't switch itself). The three levers the Copilot CLI exposes are set
 from the chosen task class:
 
@@ -108,6 +111,28 @@ your config for you.
 When tuning profiles, consult the
 [model comparison page](https://docs.github.com/en/copilot/reference/ai-models/model-comparison)
 rather than guessing.
+
+### Orchestrator mode (route per task without relaunch)
+
+If your work is mixed/evolving and you want one session to pick the right model *per request*,
+launch **Orchestrator (route per task)**. On each run, the launcher generates per-class custom
+agents in `~/.copilot/agents` from `task-profiles.json`:
+
+- `quick.agent.md`
+- `default-development.agent.md`
+- `agentic-implementation.agent.md`
+- `deep-reasoning.agent.md`
+- `review.agent.md`
+- `visual-ui.agent.md`
+- `mechanical.agent.md`
+
+These agent profiles pin the class model in frontmatter (`model: ...`), so the orchestrator can
+route non-trivial work to the best `@agent-key` without restarting the session. This is additive:
+for long, interactive single-class work, the normal per-process launch class still gives the
+cleanest workflow.
+
+> Cost note: routing/delegation can improve quality and context isolation, but can also increase
+> total AI-credit usage (more independent LLM round-trips). It's not automatically cheaper.
 
 ### Drift detection within a session
 

@@ -63,6 +63,15 @@
     "context": "default"
   },
   {
+    "key": "orchestrator",
+    "label": "Orchestrator (route per task)",
+    "description": "Mixed or evolving workloads where one session should classify each request and route to task-class subagents without relaunching.",
+    "hint": "When you open the chat, describe the task. The session should choose inline vs @task-class agent routing per request.",
+    "model": "claude-sonnet-4.6",
+    "effort": "medium",
+    "context": "default"
+  },
+  {
     "key": "triage",
     "label": "Triage (not sure — estimate first)",
     "description": "Not sure what class to use — runs an inline estimate of your task and recommends which class to relaunch as.",

@@ -22,7 +22,8 @@ These are the shared vocabulary; each maps to a key in `task-profiles.json`:
 5. Review — ordinary diff review (use Deep reasoning for risky/large/business-critical diffs).
 6. Visual/UI — UI/layout-oriented work where visual reasoning matters.
 7. Mechanical — repetitive bulk edits OR known operational steps (build, package, deploy, run migrations) after the approach is clear; no real design decisions required.
-8. Triage — a cheap "I'm not sure" launch that estimates the task first, then recommends one of the classes above (see Triage mode below).
+8. Orchestrator — mixed/evolving work in one session; route each request to the best task-class custom agent without relaunching.
+9. Triage — a cheap "I'm not sure" launch that estimates the task first, then recommends one of the classes above (see Triage mode below).
 
 To change models, effort, or context tier, the **right action is to adjust the launch**:
 relaunch via `Start-CopilotWork.ps1` with a different task class, or use the in-session
@@ -45,6 +46,23 @@ Do **not** re-read env vars to determine task class — the kickoff is the singl
 If no kickoff message is present, the session was not started through the launcher —
 do not show the banner, but you may mention once that launching via `Start-CopilotWork.ps1`
 enables task-aware model selection.
+
+## Orchestrator mode (task-level routing)
+
+If the launched task class is `orchestrator`, this session is intentionally cross-class and should
+route work per request rather than rely on relaunches:
+
+1. Classify the user's request quickly.
+2. Handle truly trivial one-liners inline.
+3. Route non-trivial work to the best task-class custom agent using explicit `@agent-key` callouts:
+   `@quick`, `@default-development`, `@agentic-implementation`, `@deep-reasoning`, `@review`,
+   `@visual-ui`, `@mechanical`.
+4. If uncertain between classes, ask one high-value clarifying question before routing.
+5. Start your first substantive response with:
+   `Routing: [inline or @<agent-key>] — [one-sentence reason]`
+
+In orchestrator sessions, do **not** show the mismatch banner — the orchestrator route is already
+the intended drift-handling mechanism.
 
 ## Triage mode (auto-estimate)
 
@@ -97,6 +115,8 @@ banner below still applies.
 You cannot switch your own model mid-session. Your job is to make a mismatch **impossible to
 miss** so the user can switch. On **every turn**, compare the work the user's most recent
 input actually requires against the launched baseline class.
+
+This mandatory banner rule applies to all launched classes **except `orchestrator`**.
 
 Mismatch matters in **both directions**, and the cheaper direction matters at least as much:
 
