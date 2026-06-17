@@ -12,17 +12,19 @@ permissions:
 jobs:
   review:
     runs-on: windows-latest
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Generate review report
         shell: pwsh
         run: .\scripts\review-task-profiles.ps1
 
       - name: Create/update PR
-        uses: peter-evans/create-pull-request@v7
+        uses: peter-evans/create-pull-request@v8
         with:
           branch: chore/monthly-task-profile-review
           title: "chore: monthly task profile review"
