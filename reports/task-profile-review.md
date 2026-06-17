@@ -24,13 +24,13 @@ Direct-apply mode: **true**
 - No structural problems detected.
 
 ## Suggested profile changes
-- None.
+- "orchestrator": "claude-sonnet-4.5" -> "claude-sonnet-4.6" | type: policy_preference | confidence: medium | applied: True
+  - reason: Preferred monthly policy model for this task class.
 
 ## Applied profile changes in this run
-- None.
+- "orchestrator": "claude-sonnet-4.5" -> "claude-sonnet-4.6" (policy_preference)
 
 ## Newly available models not currently used
-- "claude-sonnet-4.5"
 - "claude-fable-5"
 - "claude-opus-4.7"
 - "claude-opus-4.6"
