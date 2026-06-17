@@ -84,12 +84,12 @@ $usedModels = @(
     Select-Object -Unique
 )
 
-$validModels = Get-ValidModelsFromCli
-$modelSource = if ($validModels.Count -gt 0) { "copilot help config" } else { "copilot help config (not available on this runner)" }
+$validModels = @(Get-ValidModelsFromCli)
+$modelSource = if (@($validModels).Count -gt 0) { "copilot help config" } else { "copilot help config (not available on this runner)" }
 
 $invalidUsed = @()
 $newAvailable = @()
-if ($validModels.Count -gt 0) {
+if (@($validModels).Count -gt 0) {
     $invalidUsed = @($usedModels | Where-Object { $validModels -notcontains $_ })
     $newAvailable = @($validModels | Where-Object { $usedModels -notcontains $_ })
 }
@@ -98,7 +98,7 @@ $suggestions = New-Object System.Collections.Generic.List[object]
 $appliedChanges = New-Object System.Collections.Generic.List[string]
 $profilesUpdated = $false
 
-if ($validModels.Count -gt 0) {
+if (@($validModels).Count -gt 0) {
     foreach ($profile in $profiles) {
         $profileKey = [string]$profile.key
         $currentModel = [string]$profile.model
