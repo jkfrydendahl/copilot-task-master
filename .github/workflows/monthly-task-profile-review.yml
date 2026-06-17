@@ -1,0 +1,43 @@
+name: Monthly task profile review
+
+on:
+  schedule:
+    - cron: "0 7 1 * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  review:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Generate review report
+        shell: pwsh
+        run: .\scripts\review-task-profiles.ps1
+
+      - name: Create/update PR
+        uses: peter-evans/create-pull-request@v7
+        with:
+          branch: chore/monthly-task-profile-review
+          title: "chore: monthly task profile review"
+          commit-message: "chore: update monthly task profile review report"
+          add-paths: |
+            reports/task-profile-review.md
+            task-profiles.json
+          body: |
+            Automated monthly review for `task-profiles.json`.
+
+            Includes:
+            - current profile matrix
+            - direct model suggestions per task class (in report)
+            - automatic application of suggested model changes in `task-profiles.json`
+            - invalid/deprecated model handling (if CLI model list is available)
+            - newly available model candidates
+            - required manual check against:
+              https://docs.github.com/en/copilot/reference/ai-models/model-comparison

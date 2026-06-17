@@ -217,6 +217,20 @@ launch**, any leftover markers are detected and logged automatically with `aband
 
 For token/cost details per session, use the in-session `/usage` command.
 
+## Automated monthly task-profile review
+
+A scheduled GitHub Actions workflow (`.github/workflows/monthly-task-profile-review.yml`) runs on
+the 1st of each month and opens/updates a PR with:
+
+- `reports/task-profile-review.md` (summary + applied/suggested changes)
+- `task-profiles.json` updated directly in the PR (when suggestions apply)
+
+The workflow uses class-specific model preferences and applies suggestions directly in the PR branch.
+You still approve/reject at merge time.
+
+- Human review is expected before merge, using:
+  https://docs.github.com/en/copilot/reference/ai-models/model-comparison
+
 ## Notes / limitations
 
 - Windows-only and single-user by design (hardcoded drive paths, PowerShell).
