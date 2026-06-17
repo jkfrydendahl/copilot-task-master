@@ -4,7 +4,7 @@
     "label": "Orchestrator (route per task)",
     "description": "Mixed or evolving workloads where one session should classify each request and route to task-class subagents without relaunching.",
     "hint": "When you open the chat, describe the task. The session should choose inline vs @task-class agent routing per request.",
-    "model": "claude-sonnet-4.6",
+    "model": "claude-sonnet-4.5",
     "effort": "medium",
     "context": "default"
   },
