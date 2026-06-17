@@ -19,9 +19,17 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v5
 
+      - name: Install Copilot CLI extension
+        run: gh extension install github/gh-copilot
+        env:
+          GH_TOKEN: ${{ github.token }}
+        continue-on-error: true
+
       - name: Generate review report
         shell: pwsh
         run: .\scripts\review-task-profiles.ps1
+        env:
+          GH_TOKEN: ${{ github.token }}
 
       - name: Create/update PR
         uses: peter-evans/create-pull-request@v8

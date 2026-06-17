@@ -16,16 +16,32 @@ function Get-ValidModels {
     [OutputType([string[]])]
     param()
 
+    $modelPattern = '"(claude-[\w.\-]+|gpt-[\w.\-]+|gemini-[\w.\-]+)"'
+
     if (Get-Command copilot -ErrorAction SilentlyContinue) {
         try {
             $helpText = (copilot help config 2>&1 | Out-String)
             $cliModels = @(
-                [regex]::Matches($helpText, '"(claude-[\w.\-]+|gpt-[\w.\-]+|gemini-[\w.\-]+)"') |
+                [regex]::Matches($helpText, $modelPattern) |
                 ForEach-Object { $_.Groups[1].Value } |
                 Select-Object -Unique
             )
             if ($cliModels.Count -gt 0) {
                 return $cliModels, "copilot help config"
+            }
+        } catch { }
+    }
+
+    if (Get-Command gh -ErrorAction SilentlyContinue) {
+        try {
+            $helpText = (gh copilot help config 2>&1 | Out-String)
+            $cliModels = @(
+                [regex]::Matches($helpText, $modelPattern) |
+                ForEach-Object { $_.Groups[1].Value } |
+                Select-Object -Unique
+            )
+            if ($cliModels.Count -gt 0) {
+                return $cliModels, "gh copilot help config"
             }
         } catch { }
     }
