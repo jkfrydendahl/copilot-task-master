@@ -1,21 +1,36 @@
 Set-StrictMode -Version Latest
 $ErrorActionPreference = "Stop"
 
-function Get-ValidModelsFromCli {
-    if (!(Get-Command copilot -ErrorAction SilentlyContinue)) {
-        return @()
+# Update this list when new models become available in GitHub Copilot.
+# Used as fallback when `copilot help config` is not available (e.g. on CI runners).
+$script:FallbackKnownModels = @(
+    "claude-sonnet-4.6", "claude-sonnet-4.5",
+    "claude-haiku-4.5",
+    "claude-opus-4.8", "claude-opus-4.7", "claude-opus-4.6", "claude-opus-4.6-fast", "claude-opus-4.5",
+    "claude-fable-5",
+    "gpt-5.5", "gpt-5.4", "gpt-5.4-mini", "gpt-5.3-codex", "gpt-5.2-codex", "gpt-5.2", "gpt-5-mini",
+    "gemini-3.1-pro-preview", "gemini-3.5-flash"
+)
+
+function Get-ValidModels {
+    [OutputType([string[]])]
+    param()
+
+    if (Get-Command copilot -ErrorAction SilentlyContinue) {
+        try {
+            $helpText = (copilot help config 2>&1 | Out-String)
+            $cliModels = @(
+                [regex]::Matches($helpText, '"(claude-[\w.\-]+|gpt-[\w.\-]+|gemini-[\w.\-]+)"') |
+                ForEach-Object { $_.Groups[1].Value } |
+                Select-Object -Unique
+            )
+            if ($cliModels.Count -gt 0) {
+                return $cliModels, "copilot help config"
+            }
+        } catch { }
     }
 
-    try {
-        $helpText = (copilot help config 2>&1 | Out-String)
-        return @(
-            [regex]::Matches($helpText, '"(claude-[\w.\-]+|gpt-[\w.\-]+|gemini-[\w.\-]+)"') |
-            ForEach-Object { $_.Groups[1].Value } |
-            Select-Object -Unique
-        )
-    } catch {
-        return @()
-    }
+    return $script:FallbackKnownModels, "hardcoded fallback (copilot help config not available on this runner)"
 }
 
 function Get-PreferredModelForProfile {
@@ -84,12 +99,12 @@ $usedModels = @(
     Select-Object -Unique
 )
 
-$validModels = @(Get-ValidModelsFromCli)
-$modelSource = if (@($validModels).Count -gt 0) { "copilot help config" } else { "copilot help config (not available on this runner)" }
+$validModels, $modelSource = Get-ValidModels
+$validModels = @($validModels)
 
 $invalidUsed = @()
 $newAvailable = @()
-if (@($validModels).Count -gt 0) {
+if ($validModels.Count -gt 0) {
     $invalidUsed = @($usedModels | Where-Object { $validModels -notcontains $_ })
     $newAvailable = @($validModels | Where-Object { $usedModels -notcontains $_ })
 }
@@ -98,7 +113,7 @@ $suggestions = New-Object System.Collections.Generic.List[object]
 $appliedChanges = New-Object System.Collections.Generic.List[string]
 $profilesUpdated = $false
 
-if (@($validModels).Count -gt 0) {
+if ($validModels.Count -gt 0) {
     foreach ($profile in $profiles) {
         $profileKey = [string]$profile.key
         $currentModel = [string]$profile.model
