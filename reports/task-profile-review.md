@@ -2,7 +2,7 @@
 
 Reference: https://docs.github.com/en/copilot/reference/ai-models/model-comparison
 
-Model source: **copilot help config**
+Model source: **copilot help config (not available on this runner)**
 
 Direct-apply mode: **true**
 
@@ -30,20 +30,7 @@ Direct-apply mode: **true**
 - None.
 
 ## Newly available models not currently used
-- "claude-sonnet-4.5"
-- "claude-fable-5"
-- "claude-opus-4.7"
-- "claude-opus-4.6"
-- "claude-opus-4.6-fast"
-- "claude-opus-4.5"
-- "gpt-5.5"
-- "gpt-5.4"
-- "gpt-5.2-codex"
-- "gpt-5.2"
-- "gpt-5.4-mini"
-- "gpt-5-mini"
-- "gemini-3.1-pro-preview"
-- "gemini-3.5-flash"
+- None (or live model list unavailable on runner).
 
 ## Review checklist
 - [ ] Compare candidates on model-comparison page.
