@@ -1,6 +1,13 @@
 Set-StrictMode -Version Latest
 $ErrorActionPreference = "Stop"
 
+# Models that appear in `copilot help config` but are not yet actually selectable.
+# Add a model here when it shows up in the CLI list but can't be used in practice.
+# Remove it once it becomes fully available.
+$script:ModelDenylist = @(
+    "claude-fable-5"  # Listed in CLI but pulled back by Anthropic; re-enable when available
+)
+
 # Update this list when new models become available in GitHub Copilot.
 # Used as fallback when `copilot help config` is not available (e.g. on CI runners).
 $script:FallbackKnownModels = @(
@@ -24,7 +31,8 @@ function Get-ValidModels {
             $cliModels = @(
                 [regex]::Matches($helpText, $modelPattern) |
                 ForEach-Object { $_.Groups[1].Value } |
-                Select-Object -Unique
+                Select-Object -Unique |
+                Where-Object { $script:ModelDenylist -notcontains $_ }
             )
             if ($cliModels.Count -gt 0) {
                 return $cliModels, "copilot help config"
@@ -38,7 +46,8 @@ function Get-ValidModels {
             $cliModels = @(
                 [regex]::Matches($helpText, $modelPattern) |
                 ForEach-Object { $_.Groups[1].Value } |
-                Select-Object -Unique
+                Select-Object -Unique |
+                Where-Object { $script:ModelDenylist -notcontains $_ }
             )
             if ($cliModels.Count -gt 0) {
                 return $cliModels, "gh copilot help config"
