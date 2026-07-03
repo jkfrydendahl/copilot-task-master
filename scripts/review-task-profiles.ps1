@@ -84,9 +84,19 @@ function Get-PreferredModelForProfile {
 
     foreach ($familyName in $classPreferences[$ProfileKey]) {
         $pattern = $familyPatterns[$familyName]
-        # Filter candidates that belong to this family, then sort descending so the
-        # highest version string (newest model) comes first.
-        $candidates = @($ValidModels | Where-Object { $_ -match $pattern } | Sort-Object -Descending)
+        # Filter candidates that belong to this family, then sort so the newest
+        # base model wins. Quality-reducing suffixes (-fast, -lite) are demoted
+        # below the base model at the same version by sorting on a normalized key
+        # that strips those suffixes, with the original ID as a tiebreaker that
+        # puts the base model (shorter string) above the suffixed variant.
+        $candidates = @(
+            $ValidModels |
+            Where-Object { $_ -match $pattern } |
+            Sort-Object -Descending -Property @(
+                @{ Expression = { ($_ -replace '-fast$|-lite$', '') }; Descending = $true },
+                @{ Expression = { $_.Length }; Descending = $false }
+            )
+        )
         if ($candidates.Count -gt 0) {
             return $candidates[0]
         }
