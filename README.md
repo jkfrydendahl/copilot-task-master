@@ -99,12 +99,10 @@ discovers the **current valid model list from the CLI itself** (`copilot help co
 if a profile references an unknown model, so the config can't silently go stale. To change models
 for a single session instead, use the in-session `/model` command.
 
-`task-profiles.json` is **not** auto-updated from the GitHub docs — it's a deliberate, manual
-config (scraping the human-facing comparison page would be brittle, and "best model" depends on
-your plan). Instead the launcher keeps you informed: it caches the model list it has seen
-(`.known-models.json`, git-ignored) and, when the CLI starts offering a **new** model you don't
-use in any profile, prints a one-time nudge pointing you to the docs to decide. It never edits
-your config for you.
+`task-profiles.json` is auto-updated by the monthly workflow (see below) — version bumps within
+a model family are applied automatically. What the workflow does **not** auto-update are the
+family-to-task-class assignments (e.g. "deep-reasoning uses opus-family") — those are deliberate,
+manual decisions that require human judgment against the model comparison page.
 
 When tuning profiles, consult the
 [model comparison page](https://docs.github.com/en/copilot/reference/ai-models/model-comparison)
@@ -225,11 +223,17 @@ the 1st of each month and opens/updates a PR with:
 - `reports/task-profile-review.md` (summary + applied/suggested changes)
 - `task-profiles.json` updated directly in the PR (when suggestions apply)
 
-The workflow uses class-specific model preferences and applies suggestions directly in the PR branch.
-You still approve/reject at merge time.
+The workflow selects models using **family-pattern matching** — each task class maps to an ordered
+list of model families (e.g. `deep-reasoning` → opus-family, then gpt-flagship-family). Within a
+family, the newest available version wins automatically. A `$ModelDenylist` in the script lets you
+exclude models that appear in the CLI list but aren't yet usable (e.g. pulled-back previews).
+
+Changes are applied directly in the PR branch. You still approve/reject at merge time.
 
 - Human review is expected before merge, using:
   https://docs.github.com/en/copilot/reference/ai-models/model-comparison
+- To block a specific model, add it to `$script:ModelDenylist` in `scripts/review-task-profiles.ps1`.
+- To change which family a task class prefers, edit `$classPreferences` in the same script.
 
 ## Notes / limitations
 
