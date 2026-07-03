@@ -24,28 +24,14 @@ Direct-apply mode: **true**
 - No structural problems detected.
 
 ## Suggested profile changes
-- "orchestrator": "claude-sonnet-4.6" -> "claude-sonnet-5" | type: policy_preference | confidence: medium | applied: True
-  - reason: Preferred monthly policy model for this task class.
-- "default-development": "claude-sonnet-4.6" -> "claude-sonnet-5" | type: policy_preference | confidence: medium | applied: True
-  - reason: Preferred monthly policy model for this task class.
-- "review": "claude-sonnet-4.6" -> "claude-sonnet-5" | type: policy_preference | confidence: medium | applied: True
-  - reason: Preferred monthly policy model for this task class.
-- "visual-ui": "claude-sonnet-4.6" -> "claude-sonnet-5" | type: policy_preference | confidence: medium | applied: True
-  - reason: Preferred monthly policy model for this task class.
-- "triage": "claude-sonnet-4.6" -> "claude-sonnet-5" | type: policy_preference | confidence: medium | applied: True
-  - reason: Preferred monthly policy model for this task class.
+- None.
 
 ## Applied profile changes in this run
-- "orchestrator": "claude-sonnet-4.6" -> "claude-sonnet-5" (policy_preference)
-- "default-development": "claude-sonnet-4.6" -> "claude-sonnet-5" (policy_preference)
-- "review": "claude-sonnet-4.6" -> "claude-sonnet-5" (policy_preference)
-- "visual-ui": "claude-sonnet-4.6" -> "claude-sonnet-5" (policy_preference)
-- "triage": "claude-sonnet-4.6" -> "claude-sonnet-5" (policy_preference)
+- None.
 
 ## Newly available models not currently used
-- "claude-sonnet-5"
+- "claude-sonnet-4.6"
 - "claude-sonnet-4.5"
-- "claude-fable-5"
 - "claude-opus-4.8-fast"
 - "claude-opus-4.7"
 - "claude-opus-4.6"
