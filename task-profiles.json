@@ -4,7 +4,7 @@
     "label": "Orchestrator (route per task)",
     "description": "Mixed or evolving workloads where one session should classify each request and route to task-class subagents without relaunching.",
     "hint": "When you open the chat, describe the task. The session should choose inline vs @task-class agent routing per request.",
-    "model": "claude-sonnet-4.6",
+    "model": "claude-sonnet-5",
     "effort": "medium",
     "context": "default"
   },
@@ -22,7 +22,7 @@
     "label": "Default development",
     "description": "Ordinary bug fixes, normal feature work, straightforward refactors, small D365 changes.",
     "hint": "When you open the chat, describe what you want to fix or build. The agent will plan before coding.",
-    "model": "claude-sonnet-4.6",
+    "model": "claude-sonnet-5",
     "effort": "medium",
     "context": "default"
   },
@@ -49,7 +49,7 @@
     "label": "Review",
     "description": "Ordinary diff review. For risky/large/business-critical diffs, use Deep reasoning instead.",
     "hint": "When you open the chat, run /review (or /code-review-synthesis for multi-model). Stage your changes first.",
-    "model": "claude-sonnet-4.6",
+    "model": "claude-sonnet-5",
     "effort": "medium",
     "context": "default"
   },
@@ -58,7 +58,7 @@
     "label": "Visual / UI",
     "description": "UI/layout-oriented work where visual reasoning matters.",
     "hint": "When you open the chat, describe the UI goal. Attach screenshots or mockups if you have them.",
-    "model": "claude-sonnet-4.6",
+    "model": "claude-sonnet-5",
     "effort": "medium",
     "context": "default"
   },
@@ -76,7 +76,7 @@
     "label": "Triage (not sure — estimate first)",
     "description": "Not sure what class to use — runs an inline estimate of your task and recommends which class to relaunch as.",
     "hint": "When you open the chat, describe your task and the agent will estimate the scope and recommend the right class before doing any work.",
-    "model": "claude-sonnet-4.6",
+    "model": "claude-sonnet-5",
     "effort": "low",
     "context": "default"
   }
