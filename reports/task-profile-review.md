@@ -1,4 +1,4 @@
-# Monthly task profile review (2026-06-17)
+# Monthly task profile review (2026-07-01)
 
 Reference: https://docs.github.com/en/copilot/reference/ai-models/model-comparison
 
@@ -24,22 +24,21 @@ Direct-apply mode: **true**
 - No structural problems detected.
 
 ## Suggested profile changes
-- "orchestrator": "claude-sonnet-4.5" -> "claude-sonnet-4.6" | type: policy_preference | confidence: medium | applied: True
-  - reason: Preferred monthly policy model for this task class.
+- None.
 
 ## Applied profile changes in this run
-- "orchestrator": "claude-sonnet-4.5" -> "claude-sonnet-4.6" (policy_preference)
+- None.
 
 ## Newly available models not currently used
+- "claude-sonnet-5"
+- "claude-sonnet-4.5"
 - "claude-fable-5"
+- "claude-opus-4.8-fast"
 - "claude-opus-4.7"
 - "claude-opus-4.6"
-- "claude-opus-4.6-fast"
 - "claude-opus-4.5"
 - "gpt-5.5"
 - "gpt-5.4"
-- "gpt-5.2-codex"
-- "gpt-5.2"
 - "gpt-5.4-mini"
 - "gpt-5-mini"
 - "gemini-3.1-pro-preview"
