@@ -60,6 +60,7 @@ function Get-PreferredModelForProfile {
         "sonnet-family"        = 'claude-sonnet-\d'
         "haiku-family"         = 'claude-haiku-\d'
         "opus-family"          = 'claude-opus-\d'
+        "fable-family"         = 'claude-fable-\d'
         "codex-family"         = 'gpt-.*-codex'
         "mini-family"          = 'gpt-.*-mini'
         "gpt-flagship-family"  = 'gpt-5\.\d+$'
@@ -70,7 +71,7 @@ function Get-PreferredModelForProfile {
         "orchestrator"           = @("sonnet-family", "gpt-flagship-family")
         "quick"                  = @("haiku-family", "mini-family")
         "default-development"    = @("sonnet-family", "gpt-flagship-family")
-        "agentic-implementation" = @("codex-family", "gpt-flagship-family", "sonnet-family")
+        "agentic-implementation" = @("fable-family", "codex-family", "gpt-flagship-family", "sonnet-family")
         "deep-reasoning"         = @("opus-family", "gpt-flagship-family")
         "review"                 = @("sonnet-family", "codex-family")
         "visual-ui"              = @("sonnet-family", "gpt-flagship-family")
