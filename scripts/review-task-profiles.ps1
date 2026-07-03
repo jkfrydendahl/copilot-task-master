@@ -4,7 +4,7 @@ $ErrorActionPreference = "Stop"
 # Update this list when new models become available in GitHub Copilot.
 # Used as fallback when `copilot help config` is not available (e.g. on CI runners).
 $script:FallbackKnownModels = @(
-    "claude-sonnet-4.6", "claude-sonnet-4.5",
+    "claude-sonnet-5", "claude-sonnet-4.6", "claude-sonnet-4.5",
     "claude-haiku-4.5",
     "claude-opus-4.8", "claude-opus-4.7", "claude-opus-4.6", "claude-opus-4.6-fast", "claude-opus-4.5",
     "claude-fable-5",
@@ -55,25 +55,40 @@ function Get-PreferredModelForProfile {
         [string[]]$ValidModels
     )
 
-    $preferences = @{
-        "orchestrator" = @("claude-sonnet-4.6", "claude-sonnet-4.5", "gpt-5.4-mini", "gpt-5-mini")
-        "quick" = @("claude-haiku-4.5", "gpt-5-mini", "gpt-5.4-mini")
-        "default-development" = @("claude-sonnet-4.6", "claude-sonnet-4.5", "gpt-5.4-mini", "gpt-5.4")
-        "agentic-implementation" = @("gpt-5.3-codex", "gpt-5.2-codex", "gpt-5.4", "claude-sonnet-4.6")
-        "deep-reasoning" = @("claude-opus-4.8", "claude-opus-4.7", "claude-opus-4.6", "gpt-5.5", "gpt-5.4")
-        "review" = @("claude-sonnet-4.6", "gpt-5.3-codex", "claude-sonnet-4.5")
-        "visual-ui" = @("claude-sonnet-4.6", "claude-sonnet-4.5", "gpt-5.4")
-        "mechanical" = @("claude-haiku-4.5", "gpt-5-mini", "gpt-5.4-mini")
-        "triage" = @("claude-sonnet-4.6", "claude-sonnet-4.5", "gpt-5.4-mini")
+    # Regex patterns that identify each model family from a model ID string.
+    $familyPatterns = @{
+        "sonnet-family"        = 'claude-sonnet-\d'
+        "haiku-family"         = 'claude-haiku-\d'
+        "opus-family"          = 'claude-opus-\d'
+        "codex-family"         = 'gpt-.*-codex'
+        "mini-family"          = 'gpt-.*-mini'
+        "gpt-flagship-family"  = 'gpt-5\.\d+$'
     }
 
-    if (-not $preferences.ContainsKey($ProfileKey)) {
+    # Per task-class, an ordered list of families to try (first match wins).
+    $classPreferences = @{
+        "orchestrator"           = @("sonnet-family", "gpt-flagship-family")
+        "quick"                  = @("haiku-family", "mini-family")
+        "default-development"    = @("sonnet-family", "gpt-flagship-family")
+        "agentic-implementation" = @("codex-family", "gpt-flagship-family", "sonnet-family")
+        "deep-reasoning"         = @("opus-family", "gpt-flagship-family")
+        "review"                 = @("sonnet-family", "codex-family")
+        "visual-ui"              = @("sonnet-family", "gpt-flagship-family")
+        "mechanical"             = @("haiku-family", "mini-family")
+        "triage"                 = @("sonnet-family", "mini-family")
+    }
+
+    if (-not $classPreferences.ContainsKey($ProfileKey)) {
         return $null
     }
 
-    foreach ($candidate in $preferences[$ProfileKey]) {
-        if ($ValidModels -contains $candidate) {
-            return $candidate
+    foreach ($familyName in $classPreferences[$ProfileKey]) {
+        $pattern = $familyPatterns[$familyName]
+        # Filter candidates that belong to this family, then sort descending so the
+        # highest version string (newest model) comes first.
+        $candidates = @($ValidModels | Where-Object { $_ -match $pattern } | Sort-Object -Descending)
+        if ($candidates.Count -gt 0) {
+            return $candidates[0]
         }
     }
 
