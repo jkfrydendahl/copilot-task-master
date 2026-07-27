@@ -1,4 +1,4 @@
-# Monthly task profile review (2026-07-03)
+# Monthly task profile review (2026-07-27)
 
 Reference: https://docs.github.com/en/copilot/reference/ai-models/model-comparison
 
@@ -14,7 +14,7 @@ Direct-apply mode: **true**
 | quick | claude-haiku-4.5 | low | default |
 | default-development | claude-sonnet-5 | medium | default |
 | agentic-implementation | gpt-5.3-codex | high | default |
-| deep-reasoning | claude-opus-4.8 | high | long_context |
+| deep-reasoning | claude-opus-5 | high | long_context |
 | review | claude-sonnet-5 | medium | default |
 | visual-ui | claude-sonnet-5 | medium | default |
 | mechanical | claude-haiku-4.5 | low | default |
@@ -24,23 +24,29 @@ Direct-apply mode: **true**
 - No structural problems detected.
 
 ## Suggested profile changes
-- None.
+- "deep-reasoning": "claude-opus-4.8" -> "claude-opus-5" | type: policy_preference | confidence: medium | applied: True
+  - reason: Preferred monthly policy model for this task class.
 
 ## Applied profile changes in this run
-- None.
+- "deep-reasoning": "claude-opus-4.8" -> "claude-opus-5" (policy_preference)
 
 ## Newly available models not currently used
 - "claude-sonnet-4.6"
 - "claude-sonnet-4.5"
+- "claude-opus-5"
 - "claude-opus-4.8-fast"
 - "claude-opus-4.7"
 - "claude-opus-4.6"
 - "claude-opus-4.5"
+- "gpt-5.6-sol"
+- "gpt-5.6-terra"
+- "gpt-5.6-luna"
 - "gpt-5.5"
 - "gpt-5.4"
 - "gpt-5.4-mini"
 - "gpt-5-mini"
 - "gemini-3.1-pro-preview"
+- "gemini-3.6-flash"
 - "gemini-3.5-flash"
 
 ## Review checklist
