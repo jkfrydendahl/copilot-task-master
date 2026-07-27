@@ -13,10 +13,11 @@ $script:ModelDenylist = @(
 $script:FallbackKnownModels = @(
     "claude-sonnet-5", "claude-sonnet-4.6", "claude-sonnet-4.5",
     "claude-haiku-4.5",
-    "claude-opus-4.8", "claude-opus-4.7", "claude-opus-4.6", "claude-opus-4.6-fast", "claude-opus-4.5",
+    "claude-opus-5", "claude-opus-4.8", "claude-opus-4.7", "claude-opus-4.6", "claude-opus-4.6-fast", "claude-opus-4.5",
     "claude-fable-5",
+    "gpt-5.6-sol", "gpt-5.6-terra", "gpt-5.6-luna",
     "gpt-5.5", "gpt-5.4", "gpt-5.4-mini", "gpt-5.3-codex", "gpt-5.2-codex", "gpt-5.2", "gpt-5-mini",
-    "gemini-3.1-pro-preview", "gemini-3.5-flash"
+    "gemini-3.1-pro-preview", "gemini-3.6-flash", "gemini-3.5-flash"
 )
 
 function Get-ValidModels {
@@ -72,20 +73,23 @@ function Get-PreferredModelForProfile {
         "fable-family"         = 'claude-fable-\d'
         "codex-family"         = 'gpt-.*-codex'
         "mini-family"          = 'gpt-.*-mini'
-        "gpt-flagship-family"  = 'gpt-5\.\d+$'
+        "gpt-flagship-family"  = 'gpt-5\.\d+$'          # numbered base models: gpt-5.4, gpt-5.5
+        "gpt-sol-family"       = 'gpt-5\.\d+-sol$'      # deep reasoning + long agentic work
+        "gpt-terra-family"     = 'gpt-5\.\d+-terra$'    # balanced general-purpose + agentic
+        "gpt-luna-family"      = 'gpt-5\.\d+-luna$'     # fast, cost-efficient
     }
 
     # Per task-class, an ordered list of families to try (first match wins).
     $classPreferences = @{
-        "orchestrator"           = @("sonnet-family", "gpt-flagship-family")
-        "quick"                  = @("haiku-family", "mini-family")
-        "default-development"    = @("sonnet-family", "gpt-flagship-family")
-        "agentic-implementation" = @("fable-family", "codex-family", "gpt-flagship-family", "sonnet-family")
-        "deep-reasoning"         = @("opus-family", "gpt-flagship-family")
-        "review"                 = @("sonnet-family", "codex-family")
-        "visual-ui"              = @("sonnet-family", "gpt-flagship-family")
-        "mechanical"             = @("haiku-family", "mini-family")
-        "triage"                 = @("sonnet-family", "mini-family")
+        "orchestrator"           = @("sonnet-family", "gpt-terra-family", "gpt-flagship-family")
+        "quick"                  = @("haiku-family", "gpt-luna-family", "mini-family")
+        "default-development"    = @("sonnet-family", "gpt-terra-family", "gpt-flagship-family")
+        "agentic-implementation" = @("fable-family", "codex-family", "gpt-terra-family", "gpt-flagship-family", "sonnet-family")
+        "deep-reasoning"         = @("opus-family", "gpt-sol-family", "gpt-flagship-family")
+        "review"                 = @("sonnet-family", "gpt-terra-family", "codex-family")
+        "visual-ui"              = @("sonnet-family", "gpt-terra-family", "gpt-flagship-family")
+        "mechanical"             = @("haiku-family", "gpt-luna-family", "mini-family")
+        "triage"                 = @("sonnet-family", "gpt-luna-family", "mini-family")
     }
 
     if (-not $classPreferences.ContainsKey($ProfileKey)) {
