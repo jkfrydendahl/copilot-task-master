@@ -24,16 +24,15 @@ Direct-apply mode: **true**
 - No structural problems detected.
 
 ## Suggested profile changes
-- "deep-reasoning": "claude-opus-4.8" -> "claude-opus-5" | type: policy_preference | confidence: medium | applied: True
-  - reason: Preferred monthly policy model for this task class.
+- None.
 
 ## Applied profile changes in this run
-- "deep-reasoning": "claude-opus-4.8" -> "claude-opus-5" (policy_preference)
+- None.
 
 ## Newly available models not currently used
 - "claude-sonnet-4.6"
 - "claude-sonnet-4.5"
-- "claude-opus-5"
+- "claude-opus-4.8"
 - "claude-opus-4.8-fast"
 - "claude-opus-4.7"
 - "claude-opus-4.6"
