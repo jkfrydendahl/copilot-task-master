@@ -170,7 +170,7 @@ guess.
 
 The `skills/` folder holds reusable [agent skills](https://docs.github.com/en/copilot/concepts/agents/about-agent-skills)
 — `/grill-me`, `/refine-requirements`, `/estimate-task`, `/tdd-implement`, `/reference-lookup`,
-`/code-review`, `/create-release`, `/update-readme`.
+`/code-review`, `/create-release`, `/update-readme`, `/session-time-audit`.
 
 The Copilot CLI loads **personal skills** from `~/.copilot/skills` in *every* repo. To keep this
 folder the single source of truth (no per-repo copies), the launcher creates a Windows

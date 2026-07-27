@@ -33,6 +33,7 @@ it does not replace them. Respect those before editing.
 - `/code-review-synthesis` — After a multi-model `/review`, consolidate the passes into one deduplicated, prioritized report (this is the skill's name; the review criteria live in the Code Review Standards instruction).
 - `/create-release` — Merge feature branches and bump the version for a release.
 - `/update-readme` — Bring a README in sync with the current state of the project.
+- `/session-time-audit` — Compare AI-assisted vs. no-AI effort for one Copilot CLI session (current or by ID).
 
 ## Post-implementation self-review
 
