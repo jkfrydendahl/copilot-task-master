@@ -17,14 +17,17 @@ $script:FallbackKnownModels = @(
     "claude-fable-5",
     "gpt-5.6-sol", "gpt-5.6-terra", "gpt-5.6-luna",
     "gpt-5.5", "gpt-5.4", "gpt-5.4-mini", "gpt-5.3-codex", "gpt-5.2-codex", "gpt-5.2", "gpt-5-mini",
-    "gemini-3.1-pro-preview", "gemini-3.6-flash", "gemini-3.5-flash"
+    "gemini-3.1-pro-preview", "gemini-3.6-flash", "gemini-3.5-flash",
+    "mai-code-1-flash-picker"
 )
 
 function Get-ValidModels {
     [OutputType([string[]])]
     param()
 
-    $modelPattern = '"(claude-[\w.\-]+|gpt-[\w.\-]+|gemini-[\w.\-]+)"'
+    # Matches quoted model IDs in CLI help output. Add new provider prefixes here
+    # when new model families appear (e.g. qwen, raptor, kimi).
+    $modelPattern = '"(claude-[\w.\-]+|gpt-[\w.\-]+|gemini-[\w.\-]+|mai-[\w.\-]+)"'
 
     if (Get-Command copilot -ErrorAction SilentlyContinue) {
         try {
@@ -77,19 +80,20 @@ function Get-PreferredModelForProfile {
         "gpt-sol-family"       = 'gpt-5\.\d+-sol$'      # deep reasoning + long agentic work
         "gpt-terra-family"     = 'gpt-5\.\d+-terra$'    # balanced general-purpose + agentic
         "gpt-luna-family"      = 'gpt-5\.\d+-luna$'     # fast, cost-efficient
+        "mai-family"           = 'mai-[\w.\-]+'          # MAI-Code models: fast, general-purpose coding
     }
 
     # Per task-class, an ordered list of families to try (first match wins).
     $classPreferences = @{
         "orchestrator"           = @("sonnet-family", "gpt-terra-family", "gpt-flagship-family")
-        "quick"                  = @("haiku-family", "gpt-luna-family", "mini-family")
+        "quick"                  = @("haiku-family", "mai-family", "gpt-luna-family", "mini-family")
         "default-development"    = @("sonnet-family", "gpt-terra-family", "gpt-flagship-family")
         "agentic-implementation" = @("fable-family", "codex-family", "gpt-terra-family", "gpt-flagship-family", "sonnet-family")
         "deep-reasoning"         = @("opus-family", "gpt-sol-family", "gpt-flagship-family")
         "review"                 = @("sonnet-family", "gpt-terra-family", "codex-family")
         "visual-ui"              = @("sonnet-family", "gpt-terra-family", "gpt-flagship-family")
-        "mechanical"             = @("haiku-family", "gpt-luna-family", "mini-family")
-        "triage"                 = @("sonnet-family", "gpt-luna-family", "mini-family")
+        "mechanical"             = @("haiku-family", "mai-family", "gpt-luna-family", "mini-family")
+        "triage"                 = @("sonnet-family", "mai-family", "gpt-luna-family", "mini-family")
     }
 
     if (-not $classPreferences.ContainsKey($ProfileKey)) {
