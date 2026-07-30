@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAtUtc": "2026-07-30T15:06:54.3551665Z",
+  "generatedAtUtc": "2026-07-30T15:09:38.5467971Z",
   "staleAfterDays": 45,
   "status": "ok",
   "stale": false,
@@ -17,7 +17,7 @@
       "message": "Parsed embedded model records.",
       "sourceDate": "2026-07-24",
       "sourceVersion": "8ac9a6cb6996255a83db36c188112b53e90ef28f150d06958abb8b2e0fc79815",
-      "fetchedAtUtc": "2026-07-30T15:06:53.2651312Z",
+      "fetchedAtUtc": "2026-07-30T15:09:37.1961236Z",
       "sourceUrl": "https://artificialanalysis.ai/?intelligence=agentic-index"
     },
     "artificialAnalysisCodingAgents": {
@@ -25,7 +25,7 @@
       "message": "Parsed embedded coding-agent records.",
       "sourceDate": null,
       "sourceVersion": "30e68fb4f3e7cd69cd9062ba7d457517d30bed2fe22bce4d27824dc78147e619",
-      "fetchedAtUtc": "2026-07-30T15:06:53.6611218Z",
+      "fetchedAtUtc": "2026-07-30T15:09:37.5388458Z",
       "sourceUrl": "https://artificialanalysis.ai/agents/coding-agents"
     },
     "liveBench": {
@@ -33,7 +33,7 @@
       "message": "Parsed LiveBench table and categories.",
       "sourceDate": "2026-06-25",
       "sourceVersion": "2026-06-25",
-      "fetchedAtUtc": "2026-07-30T15:06:53.7792945Z",
+      "fetchedAtUtc": "2026-07-30T15:09:37.6643029Z",
       "sourceUrl": "https://github.com/LiveBench/new-livebench/blob/main/public/table_2026_06_25.csv"
     },
     "liveBenchCost": {
@@ -41,7 +41,7 @@
       "message": "Parsed complete LiveBench cost data.",
       "sourceDate": "2026-06-25",
       "sourceVersion": "2026-06-25",
-      "fetchedAtUtc": "2026-07-30T15:06:53.7792945Z",
+      "fetchedAtUtc": "2026-07-30T15:09:37.6643029Z",
       "sourceUrl": "https://github.com/LiveBench/new-livebench/blob/main/public/table_2026_06_25.csv"
     }
   },
