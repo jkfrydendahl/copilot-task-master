@@ -129,10 +129,10 @@ Run-Test "6 Top challenger losing one raw signal does not qualify" {
     Assert-True ($null -eq $candidate) "Expected no qualifier when one raw signal loses."
 }
 
-Run-Test "7 Top challenger may qualify against unscored incumbent" {
+Run-Test "7 Top challenger cannot replace an unscored incumbent" {
     $snapshot = New-QualitySnapshot -AaScores @{ "claude-sonnet-5" = $null; "gpt-5.6-terra" = 80; "gpt-5.4" = 60; "gpt-5.5" = 50 } -AaCodingScores @{ "claude-sonnet-5" = $null; "gpt-5.6-terra" = 80; "gpt-5.4" = 60; "gpt-5.5" = 50 } -LbScores @{ "claude-sonnet-5" = $null; "gpt-5.6-terra" = 90; "gpt-5.4" = 60; "gpt-5.5" = 50 } -Costs @{ "claude-sonnet-5" = $null; "gpt-5.6-terra" = 0.85; "gpt-5.4" = 0.9; "gpt-5.5" = 0.8 }
     $candidate = Get-BenchmarkConsensusCandidate -ProfileKey "default-development" -ValidModels @("claude-sonnet-5","gpt-5.6-terra","gpt-5.4","gpt-5.5") -IncumbentModel "claude-sonnet-5" -Snapshot $snapshot -AvailabilityVerified $true -Denylist $script:ModelDenylist -CapabilitiesCatalog $script:RealCapabilities -ProfileRequirement $script:DefaultDevRequirement -ProfileContextTier "default" -ProfileEffort "medium"
-    Assert-Eq "gpt-5.6-terra" $candidate.model "Expected challenger vs unscored incumbent."
+    Assert-True ($null -eq $candidate) "Missing incumbent benchmark coverage must not be treated as evidence that the challenger is better."
 }
 
 Run-Test "8 Rule 7: cost tie-break orders equal combinedRank challengers by lowest cost, not a hard gate" {
@@ -150,9 +150,7 @@ Run-Test "9 Rule 7: a much higher-cost qualifying challenger is no longer blocke
 }
 
 Run-Test "10 Rule 7: missing incumbent cost no longer required for qualification" {
-    # claude-sonnet-5's null aa/lb scores exclude it from the scored set entirely, so two filler models
-    # (gpt-5.4, gpt-5.5) are included purely so bucket assignment (needs >=3 scored entries) puts gpt-5.6-terra in "top".
-    $snapshot = New-QualitySnapshot -AaScores @{ "claude-sonnet-5" = $null; "gpt-5.6-terra" = 90; "gpt-5.4" = 10; "gpt-5.5" = 5 } -AaCodingScores @{ "claude-sonnet-5" = $null; "gpt-5.6-terra" = 90; "gpt-5.4" = 10; "gpt-5.5" = 5 } -LbScores @{ "claude-sonnet-5" = $null; "gpt-5.6-terra" = 90; "gpt-5.4" = 10; "gpt-5.5" = 5 } -Costs @{ "claude-sonnet-5" = $null; "gpt-5.6-terra" = 999.0; "gpt-5.4" = 0.2; "gpt-5.5" = 0.3 }
+    $snapshot = New-QualitySnapshot -AaScores @{ "claude-sonnet-5" = 60; "gpt-5.6-terra" = 90; "gpt-5.4" = 10 } -AaCodingScores @{ "claude-sonnet-5" = 60; "gpt-5.6-terra" = 90; "gpt-5.4" = 10 } -LbScores @{ "claude-sonnet-5" = 60; "gpt-5.6-terra" = 90; "gpt-5.4" = 10 } -Costs @{ "claude-sonnet-5" = $null; "gpt-5.6-terra" = 999.0; "gpt-5.4" = 0.2 }
     $candidate = Get-BenchmarkConsensusCandidate -ProfileKey "default-development" -ValidModels @("claude-sonnet-5","gpt-5.6-terra") -IncumbentModel "claude-sonnet-5" -Snapshot $snapshot -AvailabilityVerified $true -Denylist $script:ModelDenylist -CapabilitiesCatalog $script:RealCapabilities -ProfileRequirement $script:DefaultDevRequirement -ProfileContextTier "default" -ProfileEffort "medium"
     Assert-Eq "gpt-5.6-terra" $candidate.model "Missing incumbent cost combined with an unbounded challenger cost must not block qualification."
 }

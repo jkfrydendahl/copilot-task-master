@@ -24,7 +24,6 @@ Force benchmark consensus (manual first-run override): **False**
 - None.
 
 ## Benchmark consensus pending
-- "agentic-implementation": candidate "claude-opus-5", count=1
 - "review": candidate "gpt-5.6-sol", count=1
 
 ## Active benchmark overrides
@@ -232,9 +231,9 @@ Force benchmark consensus (manual first-run override): **False**
 - Artificial Analysis source date: 2026-07-24
 - Artificial Analysis Coding Agent source date: n/a
 - LiveBench source date: 2026-06-25
-- Artificial Analysis fetched at (UTC): 2026-07-30T14:52:00.7815304Z
-- Artificial Analysis Coding Agents fetched at (UTC): 2026-07-30T14:52:01.3028915Z
-- LiveBench fetched at (UTC): 2026-07-30T14:52:01.5577991Z
+- Artificial Analysis fetched at (UTC): 2026-07-30T15:03:56.3313672Z
+- Artificial Analysis Coding Agents fetched at (UTC): 2026-07-30T15:03:56.7544734Z
+- LiveBench fetched at (UTC): 2026-07-30T15:03:57.2016851Z
 
 > External rankings can auto-apply only after strict two-run consensus; verified availability, capabilities, pricing, and benchmark quality govern promotion, and family preferences are baseline-only.
 

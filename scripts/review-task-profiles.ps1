@@ -153,6 +153,9 @@ function Get-BenchmarkConsensusCandidate {
     }
 
     $incumbent = Get-ModelQualityDataForProfile -Snapshot $Snapshot -ProfileKey $ProfileKey -ModelId $IncumbentModel
+    if ($null -eq $incumbent -or $null -eq $incumbent.aaScore -or $null -eq $incumbent.lbScore) {
+        return $null
+    }
     $qualifiers = New-Object System.Collections.Generic.List[object]
     foreach ($model in $ValidModels) {
         if ($model -eq $IncumbentModel) { continue }
@@ -168,12 +171,7 @@ function Get-BenchmarkConsensusCandidate {
         if ($candidate.aaBucket -ne "top" -or $candidate.lbBucket -ne "top") { continue }
         if ($null -eq $candidate.aaScore -or $null -eq $candidate.lbScore) { continue }
 
-        $winsBoth = $false
-        if ($null -ne $incumbent -and $null -ne $incumbent.aaScore -and $null -ne $incumbent.lbScore) {
-            $winsBoth = ([double]$candidate.aaScore -gt [double]$incumbent.aaScore) -and ([double]$candidate.lbScore -gt [double]$incumbent.lbScore)
-        } else {
-            $winsBoth = $true
-        }
+        $winsBoth = ([double]$candidate.aaScore -gt [double]$incumbent.aaScore) -and ([double]$candidate.lbScore -gt [double]$incumbent.lbScore)
         if (-not $winsBoth) { continue }
 
         $combinedRank = ([int]$candidate.aaRank) + ([int]$candidate.lbRank)
