@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "generatedAtUtc": "2026-01-01T00:00:00Z",
+  "staleAfterDays": 45,
+  "status": "ok",
+  "stale": false,
+  "fallbackUsed": false,
+  "message": "Fixture fallback snapshot",
+  "attribution": {
+    "artificialAnalysisUrl": "https://artificialanalysis.ai/?intelligence=agentic-index",
+    "liveBenchUrl": "https://github.com/LiveBench/new-livebench/tree/main/public"
+  },
+  "sourceStatus": {
+    "artificialAnalysis": {
+      "status": "ok",
+      "message": "fixture",
+      "sourceDate": "2026-01-01",
+      "fetchedAtUtc": "2026-01-01T00:00:00Z",
+      "sourceUrl": "https://artificialanalysis.ai/?intelligence=agentic-index"
+    },
+    "liveBench": {
+      "status": "ok",
+      "message": "fixture",
+      "sourceDate": "2026-01-01",
+      "fetchedAtUtc": "2026-01-01T00:00:00Z",
+      "sourceUrl": "https://github.com/LiveBench/new-livebench/tree/main/public"
+    }
+  },
+  "models": {
+    "claude-sonnet-5": {
+      "artificialAnalysis": { "alias": "claude-sonnet-5", "name": "Claude Sonnet 5", "agenticIndex": 46.7, "bucket": "competitive" },
+      "liveBench": {
+        "alias": "claude-sonnet-5-xhigh-effort",
+        "categories": { "coding": 81, "agenticCoding": 72, "reasoning": 82, "instructionFollowing": 71 },
+        "buckets": { "coding": "competitive", "agenticCoding": "competitive", "reasoning": "competitive", "instructionFollowing": "competitive" }
+      }
+    }
+  }
+}

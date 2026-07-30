@@ -1,6 +1,11 @@
 Set-StrictMode -Version Latest
 $ErrorActionPreference = "Stop"
 
+$modelRankingModulePath = Join-Path $PSScriptRoot "model-ranking-data.ps1"
+if (Test-Path $modelRankingModulePath) {
+    . $modelRankingModulePath
+}
+
 # Models that appear in `copilot help config` but are not yet actually selectable.
 # Add a model here when it shows up in the CLI list but can't be used in practice.
 # Remove it once it becomes fully available.
@@ -59,7 +64,8 @@ function Get-ValidModels {
         } catch { }
     }
 
-    return $script:FallbackKnownModels, "hardcoded fallback (copilot help config not available on this runner)"
+    $fallbackModels = @($script:FallbackKnownModels | Where-Object { $script:ModelDenylist -notcontains $_ })
+    return $fallbackModels, "hardcoded fallback (copilot help config not available on this runner)"
 }
 
 function Get-PreferredModelForProfile {
@@ -235,6 +241,33 @@ if ($profilesUpdated) {
     Set-Content -Path $profilesPath -Value $profilesJson -Encoding UTF8
 }
 
+$rankingReportLines = @(
+    "## Advisory model ranking snapshot",
+    "",
+    "- Status: **unavailable**",
+    "- Note: Ranking module unavailable.",
+    "",
+    "> Advisory only: external rankings never auto-apply and never influence profile-selection policy.",
+    ""
+)
+
+if (Get-Command Get-AdvisoryModelRankingSnapshot -ErrorAction SilentlyContinue) {
+    try {
+        $rankingSnapshot = Get-AdvisoryModelRankingSnapshot -RepoRoot $repoRoot -ValidModels $validModels
+        $rankingReportLines = Get-ModelRankingReportLines -Snapshot $rankingSnapshot -ValidModels $validModels
+    } catch {
+        $rankingReportLines = @(
+            "## Advisory model ranking snapshot",
+            "",
+            "- Status: **unavailable**",
+            "- Note: Ranking pipeline failed safely: $($_.Exception.Message)",
+            "",
+            "> Advisory only: external rankings never auto-apply and never influence profile-selection policy.",
+            ""
+        )
+    }
+}
+
 $today = (Get-Date).ToString("yyyy-MM-dd")
 $lines = @()
 $lines += "# Monthly task profile review ($today)"
@@ -302,8 +335,10 @@ $lines += "## Review checklist"
 $lines += "- [ ] Compare candidates on model-comparison page."
 $lines += "- [ ] Review suggested/applied model swaps for cost and quality fit."
 $lines += "- [ ] Keep cost-sensitive defaults unless clear quality gain is expected."
+$lines += ""
+$lines += $rankingReportLines
 
-Set-Content -Path $reportPath -Value ($lines -join "`r`n") -Encoding UTF8
+Set-Content -Path $reportPath -Value (($lines -join "`r`n").TrimEnd()) -Encoding UTF8
 Write-Host "Wrote $reportPath"
 if ($profilesUpdated) {
     Write-Host "Updated $profilesPath"
