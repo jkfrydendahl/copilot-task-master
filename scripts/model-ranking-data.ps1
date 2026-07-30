@@ -1196,7 +1196,7 @@ function Get-ModelRankingReportLines {
     $lines.Add("- Artificial Analysis Coding Agents fetched at (UTC): $(if ($aaCodingFetched) { $aaCodingFetched } else { 'n/a' })")
     $lines.Add("- LiveBench fetched at (UTC): $lbFetched")
     $lines.Add("")
-    $lines.Add("> External rankings can auto-apply only after strict two-run consensus; task-family eligibility remains authoritative.")
+    $lines.Add("> External rankings can auto-apply only after strict two-run consensus; verified availability, capabilities, pricing, and benchmark quality govern promotion, and family preferences are baseline-only.")
     $lines.Add("")
     $lines.Add("| Model | AA Agentic | AA Coding Agent | LB Coding | LB Agentic Coding | LB Reasoning | LB Instruction Following | LB Cost | LB Cost Bucket |")
     $lines.Add("|---|---|---|---|---|---|---|---|---|")

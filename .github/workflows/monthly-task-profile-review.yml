@@ -28,6 +28,19 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v5
 
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install GitHub Copilot CLI
+        shell: pwsh
+        run: npm install --global @github/copilot
+
+      - name: Run tests
+        shell: pwsh
+        run: .\scripts\test-all.ps1
+
       - name: Generate review report
         shell: pwsh
         run: .\scripts\review-task-profiles.ps1

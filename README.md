@@ -218,35 +218,122 @@ For token/cost details per session, use the in-session `/usage` command.
 ## Automated monthly task-profile review
 
 A scheduled GitHub Actions workflow (`.github/workflows/monthly-task-profile-review.yml`) runs on
-the 1st of each month and opens/updates a PR with:
+the 1st of each month, **runs the test suite first** (`scripts/test-all.ps1`; the report is never
+generated on a red test run), installs the official `@github/copilot` CLI package on Node.js 22
+for verified model discovery, and opens/updates a PR with:
 
-- `reports/task-profile-review.md` (summary + applied/suggested changes)
+- `reports/task-profile-review.md` (summary + applied/suggested changes + admissibility ledger)
 - `task-profiles.json` updated directly in the PR (when suggestions apply)
 - `data/model-ranking-snapshot.json` ranking snapshot + benchmark-consensus state
 
-The workflow selects models using **family-pattern matching** — each task class maps to an ordered
-list of model families (e.g. `deep-reasoning` → opus-family, then gpt-flagship-family). Within a
-family, the newest available version wins automatically. A `$ModelDenylist` in the script lets you
-exclude models that appear in the CLI list but aren't yet usable (e.g. pulled-back previews).
+The workflow selects each profile's **baseline** model using family-pattern matching — each task
+class maps to an ordered list of model families (e.g. `deep-reasoning` → opus-family, then
+gpt-flagship-family). Within a family, the newest available version wins automatically. Family
+matching is a **deterministic baseline fallback only** — it is no longer a gate for benchmark
+challengers or active overrides (see "Model admissibility" below). A `$script:ModelDenylist`
+(derived from `config/model-policy.json`) lets you exclude models that appear in the CLI list but
+aren't yet usable (e.g. pulled-back previews); the denylist is always a hard gate.
 
 Changes are applied directly in the PR branch. You still approve/reject at merge time.
 
 - Human review is expected before merge, using:
   https://docs.github.com/en/copilot/reference/ai-models/model-comparison
-- To block a specific model, add it to `$script:ModelDenylist` in `scripts/review-task-profiles.ps1`.
-- To change which family a task class prefers, edit `scripts/model-selection-policy.ps1`.
+- To block a specific model, add it to `denylist` in `config/model-policy.json`.
+- To change which family a task class prefers as its baseline, edit `config/model-policy.json`
+  (`familyPatterns` / `classPreferences`) or `scripts/model-selection-policy.ps1`.
+
+### Model admissibility (capabilities, pricing, and availability gating)
+
+Whether a model may be **benchmark-promoted or retained as an active override** is decided by a
+single pure verdict engine, `Get-ModelAdmissibilityVerdict` in `scripts/model-admissibility.ps1`,
+fed by two config files and one discovery module:
+
+- `config/model-policy.json` — denylist, family patterns/preferences (baseline only), per-profile
+  LiveBench category mapping, and per-profile requirements: hard pricing ceilings (input/output
+  per-million-token, using the profile's context tier), `requiresVision`, `requiresCliAgent`.
+- `config/model-capabilities.json` — per-model capability/pricing catalog: `vision`,
+  `supportedContexts`, `supportedEfforts`, an optional `effortMode` (`"unsupported"` means the
+  model's CLI surface does not accept an `--effort` flag at all, e.g. `claude-haiku-4.5` — a fact
+  independent of `supportedEfforts`, which is left empty for such models), per-context-tier pricing
+  (with an optional `long_context` tier), a required `capabilitySource` provenance field (e.g.
+  `copilot-cli-session-model-metadata` or `unknown`), and an `asOf` freshness date. Facts that
+  cannot be verified from GitHub's own docs or this session's authoritative model metadata are
+  marked `null`/empty/unknown rather than guessed — an unknown fact blocks promotion safely instead
+  of assuming it passes. There is deliberately **no** `cliAgentCompatible` field in this catalog —
+  see below.
+- `scripts/model-availability.ps1` — current model discovery (`copilot help config` / `gh copilot
+  help config`, with a hardcoded fallback list). Returns `verified: true` for live CLI/GHE
+  discovery or `verified: false` for the hardcoded fallback.
+
+A model is **admissible** for a profile only if all of the following hold (every failing check is
+reported, not just the first):
+
+- Not denylisted, and present in the currently discovered model list.
+- Availability was **verified** this run — hardcoded fallback discovery **freezes all automatic
+  profile changes** (both benchmark-consensus and policy-baseline changes; it can still generate
+  baseline/report output) but never revokes an already-active override or the current model, and
+  the review report explicitly calls this freeze out per profile.
+- It has a capability record that is not missing or stale (default freshness threshold: 60 days,
+  configurable per catalog via `freshnessThresholdDays`).
+- If the profile requires vision (`visual-ui`), the model's `vision` fact is `true` — `null`
+  (unknown) or `false` both block, with distinct reason codes. Only the models GitHub's Copilot
+  visuals guidance positively confirms (GPT-5 mini, Claude Sonnet 4.6, Gemini 3.1 Pro) are marked
+  `true`; every other model is left `null` (unknown), never guessed `false`.
+- The model supports the profile's requested context tier (`default`/`long_context`) and effort
+  (or, for `effortMode="unsupported"` models, the profile's stored effort is ignored entirely since
+  the launcher never sends `--effort` for them — see `scripts/model-launch-args.ps1`). Context
+  capability and pricing tiers are separate facts: a model may support `long_context` even where
+  GitHub's pricing table documents no distinct `long_context` price row, in which case default-tier
+  pricing is used for that context request; a `long_context`-only claim is never invented for a
+  model whose catalog entry doesn't list it as a supported context.
+- If the profile requires CLI-agent compatibility (all profiles do), the model is present in
+  **this run's own verified live availability** (`AvailabilityVerified` and `AvailableModels`) —
+  this is computed per run by `scripts/model-admissibility.ps1`, never asserted as a static catalog
+  claim, since only live discovery can confirm what the CLI currently exposes.
+- The model has documented, non-cached pricing for the resolved tier, and both input and output
+  per-million-token prices are `<=` the profile's ceiling (equal to the ceiling passes; cached
+  prices are report-only and never gate).
+
+Active overrides are **revalidated through this same engine** on every run where availability was
+verified. Confirmed incompatibility, unavailability, denylisting, or budget violations revoke an
+override; missing, stale, or unknown capability/pricing facts preserve it until the uncertainty is
+resolved. On an unverified (fallback) run, an active override is retained unchanged.
+
+Automatic family-baseline selection (`Get-PreferredModelForProfilePolicy`) is filtered through this
+same admissibility engine: a family match is never selected as the new baseline unless it is also
+admissible for that profile, and if no admissible baseline candidate exists, the existing current
+model is grandfathered (kept unchanged) rather than silently replaced. Challengers from external
+benchmark consensus still compare against this effective incumbent and may only replace an
+inadmissible incumbent if they pass every quality/consensus rule.
+
+The review report includes a **"Model admissibility"** section per profile with availability
+confidence (and an explicit freeze notice when unverified), the profile's pricing ceilings, the
+**incumbent/current model's own admissibility verdict** (always rendered, even when the incumbent
+is otherwise excluded from the challenger table — e.g. a current model with unknown vision is
+visible here rather than silently omitted), and a table of every excluded model with its full set
+of reason codes (`denylisted`, `not_available`, `unverified_availability_freezes_promotion`,
+`capabilities_missing`, `capabilities_stale`, `cli_agent_incompatible`, `vision_unknown`,
+`vision_unsupported`, `context_unsupported`, `effort_unsupported`, `pricing_missing`,
+`pricing_input_exceeds_ceiling`, `pricing_output_exceeds_ceiling`).
 
 ### External benchmark consensus auto-selection
 
 External benchmarks can auto-select models, but only under strict guardrails:
 
 - **Two-run consensus required**: first full fresh qualifying run records pending candidate (`count=1`), second consecutive run with same candidate applies.
-- **Task-family eligibility remains authoritative**: challengers must be currently valid Copilot models and match allowed profile families from shared policy config.
+- **Admissibility gates challengers and overrides, not family matching**: a challenger only needs
+  to pass the model-admissibility engine above (denylist, verified availability, capability/pricing
+  facts). It does **not** need to match the task class's baseline family — e.g. a family-mismatched
+  Claude Opus or GPT Sol model can still compete for the `review` profile if it is otherwise
+  admissible. Family/task-family guidance remains the deterministic **baseline** fallback only.
 - **No fuzzy mapping**: source matching is explicit through `config/model-ranking-aliases.json`.
 - **Active override behavior**:
-  - Once applied, benchmark override stays active across later runs unless invalid/ineligible/denylisted.
+  - Once applied, benchmark override stays active across later runs unless it becomes inadmissible
+    due to a confirmed hard failure (denylisted, unavailable, unsupported, or over budget) on a
+    verified-availability run. Missing/stale/unknown facts and unverified runs retain it unchanged.
   - Lack of consensus does not auto-revert a still-valid active override.
-  - If policy-preferred model becomes persistent benchmark winner (two runs), override clears and policy ownership resumes.
+  - If policy-preferred model becomes persistent benchmark winner (two runs), override clears and
+    policy ownership resumes.
 
 Sources:
 - Artificial Analysis Agentic Index page (embedded server-rendered JSON extraction, no API key):
@@ -255,6 +342,8 @@ Sources:
   https://artificialanalysis.ai/agents/coding-agents
 - LiveBench public release files from:
   https://github.com/LiveBench/new-livebench/tree/main/public
+- GitHub Copilot per-model pricing (hard billing gate, see "Model admissibility" above):
+  https://docs.github.com/en/copilot/reference/copilot-billing/models-and-pricing
 
 Guardrails:
 - Quality requirements per profile:
@@ -263,17 +352,20 @@ Guardrails:
   - `orchestrator` / `triage`: AA Agentic Index + LiveBench `instructionFollowing`
   - `default-development` / `visual-ui` / `quick` / `mechanical`: AA Agentic Index + LiveBench `coding`
   - `review`: AA Agentic Index + LiveBench `reasoning`
-- Challenger must be **top bucket in both required signals**, and strictly higher raw score in both when incumbent is scored.
-- Cost guardrail uses LiveBench `cost_per_successful_task`:
-  - cost-sensitive profiles (`quick`, `mechanical`, `triage`): challenger cost must be `<=` incumbent.
-  - other profiles: challenger cost must be `<= 1.5x` incumbent.
-  - if incumbent cost missing: challenger cannot be highest-cost third (`costBucket` must be `top` or `competitive`).
-  - if challenger cost missing: cannot auto-qualify.
+- Challenger must be **top bucket in both required signals**, and strictly higher raw score in both
+  when incumbent is scored, **and** pass the model-admissibility engine (capabilities/pricing/
+  context/effort/CLI-agent/vision, per profile requirement).
+- LiveBench `cost_per_successful_task` **no longer blocks** a qualifying challenger — GitHub
+  per-million-token pricing (via model admissibility) is the hard billing gate instead. LiveBench
+  cost is retained only as a **tie-break** after combined quality rank when multiple challengers
+  qualify in the same run.
 - If any required source is partial/fallback/stale, consensus counter does not advance.
 
 Maintenance notes:
 - Artificial Analysis extraction can break if embedded schema/layout changes; failures are reported as unavailable instead of guessed.
 - Keep alias mappings current when new Copilot model IDs appear.
+- Keep `config/model-capabilities.json` current when new Copilot model IDs appear — a model with no
+  catalog entry is safely excluded (`capabilities_missing`) rather than silently guessed at.
 
 ## Notes / limitations
 

@@ -1,0 +1,11 @@
+{
+  "schemaVersion": 1,
+  "denylist": [],
+  "familyPatterns": {},
+  "classPreferences": {},
+  "profileLiveBenchCategories": {},
+  "profileRequirements": {
+    "quick": { "inputCeilingPerMillion": "not-a-number", "outputCeilingPerMillion": 10, "requiresVision": false, "requiresCliAgent": true, "costSensitive": true }
+  },
+  "consensusPolicy": { "staleAfterDays": 45, "capabilityFreshnessDays": 60 }
+}

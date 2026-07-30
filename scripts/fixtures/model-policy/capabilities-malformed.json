@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "generatedDate": "2026-07-30",
+  "freshnessThresholdDays": 60,
+  "models": {
+    "broken-model": {
+      "asOf": "2026-07-30",
+      "vision": false,
+      "cliAgentCompatible": true,
+      "pricing": { "default": { "inputPerMillion": "oops", "outputPerMillion": 5.0 } }
+    }
+  }
+}

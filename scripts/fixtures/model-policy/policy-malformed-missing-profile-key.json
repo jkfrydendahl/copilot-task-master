@@ -1,0 +1,43 @@
+{
+  "schemaVersion": 1,
+  "denylist": ["claude-fable-5"],
+  "familyPatterns": {
+    "sonnet-family": "claude-sonnet-\\d",
+    "haiku-family": "claude-haiku-\\d",
+    "opus-family": "claude-opus-\\d",
+    "gpt-flagship-family": "gpt-5\\.\\d+$"
+  },
+  "classPreferences": {
+    "orchestrator": ["sonnet-family"],
+    "quick": ["haiku-family"],
+    "default-development": ["sonnet-family"],
+    "agentic-implementation": ["sonnet-family"],
+    "deep-reasoning": ["opus-family"],
+    "review": ["sonnet-family"],
+    "visual-ui": ["sonnet-family"],
+    "mechanical": ["haiku-family"],
+    "triage": ["sonnet-family"]
+  },
+  "profileLiveBenchCategories": {
+    "agentic-implementation": "agenticCoding",
+    "deep-reasoning": "reasoning",
+    "orchestrator": "instructionFollowing",
+    "triage": "instructionFollowing",
+    "default-development": "coding",
+    "review": "reasoning",
+    "visual-ui": "coding",
+    "quick": "coding"
+  },
+  "profileRequirements": {
+    "quick": { "inputCeilingPerMillion": 2, "outputCeilingPerMillion": 10, "requiresVision": false, "requiresCliAgent": true, "costSensitive": true },
+    "mechanical": { "inputCeilingPerMillion": 2, "outputCeilingPerMillion": 10, "requiresVision": false, "requiresCliAgent": true, "costSensitive": true },
+    "triage": { "inputCeilingPerMillion": 2, "outputCeilingPerMillion": 10, "requiresVision": false, "requiresCliAgent": true, "costSensitive": true },
+    "default-development": { "inputCeilingPerMillion": 3, "outputCeilingPerMillion": 15, "requiresVision": false, "requiresCliAgent": true, "costSensitive": false },
+    "orchestrator": { "inputCeilingPerMillion": 3, "outputCeilingPerMillion": 15, "requiresVision": false, "requiresCliAgent": true, "costSensitive": false },
+    "visual-ui": { "inputCeilingPerMillion": 3, "outputCeilingPerMillion": 15, "requiresVision": true, "requiresCliAgent": true, "costSensitive": false },
+    "review": { "inputCeilingPerMillion": 5, "outputCeilingPerMillion": 30, "requiresVision": false, "requiresCliAgent": true, "costSensitive": false },
+    "agentic-implementation": { "inputCeilingPerMillion": 10, "outputCeilingPerMillion": 50, "requiresVision": false, "requiresCliAgent": true, "costSensitive": false },
+    "deep-reasoning": { "inputCeilingPerMillion": 10, "outputCeilingPerMillion": 45, "requiresVision": false, "requiresCliAgent": true, "costSensitive": false }
+  },
+  "consensusPolicy": { "staleAfterDays": 45, "capabilityFreshnessDays": 60 }
+}
