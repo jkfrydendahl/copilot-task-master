@@ -4,6 +4,8 @@ Reference: https://docs.github.com/en/copilot/reference/ai-models/model-comparis
 
 Model source: **gh copilot help config**
 
+Force benchmark consensus (manual first-run override): **True**
+
 ## Current profiles
 
 | Key | Model | Effort | Context |
@@ -13,22 +15,22 @@ Model source: **gh copilot help config**
 | default-development | claude-sonnet-5 | medium | default |
 | agentic-implementation | gpt-5.3-codex | high | default |
 | deep-reasoning | claude-opus-5 | high | long_context |
-| review | claude-sonnet-5 | medium | default |
+| review | gpt-5.6-terra | medium | default |
 | visual-ui | claude-sonnet-5 | medium | default |
 | mechanical | claude-haiku-4.5 | low | default |
 | triage | claude-sonnet-5 | low | default |
 
 ## Applied profile changes in this run
-- None.
+- "review": "claude-sonnet-5" -> "gpt-5.6-terra" (benchmark_consensus_forced)
 
 ## Benchmark consensus pending
-- "review": candidate "gpt-5.6-terra", count=1
+- None.
 
 ## Active benchmark overrides
-- None.
+- "review": "gpt-5.6-terra"
 
 ## Benchmark consensus auto-applied changes
-- None.
+- "review": "claude-sonnet-5" -> "gpt-5.6-terra" (benchmark_consensus_forced - manual override, first qualifying run)
 
 ## External model ranking snapshot
 
@@ -42,9 +44,9 @@ Model source: **gh copilot help config**
 - Artificial Analysis source date: 2026-07-24
 - Artificial Analysis Coding Agent source date: n/a
 - LiveBench source date: 2026-06-25
-- Artificial Analysis fetched at (UTC): 2026-07-30T11:11:13.6056053Z
-- Artificial Analysis Coding Agents fetched at (UTC): 2026-07-30T11:11:13.9922878Z
-- LiveBench fetched at (UTC): 2026-07-30T11:11:14.1141012Z
+- Artificial Analysis fetched at (UTC): 2026-07-30T11:29:13.2632775Z
+- Artificial Analysis Coding Agents fetched at (UTC): 2026-07-30T11:29:13.7507473Z
+- LiveBench fetched at (UTC): 2026-07-30T11:29:13.9123563Z
 
 > External rankings can auto-apply only after strict two-run consensus; task-family eligibility remains authoritative.
 
