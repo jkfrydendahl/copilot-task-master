@@ -232,9 +232,9 @@ Force benchmark consensus (manual first-run override): **False**
 - Artificial Analysis source date: 2026-07-24
 - Artificial Analysis Coding Agent source date: n/a
 - LiveBench source date: 2026-06-25
-- Artificial Analysis fetched at (UTC): 2026-07-30T14:52:00.7815304Z
-- Artificial Analysis Coding Agents fetched at (UTC): 2026-07-30T14:52:01.3028915Z
-- LiveBench fetched at (UTC): 2026-07-30T14:52:01.5577991Z
+- Artificial Analysis fetched at (UTC): 2026-07-30T14:55:00.2345740Z
+- Artificial Analysis Coding Agents fetched at (UTC): 2026-07-30T14:55:00.9604422Z
+- LiveBench fetched at (UTC): 2026-07-30T14:55:01.1574306Z
 
 > External rankings can auto-apply only after strict two-run consensus; verified availability, capabilities, pricing, and benchmark quality govern promotion, and family preferences are baseline-only.
 
