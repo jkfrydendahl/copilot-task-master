@@ -424,15 +424,15 @@ function Invoke-TaskProfileReview {
         # $ctx for the override check, ledger, and benchmark candidate
         # search below instead of recomputing it three times.
         $ctx = Get-ProfileAdmissibilityRequirement -ProfilesByKey $profilesByKey -ProfileKey $profileKey
-        $admissibilityFilter = {
-            param($modelId)
+        $admissibleBaselineModels = @($validModels | Where-Object {
+            $modelId = $_
             $verdict = Get-ModelAdmissibilityVerdict -ModelId $modelId -ProfileKey $profileKey -AvailabilityVerified $availability.verified `
                 -Denylist $script:ModelDenylist -AvailableModels $validModels `
                 -CapabilityRecord $(if ($capabilitiesCatalog.ContainsKey($modelId)) { $capabilitiesCatalog[$modelId] } else { $null }) `
                 -ProfileRequirement $ctx.requirement -ProfileContextTier $ctx.contextTier -ProfileEffort $ctx.effort -CapabilityFreshnessDays $capabilityFreshnessDays
-            return [bool]$verdict.admissible
-        }.GetNewClosure()
-        $policyPreferred = Get-PreferredModelForProfilePolicy -ProfileKey $profileKey -ValidModels $validModels -Policy $policy -AdmissibilityFilter $admissibilityFilter
+            [bool]$verdict.admissible
+        })
+        $policyPreferred = Get-PreferredModelForProfilePolicy -ProfileKey $profileKey -ValidModels $validModels -Policy $policy -AdmissibleModels $admissibleBaselineModels
         $currentVerdict = Get-ModelAdmissibilityVerdict -ModelId $currentModel -ProfileKey $profileKey -AvailabilityVerified $availability.verified `
             -Denylist $script:ModelDenylist -AvailableModels $validModels `
             -CapabilityRecord $(if ($capabilitiesCatalog.ContainsKey($currentModel)) { $capabilitiesCatalog[$currentModel] } else { $null }) `

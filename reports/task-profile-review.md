@@ -6,8 +6,6 @@ Model source: **copilot help config**
 
 Force benchmark consensus (manual first-run override): **False**
 
-Force benchmark consensus (manual first-run override): **True**
-
 ## Current profiles
 
 | Key | Model | Effort | Context |
@@ -23,16 +21,17 @@ Force benchmark consensus (manual first-run override): **True**
 | triage | claude-sonnet-5 | low | default |
 
 ## Applied profile changes in this run
-- "review": "claude-sonnet-5" -> "gpt-5.6-terra" (benchmark_consensus_forced)
+- None.
 
 ## Benchmark consensus pending
-- None.
+- "agentic-implementation": candidate "claude-opus-5", count=1
+- "review": candidate "gpt-5.6-sol", count=1
 
 ## Active benchmark overrides
 - "review": "gpt-5.6-terra"
 
 ## Benchmark consensus auto-applied changes
-- "review": "claude-sonnet-5" -> "gpt-5.6-terra" (benchmark_consensus_forced - manual override, first qualifying run)
+- None.
 
 ## Model admissibility (rule 9: availability confidence, capability/pricing freshness, profile ceilings, exclusion reasons)
 
@@ -134,7 +133,7 @@ Force benchmark consensus (manual first-run override): **True**
 
 - Availability confidence: **verified**
 - Pricing ceilings (per million tokens): input <= $5, output <= $30
-- Incumbent/current model: **claude-sonnet-5** — admissible: **True** (reasons: none)
+- Incumbent/current model: **gpt-5.6-terra** — admissible: **True** (reasons: none)
 - Exclusions:
 
 | Model | Reasons | Pricing tier | Input $/M | Output $/M | Capability as-of |
@@ -233,9 +232,9 @@ Force benchmark consensus (manual first-run override): **True**
 - Artificial Analysis source date: 2026-07-24
 - Artificial Analysis Coding Agent source date: n/a
 - LiveBench source date: 2026-06-25
-- Artificial Analysis fetched at (UTC): 2026-07-30T11:29:13.2632775Z
-- Artificial Analysis Coding Agents fetched at (UTC): 2026-07-30T11:29:13.7507473Z
-- LiveBench fetched at (UTC): 2026-07-30T11:29:13.9123563Z
+- Artificial Analysis fetched at (UTC): 2026-07-30T14:52:00.7815304Z
+- Artificial Analysis Coding Agents fetched at (UTC): 2026-07-30T14:52:01.3028915Z
+- LiveBench fetched at (UTC): 2026-07-30T14:52:01.5577991Z
 
 > External rankings can auto-apply only after strict two-run consensus; verified availability, capabilities, pricing, and benchmark quality govern promotion, and family preferences are baseline-only.
 
