@@ -2,7 +2,7 @@
 
 Reference: https://docs.github.com/en/copilot/reference/ai-models/model-comparison
 
-Model source: **copilot help config**
+Model source: **gh copilot help config**
 
 ## Current profiles
 
@@ -42,9 +42,8 @@ Model source: **copilot help config**
 - Artificial Analysis source date: 2026-07-24
 - Artificial Analysis Coding Agent source date: n/a
 - LiveBench source date: 2026-06-25
-- Artificial Analysis fetched at (UTC): 2026-07-30T10:54:15.5459794Z
-- Artificial Analysis Coding Agents fetched at (UTC): 2026-07-30T10:54:16.2958967Z
-- LiveBench fetched at (UTC): 2026-07-30T10:54:16.7006969Z
+- Artificial Analysis fetched at (UTC): 2026-07-30T08:33:36.6929429Z
+- LiveBench fetched at (UTC): 2026-07-30T08:33:37.1384939Z
 
 > External rankings can auto-apply only after strict two-run consensus; task-family eligibility remains authoritative.
 
