@@ -49,7 +49,7 @@
     "label": "Review",
     "description": "Ordinary diff review. For risky/large/business-critical diffs, use Deep reasoning instead.",
     "hint": "When you open the chat, run /review (or /code-review-synthesis for multi-model). Stage your changes first.",
-    "model": "claude-sonnet-5",
+    "model": "gpt-5.6-terra",
     "effort": "medium",
     "context": "default"
   },
