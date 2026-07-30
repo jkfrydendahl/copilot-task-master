@@ -1,8 +1,9 @@
 Set-StrictMode -Version Latest
 
-$script:ModelRankingSchemaVersion = 1
+$script:ModelRankingSchemaVersion = 2
 $script:ModelRankingStaleAfterDays = 45
 $script:ArtificialAnalysisUrl = "https://artificialanalysis.ai/?intelligence=agentic-index"
+$script:ArtificialAnalysisCodingAgentsUrl = "https://artificialanalysis.ai/agents/coding-agents"
 $script:LiveBenchContentsApiUrl = "https://api.github.com/repos/LiveBench/new-livebench/contents/public"
 $script:LiveBenchRepoUrl = "https://github.com/LiveBench/new-livebench/tree/main/public"
 
@@ -47,6 +48,73 @@ function Invoke-JsonFetch {
             value = $null
             error = $_.Exception.Message
         }
+    }
+}
+
+function ConvertTo-HashtableDeep {
+    param($Value)
+    if ($null -eq $Value) { return $null }
+    if ($Value -is [System.Collections.IDictionary]) { return $Value }
+    if ($Value -is [System.Collections.IEnumerable] -and -not ($Value -is [string])) {
+        $list = New-Object System.Collections.ArrayList
+        foreach ($item in $Value) { [void]$list.Add((ConvertTo-HashtableDeep -Value $item)) }
+        return $list
+    }
+    $props = @()
+    if ($Value.PSObject) { $props = @($Value.PSObject.Properties) }
+    if ($props.Count -gt 0) {
+        $ht = @{}
+        foreach ($prop in $props) {
+            $ht[$prop.Name] = ConvertTo-HashtableDeep -Value $prop.Value
+        }
+        return $ht
+    }
+    return $Value
+}
+
+function ConvertFrom-JsonAsHashtableCompat {
+    [OutputType([hashtable])]
+    param([Parameter(Mandatory = $true)][string]$JsonText)
+    $cmd = Get-Command ConvertFrom-Json
+    if ($cmd.Parameters.ContainsKey("AsHashtable")) {
+        return ConvertFrom-Json -InputObject $JsonText -AsHashtable
+    }
+    $obj = ConvertFrom-Json -InputObject $JsonText
+    return (ConvertTo-HashtableDeep -Value $obj)
+}
+
+function Test-ObjectMember {
+    param($InputObject, [Parameter(Mandatory = $true)][string]$Name)
+    if ($null -eq $InputObject) { return $false }
+    if ($InputObject -is [System.Collections.IDictionary]) { return $InputObject.Contains($Name) }
+    return @($InputObject.PSObject.Properties | Where-Object { $_.Name -eq $Name }).Count -gt 0
+}
+
+function Get-ObjectMemberValue {
+    param($InputObject, [Parameter(Mandatory = $true)][string]$Name)
+    if (-not (Test-ObjectMember -InputObject $InputObject -Name $Name)) { return $null }
+    if ($InputObject -is [System.Collections.IDictionary]) { return $InputObject[$Name] }
+    return $InputObject.PSObject.Properties[$Name].Value
+}
+
+function Get-ModelScoreFingerprint {
+    param(
+        [Parameter(Mandatory = $true)][System.Collections.IDictionary]$Models,
+        [Parameter(Mandatory = $true)][string]$ScoreProperty
+    )
+    $parts = foreach ($key in @($Models.Keys | Sort-Object)) {
+        $score = Get-ObjectMemberValue -InputObject $Models[$key] -Name $ScoreProperty
+        if ($null -ne $score) {
+            "{0}={1}" -f $key, ([double]$score).ToString("R", [System.Globalization.CultureInfo]::InvariantCulture)
+        }
+    }
+    if (@($parts).Count -eq 0) { return $null }
+    $sha = [System.Security.Cryptography.SHA256]::Create()
+    try {
+        $bytes = [System.Text.Encoding]::UTF8.GetBytes(($parts -join "`n"))
+        return ([System.BitConverter]::ToString($sha.ComputeHash($bytes))).Replace("-", "").ToLowerInvariant()
+    } finally {
+        $sha.Dispose()
     }
 }
 
@@ -134,6 +202,80 @@ function Parse-ArtificialAnalysisAgenticIndexFromHtml {
     }
 }
 
+function Parse-ArtificialAnalysisCodingAgentIndexFromHtml {
+    [OutputType([pscustomobject])]
+    param(
+        [Parameter(Mandatory = $true)][AllowEmptyString()][string]$Html
+    )
+
+    if ([string]::IsNullOrWhiteSpace($Html)) {
+        return [pscustomobject]@{
+            status = "unavailable"
+            message = "Artificial Analysis Coding Agents HTML was empty."
+            models = @{}
+            sourceDate = $null
+        }
+    }
+
+    $normalizedHtml = $Html -replace '\\+"', '"'
+    $pattern = '"label":"(?<label>[^"]+)","codingAgentsIndex":(?<codingAgentIndex>-?\d+(?:\.\d+)?)'
+    $matches = [regex]::Matches($normalizedHtml, $pattern, [System.Text.RegularExpressions.RegexOptions]::Singleline)
+
+    if ($matches.Count -eq 0) {
+        return [pscustomobject]@{
+            status = "unavailable"
+            message = "Artificial Analysis embedded coding-agent records with codingAgentsIndex were not found."
+            models = @{}
+            sourceDate = $null
+        }
+    }
+
+    $models = @{}
+    foreach ($match in $matches) {
+        $label = [string]$match.Groups["label"].Value
+        $scoreText = [string]$match.Groups["codingAgentIndex"].Value
+
+        $score = 0.0
+        if (-not [double]::TryParse($scoreText, [System.Globalization.NumberStyles]::Float, [System.Globalization.CultureInfo]::InvariantCulture, [ref]$score)) {
+            continue
+        }
+
+        if ($models.ContainsKey($label)) {
+            if ([math]::Abs([double]$models[$label].codingAgentIndex - $score) -gt 0.000001) {
+                return [pscustomobject]@{
+                    status = "unavailable"
+                    message = "Artificial Analysis coding-agent data was ambiguous for label '$label'."
+                    models = @{}
+                    sourceDate = $null
+                }
+            }
+            continue
+        }
+
+        $models[$label] = [pscustomobject]@{
+            label = $label
+            name = $label
+            codingAgentIndex = $score
+        }
+    }
+
+    if ($models.Count -eq 0) {
+        return [pscustomobject]@{
+            status = "unavailable"
+            message = "Artificial Analysis coding-agent parsing found no numeric records."
+            models = @{}
+            sourceDate = $null
+        }
+    }
+
+    return [pscustomobject]@{
+        status = "ok"
+        message = "Parsed embedded coding-agent records."
+        models = $models
+        sourceDate = $null
+    }
+}
+
 function Get-ArtificialAnalysisAgenticIndexData {
     [OutputType([pscustomobject])]
     param(
@@ -164,6 +306,43 @@ function Get-ArtificialAnalysisAgenticIndexData {
         message = $parsed.message
         models = $parsed.models
         sourceDate = $parsed.sourceDate
+        sourceVersion = if ($parsed.status -eq "ok") { Get-ModelScoreFingerprint -Models $parsed.models -ScoreProperty "agenticIndex" } else { $null }
+        fetchedAtUtc = $fetchedAtUtc
+        sourceUrl = $Url
+    }
+}
+
+function Get-ArtificialAnalysisCodingAgentIndexData {
+    [OutputType([pscustomobject])]
+    param(
+        [string]$Url = $script:ArtificialAnalysisCodingAgentsUrl,
+        [scriptblock]$FetchText = $null
+    )
+
+    $fetchedAtUtc = (Get-Date).ToUniversalTime().ToString("o")
+    if ($null -eq $FetchText) {
+        $FetchText = { param($u) Invoke-TextFetch -Url $u -TimeoutSec 30 }
+    }
+
+    $fetchResult = & $FetchText $Url
+    if ($fetchResult.status -ne "ok") {
+        return [pscustomobject]@{
+            status = "error"
+            message = "Fetch failed: $($fetchResult.error)"
+            models = @{}
+            sourceDate = $null
+            fetchedAtUtc = $fetchedAtUtc
+            sourceUrl = $Url
+        }
+    }
+
+    $parsed = Parse-ArtificialAnalysisCodingAgentIndexFromHtml -Html ([string]$fetchResult.content)
+    return [pscustomobject]@{
+        status = $parsed.status
+        message = $parsed.message
+        models = $parsed.models
+        sourceDate = $parsed.sourceDate
+        sourceVersion = if ($parsed.status -eq "ok") { Get-ModelScoreFingerprint -Models $parsed.models -ScoreProperty "codingAgentIndex" } else { $null }
         fetchedAtUtc = $fetchedAtUtc
         sourceUrl = $Url
     }
@@ -222,6 +401,7 @@ function Parse-LiveBenchData {
     param(
         [Parameter(Mandatory = $true)][AllowEmptyString()][string]$CsvText,
         [AllowEmptyString()][string]$CategoriesJsonText,
+        [AllowEmptyString()][string]$CostCsvText,
         [string]$SourceDate
     )
 
@@ -257,8 +437,8 @@ function Parse-LiveBenchData {
     $categoryMap = @{}
     if (-not [string]::IsNullOrWhiteSpace($CategoriesJsonText)) {
         try {
-            $categoryObj = ConvertFrom-Json -InputObject $CategoriesJsonText -AsHashtable
-            if ($categoryObj -is [hashtable]) {
+            $categoryObj = ConvertFrom-JsonAsHashtableCompat -JsonText $CategoriesJsonText
+            if ($categoryObj -is [System.Collections.IDictionary]) {
                 $categoryMap = $categoryObj
             }
         } catch {
@@ -283,6 +463,45 @@ function Parse-LiveBenchData {
     $instructionFollowingColumns = Get-LiveBenchCategoryColumns -CategoryMap $categoryMap -PreferredNames @("IF", "Instruction Following")
     if ($instructionFollowingColumns.Count -eq 0) { $instructionFollowingColumns = @("paraphrase", "simplify", "story_generation", "summarize") }
 
+    $costByModel = @{}
+    $costStatus = "unavailable"
+    $costMessage = "LiveBench cost CSV was empty."
+    if (-not [string]::IsNullOrWhiteSpace($CostCsvText)) {
+        try {
+            $costRows = @($CostCsvText | ConvertFrom-Csv)
+            if ($costRows.Count -eq 0 -or -not $costRows[0].PSObject.Properties.Name.Contains("model") -or -not $costRows[0].PSObject.Properties.Name.Contains("cost_per_successful_task")) {
+                $costMessage = "LiveBench cost CSV missing required model or cost_per_successful_task columns."
+            } else {
+                foreach ($costRow in $costRows) {
+                    $costModel = [string]$costRow.model
+                    if ([string]::IsNullOrWhiteSpace($costModel)) {
+                        continue
+                    }
+                    $costValueText = [string]$costRow.cost_per_successful_task
+                    if ([string]::IsNullOrWhiteSpace($costValueText)) {
+                        continue
+                    }
+                    $costValue = 0.0
+                    if (
+                        [double]::TryParse($costValueText, [System.Globalization.NumberStyles]::Float, [System.Globalization.CultureInfo]::InvariantCulture, [ref]$costValue) -and
+                        -not [double]::IsNaN($costValue) -and
+                        -not [double]::IsInfinity($costValue) -and
+                        $costValue -ge 0
+                    ) {
+                        $costByModel[$costModel] = $costValue
+                    }
+                }
+            }
+        } catch {
+            return [pscustomobject]@{
+                status = "unavailable"
+                message = "LiveBench cost CSV parse failed: $($_.Exception.Message)"
+                models = @{}
+                sourceDate = $SourceDate
+            }
+        }
+    }
+
     $models = @{}
     foreach ($row in $rows) {
         $modelName = [string]$row.model
@@ -296,6 +515,7 @@ function Parse-LiveBenchData {
             agenticCoding = Get-NumericAverageFromRecord -Record $row -Columns $agenticCodingColumns
             reasoning = Get-NumericAverageFromRecord -Record $row -Columns $reasoningColumns
             instructionFollowing = Get-NumericAverageFromRecord -Record $row -Columns $instructionFollowingColumns
+            costPerSuccessfulTask = if ($costByModel.ContainsKey($modelName)) { [double]$costByModel[$modelName] } else { $null }
         }
     }
 
@@ -308,9 +528,19 @@ function Parse-LiveBenchData {
         }
     }
 
+    $missingCostModels = @($models.Keys | Where-Object { -not $costByModel.ContainsKey($_) })
+    if ($costByModel.Count -gt 0 -and $missingCostModels.Count -eq 0) {
+        $costStatus = "ok"
+        $costMessage = "Parsed complete LiveBench cost data."
+    } elseif ($costByModel.Count -gt 0) {
+        $costMessage = "LiveBench cost data was incomplete for $($missingCostModels.Count) table models."
+    }
+
     return [pscustomobject]@{
         status = "ok"
         message = "Parsed LiveBench table and categories."
+        costStatus = $costStatus
+        costMessage = $costMessage
         models = $models
         sourceDate = $SourceDate
     }
@@ -365,7 +595,19 @@ function Get-LiveBenchData {
     $latestTable = $tables[0]
     $tableDate = [regex]::Match($latestTable.name, '^table_(\d{4}_\d{2}_\d{2})\.csv$').Groups[1].Value
     $categoriesName = "categories_$tableDate.json"
+    $costName = "cost_$tableDate.csv"
     $categoriesFile = @($items | Where-Object { $_.name -eq $categoriesName } | Select-Object -First 1)
+    $costFile = @($items | Where-Object { $_.name -eq $costName } | Select-Object -First 1)
+    if ($costFile.Count -eq 0) {
+        return [pscustomobject]@{
+            status = "unavailable"
+            message = "LiveBench listing had no matching $costName file."
+            models = @{}
+            sourceDate = $tableDate -replace '_', '-'
+            fetchedAtUtc = $fetchedAtUtc
+            sourceUrl = [string]$latestTable.html_url
+        }
+    }
 
     $tableFetch = & $FetchText $latestTable.download_url
     if ($tableFetch.status -ne "ok") {
@@ -395,12 +637,29 @@ function Get-LiveBenchData {
         $categoriesText = [string]$categoryFetch.content
     }
 
-    $parsed = Parse-LiveBenchData -CsvText ([string]$tableFetch.content) -CategoriesJsonText $categoriesText -SourceDate ($tableDate -replace '_', '-')
+    $costText = ""
+    $costFetch = & $FetchText $costFile[0].download_url
+    if ($costFetch.status -ne "ok") {
+        return [pscustomobject]@{
+            status = "unavailable"
+            message = "LiveBench cost fetch failed: $($costFetch.error)"
+            models = @{}
+            sourceDate = $tableDate -replace '_', '-'
+            fetchedAtUtc = $fetchedAtUtc
+            sourceUrl = [string]$latestTable.html_url
+        }
+    }
+    $costText = [string]$costFetch.content
+
+    $parsed = Parse-LiveBenchData -CsvText ([string]$tableFetch.content) -CategoriesJsonText $categoriesText -CostCsvText $costText -SourceDate ($tableDate -replace '_', '-')
     return [pscustomobject]@{
         status = $parsed.status
         message = $parsed.message
+        costStatus = if (Test-ObjectMember -InputObject $parsed -Name "costStatus") { $parsed.costStatus } else { "unavailable" }
+        costMessage = if (Test-ObjectMember -InputObject $parsed -Name "costMessage") { $parsed.costMessage } else { $parsed.message }
         models = $parsed.models
         sourceDate = $parsed.sourceDate
+        sourceVersion = if ($parsed.status -eq "ok") { $parsed.sourceDate } else { $null }
         fetchedAtUtc = $fetchedAtUtc
         sourceUrl = [string]$latestTable.html_url
     }
@@ -416,7 +675,7 @@ function Get-ModelRankingAliases {
         throw "Missing model ranking aliases file: $AliasesPath"
     }
 
-    $parsed = ConvertFrom-Json -InputObject (Get-Content -Path $AliasesPath -Raw) -AsHashtable
+    $parsed = ConvertFrom-JsonAsHashtableCompat -JsonText (Get-Content -Path $AliasesPath -Raw)
     if (-not $parsed.ContainsKey("aliases") -or -not ($parsed.aliases -is [hashtable])) {
         throw "Aliases file schema invalid: expected top-level 'aliases' object."
     }
@@ -426,14 +685,15 @@ function Get-ModelRankingAliases {
 function Get-RankingBucketAssignments {
     [OutputType([hashtable])]
     param(
-        [Parameter(Mandatory = $true)][hashtable]$ScoresByModel
+        [Parameter(Mandatory = $true)][hashtable]$ScoresByModel,
+        [switch]$LowerIsBetter
     )
 
     $buckets = @{}
     $scored = @(
         $ScoresByModel.GetEnumerator() |
         Where-Object { $null -ne $_.Value } |
-        Sort-Object -Property @{ Expression = { [double]$_.Value }; Descending = $true }, @{ Expression = { $_.Key }; Descending = $false }
+        Sort-Object -Property @{ Expression = { [double]$_.Value }; Descending = (-not $LowerIsBetter.IsPresent) }, @{ Expression = { $_.Key }; Descending = $false }
     )
 
     if ($scored.Count -lt 3) {
@@ -447,6 +707,7 @@ function Get-RankingBucketAssignments {
             $bucket = if ($position -le $topCut) { "top" } elseif ($position -gt $lagCut) { "lagging" } else { "competitive" }
             $buckets[$scored[$i].Key] = $bucket
         }
+
     }
 
     foreach ($model in $ScoresByModel.Keys) {
@@ -456,6 +717,31 @@ function Get-RankingBucketAssignments {
     }
 
     return $buckets
+}
+
+function Get-OrdinalRankAssignments {
+    [OutputType([hashtable])]
+    param(
+        [Parameter(Mandatory = $true)][hashtable]$ScoresByModel,
+        [switch]$LowerIsBetter
+    )
+
+    $ranks = @{}
+    $scored = @(
+        $ScoresByModel.GetEnumerator() |
+        Where-Object { $null -ne $_.Value } |
+        Sort-Object -Property @{ Expression = { [double]$_.Value }; Descending = (-not $LowerIsBetter.IsPresent) }, @{ Expression = { $_.Key }; Descending = $false }
+    )
+
+    for ($i = 0; $i -lt $scored.Count; $i++) {
+        $ranks[$scored[$i].Key] = $i + 1
+    }
+    foreach ($model in $ScoresByModel.Keys) {
+        if (-not $ranks.ContainsKey($model)) {
+            $ranks[$model] = $null
+        }
+    }
+    return $ranks
 }
 
 function New-UnavailableModelRankingSnapshot {
@@ -473,6 +759,7 @@ function New-UnavailableModelRankingSnapshot {
         message = $Message
         attribution = [ordered]@{
             artificialAnalysisUrl = $script:ArtificialAnalysisUrl
+            artificialAnalysisCodingAgentsUrl = $script:ArtificialAnalysisCodingAgentsUrl
             liveBenchUrl = $script:LiveBenchRepoUrl
         }
         sourceStatus = [ordered]@{
@@ -480,18 +767,39 @@ function New-UnavailableModelRankingSnapshot {
                 status = "unavailable"
                 message = "Not fetched."
                 sourceDate = $null
+                sourceVersion = $null
                 fetchedAtUtc = $null
                 sourceUrl = $script:ArtificialAnalysisUrl
+            }
+            artificialAnalysisCodingAgents = [ordered]@{
+                status = "unavailable"
+                message = "Not fetched."
+                sourceDate = $null
+                sourceVersion = $null
+                fetchedAtUtc = $null
+                sourceUrl = $script:ArtificialAnalysisCodingAgentsUrl
             }
             liveBench = [ordered]@{
                 status = "unavailable"
                 message = "Not fetched."
                 sourceDate = $null
+                sourceVersion = $null
+                fetchedAtUtc = $null
+                sourceUrl = $script:LiveBenchRepoUrl
+            }
+            liveBenchCost = [ordered]@{
+                status = "unavailable"
+                message = "Not fetched."
+                sourceDate = $null
+                sourceVersion = $null
                 fetchedAtUtc = $null
                 sourceUrl = $script:LiveBenchRepoUrl
             }
         }
         models = [ordered]@{}
+        consensus = [ordered]@{
+            profiles = [ordered]@{}
+        }
     }
 }
 
@@ -543,6 +851,7 @@ function Resolve-ModelRankingSnapshot {
         [Parameter(Mandatory = $true)][string[]]$ValidModels,
         [Parameter(Mandatory = $true)][hashtable]$Aliases,
         [Parameter(Mandatory = $true)]$ArtificialAnalysisData,
+        [Parameter(Mandatory = $true)]$ArtificialAnalysisCodingAgentData,
         [Parameter(Mandatory = $true)]$LiveBenchData,
         $FallbackSnapshot = $null,
         [datetime]$NowUtc = ((Get-Date).ToUniversalTime())
@@ -554,33 +863,56 @@ function Resolve-ModelRankingSnapshot {
         status = $ArtificialAnalysisData.status
         message = $ArtificialAnalysisData.message
         sourceDate = $ArtificialAnalysisData.sourceDate
+        sourceVersion = Get-ObjectMemberValue -InputObject $ArtificialAnalysisData -Name "sourceVersion"
         fetchedAtUtc = $ArtificialAnalysisData.fetchedAtUtc
         sourceUrl = $ArtificialAnalysisData.sourceUrl
+    }
+    $snapshot.sourceStatus.artificialAnalysisCodingAgents = [ordered]@{
+        status = $ArtificialAnalysisCodingAgentData.status
+        message = $ArtificialAnalysisCodingAgentData.message
+        sourceDate = $ArtificialAnalysisCodingAgentData.sourceDate
+        sourceVersion = Get-ObjectMemberValue -InputObject $ArtificialAnalysisCodingAgentData -Name "sourceVersion"
+        fetchedAtUtc = $ArtificialAnalysisCodingAgentData.fetchedAtUtc
+        sourceUrl = $ArtificialAnalysisCodingAgentData.sourceUrl
     }
     $snapshot.sourceStatus.liveBench = [ordered]@{
         status = $LiveBenchData.status
         message = $LiveBenchData.message
         sourceDate = $LiveBenchData.sourceDate
+        sourceVersion = Get-ObjectMemberValue -InputObject $LiveBenchData -Name "sourceVersion"
+        fetchedAtUtc = $LiveBenchData.fetchedAtUtc
+        sourceUrl = $LiveBenchData.sourceUrl
+    }
+    $snapshot.sourceStatus.liveBenchCost = [ordered]@{
+        status = if (Test-ObjectMember -InputObject $LiveBenchData -Name "costStatus") { $LiveBenchData.costStatus } else { "unavailable" }
+        message = if (Test-ObjectMember -InputObject $LiveBenchData -Name "costMessage") { $LiveBenchData.costMessage } else { $LiveBenchData.message }
+        sourceDate = $LiveBenchData.sourceDate
+        sourceVersion = Get-ObjectMemberValue -InputObject $LiveBenchData -Name "sourceVersion"
         fetchedAtUtc = $LiveBenchData.fetchedAtUtc
         sourceUrl = $LiveBenchData.sourceUrl
     }
 
     $aaScores = @{}
+    $aaCodingAgentScores = @{}
     $lbCodingScores = @{}
     $lbAgenticCodingScores = @{}
     $lbReasoningScores = @{}
     $lbInstructionScores = @{}
+    $lbCostScores = @{}
 
     foreach ($model in $ValidModels) {
         $alias = if ($Aliases.ContainsKey($model)) { $Aliases[$model] } else { $null }
         $aaSlug = $null
+        $aaCodingSlug = $null
         $lbName = $null
         if ($null -ne $alias) {
             if ($alias -is [hashtable]) {
                 $aaSlug = $alias.artificialAnalysis
+                $aaCodingSlug = if ($alias.ContainsKey("artificialAnalysisCodingAgents")) { $alias.artificialAnalysisCodingAgents } else { $null }
                 $lbName = $alias.liveBench
             } elseif ($alias.PSObject -and $alias.PSObject.Properties) {
                 $aaSlug = $alias.artificialAnalysis
+                $aaCodingSlug = $alias.artificialAnalysisCodingAgents
                 $lbName = $alias.liveBench
             }
         }
@@ -593,21 +925,32 @@ function Resolve-ModelRankingSnapshot {
         }
         $aaScores[$model] = $aaScore
 
+        $aaCodingScore = $null
+        $aaCodingName = $null
+        if (-not [string]::IsNullOrWhiteSpace([string]$aaCodingSlug) -and $ArtificialAnalysisCodingAgentData.models.ContainsKey([string]$aaCodingSlug)) {
+            $aaCodingScore = [double]$ArtificialAnalysisCodingAgentData.models[[string]$aaCodingSlug].codingAgentIndex
+            $aaCodingName = [string]$ArtificialAnalysisCodingAgentData.models[[string]$aaCodingSlug].name
+        }
+        $aaCodingAgentScores[$model] = $aaCodingScore
+
         $lbCoding = $null
         $lbAgenticCoding = $null
         $lbReasoning = $null
         $lbInstruction = $null
+        $lbCost = $null
         if (-not [string]::IsNullOrWhiteSpace([string]$lbName) -and $LiveBenchData.models.ContainsKey([string]$lbName)) {
             $lbRecord = $LiveBenchData.models[[string]$lbName]
             $lbCoding = $lbRecord.coding
             $lbAgenticCoding = $lbRecord.agenticCoding
             $lbReasoning = $lbRecord.reasoning
             $lbInstruction = $lbRecord.instructionFollowing
+            $lbCost = $lbRecord.costPerSuccessfulTask
         }
         $lbCodingScores[$model] = $lbCoding
         $lbAgenticCodingScores[$model] = $lbAgenticCoding
         $lbReasoningScores[$model] = $lbReasoning
         $lbInstructionScores[$model] = $lbInstruction
+        $lbCostScores[$model] = $lbCost
 
         $snapshot.models[$model] = [ordered]@{
             artificialAnalysis = [ordered]@{
@@ -615,6 +958,14 @@ function Resolve-ModelRankingSnapshot {
                 name = $aaName
                 agenticIndex = $aaScore
                 bucket = "n/a"
+                ordinalRank = $null
+            }
+            artificialAnalysisCodingAgents = [ordered]@{
+                alias = $aaCodingSlug
+                name = $aaCodingName
+                codingAgentIndex = $aaCodingScore
+                bucket = "n/a"
+                ordinalRank = $null
             }
             liveBench = [ordered]@{
                 alias = $lbName
@@ -630,45 +981,80 @@ function Resolve-ModelRankingSnapshot {
                     reasoning = "n/a"
                     instructionFollowing = "n/a"
                 }
+                ordinalRanks = [ordered]@{
+                    coding = $null
+                    agenticCoding = $null
+                    reasoning = $null
+                    instructionFollowing = $null
+                }
+                costPerSuccessfulTask = $lbCost
+                costBucket = "n/a"
+                costOrdinalRank = $null
             }
         }
     }
 
     $aaBuckets = Get-RankingBucketAssignments -ScoresByModel $aaScores
+    $aaRanks = Get-OrdinalRankAssignments -ScoresByModel $aaScores
+    $aaCodingBuckets = Get-RankingBucketAssignments -ScoresByModel $aaCodingAgentScores
+    $aaCodingRanks = Get-OrdinalRankAssignments -ScoresByModel $aaCodingAgentScores
     $lbCodingBuckets = Get-RankingBucketAssignments -ScoresByModel $lbCodingScores
+    $lbCodingRanks = Get-OrdinalRankAssignments -ScoresByModel $lbCodingScores
     $lbAgenticCodingBuckets = Get-RankingBucketAssignments -ScoresByModel $lbAgenticCodingScores
+    $lbAgenticCodingRanks = Get-OrdinalRankAssignments -ScoresByModel $lbAgenticCodingScores
     $lbReasoningBuckets = Get-RankingBucketAssignments -ScoresByModel $lbReasoningScores
+    $lbReasoningRanks = Get-OrdinalRankAssignments -ScoresByModel $lbReasoningScores
     $lbInstructionBuckets = Get-RankingBucketAssignments -ScoresByModel $lbInstructionScores
+    $lbInstructionRanks = Get-OrdinalRankAssignments -ScoresByModel $lbInstructionScores
+    $lbCostBuckets = Get-RankingBucketAssignments -ScoresByModel $lbCostScores -LowerIsBetter
+    $lbCostRanks = Get-OrdinalRankAssignments -ScoresByModel $lbCostScores -LowerIsBetter
 
     $hasAnyBucketedData = $false
     foreach ($model in $ValidModels) {
         $snapshot.models[$model].artificialAnalysis.bucket = $aaBuckets[$model]
+        $snapshot.models[$model].artificialAnalysis.ordinalRank = $aaRanks[$model]
+        $snapshot.models[$model].artificialAnalysisCodingAgents.bucket = $aaCodingBuckets[$model]
+        $snapshot.models[$model].artificialAnalysisCodingAgents.ordinalRank = $aaCodingRanks[$model]
         $snapshot.models[$model].liveBench.buckets.coding = $lbCodingBuckets[$model]
+        $snapshot.models[$model].liveBench.ordinalRanks.coding = $lbCodingRanks[$model]
         $snapshot.models[$model].liveBench.buckets.agenticCoding = $lbAgenticCodingBuckets[$model]
+        $snapshot.models[$model].liveBench.ordinalRanks.agenticCoding = $lbAgenticCodingRanks[$model]
         $snapshot.models[$model].liveBench.buckets.reasoning = $lbReasoningBuckets[$model]
+        $snapshot.models[$model].liveBench.ordinalRanks.reasoning = $lbReasoningRanks[$model]
         $snapshot.models[$model].liveBench.buckets.instructionFollowing = $lbInstructionBuckets[$model]
+        $snapshot.models[$model].liveBench.ordinalRanks.instructionFollowing = $lbInstructionRanks[$model]
+        $snapshot.models[$model].liveBench.costBucket = $lbCostBuckets[$model]
+        $snapshot.models[$model].liveBench.costOrdinalRank = $lbCostRanks[$model]
 
         if (
             $aaBuckets[$model] -ne "n/a" -or
+            $aaCodingBuckets[$model] -ne "n/a" -or
             $lbCodingBuckets[$model] -ne "n/a" -or
             $lbAgenticCodingBuckets[$model] -ne "n/a" -or
             $lbReasoningBuckets[$model] -ne "n/a" -or
-            $lbInstructionBuckets[$model] -ne "n/a"
+            $lbInstructionBuckets[$model] -ne "n/a" -or
+            $lbCostBuckets[$model] -ne "n/a"
         ) {
             $hasAnyBucketedData = $true
         }
     }
 
+    if ($FallbackSnapshot -and $FallbackSnapshot.PSObject.Properties.Name.Contains("consensus") -and $null -ne $FallbackSnapshot.consensus) {
+        $snapshot.consensus = $FallbackSnapshot.consensus
+    }
+
     if ($hasAnyBucketedData) {
         $allSourcesValid = (
             $ArtificialAnalysisData.status -eq "ok" -and
-            $LiveBenchData.status -eq "ok"
+            $ArtificialAnalysisCodingAgentData.status -eq "ok" -and
+            $LiveBenchData.status -eq "ok" -and
+            (Get-ObjectMemberValue -InputObject $LiveBenchData -Name "costStatus") -eq "ok"
         )
         $snapshot.status = if ($allSourcesValid) { "ok" } else { "partial" }
         $snapshot.message = if ($allSourcesValid) {
-            "Advisory ranking buckets generated from live source data. Rankings are advisory-only and never auto-applied."
+            "Ranking buckets generated from live source data."
         } else {
-            "Advisory ranking buckets generated from partial live data. The committed last-good snapshot was not replaced."
+            "Ranking buckets generated from partial live data. The committed last-good snapshot was not replaced."
         }
         $snapshot.stale = $false
         return [pscustomobject]@{
@@ -683,7 +1069,7 @@ function Resolve-ModelRankingSnapshot {
         $fallbackObj.fallbackUsed = $true
         $fallbackObj.status = "fallback"
         $fallbackObj.stale = $isStale
-        $fallbackObj.message = "Live ranking data unavailable; using committed snapshot fallback. Rankings are advisory-only and never auto-applied."
+        $fallbackObj.message = "Live ranking data unavailable; using committed snapshot fallback."
         return [pscustomobject]@{
             snapshot = $fallbackObj
             shouldWriteSnapshot = $false
@@ -757,9 +1143,10 @@ function Get-AdvisoryModelRankingSnapshot {
     $fallbackSnapshot = Read-ModelRankingSnapshotFile -SnapshotPath $SnapshotPath
 
     $aaData = Get-ArtificialAnalysisAgenticIndexData -FetchText $FetchArtificialAnalysisText
+    $aaCodingAgentData = Get-ArtificialAnalysisCodingAgentIndexData -FetchText $FetchArtificialAnalysisText
     $lbData = Get-LiveBenchData -FetchJson $FetchLiveBenchJson -FetchText $FetchLiveBenchText
 
-    $resolved = Resolve-ModelRankingSnapshot -ValidModels $ValidModels -Aliases $aliases -ArtificialAnalysisData $aaData -LiveBenchData $lbData -FallbackSnapshot $fallbackSnapshot
+    $resolved = Resolve-ModelRankingSnapshot -ValidModels $ValidModels -Aliases $aliases -ArtificialAnalysisData $aaData -ArtificialAnalysisCodingAgentData $aaCodingAgentData -LiveBenchData $lbData -FallbackSnapshot $fallbackSnapshot
     if ($resolved.shouldWriteSnapshot) {
         Write-ModelRankingSnapshotAtomic -SnapshotPath $SnapshotPath -SnapshotObject $resolved.snapshot
     }
@@ -775,7 +1162,7 @@ function Get-ModelRankingReportLines {
     )
 
     $lines = New-Object System.Collections.Generic.List[string]
-    $lines.Add("## Advisory model ranking snapshot")
+    $lines.Add("## External model ranking snapshot")
     $lines.Add("")
     $lines.Add("- Status: **$($Snapshot.status)**")
     $staleText = ([string]$Snapshot.stale).ToLowerInvariant()
@@ -785,17 +1172,34 @@ function Get-ModelRankingReportLines {
     if (-not [string]::IsNullOrWhiteSpace([string]$Snapshot.message)) {
         $lines.Add("- Note: $($Snapshot.message)")
     }
-    $lines.Add("- Artificial Analysis URL: $($Snapshot.attribution.artificialAnalysisUrl)")
-    $lines.Add("- LiveBench URL: $($Snapshot.attribution.liveBenchUrl)")
-    $lines.Add("- Artificial Analysis source date: $($Snapshot.sourceStatus.artificialAnalysis.sourceDate)")
-    $lines.Add("- LiveBench source date: $($Snapshot.sourceStatus.liveBench.sourceDate)")
-    $lines.Add("- Artificial Analysis fetched at (UTC): $($Snapshot.sourceStatus.artificialAnalysis.fetchedAtUtc)")
-    $lines.Add("- LiveBench fetched at (UTC): $($Snapshot.sourceStatus.liveBench.fetchedAtUtc)")
+    $aaUrlValue = Get-ObjectMemberValue -InputObject $Snapshot.attribution -Name "artificialAnalysisUrl"
+    $aaUrl = if ($aaUrlValue) { $aaUrlValue } else { $script:ArtificialAnalysisUrl }
+    $aaCodingUrl = if (Test-ObjectMember -InputObject $Snapshot.attribution -Name "artificialAnalysisCodingAgentsUrl") { Get-ObjectMemberValue -InputObject $Snapshot.attribution -Name "artificialAnalysisCodingAgentsUrl" } else { $script:ArtificialAnalysisCodingAgentsUrl }
+    $lbUrlValue = Get-ObjectMemberValue -InputObject $Snapshot.attribution -Name "liveBenchUrl"
+    $lbUrl = if ($lbUrlValue) { $lbUrlValue } else { $script:LiveBenchRepoUrl }
+    $aaSource = Get-ObjectMemberValue -InputObject $Snapshot.sourceStatus -Name "artificialAnalysis"
+    $aaDate = if ($aaSource) { Get-ObjectMemberValue -InputObject $aaSource -Name "sourceDate" } else { $null }
+    $aaCodingSource = Get-ObjectMemberValue -InputObject $Snapshot.sourceStatus -Name "artificialAnalysisCodingAgents"
+    $aaCodingDate = if ($aaCodingSource) { $aaCodingSource.sourceDate } else { $null }
+    $lbSource = Get-ObjectMemberValue -InputObject $Snapshot.sourceStatus -Name "liveBench"
+    $lbDate = if ($lbSource) { Get-ObjectMemberValue -InputObject $lbSource -Name "sourceDate" } else { $null }
+    $aaFetched = if ($aaSource) { Get-ObjectMemberValue -InputObject $aaSource -Name "fetchedAtUtc" } else { $null }
+    $aaCodingFetched = if ($aaCodingSource) { $aaCodingSource.fetchedAtUtc } else { $null }
+    $lbFetched = if ($lbSource) { Get-ObjectMemberValue -InputObject $lbSource -Name "fetchedAtUtc" } else { $null }
+    $lines.Add("- Artificial Analysis URL: $aaUrl")
+    $lines.Add("- Artificial Analysis Coding Agents URL: $aaCodingUrl")
+    $lines.Add("- LiveBench URL: $lbUrl")
+    $lines.Add("- Artificial Analysis source date: $aaDate")
+    $lines.Add("- Artificial Analysis Coding Agent source date: $(if ($aaCodingDate) { $aaCodingDate } else { 'n/a' })")
+    $lines.Add("- LiveBench source date: $lbDate")
+    $lines.Add("- Artificial Analysis fetched at (UTC): $aaFetched")
+    $lines.Add("- Artificial Analysis Coding Agents fetched at (UTC): $(if ($aaCodingFetched) { $aaCodingFetched } else { 'n/a' })")
+    $lines.Add("- LiveBench fetched at (UTC): $lbFetched")
     $lines.Add("")
-    $lines.Add("> Advisory only: external rankings never auto-apply and never influence profile-selection policy.")
+    $lines.Add("> External rankings can auto-apply only after strict two-run consensus; task-family eligibility remains authoritative.")
     $lines.Add("")
-    $lines.Add("| Model | AA Agentic | LB Coding | LB Agentic Coding | LB Reasoning | LB Instruction Following |")
-    $lines.Add("|---|---|---|---|---|---|")
+    $lines.Add("| Model | AA Agentic | AA Coding Agent | LB Coding | LB Agentic Coding | LB Reasoning | LB Instruction Following | LB Cost | LB Cost Bucket |")
+    $lines.Add("|---|---|---|---|---|---|---|---|---|")
     foreach ($model in $ValidModels) {
         $modelData = $null
         if ($Snapshot.models -is [System.Collections.IDictionary]) {
@@ -806,15 +1210,21 @@ function Get-ModelRankingReportLines {
             $modelData = $Snapshot.models.PSObject.Properties[$model].Value
         }
         if ($null -eq $modelData) {
-            $lines.Add("| $model | n/a | n/a | n/a | n/a | n/a |")
+            $lines.Add("| $model | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a |")
             continue
         }
-        $aaBucket = [string]$modelData.artificialAnalysis.bucket
-        $lbCodingBucket = [string]$modelData.liveBench.buckets.coding
-        $lbAgenticBucket = [string]$modelData.liveBench.buckets.agenticCoding
-        $lbReasoningBucket = [string]$modelData.liveBench.buckets.reasoning
-        $lbInstructionBucket = [string]$modelData.liveBench.buckets.instructionFollowing
-        $lines.Add("| $model | $aaBucket | $lbCodingBucket | $lbAgenticBucket | $lbReasoningBucket | $lbInstructionBucket |")
+        $aaBucket = if ($modelData.artificialAnalysis -and $modelData.artificialAnalysis.bucket) { [string]$modelData.artificialAnalysis.bucket } else { "n/a" }
+        $aaCodingData = Get-ObjectMemberValue -InputObject $modelData -Name "artificialAnalysisCodingAgents"
+        $aaCodingBucket = if ($aaCodingData -and $aaCodingData.bucket) { [string]$aaCodingData.bucket } else { "n/a" }
+        $lbCodingBucket = if ($modelData.liveBench -and $modelData.liveBench.buckets -and $modelData.liveBench.buckets.coding) { [string]$modelData.liveBench.buckets.coding } else { "n/a" }
+        $lbAgenticBucket = if ($modelData.liveBench -and $modelData.liveBench.buckets -and $modelData.liveBench.buckets.agenticCoding) { [string]$modelData.liveBench.buckets.agenticCoding } else { "n/a" }
+        $lbReasoningBucket = if ($modelData.liveBench -and $modelData.liveBench.buckets -and $modelData.liveBench.buckets.reasoning) { [string]$modelData.liveBench.buckets.reasoning } else { "n/a" }
+        $lbInstructionBucket = if ($modelData.liveBench -and $modelData.liveBench.buckets -and $modelData.liveBench.buckets.instructionFollowing) { [string]$modelData.liveBench.buckets.instructionFollowing } else { "n/a" }
+        $hasCostValue = $false
+        if ($modelData.liveBench -and (Test-ObjectMember -InputObject $modelData.liveBench -Name "costPerSuccessfulTask") -and $null -ne $modelData.liveBench.costPerSuccessfulTask) { $hasCostValue = $true }
+        $lbCost = if ($hasCostValue) { [string]([double]$modelData.liveBench.costPerSuccessfulTask) } else { "n/a" }
+        $lbCostBucket = if ($modelData.liveBench -and (Test-ObjectMember -InputObject $modelData.liveBench -Name "costBucket") -and $modelData.liveBench.costBucket) { [string]$modelData.liveBench.costBucket } else { "n/a" }
+        $lines.Add("| $model | $aaBucket | $aaCodingBucket | $lbCodingBucket | $lbAgenticBucket | $lbReasoningBucket | $lbInstructionBucket | $lbCost | $lbCostBucket |")
     }
     $lines.Add("")
 

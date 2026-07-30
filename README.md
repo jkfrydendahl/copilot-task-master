@@ -222,7 +222,7 @@ the 1st of each month and opens/updates a PR with:
 
 - `reports/task-profile-review.md` (summary + applied/suggested changes)
 - `task-profiles.json` updated directly in the PR (when suggestions apply)
-- `data/model-ranking-snapshot.json` advisory ranking snapshot (when live ranking data is available)
+- `data/model-ranking-snapshot.json` ranking snapshot + benchmark-consensus state
 
 The workflow selects models using **family-pattern matching** — each task class maps to an ordered
 list of model families (e.g. `deep-reasoning` → opus-family, then gpt-flagship-family). Within a
@@ -234,26 +234,42 @@ Changes are applied directly in the PR branch. You still approve/reject at merge
 - Human review is expected before merge, using:
   https://docs.github.com/en/copilot/reference/ai-models/model-comparison
 - To block a specific model, add it to `$script:ModelDenylist` in `scripts/review-task-profiles.ps1`.
-- To change which family a task class prefers, edit `$classPreferences` in the same script.
+- To change which family a task class prefers, edit `scripts/model-selection-policy.ps1`.
 
-### Advisory model ranking data (non-authoritative)
+### External benchmark consensus auto-selection
 
-The monthly script also appends an **advisory-only** benchmark section in
-`reports/task-profile-review.md` and may refresh `data/model-ranking-snapshot.json`.
+External benchmarks can auto-select models, but only under strict guardrails:
+
+- **Two-run consensus required**: first full fresh qualifying run records pending candidate (`count=1`), second consecutive run with same candidate applies.
+- **Task-family eligibility remains authoritative**: challengers must be currently valid Copilot models and match allowed profile families from shared policy config.
+- **No fuzzy mapping**: source matching is explicit through `config/model-ranking-aliases.json`.
+- **Active override behavior**:
+  - Once applied, benchmark override stays active across later runs unless invalid/ineligible/denylisted.
+  - Lack of consensus does not auto-revert a still-valid active override.
+  - If policy-preferred model becomes persistent benchmark winner (two runs), override clears and policy ownership resumes.
 
 Sources:
 - Artificial Analysis Agentic Index page (embedded server-rendered JSON extraction, no API key):
   https://artificialanalysis.ai/?intelligence=agentic-index
+- Artificial Analysis Coding Agent Index page (used only for `agentic-implementation`):
+  https://artificialanalysis.ai/agents/coding-agents
 - LiveBench public release files from:
   https://github.com/LiveBench/new-livebench/tree/main/public
 
 Guardrails:
-- GitHub model guidance + task-family policy stay authoritative for eligibility and selection.
-- Advisory rankings never auto-apply and never change task-family policy or profile selection logic.
-- Model matching is explicit via `config/model-ranking-aliases.json` (no fuzzy matching).
-- Missing/unmapped scores are `n/a`, never negative evidence.
-- Rankings are normalized into broad buckets (`top`, `competitive`, `lagging`, `n/a`) among currently available Copilot models.
-- If fetch/parsing/schema issues occur, profile selection remains unchanged; the script falls back to committed snapshot data when available, and labels stale snapshots (45-day threshold).
+- Quality requirements per profile:
+  - `agentic-implementation`: AA Coding Agent Index + LiveBench `agenticCoding`
+  - `deep-reasoning`: AA Agentic Index + LiveBench `reasoning`
+  - `orchestrator` / `triage`: AA Agentic Index + LiveBench `instructionFollowing`
+  - `default-development` / `visual-ui` / `quick` / `mechanical`: AA Agentic Index + LiveBench `coding`
+  - `review`: AA Agentic Index + LiveBench `reasoning`
+- Challenger must be **top bucket in both required signals**, and strictly higher raw score in both when incumbent is scored.
+- Cost guardrail uses LiveBench `cost_per_successful_task`:
+  - cost-sensitive profiles (`quick`, `mechanical`, `triage`): challenger cost must be `<=` incumbent.
+  - other profiles: challenger cost must be `<= 1.5x` incumbent.
+  - if incumbent cost missing: challenger cannot be highest-cost third (`costBucket` must be `top` or `competitive`).
+  - if challenger cost missing: cannot auto-qualify.
+- If any required source is partial/fallback/stale, consensus counter does not advance.
 
 Maintenance notes:
 - Artificial Analysis extraction can break if embedded schema/layout changes; failures are reported as unavailable instead of guessed.
