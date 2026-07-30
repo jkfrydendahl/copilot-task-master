@@ -186,6 +186,30 @@ function Get-BenchmarkConsensusCandidate {
     return @($qualifiers | Sort-Object -Property @{ Expression = { $_.combinedRank }; Descending = $false }, @{ Expression = { $_.cost }; Descending = $false }, @{ Expression = { $_.model }; Descending = $false })[0]
 }
 
+function Test-ActiveOverrideQualitySupported {
+    [OutputType([bool])]
+    param(
+        [string]$ActiveModel,
+        [string]$PolicyPreferredModel,
+        [bool]$IsFullFreshRun,
+        [string]$ProfileKey,
+        $Snapshot
+    )
+
+    if ([string]::IsNullOrWhiteSpace($ActiveModel)) { return $true }
+    if (-not $IsFullFreshRun) { return $true }
+    if ([string]::IsNullOrWhiteSpace($PolicyPreferredModel)) { return $true }
+    if ($ActiveModel -eq $PolicyPreferredModel) { return $true }
+
+    $activeQuality = Get-ModelQualityDataForProfile -Snapshot $Snapshot -ProfileKey $ProfileKey -ModelId $ActiveModel
+    $baselineQuality = Get-ModelQualityDataForProfile -Snapshot $Snapshot -ProfileKey $ProfileKey -ModelId $PolicyPreferredModel
+    if ($null -eq $activeQuality -or $null -eq $baselineQuality) { return $false }
+    if ($null -eq $activeQuality.aaScore -or $null -eq $activeQuality.lbScore) { return $false }
+    if ($null -eq $baselineQuality.aaScore -or $null -eq $baselineQuality.lbScore) { return $false }
+    return ([double]$activeQuality.aaScore -gt [double]$baselineQuality.aaScore) -and `
+        ([double]$activeQuality.lbScore -gt [double]$baselineQuality.lbScore)
+}
+
 function Get-SnapshotConsensusProfilesMap {
     param($Snapshot)
     if ($Snapshot -is [System.Collections.IDictionary]) {
@@ -481,7 +505,6 @@ function Invoke-TaskProfileReview {
     foreach ($profile in $profiles) {
         $profileKey = [string]$profile.key
         $d = $decisions[$profileKey]
-        $incumbent = [string]$d.incumbentAfterPolicy
         $profileHasKey = if ($consensusProfiles -is [System.Collections.IDictionary]) { $consensusProfiles.Contains($profileKey) } else { (@($consensusProfiles.PSObject.Properties | Where-Object { $_.Name -eq $profileKey }).Count -gt 0) }
         $profileState = if ($profileHasKey) {
             if ($consensusProfiles -is [System.Collections.IDictionary]) { $consensusProfiles[$profileKey] } else { $consensusProfiles.$profileKey }
@@ -495,6 +518,9 @@ function Invoke-TaskProfileReview {
 
         $activeModel = if ($null -ne $profileState.activeOverride) { [string]$profileState.activeOverride.model } else { $null }
         $ctx = $d.ctx
+        # Only full, fresh, verified benchmark data may invalidate an existing
+        # override on quality grounds. Partial/fallback runs preserve it.
+        $isFullFresh = (Test-FullFreshConsensusRunForProfile -Snapshot $rankingSnapshot -ProfileKey $profileKey) -and $availability.verified
         $activeStillValid = $true
         if (-not [string]::IsNullOrWhiteSpace($activeModel)) {
             $activeStillValid = Test-ActiveOverrideAdmissible -ProfileKey $profileKey -ModelId $activeModel `
@@ -502,10 +528,22 @@ function Invoke-TaskProfileReview {
                 -CapabilityRecord $(if ($capabilitiesCatalog.ContainsKey($activeModel)) { $capabilitiesCatalog[$activeModel] } else { $null }) `
                 -ProfileRequirement $ctx.requirement -ProfileContextTier $ctx.contextTier -ProfileEffort $ctx.effort `
                 -CapabilityFreshnessDays $capabilityFreshnessDays
+
+            if ($activeStillValid -and $isFullFresh -and -not [string]::IsNullOrWhiteSpace([string]$d.policyPreferred)) {
+                $activeStillValid = Test-ActiveOverrideQualitySupported -ActiveModel $activeModel `
+                    -PolicyPreferredModel ([string]$d.policyPreferred) -IsFullFreshRun $isFullFresh `
+                    -ProfileKey $profileKey -Snapshot $rankingSnapshot
+            }
+        }
+        $incumbent = if (-not [string]::IsNullOrWhiteSpace($activeModel) -and $activeStillValid) {
+            $activeModel
+        } elseif (-not [string]::IsNullOrWhiteSpace([string]$d.policyPreferred)) {
+            [string]$d.policyPreferred
+        } else {
+            [string]$d.currentModel
         }
         # Rule 2: hardcoded fallback discovery (unverified) may still generate
         # baseline/report output, but must freeze benchmark promotion.
-        $isFullFresh = (Test-FullFreshConsensusRunForProfile -Snapshot $rankingSnapshot -ProfileKey $profileKey) -and $availability.verified
         $candidate = if ($isFullFresh) {
             Get-BenchmarkConsensusCandidate -ProfileKey $profileKey -ValidModels $validModels -IncumbentModel $incumbent -Snapshot $rankingSnapshot `
                 -AvailabilityVerified $availability.verified -Denylist $script:ModelDenylist -CapabilitiesCatalog $capabilitiesCatalog `

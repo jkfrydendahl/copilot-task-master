@@ -331,6 +331,9 @@ External benchmarks can auto-select models, but only under strict guardrails:
   - Once applied, benchmark override stays active across later runs unless it becomes inadmissible
     due to a confirmed hard failure (denylisted, unavailable, unsupported, or over budget) on a
     verified-availability run. Missing/stale/unknown facts and unverified runs retain it unchanged.
+  - On a full fresh benchmark run, the override is also rechecked against the current policy
+    baseline using the current comparison rules. A legacy override that no longer has comparative
+    evidence—such as Opus against an unscored Codex baseline—is cleared back to that baseline.
   - Lack of consensus does not auto-revert a still-valid active override.
   - If policy-preferred model becomes persistent benchmark winner (two runs), override clears and
     policy ownership resumes.
