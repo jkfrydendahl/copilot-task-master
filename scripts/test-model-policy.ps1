@@ -400,6 +400,13 @@ Run-Test "F2 Automatic family baseline selection skips an inadmissible top famil
     Assert-Eq "claude-sonnet-4.6" $result "Expected the next admissible sonnet-family candidate to be chosen when the newest one fails admissibility."
 }
 
+Run-Test "F2b Agentic baseline selects the newest admissible Codex version" {
+    $result = Get-PreferredModelForProfilePolicy -ProfileKey "agentic-implementation" `
+        -ValidModels @("gpt-5.2-codex", "gpt-5.3-codex") `
+        -AdmissibleModels @("gpt-5.2-codex", "gpt-5.3-codex")
+    Assert-Eq "gpt-5.3-codex" $result "Expected the newest admissible Codex model to remain the agentic baseline."
+}
+
 Run-Test "F3 Automatic family baseline selection returns null (grandfather current model) when no candidate is admissible" {
     $filter = { param($modelId) $false }
     $result = Get-PreferredModelForProfilePolicy -ProfileKey "default-development" -ValidModels @("claude-sonnet-5", "gpt-5.6-terra") -AdmissibilityFilter $filter

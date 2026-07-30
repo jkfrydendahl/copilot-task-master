@@ -352,9 +352,11 @@ Guardrails:
   - `orchestrator` / `triage`: AA Agentic Index + LiveBench `instructionFollowing`
   - `default-development` / `visual-ui` / `quick` / `mechanical`: AA Agentic Index + LiveBench `coding`
   - `review`: AA Agentic Index + LiveBench `reasoning`
-- Challenger must be **top bucket in both required signals**, and strictly higher raw score in both
-  when incumbent is scored, **and** pass the model-admissibility engine (capabilities/pricing/
-  context/effort/CLI-agent/vision, per profile requirement).
+- Challenger must be **top bucket in both required signals**, the incumbent must have comparable
+  raw scores in both signals, and the challenger must score strictly higher in both. Missing
+  incumbent coverage preserves the current model rather than treating absence of evidence as a
+  benchmark loss. The challenger must also pass the model-admissibility engine (capabilities/
+  pricing/context/effort/CLI-agent/vision, per profile requirement).
 - LiveBench `cost_per_successful_task` **no longer blocks** a qualifying challenger — GitHub
   per-million-token pricing (via model admissibility) is the hard billing gate instead. LiveBench
   cost is retained only as a **tie-break** after combined quality rank when multiple challengers
