@@ -6,6 +6,24 @@ $ErrorActionPreference = "Stop"
 . (Join-Path $PSScriptRoot "review-task-profiles.ps1")
 
 $fixtureRoot = Join-Path $PSScriptRoot "fixtures/model-ranking"
+$repoRoot = Resolve-Path (Join-Path $PSScriptRoot "..")
+
+# Real config, reused directly rather than re-declared as fixtures, so these
+# tests stay honest about what the shipped policy/capabilities catalog
+# actually admits (rule 3/4/6 integration).
+$script:RealCapabilities = (Get-ModelCapabilitiesCatalog -CatalogPath (Join-Path $repoRoot "config/model-capabilities.json")).models
+$script:DefaultDevRequirement = $script:ModelPolicyConfig.profileRequirements["default-development"]
+$script:QuickRequirement = $script:ModelPolicyConfig.profileRequirements["quick"]
+# Permissive requirement (no pricing ceiling) used only where a test's point is
+# to isolate cost-tie-break/no-longer-blocks behavior from unrelated pricing
+# ceiling gating.
+$script:PermissiveRequirement = [pscustomobject]@{
+    inputCeilingPerMillion = [double]::MaxValue
+    outputCeilingPerMillion = [double]::MaxValue
+    requiresVision = $false
+    requiresCliAgent = $true
+    costSensitive = $true
+}
 
 $script:Passed = 0
 $script:Failed = 0
@@ -94,55 +112,56 @@ Run-Test "3 LiveBench cost parsing and lower-is-better buckets" {
     Assert-Eq "top" $b."claude-sonnet-5-xhigh-effort" "Lowest cost should be top."
 }
 
-Run-Test "4 Shared family eligibility works across non-first families" {
+Run-Test "4 Baseline family-match helper (renamed, informational only) works across non-first families" {
     $valid = @("gpt-5.6-luna", "claude-haiku-4.5")
-    Assert-True (Test-ModelEligibleForProfilePolicy -ProfileKey "quick" -ModelId "gpt-5.6-luna" -ValidModels $valid) "Expected gpt-luna eligible for quick."
+    Assert-True (Test-ModelMatchesProfileFamilyPolicy -ProfileKey "quick" -ModelId "gpt-5.6-luna" -ValidModels $valid) "Expected gpt-luna to match quick's baseline family list."
 }
 
-Run-Test "5 Challenger top+raw higher both qualifies" {
+Run-Test "5 Challenger top+raw higher both qualifies (real capability/pricing admissibility applied)" {
     $snapshot = New-QualitySnapshot -AaScores @{ "claude-sonnet-5" = 70; "gpt-5.6-terra" = 80; "gpt-5.4" = 60 } -AaCodingScores @{ "claude-sonnet-5" = 70; "gpt-5.6-terra" = 80; "gpt-5.4" = 60 } -LbScores @{ "claude-sonnet-5" = 70; "gpt-5.6-terra" = 80; "gpt-5.4" = 60 } -Costs @{ "claude-sonnet-5" = 1.0; "gpt-5.6-terra" = 1.1; "gpt-5.4" = 0.9 }
-    $candidate = Get-BenchmarkConsensusCandidate -ProfileKey "default-development" -ValidModels @("claude-sonnet-5","gpt-5.6-terra","gpt-5.4") -IncumbentModel "claude-sonnet-5" -Snapshot $snapshot
+    $candidate = Get-BenchmarkConsensusCandidate -ProfileKey "default-development" -ValidModels @("claude-sonnet-5","gpt-5.6-terra","gpt-5.4") -IncumbentModel "claude-sonnet-5" -Snapshot $snapshot -AvailabilityVerified $true -Denylist $script:ModelDenylist -CapabilitiesCatalog $script:RealCapabilities -ProfileRequirement $script:DefaultDevRequirement -ProfileContextTier "default" -ProfileEffort "medium"
     Assert-Eq "gpt-5.6-terra" $candidate.model "Expected challenger to qualify."
 }
 
 Run-Test "6 Top challenger losing one raw signal does not qualify" {
     $snapshot = New-QualitySnapshot -AaScores @{ "claude-sonnet-5" = 80; "gpt-5.6-terra" = 79; "gpt-5.4" = 60 } -AaCodingScores @{ "claude-sonnet-5" = 80; "gpt-5.6-terra" = 79; "gpt-5.4" = 60 } -LbScores @{ "claude-sonnet-5" = 70; "gpt-5.6-terra" = 90; "gpt-5.4" = 60 } -Costs @{ "claude-sonnet-5" = 1.0; "gpt-5.6-terra" = 1.0; "gpt-5.4" = 0.9 }
-    $candidate = Get-BenchmarkConsensusCandidate -ProfileKey "default-development" -ValidModels @("claude-sonnet-5","gpt-5.6-terra","gpt-5.4") -IncumbentModel "claude-sonnet-5" -Snapshot $snapshot
+    $candidate = Get-BenchmarkConsensusCandidate -ProfileKey "default-development" -ValidModels @("claude-sonnet-5","gpt-5.6-terra","gpt-5.4") -IncumbentModel "claude-sonnet-5" -Snapshot $snapshot -AvailabilityVerified $true -Denylist $script:ModelDenylist -CapabilitiesCatalog $script:RealCapabilities -ProfileRequirement $script:DefaultDevRequirement -ProfileContextTier "default" -ProfileEffort "medium"
     Assert-True ($null -eq $candidate) "Expected no qualifier when one raw signal loses."
 }
 
 Run-Test "7 Top challenger may qualify against unscored incumbent" {
     $snapshot = New-QualitySnapshot -AaScores @{ "claude-sonnet-5" = $null; "gpt-5.6-terra" = 80; "gpt-5.4" = 60; "gpt-5.5" = 50 } -AaCodingScores @{ "claude-sonnet-5" = $null; "gpt-5.6-terra" = 80; "gpt-5.4" = 60; "gpt-5.5" = 50 } -LbScores @{ "claude-sonnet-5" = $null; "gpt-5.6-terra" = 90; "gpt-5.4" = 60; "gpt-5.5" = 50 } -Costs @{ "claude-sonnet-5" = $null; "gpt-5.6-terra" = 0.85; "gpt-5.4" = 0.9; "gpt-5.5" = 0.8 }
-    $candidate = Get-BenchmarkConsensusCandidate -ProfileKey "default-development" -ValidModels @("claude-sonnet-5","gpt-5.6-terra","gpt-5.4","gpt-5.5") -IncumbentModel "claude-sonnet-5" -Snapshot $snapshot
+    $candidate = Get-BenchmarkConsensusCandidate -ProfileKey "default-development" -ValidModels @("claude-sonnet-5","gpt-5.6-terra","gpt-5.4","gpt-5.5") -IncumbentModel "claude-sonnet-5" -Snapshot $snapshot -AvailabilityVerified $true -Denylist $script:ModelDenylist -CapabilitiesCatalog $script:RealCapabilities -ProfileRequirement $script:DefaultDevRequirement -ProfileContextTier "default" -ProfileEffort "medium"
     Assert-Eq "gpt-5.6-terra" $candidate.model "Expected challenger vs unscored incumbent."
 }
 
-Run-Test "8 Cost-sensitive threshold blocks higher cost" {
-    $inc = [pscustomobject]@{ cost = 1.0; costBucket = "competitive" }
-    $chg = [pscustomobject]@{ cost = 1.1; costBucket = "competitive" }
-    Assert-True (-not (Test-CostGuardrail -ProfileKey "quick" -IncumbentQuality $inc -ChallengerQuality $chg)) "quick requires <= incumbent cost."
+Run-Test "8 Rule 7: cost tie-break orders equal combinedRank challengers by lowest cost, not a hard gate" {
+    # terra and luna tie on combinedRank (both aaRank=1,lbRank=1 -> combinedRank=2); terra costs more, so luna must win the tie-break.
+    $snapshot = New-QualitySnapshot -AaScores @{ "claude-haiku-4.5" = 50; "gpt-5.6-terra" = 90; "gpt-5.6-luna" = 90 } -AaCodingScores @{ "claude-haiku-4.5" = 50; "gpt-5.6-terra" = 90; "gpt-5.6-luna" = 90 } -LbScores @{ "claude-haiku-4.5" = 50; "gpt-5.6-terra" = 90; "gpt-5.6-luna" = 90 } -Costs @{ "claude-haiku-4.5" = 1.0; "gpt-5.6-terra" = 5.0; "gpt-5.6-luna" = 0.5 }
+    $candidate = Get-BenchmarkConsensusCandidate -ProfileKey "quick" -ValidModels @("claude-haiku-4.5","gpt-5.6-terra","gpt-5.6-luna") -IncumbentModel "claude-haiku-4.5" -Snapshot $snapshot -AvailabilityVerified $true -Denylist $script:ModelDenylist -CapabilitiesCatalog $script:RealCapabilities -ProfileRequirement $script:PermissiveRequirement -ProfileContextTier "default" -ProfileEffort "low"
+    Assert-Eq "gpt-5.6-luna" $candidate.model "Expected lower-cost model to win the combinedRank tie."
 }
 
-Run-Test "9 General threshold allows <=1.5x and blocks above" {
-    $inc = [pscustomobject]@{ cost = 1.0; costBucket = "competitive" }
-    $ok = [pscustomobject]@{ cost = 1.5; costBucket = "competitive" }
-    $bad = [pscustomobject]@{ cost = 1.51; costBucket = "competitive" }
-    Assert-True (Test-CostGuardrail -ProfileKey "default-development" -IncumbentQuality $inc -ChallengerQuality $ok) "1.5x should pass."
-    Assert-True (-not (Test-CostGuardrail -ProfileKey "default-development" -IncumbentQuality $inc -ChallengerQuality $bad)) "Above 1.5x should fail."
+Run-Test "9 Rule 7: a much higher-cost qualifying challenger is no longer blocked (cost-sensitive profile)" {
+    # A third (non-candidate) filler model is included purely so bucket assignment (needs >=3 scored entries) puts gpt-5.6-terra in "top".
+    $snapshot = New-QualitySnapshot -AaScores @{ "claude-haiku-4.5" = 50; "gpt-5.6-terra" = 90; "gpt-5.4" = 10 } -AaCodingScores @{ "claude-haiku-4.5" = 50; "gpt-5.6-terra" = 90; "gpt-5.4" = 10 } -LbScores @{ "claude-haiku-4.5" = 50; "gpt-5.6-terra" = 90; "gpt-5.4" = 10 } -Costs @{ "claude-haiku-4.5" = 0.1; "gpt-5.6-terra" = 500.0; "gpt-5.4" = 0.2 }
+    $candidate = Get-BenchmarkConsensusCandidate -ProfileKey "quick" -ValidModels @("claude-haiku-4.5","gpt-5.6-terra") -IncumbentModel "claude-haiku-4.5" -Snapshot $snapshot -AvailabilityVerified $true -Denylist $script:ModelDenylist -CapabilitiesCatalog $script:RealCapabilities -ProfileRequirement $script:PermissiveRequirement -ProfileContextTier "default" -ProfileEffort "low"
+    Assert-Eq "gpt-5.6-terra" $candidate.model "A cost-sensitive profile's much-higher-cost challenger must still qualify; cost no longer gates."
 }
 
-Run-Test "10 Missing incumbent cost requires challenger not highest-cost third" {
-    $inc = [pscustomobject]@{ cost = $null; costBucket = "n/a" }
-    $good = [pscustomobject]@{ cost = 1.0; costBucket = "competitive" }
-    $bad = [pscustomobject]@{ cost = 2.0; costBucket = "lagging" }
-    Assert-True (Test-CostGuardrail -ProfileKey "default-development" -IncumbentQuality $inc -ChallengerQuality $good) "competitive should pass."
-    Assert-True (-not (Test-CostGuardrail -ProfileKey "default-development" -IncumbentQuality $inc -ChallengerQuality $bad)) "lagging should fail."
+Run-Test "10 Rule 7: missing incumbent cost no longer required for qualification" {
+    # claude-sonnet-5's null aa/lb scores exclude it from the scored set entirely, so two filler models
+    # (gpt-5.4, gpt-5.5) are included purely so bucket assignment (needs >=3 scored entries) puts gpt-5.6-terra in "top".
+    $snapshot = New-QualitySnapshot -AaScores @{ "claude-sonnet-5" = $null; "gpt-5.6-terra" = 90; "gpt-5.4" = 10; "gpt-5.5" = 5 } -AaCodingScores @{ "claude-sonnet-5" = $null; "gpt-5.6-terra" = 90; "gpt-5.4" = 10; "gpt-5.5" = 5 } -LbScores @{ "claude-sonnet-5" = $null; "gpt-5.6-terra" = 90; "gpt-5.4" = 10; "gpt-5.5" = 5 } -Costs @{ "claude-sonnet-5" = $null; "gpt-5.6-terra" = 999.0; "gpt-5.4" = 0.2; "gpt-5.5" = 0.3 }
+    $candidate = Get-BenchmarkConsensusCandidate -ProfileKey "default-development" -ValidModels @("claude-sonnet-5","gpt-5.6-terra") -IncumbentModel "claude-sonnet-5" -Snapshot $snapshot -AvailabilityVerified $true -Denylist $script:ModelDenylist -CapabilitiesCatalog $script:RealCapabilities -ProfileRequirement $script:DefaultDevRequirement -ProfileContextTier "default" -ProfileEffort "medium"
+    Assert-Eq "gpt-5.6-terra" $candidate.model "Missing incumbent cost combined with an unbounded challenger cost must not block qualification."
 }
 
-Run-Test "11 Missing challenger cost blocks" {
-    $inc = [pscustomobject]@{ cost = 1.0; costBucket = "top" }
-    $chg = [pscustomobject]@{ cost = $null; costBucket = "top" }
-    Assert-True (-not (Test-CostGuardrail -ProfileKey "default-development" -IncumbentQuality $inc -ChallengerQuality $chg)) "Missing challenger cost must block."
+Run-Test "11 Rule 7: missing challenger cost no longer blocks qualification" {
+    # A third (non-candidate) filler model is included purely so bucket assignment (needs >=3 scored entries) puts gpt-5.6-terra in "top".
+    $snapshot = New-QualitySnapshot -AaScores @{ "claude-sonnet-5" = 60; "gpt-5.6-terra" = 90; "gpt-5.4" = 10 } -AaCodingScores @{ "claude-sonnet-5" = 60; "gpt-5.6-terra" = 90; "gpt-5.4" = 10 } -LbScores @{ "claude-sonnet-5" = 60; "gpt-5.6-terra" = 90; "gpt-5.4" = 10 } -Costs @{ "claude-sonnet-5" = 1.0; "gpt-5.6-terra" = $null; "gpt-5.4" = 0.2 }
+    $candidate = Get-BenchmarkConsensusCandidate -ProfileKey "default-development" -ValidModels @("claude-sonnet-5","gpt-5.6-terra") -IncumbentModel "claude-sonnet-5" -Snapshot $snapshot -AvailabilityVerified $true -Denylist $script:ModelDenylist -CapabilitiesCatalog $script:RealCapabilities -ProfileRequirement $script:DefaultDevRequirement -ProfileContextTier "default" -ProfileEffort "medium"
+    Assert-Eq "gpt-5.6-terra" $candidate.model "A missing challenger cost must not block qualification now that cost is tie-break only."
 }
 
 Run-Test "12 First run records pending=1 no apply" {

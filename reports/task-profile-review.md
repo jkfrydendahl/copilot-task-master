@@ -2,7 +2,9 @@
 
 Reference: https://docs.github.com/en/copilot/reference/ai-models/model-comparison
 
-Model source: **gh copilot help config**
+Model source: **copilot help config**
+
+Force benchmark consensus (manual first-run override): **False**
 
 Force benchmark consensus (manual first-run override): **True**
 
@@ -32,6 +34,193 @@ Force benchmark consensus (manual first-run override): **True**
 ## Benchmark consensus auto-applied changes
 - "review": "claude-sonnet-5" -> "gpt-5.6-terra" (benchmark_consensus_forced - manual override, first qualifying run)
 
+## Model admissibility (rule 9: availability confidence, capability/pricing freshness, profile ceilings, exclusion reasons)
+
+### orchestrator
+
+- Availability confidence: **verified**
+- Pricing ceilings (per million tokens): input <= $3, output <= $15
+- Incumbent/current model: **claude-sonnet-5** — admissible: **True** (reasons: none)
+- Exclusions:
+
+| Model | Reasons | Pricing tier | Input $/M | Output $/M | Capability as-of |
+|---|---|---|---|---|---|
+| claude-sonnet-4.5 | context_unsupported, effort_unsupported | default | 3 | 15 | 2026-07-30 |
+| claude-opus-5 | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 | 25 | 2026-07-30 |
+| claude-opus-4.8 | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 | 25 | 2026-07-30 |
+| claude-opus-4.8-fast | context_unsupported, effort_unsupported, pricing_missing | n/a | n/a | n/a | 2026-07-30 |
+| claude-opus-4.7 | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 | 25 | 2026-07-30 |
+| claude-opus-4.6 | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 | 25 | 2026-07-30 |
+| claude-opus-4.5 | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 | 25 | 2026-07-30 |
+| gpt-5.6-sol | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 | 30 | 2026-07-30 |
+| gpt-5.5 | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 | 30 | 2026-07-30 |
+| gpt-5-mini | context_unsupported, effort_unsupported | default | 0.25 | 2 | 2026-07-30 |
+
+### quick
+
+- Availability confidence: **verified**
+- Pricing ceilings (per million tokens): input <= $2, output <= $10
+- Incumbent/current model: **claude-haiku-4.5** — admissible: **True** (reasons: none)
+- Exclusions:
+
+| Model | Reasons | Pricing tier | Input $/M | Output $/M | Capability as-of |
+|---|---|---|---|---|---|
+| claude-sonnet-4.6 | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 3 | 15 | 2026-07-30 |
+| claude-sonnet-4.5 | context_unsupported, effort_unsupported, pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 3 | 15 | 2026-07-30 |
+| claude-opus-5 | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 | 25 | 2026-07-30 |
+| claude-opus-4.8 | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 | 25 | 2026-07-30 |
+| claude-opus-4.8-fast | context_unsupported, effort_unsupported, pricing_missing | n/a | n/a | n/a | 2026-07-30 |
+| claude-opus-4.7 | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 | 25 | 2026-07-30 |
+| claude-opus-4.6 | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 | 25 | 2026-07-30 |
+| claude-opus-4.5 | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 | 25 | 2026-07-30 |
+| gpt-5.6-sol | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 | 30 | 2026-07-30 |
+| gpt-5.6-terra | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 2.5 | 15 | 2026-07-30 |
+| gpt-5.5 | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 | 30 | 2026-07-30 |
+| gpt-5.4 | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 2.5 | 15 | 2026-07-30 |
+| gpt-5.3-codex | pricing_output_exceeds_ceiling | default | 1.75 | 14 | 2026-07-30 |
+| gpt-5-mini | context_unsupported, effort_unsupported | default | 0.25 | 2 | 2026-07-30 |
+| gemini-3.1-pro-preview | pricing_output_exceeds_ceiling | default | 2 | 12 | 2026-07-30 |
+
+### default-development
+
+- Availability confidence: **verified**
+- Pricing ceilings (per million tokens): input <= $3, output <= $15
+- Incumbent/current model: **claude-sonnet-5** — admissible: **True** (reasons: none)
+- Exclusions:
+
+| Model | Reasons | Pricing tier | Input $/M | Output $/M | Capability as-of |
+|---|---|---|---|---|---|
+| claude-sonnet-4.5 | context_unsupported, effort_unsupported | default | 3 | 15 | 2026-07-30 |
+| claude-opus-5 | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 | 25 | 2026-07-30 |
+| claude-opus-4.8 | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 | 25 | 2026-07-30 |
+| claude-opus-4.8-fast | context_unsupported, effort_unsupported, pricing_missing | n/a | n/a | n/a | 2026-07-30 |
+| claude-opus-4.7 | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 | 25 | 2026-07-30 |
+| claude-opus-4.6 | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 | 25 | 2026-07-30 |
+| claude-opus-4.5 | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 | 25 | 2026-07-30 |
+| gpt-5.6-sol | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 | 30 | 2026-07-30 |
+| gpt-5.5 | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 | 30 | 2026-07-30 |
+| gpt-5-mini | context_unsupported, effort_unsupported | default | 0.25 | 2 | 2026-07-30 |
+
+### agentic-implementation
+
+- Availability confidence: **verified**
+- Pricing ceilings (per million tokens): input <= $10, output <= $50
+- Incumbent/current model: **gpt-5.3-codex** — admissible: **True** (reasons: none)
+- Exclusions:
+
+| Model | Reasons | Pricing tier | Input $/M | Output $/M | Capability as-of |
+|---|---|---|---|---|---|
+| claude-sonnet-4.5 | context_unsupported, effort_unsupported | default | 3 | 15 | 2026-07-30 |
+| claude-opus-4.8-fast | context_unsupported, effort_unsupported, pricing_missing | n/a | n/a | n/a | 2026-07-30 |
+| gpt-5-mini | context_unsupported, effort_unsupported | default | 0.25 | 2 | 2026-07-30 |
+
+### deep-reasoning
+
+- Availability confidence: **verified**
+- Pricing ceilings (per million tokens): input <= $10, output <= $45
+- Incumbent/current model: **claude-opus-5** — admissible: **True** (reasons: none)
+- Exclusions:
+
+| Model | Reasons | Pricing tier | Input $/M | Output $/M | Capability as-of |
+|---|---|---|---|---|---|
+| claude-sonnet-4.5 | context_unsupported, effort_unsupported | default | 3 | 15 | 2026-07-30 |
+| claude-haiku-4.5 | context_unsupported | default | 1 | 5 | 2026-07-30 |
+| claude-opus-4.8-fast | context_unsupported, effort_unsupported, pricing_missing | n/a | n/a | n/a | 2026-07-30 |
+| gpt-5.3-codex | context_unsupported | default | 1.75 | 14 | 2026-07-30 |
+| gpt-5.4-mini | context_unsupported | default | 0.75 | 4.5 | 2026-07-30 |
+| gpt-5-mini | context_unsupported, effort_unsupported | default | 0.25 | 2 | 2026-07-30 |
+
+### review
+
+- Availability confidence: **verified**
+- Pricing ceilings (per million tokens): input <= $5, output <= $30
+- Incumbent/current model: **claude-sonnet-5** — admissible: **True** (reasons: none)
+- Exclusions:
+
+| Model | Reasons | Pricing tier | Input $/M | Output $/M | Capability as-of |
+|---|---|---|---|---|---|
+| claude-sonnet-4.5 | context_unsupported, effort_unsupported | default | 3 | 15 | 2026-07-30 |
+| claude-opus-4.8-fast | context_unsupported, effort_unsupported, pricing_missing | n/a | n/a | n/a | 2026-07-30 |
+| gpt-5-mini | context_unsupported, effort_unsupported | default | 0.25 | 2 | 2026-07-30 |
+
+### visual-ui
+
+- Availability confidence: **verified**
+- Pricing ceilings (per million tokens): input <= $3, output <= $15
+- Incumbent/current model: **claude-sonnet-5** — admissible: **False** (reasons: vision_unknown)
+- Exclusions:
+
+| Model | Reasons | Pricing tier | Input $/M | Output $/M | Capability as-of |
+|---|---|---|---|---|---|
+| claude-sonnet-4.5 | vision_unknown, context_unsupported, effort_unsupported | default | 3 | 15 | 2026-07-30 |
+| claude-haiku-4.5 | vision_unknown | default | 1 | 5 | 2026-07-30 |
+| claude-opus-5 | vision_unknown, pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 | 25 | 2026-07-30 |
+| claude-opus-4.8 | vision_unknown, pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 | 25 | 2026-07-30 |
+| claude-opus-4.8-fast | vision_unknown, context_unsupported, effort_unsupported, pricing_missing | n/a | n/a | n/a | 2026-07-30 |
+| claude-opus-4.7 | vision_unknown, pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 | 25 | 2026-07-30 |
+| claude-opus-4.6 | vision_unknown, pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 | 25 | 2026-07-30 |
+| claude-opus-4.5 | vision_unknown, pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 | 25 | 2026-07-30 |
+| gpt-5.6-sol | vision_unknown, pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 | 30 | 2026-07-30 |
+| gpt-5.6-terra | vision_unknown | default | 2.5 | 15 | 2026-07-30 |
+| gpt-5.6-luna | vision_unknown | default | 1 | 6 | 2026-07-30 |
+| gpt-5.5 | vision_unknown, pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 | 30 | 2026-07-30 |
+| gpt-5.4 | vision_unknown | default | 2.5 | 15 | 2026-07-30 |
+| gpt-5.3-codex | vision_unknown | default | 1.75 | 14 | 2026-07-30 |
+| gpt-5.4-mini | vision_unknown | default | 0.75 | 4.5 | 2026-07-30 |
+| gpt-5-mini | context_unsupported, effort_unsupported | default | 0.25 | 2 | 2026-07-30 |
+| gemini-3.6-flash | vision_unknown | default | 1.5 | 7.5 | 2026-07-30 |
+| gemini-3.5-flash | vision_unknown | default | 1.5 | 9 | 2026-07-30 |
+
+### mechanical
+
+- Availability confidence: **verified**
+- Pricing ceilings (per million tokens): input <= $2, output <= $10
+- Incumbent/current model: **claude-haiku-4.5** — admissible: **True** (reasons: none)
+- Exclusions:
+
+| Model | Reasons | Pricing tier | Input $/M | Output $/M | Capability as-of |
+|---|---|---|---|---|---|
+| claude-sonnet-4.6 | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 3 | 15 | 2026-07-30 |
+| claude-sonnet-4.5 | context_unsupported, effort_unsupported, pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 3 | 15 | 2026-07-30 |
+| claude-opus-5 | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 | 25 | 2026-07-30 |
+| claude-opus-4.8 | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 | 25 | 2026-07-30 |
+| claude-opus-4.8-fast | context_unsupported, effort_unsupported, pricing_missing | n/a | n/a | n/a | 2026-07-30 |
+| claude-opus-4.7 | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 | 25 | 2026-07-30 |
+| claude-opus-4.6 | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 | 25 | 2026-07-30 |
+| claude-opus-4.5 | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 | 25 | 2026-07-30 |
+| gpt-5.6-sol | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 | 30 | 2026-07-30 |
+| gpt-5.6-terra | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 2.5 | 15 | 2026-07-30 |
+| gpt-5.5 | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 | 30 | 2026-07-30 |
+| gpt-5.4 | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 2.5 | 15 | 2026-07-30 |
+| gpt-5.3-codex | pricing_output_exceeds_ceiling | default | 1.75 | 14 | 2026-07-30 |
+| gpt-5-mini | context_unsupported, effort_unsupported | default | 0.25 | 2 | 2026-07-30 |
+| gemini-3.1-pro-preview | pricing_output_exceeds_ceiling | default | 2 | 12 | 2026-07-30 |
+
+### triage
+
+- Availability confidence: **verified**
+- Pricing ceilings (per million tokens): input <= $2, output <= $10
+- Incumbent/current model: **claude-sonnet-5** — admissible: **True** (reasons: none)
+- Exclusions:
+
+| Model | Reasons | Pricing tier | Input $/M | Output $/M | Capability as-of |
+|---|---|---|---|---|---|
+| claude-sonnet-4.6 | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 3 | 15 | 2026-07-30 |
+| claude-sonnet-4.5 | context_unsupported, effort_unsupported, pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 3 | 15 | 2026-07-30 |
+| claude-opus-5 | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 | 25 | 2026-07-30 |
+| claude-opus-4.8 | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 | 25 | 2026-07-30 |
+| claude-opus-4.8-fast | context_unsupported, effort_unsupported, pricing_missing | n/a | n/a | n/a | 2026-07-30 |
+| claude-opus-4.7 | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 | 25 | 2026-07-30 |
+| claude-opus-4.6 | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 | 25 | 2026-07-30 |
+| claude-opus-4.5 | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 | 25 | 2026-07-30 |
+| gpt-5.6-sol | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 | 30 | 2026-07-30 |
+| gpt-5.6-terra | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 2.5 | 15 | 2026-07-30 |
+| gpt-5.5 | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 | 30 | 2026-07-30 |
+| gpt-5.4 | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 2.5 | 15 | 2026-07-30 |
+| gpt-5.3-codex | pricing_output_exceeds_ceiling | default | 1.75 | 14 | 2026-07-30 |
+| gpt-5-mini | context_unsupported, effort_unsupported | default | 0.25 | 2 | 2026-07-30 |
+| gemini-3.1-pro-preview | pricing_output_exceeds_ceiling | default | 2 | 12 | 2026-07-30 |
+
 ## External model ranking snapshot
 
 - Status: **ok**
@@ -48,7 +237,7 @@ Force benchmark consensus (manual first-run override): **True**
 - Artificial Analysis Coding Agents fetched at (UTC): 2026-07-30T11:29:13.7507473Z
 - LiveBench fetched at (UTC): 2026-07-30T11:29:13.9123563Z
 
-> External rankings can auto-apply only after strict two-run consensus; task-family eligibility remains authoritative.
+> External rankings can auto-apply only after strict two-run consensus; verified availability, capabilities, pricing, and benchmark quality govern promotion, and family preferences are baseline-only.
 
 | Model | AA Agentic | AA Coding Agent | LB Coding | LB Agentic Coding | LB Reasoning | LB Instruction Following | LB Cost | LB Cost Bucket |
 |---|---|---|---|---|---|---|---|---|

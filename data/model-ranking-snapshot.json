@@ -902,7 +902,19 @@
         "activeOverride": null
       },
       "agentic-implementation": {
-        "pending": null,
+        "pending": {
+          "candidateModel": "claude-opus-5",
+          "consecutiveQualifyingFullRuns": 1,
+          "sourceDates": {
+            "liveBench": "2026-06-25",
+            "artificialAnalysisCodingAgents": null
+          },
+          "sourceVersions": {
+            "liveBench": "2026-06-25",
+            "artificialAnalysisCodingAgents": "30e68fb4f3e7cd69cd9062ba7d457517d30bed2fe22bce4d27824dc78147e619"
+          },
+          "updatedAtUtc": "2026-07-30T14:41:18.3740927Z"
+        },
         "activeOverride": null
       },
       "deep-reasoning": {

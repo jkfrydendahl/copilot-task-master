@@ -3,58 +3,32 @@ $ErrorActionPreference = "Stop"
 
 . (Join-Path $PSScriptRoot "model-ranking-data.ps1")
 . (Join-Path $PSScriptRoot "model-selection-policy.ps1")
+. (Join-Path $PSScriptRoot "model-policy-config.ps1")
+. (Join-Path $PSScriptRoot "model-availability.ps1")
+. (Join-Path $PSScriptRoot "model-admissibility.ps1")
+. (Join-Path $PSScriptRoot "model-review-report.ps1")
 
-$script:ModelDenylist = @(
-    "claude-fable-5"
-)
-
-$script:FallbackKnownModels = @(
-    "claude-sonnet-5", "claude-sonnet-4.6", "claude-sonnet-4.5",
-    "claude-haiku-4.5",
-    "claude-opus-5", "claude-opus-4.8", "claude-opus-4.7", "claude-opus-4.6", "claude-opus-4.6-fast", "claude-opus-4.5",
-    "claude-fable-5",
-    "gpt-5.6-sol", "gpt-5.6-terra", "gpt-5.6-luna",
-    "gpt-5.5", "gpt-5.4", "gpt-5.4-mini", "gpt-5.3-codex", "gpt-5.2-codex", "gpt-5.2", "gpt-5-mini",
-    "gemini-3.1-pro-preview", "gemini-3.6-flash", "gemini-3.5-flash",
-    "mai-code-1-flash-picker"
-)
+$script:ModelPolicyConfigPath = Join-Path (Join-Path $PSScriptRoot "..") "config/model-policy.json"
+$script:ModelCapabilitiesConfigPath = Join-Path (Join-Path $PSScriptRoot "..") "config/model-capabilities.json"
+$script:ModelPolicyConfig = Get-ModelPolicyConfig -PolicyPath $script:ModelPolicyConfigPath
+$script:ModelDenylist = @($script:ModelPolicyConfig.denylist)
 
 function Get-ValidModels {
-    [OutputType([string[]])]
+    # Back-compat wrapper (models, source) tuple around Get-ModelAvailability,
+    # for any callers still expecting the historical two-value return shape.
+    [OutputType([System.Object[]])]
     param()
 
-    $modelPattern = '"(claude-[\w.\-]+|gpt-[\w.\-]+|gemini-[\w.\-]+|mai-[\w.\-]+)"'
-    if (Get-Command copilot -ErrorAction SilentlyContinue) {
-        try {
-            $helpText = (copilot help config 2>&1 | Out-String)
-            $cliModels = @([regex]::Matches($helpText, $modelPattern) | ForEach-Object { $_.Groups[1].Value } | Select-Object -Unique | Where-Object { $script:ModelDenylist -notcontains $_ })
-            if ($cliModels.Count -gt 0) { return $cliModels, "copilot help config" }
-        } catch { }
-    }
-    if (Get-Command gh -ErrorAction SilentlyContinue) {
-        try {
-            $helpText = (gh copilot help config 2>&1 | Out-String)
-            $cliModels = @([regex]::Matches($helpText, $modelPattern) | ForEach-Object { $_.Groups[1].Value } | Select-Object -Unique | Where-Object { $script:ModelDenylist -notcontains $_ })
-            if ($cliModels.Count -gt 0) { return $cliModels, "gh copilot help config" }
-        } catch { }
-    }
-    return @($script:FallbackKnownModels | Where-Object { $script:ModelDenylist -notcontains $_ }), "hardcoded fallback (copilot help config not available on this runner)"
+    $availability = Get-ModelAvailability -Denylist $script:ModelDenylist
+    return $availability.models, $availability.source
 }
 
 function Get-ProfileLiveBenchCategory {
-    param([string]$ProfileKey)
-    $map = @{
-        "agentic-implementation" = "agenticCoding"
-        "deep-reasoning" = "reasoning"
-        "orchestrator" = "instructionFollowing"
-        "triage" = "instructionFollowing"
-        "default-development" = "coding"
-        "review" = "reasoning"
-        "visual-ui" = "coding"
-        "quick" = "coding"
-        "mechanical" = "coding"
-    }
-    if ($map.ContainsKey($ProfileKey)) { return $map[$ProfileKey] }
+    param(
+        [string]$ProfileKey,
+        [hashtable]$Map = $script:ModelPolicyConfig.profileLiveBenchCategories
+    )
+    if ($Map.ContainsKey($ProfileKey)) { return $Map[$ProfileKey] }
     return $null
 }
 
@@ -145,36 +119,50 @@ function Get-ModelQualityDataForProfile {
     }
 }
 
-function Test-CostGuardrail {
-    param(
-        [string]$ProfileKey,
-        $IncumbentQuality,
-        $ChallengerQuality
-    )
-    if ($null -eq $ChallengerQuality -or $null -eq $ChallengerQuality.cost) { return $false }
-    $costSensitive = @("quick", "mechanical", "triage")
-    if ($null -ne $IncumbentQuality -and $null -ne $IncumbentQuality.cost) {
-        $inc = [double]$IncumbentQuality.cost
-        $chg = [double]$ChallengerQuality.cost
-        if ($costSensitive -contains $ProfileKey) { return $chg -le $inc }
-        return $chg -le ($inc * 1.5)
-    }
-    return @("top", "competitive") -contains [string]$ChallengerQuality.costBucket
-}
-
 function Get-BenchmarkConsensusCandidate {
+    # Rule 3: family/task-family matching is baseline preference only and is
+    # NOT an admissibility gate here anymore — candidates are gated by the
+    # real admissibility engine (denylist, verified availability, capability
+    # facts, and the profile's hard pricing ceilings).
+    # Rule 7: LiveBench cost_per_successful_task no longer blocks a
+    # qualifying challenger; it is retained only as a tie-break (see the
+    # Sort-Object below, which already orders by cost after combinedRank).
     param(
         [string]$ProfileKey,
         [string[]]$ValidModels,
         [string]$IncumbentModel,
-        $Snapshot
+        $Snapshot,
+        [bool]$AvailabilityVerified = $true,
+        [string[]]$Denylist = $script:ModelDenylist,
+        [hashtable]$CapabilitiesCatalog = @{},
+        $ProfileRequirement = $null,
+        [string]$ProfileContextTier = "default",
+        [string]$ProfileEffort = "medium",
+        [int]$CapabilityFreshnessDays = 60,
+        [datetime]$NowUtc = ((Get-Date).ToUniversalTime())
     )
+
+    if ($null -eq $ProfileRequirement) {
+        $ProfileRequirement = [pscustomobject]@{
+            inputCeilingPerMillion = [double]::MaxValue
+            outputCeilingPerMillion = [double]::MaxValue
+            requiresVision = $false
+            requiresCliAgent = $false
+            costSensitive = $false
+        }
+    }
 
     $incumbent = Get-ModelQualityDataForProfile -Snapshot $Snapshot -ProfileKey $ProfileKey -ModelId $IncumbentModel
     $qualifiers = New-Object System.Collections.Generic.List[object]
     foreach ($model in $ValidModels) {
         if ($model -eq $IncumbentModel) { continue }
-        if (-not (Test-ModelEligibleForProfilePolicy -ProfileKey $ProfileKey -ModelId $model -ValidModels $ValidModels -ModelDenylist $script:ModelDenylist)) { continue }
+        $capabilityRecord = if ($CapabilitiesCatalog.ContainsKey($model)) { $CapabilitiesCatalog[$model] } else { $null }
+        $verdict = Get-ModelAdmissibilityVerdict -ModelId $model -ProfileKey $ProfileKey -AvailabilityVerified $AvailabilityVerified `
+            -Denylist $Denylist -AvailableModels $ValidModels -CapabilityRecord $capabilityRecord `
+            -ProfileRequirement $ProfileRequirement -ProfileContextTier $ProfileContextTier -ProfileEffort $ProfileEffort `
+            -CapabilityFreshnessDays $CapabilityFreshnessDays -NowUtc $NowUtc
+        if (-not $verdict.admissible) { continue }
+
         $candidate = Get-ModelQualityDataForProfile -Snapshot $Snapshot -ProfileKey $ProfileKey -ModelId $model
         if ($null -eq $candidate) { continue }
         if ($candidate.aaBucket -ne "top" -or $candidate.lbBucket -ne "top") { continue }
@@ -187,7 +175,6 @@ function Get-BenchmarkConsensusCandidate {
             $winsBoth = $true
         }
         if (-not $winsBoth) { continue }
-        if (-not (Test-CostGuardrail -ProfileKey $ProfileKey -IncumbentQuality $incumbent -ChallengerQuality $candidate)) { continue }
 
         $combinedRank = ([int]$candidate.aaRank) + ([int]$candidate.lbRank)
         $qualifiers.Add([pscustomobject]@{
@@ -317,7 +304,7 @@ function Resolve-BenchmarkConsensusState {
     }
 
     # Manual, one-time override: a candidate that already passed every other
-    # gate (GitHub family eligibility, top-bucket/raw-score wins, cost
+    # gate (verified availability/capability/pricing admissibility, top-bucket/raw-score wins, cost
     # guardrail, source completeness/freshness via $IsFullFreshRun, and
     # active-override validity via $ActiveOverrideStillValid, all evaluated
     # by the caller before reaching this function) may apply on its first
@@ -379,10 +366,27 @@ function Get-ForceBenchmarkConsensusFlag {
     return $raw -match '^(?i:true|1)$'
 }
 
+function Get-ProfileAdmissibilityRequirement {
+    # Resolves a profile's admissibility inputs: its pricing/capability
+    # requirement (from config/model-policy.json), and its context tier /
+    # effort (from task-profiles.json, the actual runtime values a model
+    # would be asked to serve for this profile).
+    param($ProfilesByKey, [string]$ProfileKey)
+    if (-not $script:ModelPolicyConfig.profileRequirements.ContainsKey($ProfileKey)) {
+        throw "No profileRequirements entry configured for profile key '$ProfileKey' in config/model-policy.json. Refusing to fall back to an unlimited/no-requirements default -- add the missing profile entry (profileRequirements, classPreferences, and profileLiveBenchCategories are all required per known profile key)."
+    }
+    $requirement = $script:ModelPolicyConfig.profileRequirements[$ProfileKey]
+    $profile = $ProfilesByKey[$ProfileKey]
+    $contextTier = if ($null -ne $profile) { [string]$profile.context } else { "default" }
+    $effort = if ($null -ne $profile) { [string]$profile.effort } else { "medium" }
+    return [pscustomobject]@{ requirement = $requirement; contextTier = $contextTier; effort = $effort }
+}
+
 function Invoke-TaskProfileReview {
     $policy = Get-ModelSelectionPolicy
     $modelComparisonUrl = "https://docs.github.com/en/copilot/reference/ai-models/model-comparison"
     $forceBenchmarkConsensus = Get-ForceBenchmarkConsensusFlag
+    $capabilityFreshnessDays = [int]$script:ModelPolicyConfig.consensusPolicy.capabilityFreshnessDays
 
     $repoRoot = Resolve-Path (Join-Path $PSScriptRoot "..")
     $profilesPath = Join-Path $repoRoot "task-profiles.json"
@@ -392,8 +396,17 @@ function Invoke-TaskProfileReview {
     if (!(Test-Path $reportDir)) { New-Item -ItemType Directory -Path $reportDir -Force | Out-Null }
 
     $profiles = @((Get-Content $profilesPath -Raw | ConvertFrom-Json) | ForEach-Object { $_ })
-    $validModels, $modelSource = Get-ValidModels
-    $validModels = @($validModels)
+    $profilesByKey = @{}
+    foreach ($p in $profiles) { $profilesByKey[[string]$p.key] = $p }
+
+    # Rule 2/10: availability discovery drives both the usable model list and
+    # whether this run's confidence is "verified" (real CLI/GHE discovery) or
+    # "unverified" (hardcoded fallback). Unverified runs freeze benchmark
+    # promotion below but must not revoke already-active overrides.
+    $availability = Get-ModelAvailability -Denylist $script:ModelDenylist
+    $validModels = @($availability.models)
+    $modelSource = $availability.source
+    $capabilitiesCatalog = (Get-ModelCapabilitiesCatalog -CatalogPath $script:ModelCapabilitiesConfigPath).models
 
     $priorSnapshot = Read-ModelRankingSnapshotFile -SnapshotPath $snapshotPath
     if ($null -eq $priorSnapshot) { $priorSnapshot = New-UnavailableModelRankingSnapshot }
@@ -402,13 +415,43 @@ function Invoke-TaskProfileReview {
     foreach ($profile in $profiles) {
         $profileKey = [string]$profile.key
         $currentModel = [string]$profile.model
-        $policyPreferred = Get-PreferredModelForProfilePolicy -ProfileKey $profileKey -ValidModels $validModels -Policy $policy
+        # Rule 1: family/class preference is the deterministic baseline
+        # fallback ordering, but an automatic baseline change must never
+        # select a family candidate that fails the same
+        # availability/capability/pricing admissibility engine used
+        # everywhere else for this profile. Computing $ctx up-front (once,
+        # per profile) lets us build that filter here and reuse the same
+        # $ctx for the override check, ledger, and benchmark candidate
+        # search below instead of recomputing it three times.
+        $ctx = Get-ProfileAdmissibilityRequirement -ProfilesByKey $profilesByKey -ProfileKey $profileKey
+        $admissibilityFilter = {
+            param($modelId)
+            $verdict = Get-ModelAdmissibilityVerdict -ModelId $modelId -ProfileKey $profileKey -AvailabilityVerified $availability.verified `
+                -Denylist $script:ModelDenylist -AvailableModels $validModels `
+                -CapabilityRecord $(if ($capabilitiesCatalog.ContainsKey($modelId)) { $capabilitiesCatalog[$modelId] } else { $null }) `
+                -ProfileRequirement $ctx.requirement -ProfileContextTier $ctx.contextTier -ProfileEffort $ctx.effort -CapabilityFreshnessDays $capabilityFreshnessDays
+            return [bool]$verdict.admissible
+        }.GetNewClosure()
+        $policyPreferred = Get-PreferredModelForProfilePolicy -ProfileKey $profileKey -ValidModels $validModels -Policy $policy -AdmissibilityFilter $admissibilityFilter
+        $currentVerdict = Get-ModelAdmissibilityVerdict -ModelId $currentModel -ProfileKey $profileKey -AvailabilityVerified $availability.verified `
+            -Denylist $script:ModelDenylist -AvailableModels $validModels `
+            -CapabilityRecord $(if ($capabilitiesCatalog.ContainsKey($currentModel)) { $capabilitiesCatalog[$currentModel] } else { $null }) `
+            -ProfileRequirement $ctx.requirement -ProfileContextTier $ctx.contextTier -ProfileEffort $ctx.effort -CapabilityFreshnessDays $capabilityFreshnessDays
+        $grandfatherCurrent = Test-ModelAdmissibilityGrandfatherable -Verdict $currentVerdict
         $activeOverride = Get-ActiveOverrideModel -Snapshot $priorSnapshot -ProfileKey $profileKey
         $overrideValid = $false
         if (-not [string]::IsNullOrWhiteSpace($activeOverride)) {
-            $overrideValid = Test-ModelEligibleForProfilePolicy -ProfileKey $profileKey -ModelId $activeOverride -ValidModels $validModels -ModelDenylist $script:ModelDenylist -Policy $policy
+            $overrideValid = Test-ActiveOverrideAdmissible -ProfileKey $profileKey -ModelId $activeOverride `
+                -AvailabilityVerified $availability.verified -Denylist $script:ModelDenylist -AvailableModels $validModels `
+                -CapabilityRecord $(if ($capabilitiesCatalog.ContainsKey($activeOverride)) { $capabilitiesCatalog[$activeOverride] } else { $null }) `
+                -ProfileRequirement $ctx.requirement -ProfileContextTier $ctx.contextTier -ProfileEffort $ctx.effort `
+                -CapabilityFreshnessDays $capabilityFreshnessDays
         }
-        $target = if ($overrideValid) { $activeOverride } elseif (-not [string]::IsNullOrWhiteSpace($policyPreferred)) { $policyPreferred } else { $currentModel }
+        # Rule 1 (grandfathering): if no admissible baseline exists
+        # ($policyPreferred is null/empty), the existing current model is
+        # kept unchanged rather than silently replaced -- this falls out of
+        # the else-branch below with no special-casing needed.
+        $target = if ($overrideValid) { $activeOverride } elseif ($grandfatherCurrent) { $currentModel } elseif (-not [string]::IsNullOrWhiteSpace($policyPreferred)) { $policyPreferred } else { $currentModel }
         $type = if ($overrideValid) { "active_override" } elseif ($target -ne $currentModel) { "policy_preference" } else { "none" }
         $decisions[$profileKey] = [pscustomobject]@{
             currentModel = $currentModel
@@ -418,6 +461,7 @@ function Invoke-TaskProfileReview {
             changeType = $type
             benchmarkApplied = $false
             pendingCount = 0
+            ctx = $ctx
         }
     }
 
@@ -435,6 +479,7 @@ function Invoke-TaskProfileReview {
     }
 
     $benchmarkChanges = New-Object System.Collections.Generic.List[string]
+    $profileAdmissibilityVerdicts = @{}
     foreach ($profile in $profiles) {
         $profileKey = [string]$profile.key
         $d = $decisions[$profileKey]
@@ -451,12 +496,55 @@ function Invoke-TaskProfileReview {
         }
 
         $activeModel = if ($null -ne $profileState.activeOverride) { [string]$profileState.activeOverride.model } else { $null }
+        $ctx = $d.ctx
         $activeStillValid = $true
         if (-not [string]::IsNullOrWhiteSpace($activeModel)) {
-            $activeStillValid = Test-ModelEligibleForProfilePolicy -ProfileKey $profileKey -ModelId $activeModel -ValidModels $validModels -ModelDenylist $script:ModelDenylist -Policy $policy
+            $activeStillValid = Test-ActiveOverrideAdmissible -ProfileKey $profileKey -ModelId $activeModel `
+                -AvailabilityVerified $availability.verified -Denylist $script:ModelDenylist -AvailableModels $validModels `
+                -CapabilityRecord $(if ($capabilitiesCatalog.ContainsKey($activeModel)) { $capabilitiesCatalog[$activeModel] } else { $null }) `
+                -ProfileRequirement $ctx.requirement -ProfileContextTier $ctx.contextTier -ProfileEffort $ctx.effort `
+                -CapabilityFreshnessDays $capabilityFreshnessDays
         }
-        $isFullFresh = Test-FullFreshConsensusRunForProfile -Snapshot $rankingSnapshot -ProfileKey $profileKey
-        $candidate = if ($isFullFresh) { Get-BenchmarkConsensusCandidate -ProfileKey $profileKey -ValidModels $validModels -IncumbentModel $incumbent -Snapshot $rankingSnapshot } else { $null }
+        # Rule 2: hardcoded fallback discovery (unverified) may still generate
+        # baseline/report output, but must freeze benchmark promotion.
+        $isFullFresh = (Test-FullFreshConsensusRunForProfile -Snapshot $rankingSnapshot -ProfileKey $profileKey) -and $availability.verified
+        $candidate = if ($isFullFresh) {
+            Get-BenchmarkConsensusCandidate -ProfileKey $profileKey -ValidModels $validModels -IncumbentModel $incumbent -Snapshot $rankingSnapshot `
+                -AvailabilityVerified $availability.verified -Denylist $script:ModelDenylist -CapabilitiesCatalog $capabilitiesCatalog `
+                -ProfileRequirement $ctx.requirement -ProfileContextTier $ctx.contextTier -ProfileEffort $ctx.effort -CapabilityFreshnessDays $capabilityFreshnessDays
+        } else { $null }
+
+        # Per-profile admissibility ledger for the review report (rule 9):
+        # every discovered model other than the incumbent, with full reason
+        # codes, regardless of whether it happens to also be a quality
+        # challenger this run.
+        $profileVerdicts = @($validModels | Where-Object { $_ -ne $incumbent } | ForEach-Object {
+            $m = $_
+            Get-ModelAdmissibilityVerdict -ModelId $m -ProfileKey $profileKey -AvailabilityVerified $availability.verified `
+                -Denylist $script:ModelDenylist -AvailableModels $validModels `
+                -CapabilityRecord $(if ($capabilitiesCatalog.ContainsKey($m)) { $capabilitiesCatalog[$m] } else { $null }) `
+                -ProfileRequirement $ctx.requirement -ProfileContextTier $ctx.contextTier -ProfileEffort $ctx.effort -CapabilityFreshnessDays $capabilityFreshnessDays
+        })
+        # Rule 1: the incumbent/current model's own admissibility verdict is
+        # always computed and carried into the ledger, even though it is
+        # excluded from $profileVerdicts above -- this is what makes cases
+        # like "current model is Sonnet 5 with unknown vision" visible in the
+        # report instead of silently omitted.
+        $incumbentVerdict = if (-not [string]::IsNullOrWhiteSpace($incumbent)) {
+            Get-ModelAdmissibilityVerdict -ModelId $incumbent -ProfileKey $profileKey -AvailabilityVerified $availability.verified `
+                -Denylist $script:ModelDenylist -AvailableModels $validModels `
+                -CapabilityRecord $(if ($capabilitiesCatalog.ContainsKey($incumbent)) { $capabilitiesCatalog[$incumbent] } else { $null }) `
+                -ProfileRequirement $ctx.requirement -ProfileContextTier $ctx.contextTier -ProfileEffort $ctx.effort -CapabilityFreshnessDays $capabilityFreshnessDays
+        } else { $null }
+        $profileAdmissibilityVerdicts[$profileKey] = [pscustomobject]@{
+            verdicts = $profileVerdicts
+            incumbentModel = $incumbent
+            incumbentVerdict = $incumbentVerdict
+            availabilityConfidence = $availability.confidence
+            inputCeiling = [double]$ctx.requirement.inputCeilingPerMillion
+            outputCeiling = [double]$ctx.requirement.outputCeilingPerMillion
+        }
+
         $sourceDates = if ($isFullFresh -and $null -ne $candidate) { Get-RequiredSourceDatesForProfile -Snapshot $rankingSnapshot -ProfileKey $profileKey } else { @{} }
         $sourceVersions = if ($isFullFresh -and $null -ne $candidate) { Get-RequiredSourceVersionsForProfile -Snapshot $rankingSnapshot -ProfileKey $profileKey } else { @{} }
 
@@ -558,6 +646,14 @@ function Invoke-TaskProfileReview {
     $lines += "## Benchmark consensus auto-applied changes"
     if ($benchmarkChanges.Count -eq 0) { $lines += "- None." } else { $lines += @($benchmarkChanges) }
     $lines += ""
+    $lines += "## Model admissibility (rule 9: availability confidence, capability/pricing freshness, profile ceilings, exclusion reasons)"
+    $lines += ""
+    foreach ($profile in $profiles) {
+        $k = [string]$profile.key
+        $entry = $profileAdmissibilityVerdicts[$k]
+        if ($null -eq $entry) { continue }
+        $lines += Get-AdmissibilityReportLines -ProfileKey $k -Verdicts $entry.verdicts -AvailabilityConfidence $entry.availabilityConfidence -InputCeiling $entry.inputCeiling -OutputCeiling $entry.outputCeiling -IncumbentModel $entry.incumbentModel -IncumbentVerdict $entry.incumbentVerdict
+    }
     $lines += $rankingReportLines
 
     Set-Content -Path $reportPath -Value (($lines -join "`r`n").TrimEnd()) -Encoding UTF8

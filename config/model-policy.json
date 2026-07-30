@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 1,
+  "denylist": [
+    "claude-fable-5"
+  ],
+  "familyPatterns": {
+    "sonnet-family": "claude-sonnet-\\d",
+    "haiku-family": "claude-haiku-\\d",
+    "opus-family": "claude-opus-\\d",
+    "fable-family": "claude-fable-\\d",
+    "codex-family": "gpt-.*-codex",
+    "mini-family": "gpt-.*-mini",
+    "gpt-flagship-family": "gpt-5\\.\\d+$",
+    "gpt-sol-family": "gpt-5\\.\\d+-sol$",
+    "gpt-terra-family": "gpt-5\\.\\d+-terra$",
+    "gpt-luna-family": "gpt-5\\.\\d+-luna$",
+    "mai-family": "mai-[\\w.\\-]+"
+  },
+  "classPreferences": {
+    "orchestrator": ["sonnet-family", "gpt-terra-family", "gpt-flagship-family"],
+    "quick": ["haiku-family", "mai-family", "gpt-luna-family", "mini-family"],
+    "default-development": ["sonnet-family", "gpt-terra-family", "gpt-flagship-family"],
+    "agentic-implementation": ["fable-family", "codex-family", "gpt-terra-family", "gpt-flagship-family", "sonnet-family"],
+    "deep-reasoning": ["opus-family", "gpt-sol-family", "gpt-flagship-family"],
+    "review": ["sonnet-family", "gpt-terra-family", "codex-family"],
+    "visual-ui": ["sonnet-family", "gpt-terra-family", "gpt-flagship-family"],
+    "mechanical": ["haiku-family", "mai-family", "gpt-luna-family", "mini-family"],
+    "triage": ["sonnet-family", "mai-family", "gpt-luna-family", "mini-family"]
+  },
+  "profileLiveBenchCategories": {
+    "agentic-implementation": "agenticCoding",
+    "deep-reasoning": "reasoning",
+    "orchestrator": "instructionFollowing",
+    "triage": "instructionFollowing",
+    "default-development": "coding",
+    "review": "reasoning",
+    "visual-ui": "coding",
+    "quick": "coding",
+    "mechanical": "coding"
+  },
+  "profileRequirements": {
+    "quick": { "inputCeilingPerMillion": 2, "outputCeilingPerMillion": 10, "requiresVision": false, "requiresCliAgent": true, "costSensitive": true },
+    "mechanical": { "inputCeilingPerMillion": 2, "outputCeilingPerMillion": 10, "requiresVision": false, "requiresCliAgent": true, "costSensitive": true },
+    "triage": { "inputCeilingPerMillion": 2, "outputCeilingPerMillion": 10, "requiresVision": false, "requiresCliAgent": true, "costSensitive": true },
+    "default-development": { "inputCeilingPerMillion": 3, "outputCeilingPerMillion": 15, "requiresVision": false, "requiresCliAgent": true, "costSensitive": false },
+    "orchestrator": { "inputCeilingPerMillion": 3, "outputCeilingPerMillion": 15, "requiresVision": false, "requiresCliAgent": true, "costSensitive": false },
+    "visual-ui": { "inputCeilingPerMillion": 3, "outputCeilingPerMillion": 15, "requiresVision": true, "requiresCliAgent": true, "costSensitive": false },
+    "review": { "inputCeilingPerMillion": 5, "outputCeilingPerMillion": 30, "requiresVision": false, "requiresCliAgent": true, "costSensitive": false },
+    "agentic-implementation": { "inputCeilingPerMillion": 10, "outputCeilingPerMillion": 50, "requiresVision": false, "requiresCliAgent": true, "costSensitive": false },
+    "deep-reasoning": { "inputCeilingPerMillion": 10, "outputCeilingPerMillion": 45, "requiresVision": false, "requiresCliAgent": true, "costSensitive": false }
+  },
+  "consensusPolicy": {
+    "staleAfterDays": 45,
+    "capabilityFreshnessDays": 60
+  }
+}

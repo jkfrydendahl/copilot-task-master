@@ -4,6 +4,7 @@ $MasterPath = Split-Path -Parent $MyInvocation.MyCommand.Path
 $RepoIndex = Join-Path $MasterPath "repos.json"
 $ProfileIndex = Join-Path $MasterPath "task-profiles.json"
 $LogPath = Join-Path $MasterPath "usage-log.csv"
+. (Join-Path $MasterPath "scripts\model-id-parser.ps1")
 
 function Convert-ToYamlSingleQuoted {
     param([string]$Value)
@@ -185,8 +186,7 @@ function Get-ValidCopilotModels {
         return @()
     }
 
-    $matches = [regex]::Matches($helpText, '"(claude-[\w.\-]+|gpt-[\w.\-]+)"')
-    return $matches | ForEach-Object { $_.Groups[1].Value } | Select-Object -Unique
+    return @(Get-CopilotModelIdsFromHelpText -HelpText $helpText)
 }
 
 if (!(Test-Path $RepoIndex)) {
@@ -411,14 +411,21 @@ Write-Host ""
 $resumeInput = Read-Host "Resume a previous session? (paste session ID or Enter to skip)"
 
 # Build launch arguments deterministically from the selected profile.
-$copilotArgs = @("--model", $selectedProfile.model)
+# --effort is omitted for models whose capability catalog record declares
+# effortMode="unsupported" (e.g. claude-haiku-4.5), since the CLI does not
+# accept the flag for those models. See scripts/model-launch-args.ps1 and
+# scripts/test-model-launch-args.ps1 for the tested convention.
+$copilotArgs = & {
+    . (Join-Path $MasterPath "scripts\model-launch-args.ps1")
 
-if (-not [string]::IsNullOrWhiteSpace($selectedProfile.effort)) {
-    $copilotArgs += @("--effort", $selectedProfile.effort)
-}
+    $capabilitiesCatalog = @{}
+    try {
+        $capabilitiesCatalog = Get-LaunchCapabilitiesCatalog -CatalogPath (Join-Path $MasterPath "config\model-capabilities.json")
+    } catch {
+        Write-Host "Warning: could not load model capabilities catalog ($($_.Exception.Message)); assuming --effort is supported for all models." -ForegroundColor Yellow
+    }
 
-if (-not [string]::IsNullOrWhiteSpace($selectedProfile.context)) {
-    $copilotArgs += @("--context", $selectedProfile.context)
+    Get-CopilotLaunchModelArgs -Profile $selectedProfile -CapabilitiesCatalog $capabilitiesCatalog
 }
 
 if (-not [string]::IsNullOrWhiteSpace($resumeInput)) {

@@ -1,0 +1,8 @@
+{
+  "schemaVersion": 1,
+  "denylist": [],
+  "familyPatterns": {},
+  "classPreferences": {},
+  "profileLiveBenchCategories": {},
+  "consensusPolicy": { "staleAfterDays": 45, "capabilityFreshnessDays": 60 }
+}

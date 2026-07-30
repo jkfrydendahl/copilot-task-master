@@ -41,7 +41,7 @@
       "liveBench": "claude-opus-4-6-thinking-auto-high-effort",
       "artificialAnalysisCodingAgents": null
     },
-    "claude-opus-4.6-fast": {
+    "claude-opus-4.8-fast": {
       "artificialAnalysis": null,
       "liveBench": null,
       "artificialAnalysisCodingAgents": null

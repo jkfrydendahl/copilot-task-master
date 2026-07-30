@@ -1,0 +1,277 @@
+{
+  "schemaVersion": 1,
+  "generatedDate": "2026-07-30",
+  "freshnessThresholdDays": 60,
+  "sourceUrl": "https://docs.github.com/en/copilot/reference/copilot-billing/models-and-pricing",
+  "notes": "Pricing is populated from GitHub's published Copilot models-and-pricing page as of 2026-07-30; model IDs without a documented pricing row are marked pricingUnavailable rather than guessed. vision/supportedContexts/supportedEfforts are separate facts from pricing and are populated from the authoritative model metadata available in this session/tool environment (capabilitySource='copilot-cli-session-model-metadata'), not scraped/guessed from pricing docs -- a model may support long_context even where GitHub's pricing table documents no distinct long_context price row (the admissibility engine then uses default-tier pricing for that context request). 'vision' is left null (unknown) for every model except the ones GitHub's Copilot visuals guidance positively confirms (GPT-5 mini, Claude Sonnet 4.6, Gemini 3.1 Pro) -- unknown blocks vision-requiring profiles safely rather than assuming universal support. effortMode='unsupported' (Claude Haiku 4.5) means the CLI does not accept an --effort flag for that model at all; this is verified against scripts/model-launch-args.ps1's actual launcher convention (it omits --effort for such models) rather than asserted. cliAgentCompatible is NOT a static catalog field -- scripts/model-admissibility.ps1 derives it per run from this run's own verified live availability (AvailableModels + AvailabilityVerified), since only that can confirm what the CLI currently exposes. Models/IDs without confirmed session metadata for a given fact (e.g. claude-sonnet-4.5, claude-fable-5, and gpt-5-mini's context/effort breakdown) leave supportedContexts/supportedEfforts empty (capabilitySource='unknown') rather than guessing a full range.",
+  "models": {
+    "claude-sonnet-5": {
+      "asOf": "2026-07-30",
+      "sourceUrl": "https://docs.github.com/en/copilot/reference/copilot-billing/models-and-pricing",
+      "capabilitySource": "copilot-cli-session-model-metadata",
+      "vision": null,
+      "supportedContexts": ["default", "long_context"],
+      "supportedEfforts": ["low", "medium", "high", "xhigh", "max"],
+      "pricing": {
+        "default": { "inputPerMillion": 2.00, "outputPerMillion": 10.00, "cachedInputPerMillion": 0.20 }
+      }
+    },
+    "claude-sonnet-4.6": {
+      "asOf": "2026-07-30",
+      "sourceUrl": "https://docs.github.com/en/copilot/reference/copilot-billing/models-and-pricing",
+      "capabilitySource": "copilot-cli-session-model-metadata",
+      "vision": true,
+      "visionSource": "GitHub Copilot visuals guidance positively lists Claude Sonnet 4.6.",
+      "supportedContexts": ["default", "long_context"],
+      "supportedEfforts": ["low", "medium", "high", "max"],
+      "pricing": {
+        "default": { "inputPerMillion": 3.00, "outputPerMillion": 15.00, "cachedInputPerMillion": 0.30 }
+      }
+    },
+    "claude-sonnet-4.5": {
+      "asOf": "2026-07-30",
+      "sourceUrl": "https://docs.github.com/en/copilot/reference/copilot-billing/models-and-pricing",
+      "capabilitySource": "unknown",
+      "notes": "Not covered by this session's authoritative model metadata; context/effort left empty (unknown) rather than guessed.",
+      "vision": null,
+      "supportedContexts": [],
+      "supportedEfforts": [],
+      "pricing": {
+        "default": { "inputPerMillion": 3.00, "outputPerMillion": 15.00, "cachedInputPerMillion": 0.30 }
+      }
+    },
+    "claude-haiku-4.5": {
+      "asOf": "2026-07-30",
+      "sourceUrl": "https://docs.github.com/en/copilot/reference/copilot-billing/models-and-pricing",
+      "capabilitySource": "copilot-cli-session-model-metadata",
+      "vision": null,
+      "supportedContexts": ["default"],
+      "effortMode": "unsupported",
+      "supportedEfforts": [],
+      "pricing": {
+        "default": { "inputPerMillion": 1.00, "outputPerMillion": 5.00, "cachedInputPerMillion": 0.10 }
+      }
+    },
+    "claude-opus-5": {
+      "asOf": "2026-07-30",
+      "sourceUrl": "https://docs.github.com/en/copilot/reference/copilot-billing/models-and-pricing",
+      "capabilitySource": "copilot-cli-session-model-metadata",
+      "vision": null,
+      "supportedContexts": ["default", "long_context"],
+      "supportedEfforts": ["low", "medium", "high", "xhigh", "max"],
+      "pricing": {
+        "default": { "inputPerMillion": 5.00, "outputPerMillion": 25.00, "cachedInputPerMillion": 0.50 }
+      }
+    },
+    "claude-opus-4.8": {
+      "asOf": "2026-07-30",
+      "sourceUrl": "https://docs.github.com/en/copilot/reference/copilot-billing/models-and-pricing",
+      "capabilitySource": "copilot-cli-session-model-metadata",
+      "vision": null,
+      "supportedContexts": ["default", "long_context"],
+      "supportedEfforts": ["low", "medium", "high", "xhigh", "max"],
+      "pricing": {
+        "default": { "inputPerMillion": 5.00, "outputPerMillion": 25.00, "cachedInputPerMillion": 0.50 }
+      }
+    },
+    "claude-opus-4.7": {
+      "asOf": "2026-07-30",
+      "sourceUrl": "https://docs.github.com/en/copilot/reference/copilot-billing/models-and-pricing",
+      "capabilitySource": "copilot-cli-session-model-metadata",
+      "vision": null,
+      "supportedContexts": ["default", "long_context"],
+      "supportedEfforts": ["low", "medium", "high", "xhigh", "max"],
+      "pricing": {
+        "default": { "inputPerMillion": 5.00, "outputPerMillion": 25.00, "cachedInputPerMillion": 0.50 }
+      }
+    },
+    "claude-opus-4.6": {
+      "asOf": "2026-07-30",
+      "sourceUrl": "https://docs.github.com/en/copilot/reference/copilot-billing/models-and-pricing",
+      "capabilitySource": "copilot-cli-session-model-metadata",
+      "vision": null,
+      "supportedContexts": ["default", "long_context"],
+      "supportedEfforts": ["low", "medium", "high", "xhigh", "max"],
+      "pricing": {
+        "default": { "inputPerMillion": 5.00, "outputPerMillion": 25.00, "cachedInputPerMillion": 0.50 }
+      }
+    },
+    "claude-opus-4.8-fast": {
+      "asOf": "2026-07-30",
+      "sourceUrl": "https://docs.github.com/en/copilot/reference/copilot-billing/models-and-pricing",
+      "pricingUnavailable": true,
+      "unavailableReason": "claude-opus-4.8-fast is the canonical id (current CLI output lists it; the previously catalogued 'claude-opus-4.6-fast' id was stale and never existed in GitHub's docs). GitHub's pricing table documents a 'Claude Opus 4.8 (fast mode) (preview)' row, but exact preview pricing figures were not verified/available in this session, so pricing is left unresolved rather than guessed."
+    },
+    "claude-opus-4.5": {
+      "asOf": "2026-07-30",
+      "sourceUrl": "https://docs.github.com/en/copilot/reference/copilot-billing/models-and-pricing",
+      "capabilitySource": "copilot-cli-session-model-metadata",
+      "vision": null,
+      "supportedContexts": ["default", "long_context"],
+      "supportedEfforts": ["low", "medium", "high", "xhigh", "max"],
+      "pricing": {
+        "default": { "inputPerMillion": 5.00, "outputPerMillion": 25.00, "cachedInputPerMillion": 0.50 }
+      }
+    },
+    "claude-fable-5": {
+      "asOf": "2026-07-30",
+      "sourceUrl": "https://docs.github.com/en/copilot/reference/copilot-billing/models-and-pricing",
+      "capabilitySource": "unknown",
+      "notes": "Not covered by this session's authoritative model metadata; context/effort left empty (unknown) rather than guessed. Also denylisted, so never admissible regardless.",
+      "vision": null,
+      "supportedContexts": [],
+      "supportedEfforts": [],
+      "pricing": {
+        "default": { "inputPerMillion": 10.00, "outputPerMillion": 50.00, "cachedInputPerMillion": 1.00 }
+      }
+    },
+    "gpt-5.6-sol": {
+      "asOf": "2026-07-30",
+      "sourceUrl": "https://docs.github.com/en/copilot/reference/copilot-billing/models-and-pricing",
+      "capabilitySource": "copilot-cli-session-model-metadata",
+      "vision": null,
+      "supportedContexts": ["default", "long_context"],
+      "supportedEfforts": ["low", "medium", "high", "xhigh", "max"],
+      "pricing": {
+        "default": { "inputPerMillion": 5.00, "outputPerMillion": 30.00, "cachedInputPerMillion": 0.50 },
+        "long_context": { "inputPerMillion": 10.00, "outputPerMillion": 45.00, "cachedInputPerMillion": 1.00 }
+      }
+    },
+    "gpt-5.6-terra": {
+      "asOf": "2026-07-30",
+      "sourceUrl": "https://docs.github.com/en/copilot/reference/copilot-billing/models-and-pricing",
+      "capabilitySource": "copilot-cli-session-model-metadata",
+      "vision": null,
+      "supportedContexts": ["default", "long_context"],
+      "supportedEfforts": ["low", "medium", "high", "xhigh", "max"],
+      "pricing": {
+        "default": { "inputPerMillion": 2.50, "outputPerMillion": 15.00, "cachedInputPerMillion": 0.25 },
+        "long_context": { "inputPerMillion": 5.00, "outputPerMillion": 22.50, "cachedInputPerMillion": 0.50 }
+      }
+    },
+    "gpt-5.6-luna": {
+      "asOf": "2026-07-30",
+      "sourceUrl": "https://docs.github.com/en/copilot/reference/copilot-billing/models-and-pricing",
+      "capabilitySource": "copilot-cli-session-model-metadata",
+      "vision": null,
+      "supportedContexts": ["default", "long_context"],
+      "supportedEfforts": ["low", "medium", "high", "xhigh", "max"],
+      "pricing": {
+        "default": { "inputPerMillion": 1.00, "outputPerMillion": 6.00, "cachedInputPerMillion": 0.10 },
+        "long_context": { "inputPerMillion": 2.00, "outputPerMillion": 9.00, "cachedInputPerMillion": 0.20 }
+      }
+    },
+    "gpt-5.5": {
+      "asOf": "2026-07-30",
+      "sourceUrl": "https://docs.github.com/en/copilot/reference/copilot-billing/models-and-pricing",
+      "capabilitySource": "copilot-cli-session-model-metadata",
+      "vision": null,
+      "supportedContexts": ["default", "long_context"],
+      "supportedEfforts": ["low", "medium", "high", "xhigh"],
+      "pricing": {
+        "default": { "inputPerMillion": 5.00, "outputPerMillion": 30.00, "cachedInputPerMillion": 0.50 },
+        "long_context": { "inputPerMillion": 10.00, "outputPerMillion": 45.00, "cachedInputPerMillion": 1.00 }
+      }
+    },
+    "gpt-5.4": {
+      "asOf": "2026-07-30",
+      "sourceUrl": "https://docs.github.com/en/copilot/reference/copilot-billing/models-and-pricing",
+      "capabilitySource": "copilot-cli-session-model-metadata",
+      "vision": null,
+      "supportedContexts": ["default", "long_context"],
+      "supportedEfforts": ["low", "medium", "high", "xhigh"],
+      "pricing": {
+        "default": { "inputPerMillion": 2.50, "outputPerMillion": 15.00, "cachedInputPerMillion": 0.25 },
+        "long_context": { "inputPerMillion": 5.00, "outputPerMillion": 22.50, "cachedInputPerMillion": 0.50 }
+      }
+    },
+    "gpt-5.4-mini": {
+      "asOf": "2026-07-30",
+      "sourceUrl": "https://docs.github.com/en/copilot/reference/copilot-billing/models-and-pricing",
+      "capabilitySource": "copilot-cli-session-model-metadata",
+      "vision": null,
+      "supportedContexts": ["default"],
+      "supportedEfforts": ["low", "medium", "high", "xhigh"],
+      "pricing": {
+        "default": { "inputPerMillion": 0.75, "outputPerMillion": 4.50, "cachedInputPerMillion": 0.075 }
+      }
+    },
+    "gpt-5.3-codex": {
+      "asOf": "2026-07-30",
+      "sourceUrl": "https://docs.github.com/en/copilot/reference/copilot-billing/models-and-pricing",
+      "capabilitySource": "copilot-cli-session-model-metadata",
+      "vision": null,
+      "supportedContexts": ["default"],
+      "supportedEfforts": ["low", "medium", "high", "xhigh"],
+      "pricing": {
+        "default": { "inputPerMillion": 1.75, "outputPerMillion": 14.00, "cachedInputPerMillion": 0.175 }
+      }
+    },
+    "gpt-5.2-codex": {
+      "asOf": "2026-07-30",
+      "sourceUrl": "https://docs.github.com/en/copilot/reference/copilot-billing/models-and-pricing",
+      "pricingUnavailable": true,
+      "unavailableReason": "Not present in GitHub's currently published pricing table; not guessed."
+    },
+    "gpt-5.2": {
+      "asOf": "2026-07-30",
+      "sourceUrl": "https://docs.github.com/en/copilot/reference/copilot-billing/models-and-pricing",
+      "pricingUnavailable": true,
+      "unavailableReason": "Not present in GitHub's currently published pricing table; not guessed."
+    },
+    "gpt-5-mini": {
+      "asOf": "2026-07-30",
+      "sourceUrl": "https://docs.github.com/en/copilot/reference/copilot-billing/models-and-pricing",
+      "capabilitySource": "unknown",
+      "notes": "vision is positively confirmed by GitHub Copilot visuals guidance, but this session's authoritative model metadata does not cover this exact id's context/effort breakdown (distinct from the newer 'gpt-5.4-mini'); left empty (unknown) rather than guessed.",
+      "vision": true,
+      "visionSource": "GitHub Copilot visuals guidance positively lists GPT-5 mini.",
+      "supportedContexts": [],
+      "supportedEfforts": [],
+      "pricing": {
+        "default": { "inputPerMillion": 0.25, "outputPerMillion": 2.00, "cachedInputPerMillion": 0.025 }
+      }
+    },
+    "gemini-3.1-pro-preview": {
+      "asOf": "2026-07-30",
+      "sourceUrl": "https://docs.github.com/en/copilot/reference/copilot-billing/models-and-pricing",
+      "capabilitySource": "copilot-cli-session-model-metadata",
+      "vision": true,
+      "visionSource": "GitHub Copilot visuals guidance positively lists Gemini 3.1 Pro.",
+      "supportedContexts": ["default", "long_context"],
+      "supportedEfforts": ["low", "medium", "high"],
+      "pricing": {
+        "default": { "inputPerMillion": 2.00, "outputPerMillion": 12.00, "cachedInputPerMillion": 0.20 },
+        "long_context": { "inputPerMillion": 4.00, "outputPerMillion": 18.00, "cachedInputPerMillion": 0.40 }
+      }
+    },
+    "gemini-3.6-flash": {
+      "asOf": "2026-07-30",
+      "sourceUrl": "https://docs.github.com/en/copilot/reference/copilot-billing/models-and-pricing",
+      "capabilitySource": "copilot-cli-session-model-metadata",
+      "vision": null,
+      "supportedContexts": ["default", "long_context"],
+      "supportedEfforts": ["minimal", "low", "medium", "high"],
+      "pricing": {
+        "default": { "inputPerMillion": 1.50, "outputPerMillion": 7.50, "cachedInputPerMillion": 0.15 }
+      }
+    },
+    "gemini-3.5-flash": {
+      "asOf": "2026-07-30",
+      "sourceUrl": "https://docs.github.com/en/copilot/reference/copilot-billing/models-and-pricing",
+      "capabilitySource": "copilot-cli-session-model-metadata",
+      "vision": null,
+      "supportedContexts": ["default", "long_context"],
+      "supportedEfforts": ["minimal", "low", "medium", "high"],
+      "pricing": {
+        "default": { "inputPerMillion": 1.50, "outputPerMillion": 9.00, "cachedInputPerMillion": 0.15 }
+      }
+    },
+    "mai-code-1-flash-picker": {
+      "asOf": "2026-07-30",
+      "sourceUrl": "https://docs.github.com/en/copilot/reference/copilot-billing/models-and-pricing",
+      "pricingUnavailable": true,
+      "unavailableReason": "GitHub's published pricing table documents 'MAI-Code-1-Flash' but not a '-picker' variant under this exact ID; not guessed. If/when the exact 'mai-code-1-flash' id is confirmed available, session metadata indicates default context and low/medium/high effort support."
+    }
+  }
+}
