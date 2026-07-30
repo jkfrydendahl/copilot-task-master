@@ -1,6 +1,6 @@
 {
-  "schemaVersion": 1,
-  "generatedAtUtc": "2026-07-30T08:33:37.6344156Z",
+  "schemaVersion": 2,
+  "generatedAtUtc": "2026-07-30T11:11:14.9686950Z",
   "staleAfterDays": 45,
   "status": "ok",
   "stale": false,
@@ -16,7 +16,8 @@
       "status": "ok",
       "message": "Parsed embedded model records.",
       "sourceDate": "2026-07-24",
-      "fetchedAtUtc": "2026-07-30T08:33:36.6929429Z",
+      "sourceVersion": "8ac9a6cb6996255a83db36c188112b53e90ef28f150d06958abb8b2e0fc79815",
+      "fetchedAtUtc": "2026-07-30T11:11:13.6056053Z",
       "sourceUrl": "https://artificialanalysis.ai/?intelligence=agentic-index"
     },
     "artificialAnalysisCodingAgents": {
@@ -24,14 +25,23 @@
       "message": "Parsed embedded coding-agent records.",
       "sourceDate": null,
       "sourceVersion": "30e68fb4f3e7cd69cd9062ba7d457517d30bed2fe22bce4d27824dc78147e619",
-      "fetchedAtUtc": "2026-07-30T10:54:16.2958967Z",
+      "fetchedAtUtc": "2026-07-30T11:11:13.9922878Z",
       "sourceUrl": "https://artificialanalysis.ai/agents/coding-agents"
     },
     "liveBench": {
       "status": "ok",
       "message": "Parsed LiveBench table and categories.",
       "sourceDate": "2026-06-25",
-      "fetchedAtUtc": "2026-07-30T08:33:37.1384939Z",
+      "sourceVersion": "2026-06-25",
+      "fetchedAtUtc": "2026-07-30T11:11:14.1141012Z",
+      "sourceUrl": "https://github.com/LiveBench/new-livebench/blob/main/public/table_2026_06_25.csv"
+    },
+    "liveBenchCost": {
+      "status": "ok",
+      "message": "Parsed complete LiveBench cost data.",
+      "sourceDate": "2026-06-25",
+      "sourceVersion": "2026-06-25",
+      "fetchedAtUtc": "2026-07-30T11:11:14.1141012Z",
       "sourceUrl": "https://github.com/LiveBench/new-livebench/blob/main/public/table_2026_06_25.csv"
     }
   },
@@ -911,7 +921,7 @@
             "liveBench": "2026-06-25",
             "artificialAnalysis": "8ac9a6cb6996255a83db36c188112b53e90ef28f150d06958abb8b2e0fc79815"
           },
-          "updatedAtUtc": "2026-07-30T10:54:18.6850660Z"
+          "updatedAtUtc": "2026-07-30T11:11:15.2601826Z"
         },
         "activeOverride": null
       },

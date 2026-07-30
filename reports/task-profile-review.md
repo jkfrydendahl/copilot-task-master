@@ -42,8 +42,9 @@ Model source: **gh copilot help config**
 - Artificial Analysis source date: 2026-07-24
 - Artificial Analysis Coding Agent source date: n/a
 - LiveBench source date: 2026-06-25
-- Artificial Analysis fetched at (UTC): 2026-07-30T08:33:36.6929429Z
-- LiveBench fetched at (UTC): 2026-07-30T08:33:37.1384939Z
+- Artificial Analysis fetched at (UTC): 2026-07-30T11:11:13.6056053Z
+- Artificial Analysis Coding Agents fetched at (UTC): 2026-07-30T11:11:13.9922878Z
+- LiveBench fetched at (UTC): 2026-07-30T11:11:14.1141012Z
 
 > External rankings can auto-apply only after strict two-run consensus; task-family eligibility remains authoritative.
 
