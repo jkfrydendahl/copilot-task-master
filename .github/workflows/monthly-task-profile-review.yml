@@ -4,6 +4,15 @@ on:
   schedule:
     - cron: "0 7 1 * *"
   workflow_dispatch:
+    inputs:
+      force_benchmark_consensus:
+        description: >-
+          One-time manual override: apply a qualifying benchmark challenger
+          immediately on this run instead of waiting for a second distinct
+          source publication. Does not bypass any other eligibility, cost,
+          or source-completeness guardrail. Always false on scheduled runs.
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -24,6 +33,7 @@ jobs:
         run: .\scripts\review-task-profiles.ps1
         env:
           GH_TOKEN: ${{ github.token }}
+          FORCE_BENCHMARK_CONSENSUS: ${{ github.event_name == 'workflow_dispatch' && inputs.force_benchmark_consensus || 'false' }}
 
       - name: Create/update PR
         uses: peter-evans/create-pull-request@v8
