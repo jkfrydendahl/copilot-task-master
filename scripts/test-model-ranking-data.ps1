@@ -314,6 +314,20 @@ Run-Test "31 Force flag does not resurrect an already-cleared invalid active ove
     Assert-Eq "ch" $r.finalModel "Expected new forced override model, not the stale one."
 }
 
+Run-Test "32 Legacy override clears when it no longer beats the policy baseline under current rules" {
+    $snapshot = New-QualitySnapshot -AaScores @{ "claude-opus-5" = 90; "gpt-5.3-codex" = $null } -AaCodingScores @{ "claude-opus-5" = 90; "gpt-5.3-codex" = $null } -LbScores @{ "claude-opus-5" = 90; "gpt-5.3-codex" = $null } -Costs @{}
+    Assert-True (-not (Test-ActiveOverrideQualitySupported -ActiveModel "claude-opus-5" -PolicyPreferredModel "gpt-5.3-codex" -IsFullFreshRun $true -ProfileKey "agentic-implementation" -Snapshot $snapshot)) "An override unsupported by current comparative evidence must clear."
+}
+
+Run-Test "33 Active override quality validation freezes on incomplete benchmark data" {
+    Assert-True (Test-ActiveOverrideQualitySupported -ActiveModel "claude-opus-5" -PolicyPreferredModel "gpt-5.3-codex" -IsFullFreshRun $false -ProfileKey "agentic-implementation" -Snapshot $null) "Partial or fallback data must not revoke an active override."
+}
+
+Run-Test "34 Active override is evaluated individually rather than displaced by a better pending challenger" {
+    $snapshot = New-QualitySnapshot -AaScores @{ "claude-sonnet-5" = 60; "gpt-5.6-terra" = 80; "gpt-5.6-sol" = 90 } -AaCodingScores @{ "claude-sonnet-5" = 60; "gpt-5.6-terra" = 80; "gpt-5.6-sol" = 90 } -LbScores @{ "claude-sonnet-5" = 60; "gpt-5.6-terra" = 80; "gpt-5.6-sol" = 90 } -Costs @{ "claude-sonnet-5" = 1.0; "gpt-5.6-terra" = 0.8; "gpt-5.6-sol" = 0.9 }
+    Assert-True (Test-ActiveOverrideQualitySupported -ActiveModel "gpt-5.6-terra" -PolicyPreferredModel "claude-sonnet-5" -IsFullFreshRun $true -ProfileKey "review" -Snapshot $snapshot) "The active override should retain its head-to-head win over the baseline while a better challenger follows normal consensus."
+}
+
 Write-Host ""
 Write-Host "Tests passed: $script:Passed"
 Write-Host "Tests failed: $script:Failed"

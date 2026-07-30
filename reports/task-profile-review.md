@@ -146,11 +146,12 @@ Force benchmark consensus (manual first-run override): **True**
 
 - Availability confidence: **verified**
 - Pricing ceilings (per million tokens): input <= $3, output <= $15
-- Incumbent/current model: **claude-sonnet-5** — admissible: **False** (reasons: vision_unknown)
+- Incumbent/current model: **claude-sonnet-4.6** — admissible: **True** (reasons: none)
 - Exclusions:
 
 | Model | Reasons | Pricing tier | Input $/M | Output $/M | Capability as-of |
 |---|---|---|---|---|---|
+| claude-sonnet-5 | vision_unknown | default | 2 | 10 | 2026-07-30 |
 | claude-sonnet-4.5 | vision_unknown, context_unsupported, effort_unsupported | default | 3 | 15 | 2026-07-30 |
 | claude-haiku-4.5 | vision_unknown | default | 1 | 5 | 2026-07-30 |
 | claude-opus-5 | vision_unknown, pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 | 25 | 2026-07-30 |
