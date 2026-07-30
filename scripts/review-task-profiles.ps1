@@ -263,7 +263,8 @@ function Resolve-BenchmarkConsensusState {
         $Candidate,
         $SourceDates,
         $SourceVersions = @{},
-        [bool]$ActiveOverrideStillValid = $true
+        [bool]$ActiveOverrideStillValid = $true,
+        [bool]$ForceImmediateApply = $false
     )
 
     $state = if ($null -ne $CurrentState) { $CurrentState } else { [ordered]@{ pending = $null; activeOverride = $null } }
@@ -289,6 +290,7 @@ function Resolve-BenchmarkConsensusState {
             pendingCount = if ($null -ne $state.pending) { [int]$state.pending.consecutiveQualifyingFullRuns } else { 0 }
             finalModel = if ($null -ne $state.activeOverride) { [string]$state.activeOverride.model } else { $IncumbentModel }
             activeCleared = $activeCleared
+            forcedApply = $false
         }
     }
 
@@ -300,6 +302,7 @@ function Resolve-BenchmarkConsensusState {
             pendingCount = 0
             finalModel = if ($null -ne $state.activeOverride) { [string]$state.activeOverride.model } else { $IncumbentModel }
             activeCleared = $activeCleared
+            forcedApply = $false
         }
     }
 
@@ -313,6 +316,20 @@ function Resolve-BenchmarkConsensusState {
         }
     }
 
+    # Manual, one-time override: a candidate that already passed every other
+    # gate (GitHub family eligibility, top-bucket/raw-score wins, cost
+    # guardrail, source completeness/freshness via $IsFullFreshRun, and
+    # active-override validity via $ActiveOverrideStillValid, all evaluated
+    # by the caller before reaching this function) may apply on its first
+    # qualifying run instead of waiting for a second distinct source
+    # publication. This only shortens the consecutive-run counter; it does
+    # not skip or relax any of those other checks.
+    $forcedApply = $false
+    if ($ForceImmediateApply -and $count -lt 2) {
+        $count = 2
+        $forcedApply = $true
+    }
+
     if ($count -ge 2) {
         if ([string]$Candidate.model -eq [string]$PolicyPreferredModel) {
             $state.activeOverride = $null
@@ -322,6 +339,7 @@ function Resolve-BenchmarkConsensusState {
                 activatedAtUtc = (Get-Date).ToUniversalTime().ToString("o")
                 sourceDates = $SourceDates
                 sourceVersions = $SourceVersions
+                forced = $forcedApply
             }
         }
         $state.pending = $null
@@ -331,6 +349,7 @@ function Resolve-BenchmarkConsensusState {
             pendingCount = 0
             finalModel = if ($null -ne $state.activeOverride) { [string]$state.activeOverride.model } else { [string]$PolicyPreferredModel }
             activeCleared = $activeCleared
+            forcedApply = $forcedApply
         }
     }
 
@@ -347,12 +366,23 @@ function Resolve-BenchmarkConsensusState {
         pendingCount = $count
         finalModel = if ($null -ne $state.activeOverride) { [string]$state.activeOverride.model } else { $IncumbentModel }
         activeCleared = $activeCleared
+        forcedApply = $false
     }
+}
+
+function Get-ForceBenchmarkConsensusFlag {
+    # Manual one-time override, wired from the workflow_dispatch
+    # `force_benchmark_consensus` input via the FORCE_BENCHMARK_CONSENSUS
+    # environment variable. Scheduled runs never set this variable to a
+    # truthy value, so they always behave as false.
+    $raw = [string]$env:FORCE_BENCHMARK_CONSENSUS
+    return $raw -match '^(?i:true|1)$'
 }
 
 function Invoke-TaskProfileReview {
     $policy = Get-ModelSelectionPolicy
     $modelComparisonUrl = "https://docs.github.com/en/copilot/reference/ai-models/model-comparison"
+    $forceBenchmarkConsensus = Get-ForceBenchmarkConsensusFlag
 
     $repoRoot = Resolve-Path (Join-Path $PSScriptRoot "..")
     $profilesPath = Join-Path $repoRoot "task-profiles.json"
@@ -430,7 +460,7 @@ function Invoke-TaskProfileReview {
         $sourceDates = if ($isFullFresh -and $null -ne $candidate) { Get-RequiredSourceDatesForProfile -Snapshot $rankingSnapshot -ProfileKey $profileKey } else { @{} }
         $sourceVersions = if ($isFullFresh -and $null -ne $candidate) { Get-RequiredSourceVersionsForProfile -Snapshot $rankingSnapshot -ProfileKey $profileKey } else { @{} }
 
-        $resolved = Resolve-BenchmarkConsensusState -ProfileKey $profileKey -PolicyPreferredModel $d.policyPreferred -IncumbentModel $incumbent -CurrentState $profileState -IsFullFreshRun $isFullFresh -Candidate $candidate -SourceDates $sourceDates -SourceVersions $sourceVersions -ActiveOverrideStillValid $activeStillValid
+        $resolved = Resolve-BenchmarkConsensusState -ProfileKey $profileKey -PolicyPreferredModel $d.policyPreferred -IncumbentModel $incumbent -CurrentState $profileState -IsFullFreshRun $isFullFresh -Candidate $candidate -SourceDates $sourceDates -SourceVersions $sourceVersions -ActiveOverrideStillValid $activeStillValid -ForceImmediateApply $forceBenchmarkConsensus
         $profileState = $resolved.state
         $d.pendingCount = $resolved.pendingCount
         if ($resolved.activeCleared -and $d.changeType -eq "active_override") {
@@ -439,9 +469,10 @@ function Invoke-TaskProfileReview {
         }
         if ($resolved.applied) {
             $d.finalModel = $resolved.finalModel
-            $d.changeType = "benchmark_consensus"
+            $d.changeType = if ($resolved.forcedApply) { "benchmark_consensus_forced" } else { "benchmark_consensus" }
             $d.benchmarkApplied = $true
-            $benchmarkChanges.Add(('- "{0}": "{1}" -> "{2}" (benchmark_consensus)' -f $profileKey, $d.currentModel, $d.finalModel))
+            $changeLabel = if ($resolved.forcedApply) { "benchmark_consensus_forced - manual override, first qualifying run" } else { "benchmark_consensus" }
+            $benchmarkChanges.Add(('- "{0}": "{1}" -> "{2}" ({3})' -f $profileKey, $d.currentModel, $d.finalModel, $changeLabel))
         } elseif ($d.changeType -eq "active_override") {
             $d.finalModel = if ($null -ne $profileState.activeOverride) { [string]$profileState.activeOverride.model } else { $d.finalModel }
         }
@@ -506,6 +537,8 @@ function Invoke-TaskProfileReview {
     $lines += "Reference: $modelComparisonUrl"
     $lines += ""
     $lines += "Model source: **$modelSource**"
+    $lines += ""
+    $lines += "Force benchmark consensus (manual first-run override): **$forceBenchmarkConsensus**"
     $lines += ""
     $lines += "## Current profiles"
     $lines += ""

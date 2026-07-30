@@ -258,6 +258,45 @@ Run-Test "26 Unrelated source failure does not block profile consensus" {
     Assert-True (Test-FullFreshConsensusRunForProfile -Snapshot $snapshot -ProfileKey "agentic-implementation") "Agentic implementation should not require AA Agentic."
 }
 
+Run-Test "27 Force flag applies first run immediately" {
+    $state = [ordered]@{ pending = $null; activeOverride = $null }
+    $r = Resolve-BenchmarkConsensusState -ProfileKey "default-development" -PolicyPreferredModel "inc" -IncumbentModel "inc" -CurrentState $state -IsFullFreshRun $true -Candidate ([pscustomobject]@{ model = "ch" }) -SourceDates @{a="1"} -SourceVersions @{a="1"} -ActiveOverrideStillValid $true -ForceImmediateApply $true
+    Assert-True ($r.applied) "Expected forced apply on first run."
+    Assert-True ($r.forcedApply) "Expected forcedApply flag set."
+    Assert-Eq "ch" $r.finalModel "Expected override model applied immediately."
+    Assert-True ($r.state.activeOverride.forced) "Expected activeOverride to record forced flag."
+}
+
+Run-Test "28 Default (force flag false) still requires second run" {
+    $state = [ordered]@{ pending = $null; activeOverride = $null }
+    $r = Resolve-BenchmarkConsensusState -ProfileKey "default-development" -PolicyPreferredModel "inc" -IncumbentModel "inc" -CurrentState $state -IsFullFreshRun $true -Candidate ([pscustomobject]@{ model = "ch" }) -SourceDates @{a="1"} -SourceVersions @{a="1"} -ActiveOverrideStillValid $true
+    Assert-True (-not $r.applied) "Should not apply first run when force flag is not set."
+    Assert-True (-not $r.forcedApply) "forcedApply must be false by default."
+    Assert-Eq "1" $r.pendingCount "Expected pending count 1 without force."
+}
+
+Run-Test "29 Force flag does not apply when no candidate qualifies" {
+    $state = [ordered]@{ pending = $null; activeOverride = $null }
+    $r = Resolve-BenchmarkConsensusState -ProfileKey "default-development" -PolicyPreferredModel "inc" -IncumbentModel "inc" -CurrentState $state -IsFullFreshRun $true -Candidate $null -SourceDates @{} -ActiveOverrideStillValid $true -ForceImmediateApply $true
+    Assert-True (-not $r.applied) "Force must not fabricate a candidate."
+    Assert-True (-not $r.forcedApply) "forcedApply must be false with no candidate."
+}
+
+Run-Test "30 Force flag does not apply on partial/stale/fallback runs" {
+    $state = [ordered]@{ pending = $null; activeOverride = $null }
+    $r = Resolve-BenchmarkConsensusState -ProfileKey "default-development" -PolicyPreferredModel "inc" -IncumbentModel "inc" -CurrentState $state -IsFullFreshRun $false -Candidate ([pscustomobject]@{ model = "ch" }) -SourceDates @{} -ActiveOverrideStillValid $true -ForceImmediateApply $true
+    Assert-True (-not $r.applied) "Force must not bypass source completeness/freshness requirement."
+    Assert-True (-not $r.forcedApply) "forcedApply must be false when run is not full/fresh."
+}
+
+Run-Test "31 Force flag does not resurrect an already-cleared invalid active override" {
+    $state = [ordered]@{ pending = $null; activeOverride = [ordered]@{ model = "bad" } }
+    $r = Resolve-BenchmarkConsensusState -ProfileKey "default-development" -PolicyPreferredModel "inc" -IncumbentModel "inc" -CurrentState $state -IsFullFreshRun $true -Candidate ([pscustomobject]@{ model = "ch" }) -SourceDates @{a="1"} -SourceVersions @{a="1"} -ActiveOverrideStillValid $false -ForceImmediateApply $true
+    Assert-True ($r.activeCleared) "Invalid active override must still be cleared."
+    Assert-True ($r.applied) "New qualifying candidate should still forced-apply after clearing invalid override."
+    Assert-Eq "ch" $r.finalModel "Expected new forced override model, not the stale one."
+}
+
 Write-Host ""
 Write-Host "Tests passed: $script:Passed"
 Write-Host "Tests failed: $script:Failed"
