@@ -1,0 +1,514 @@
+{
+  "schemaVersion": 1,
+  "generatedAtUtc": "2026-07-30T08:29:50.4453169Z",
+  "staleAfterDays": 45,
+  "status": "ok",
+  "stale": false,
+  "fallbackUsed": false,
+  "message": "Advisory ranking buckets generated from live source data. Rankings are advisory-only and never auto-applied.",
+  "attribution": {
+    "artificialAnalysisUrl": "https://artificialanalysis.ai/?intelligence=agentic-index",
+    "liveBenchUrl": "https://github.com/LiveBench/new-livebench/tree/main/public"
+  },
+  "sourceStatus": {
+    "artificialAnalysis": {
+      "status": "ok",
+      "message": "Parsed embedded model records.",
+      "sourceDate": "2026-07-24",
+      "fetchedAtUtc": "2026-07-30T08:29:48.9255825Z",
+      "sourceUrl": "https://artificialanalysis.ai/?intelligence=agentic-index"
+    },
+    "liveBench": {
+      "status": "ok",
+      "message": "Parsed LiveBench table and categories.",
+      "sourceDate": "2026-06-25",
+      "fetchedAtUtc": "2026-07-30T08:29:49.5329590Z",
+      "sourceUrl": "https://github.com/LiveBench/new-livebench/blob/main/public/table_2026_06_25.csv"
+    }
+  },
+  "models": {
+    "claude-sonnet-5": {
+      "artificialAnalysis": {
+        "alias": "claude-sonnet-5",
+        "name": "Claude Sonnet 5 (Adaptive Reasoning, Max Effort)",
+        "agenticIndex": 46.6941408934708,
+        "bucket": "competitive"
+      },
+      "liveBench": {
+        "alias": "claude-sonnet-5-xhigh-effort",
+        "categories": {
+          "coding": 80.68,
+          "agenticCoding": 59.394000000000005,
+          "reasoning": 88.69225,
+          "instructionFollowing": 63.85850000000001
+        },
+        "buckets": {
+          "coding": "competitive",
+          "agenticCoding": "top",
+          "reasoning": "competitive",
+          "instructionFollowing": "competitive"
+        }
+      }
+    },
+    "claude-sonnet-4.6": {
+      "artificialAnalysis": {
+        "alias": null,
+        "name": null,
+        "agenticIndex": null,
+        "bucket": "n/a"
+      },
+      "liveBench": {
+        "alias": "claude-sonnet-4-6-thinking-auto-medium-effort",
+        "categories": {
+          "coding": 79.2715,
+          "agenticCoding": 42.626,
+          "reasoning": 84.76925,
+          "instructionFollowing": 63.22075
+        },
+        "buckets": {
+          "coding": "lagging",
+          "agenticCoding": "lagging",
+          "reasoning": "lagging",
+          "instructionFollowing": "lagging"
+        }
+      }
+    },
+    "claude-sonnet-4.5": {
+      "artificialAnalysis": {
+        "alias": null,
+        "name": null,
+        "agenticIndex": null,
+        "bucket": "n/a"
+      },
+      "liveBench": {
+        "alias": null,
+        "categories": {
+          "coding": null,
+          "agenticCoding": null,
+          "reasoning": null,
+          "instructionFollowing": null
+        },
+        "buckets": {
+          "coding": "n/a",
+          "agenticCoding": "n/a",
+          "reasoning": "n/a",
+          "instructionFollowing": "n/a"
+        }
+      }
+    },
+    "claude-haiku-4.5": {
+      "artificialAnalysis": {
+        "alias": "claude-4-5-haiku-reasoning",
+        "name": "Claude 4.5 Haiku (Reasoning)",
+        "agenticIndex": 16.4030549828179,
+        "bucket": "lagging"
+      },
+      "liveBench": {
+        "alias": null,
+        "categories": {
+          "coding": null,
+          "agenticCoding": null,
+          "reasoning": null,
+          "instructionFollowing": null
+        },
+        "buckets": {
+          "coding": "n/a",
+          "agenticCoding": "n/a",
+          "reasoning": "n/a",
+          "instructionFollowing": "n/a"
+        }
+      }
+    },
+    "claude-opus-5": {
+      "artificialAnalysis": {
+        "alias": "claude-opus-5",
+        "name": "Claude Opus 5 (Adaptive Reasoning, Max Effort)",
+        "agenticIndex": 55.2554261168385,
+        "bucket": "top"
+      },
+      "liveBench": {
+        "alias": "claude-opus-5-max-effort",
+        "categories": {
+          "coding": 81.4455,
+          "agenticCoding": 65.202,
+          "reasoning": 91.2115,
+          "instructionFollowing": 63.76650000000001
+        },
+        "buckets": {
+          "coding": "competitive",
+          "agenticCoding": "top",
+          "reasoning": "top",
+          "instructionFollowing": "competitive"
+        }
+      }
+    },
+    "claude-opus-4.8": {
+      "artificialAnalysis": {
+        "alias": "claude-opus-4-8",
+        "name": "Claude Opus 4.8 (Adaptive Reasoning, Max Effort)",
+        "agenticIndex": 47.1756219931271,
+        "bucket": "competitive"
+      },
+      "liveBench": {
+        "alias": "claude-opus-4-8-max-effort",
+        "categories": {
+          "coding": 81.828,
+          "agenticCoding": 50.504999999999995,
+          "reasoning": 89.19225,
+          "instructionFollowing": 72.0335
+        },
+        "buckets": {
+          "coding": "top",
+          "agenticCoding": "competitive",
+          "reasoning": "top",
+          "instructionFollowing": "top"
+        }
+      }
+    },
+    "claude-opus-4.8-fast": {
+      "artificialAnalysis": {
+        "alias": null,
+        "name": null,
+        "agenticIndex": null,
+        "bucket": "n/a"
+      },
+      "liveBench": {
+        "alias": null,
+        "categories": {
+          "coding": null,
+          "agenticCoding": null,
+          "reasoning": null,
+          "instructionFollowing": null
+        },
+        "buckets": {
+          "coding": "n/a",
+          "agenticCoding": "n/a",
+          "reasoning": "n/a",
+          "instructionFollowing": "n/a"
+        }
+      }
+    },
+    "claude-opus-4.7": {
+      "artificialAnalysis": {
+        "alias": null,
+        "name": null,
+        "agenticIndex": null,
+        "bucket": "n/a"
+      },
+      "liveBench": {
+        "alias": "claude-opus-4-7-xhigh-effort",
+        "categories": {
+          "coding": 82.088,
+          "agenticCoding": 50.65633333333333,
+          "reasoning": 87.19225,
+          "instructionFollowing": 66.7375
+        },
+        "buckets": {
+          "coding": "top",
+          "agenticCoding": "competitive",
+          "reasoning": "lagging",
+          "instructionFollowing": "top"
+        }
+      }
+    },
+    "claude-opus-4.6": {
+      "artificialAnalysis": {
+        "alias": null,
+        "name": null,
+        "agenticIndex": null,
+        "bucket": "n/a"
+      },
+      "liveBench": {
+        "alias": "claude-opus-4-6-thinking-auto-high-effort",
+        "categories": {
+          "coding": 78.1845,
+          "agenticCoding": 48.989666666666665,
+          "reasoning": 88.673,
+          "instructionFollowing": 63.3125
+        },
+        "buckets": {
+          "coding": "lagging",
+          "agenticCoding": "lagging",
+          "reasoning": "competitive",
+          "instructionFollowing": "lagging"
+        }
+      }
+    },
+    "claude-opus-4.5": {
+      "artificialAnalysis": {
+        "alias": null,
+        "name": null,
+        "agenticIndex": null,
+        "bucket": "n/a"
+      },
+      "liveBench": {
+        "alias": "claude-opus-4-5-20251101-thinking-64k-high-effort",
+        "categories": {
+          "coding": 79.654,
+          "agenticCoding": 39.697,
+          "reasoning": 80.0865,
+          "instructionFollowing": 62.54599999999999
+        },
+        "buckets": {
+          "coding": "competitive",
+          "agenticCoding": "lagging",
+          "reasoning": "lagging",
+          "instructionFollowing": "lagging"
+        }
+      }
+    },
+    "gpt-5.6-sol": {
+      "artificialAnalysis": {
+        "alias": "gpt-5-6-sol",
+        "name": "GPT-5.6 Sol (max)",
+        "agenticIndex": 54.0035635738832,
+        "bucket": "top"
+      },
+      "liveBench": {
+        "alias": "gpt-5.6-sol-max",
+        "categories": {
+          "coding": 83.941,
+          "agenticCoding": 56.211999999999996,
+          "reasoning": 91.65375,
+          "instructionFollowing": 71.846
+        },
+        "buckets": {
+          "coding": "top",
+          "agenticCoding": "top",
+          "reasoning": "top",
+          "instructionFollowing": "top"
+        }
+      }
+    },
+    "gpt-5.6-terra": {
+      "artificialAnalysis": {
+        "alias": "gpt-5-6-terra",
+        "name": "GPT-5.6 Terra (max)",
+        "agenticIndex": 47.3835257731959,
+        "bucket": "top"
+      },
+      "liveBench": {
+        "alias": "gpt-5.6-terra-max",
+        "categories": {
+          "coding": 78.24549999999999,
+          "agenticCoding": 54.949666666666666,
+          "reasoning": 90.6345,
+          "instructionFollowing": 64.6165
+        },
+        "buckets": {
+          "coding": "lagging",
+          "agenticCoding": "top",
+          "reasoning": "top",
+          "instructionFollowing": "competitive"
+        }
+      }
+    },
+    "gpt-5.6-luna": {
+      "artificialAnalysis": {
+        "alias": "gpt-5-6-luna",
+        "name": "GPT-5.6 Luna (max)",
+        "agenticIndex": 45.5974982817869,
+        "bucket": "lagging"
+      },
+      "liveBench": {
+        "alias": "gpt-5.6-luna-max",
+        "categories": {
+          "coding": 82.91499999999999,
+          "agenticCoding": 48.434333333333335,
+          "reasoning": 85.64425,
+          "instructionFollowing": 60.120999999999995
+        },
+        "buckets": {
+          "coding": "top",
+          "agenticCoding": "lagging",
+          "reasoning": "lagging",
+          "instructionFollowing": "lagging"
+        }
+      }
+    },
+    "gpt-5.5": {
+      "artificialAnalysis": {
+        "alias": null,
+        "name": null,
+        "agenticIndex": null,
+        "bucket": "n/a"
+      },
+      "liveBench": {
+        "alias": "gpt-5.5-xhigh",
+        "categories": {
+          "coding": 82.14949999999999,
+          "agenticCoding": 53.989666666666665,
+          "reasoning": 89.65375,
+          "instructionFollowing": 70.72925000000001
+        },
+        "buckets": {
+          "coding": "top",
+          "agenticCoding": "top",
+          "reasoning": "top",
+          "instructionFollowing": "top"
+        }
+      }
+    },
+    "gpt-5.4": {
+      "artificialAnalysis": {
+        "alias": null,
+        "name": null,
+        "agenticIndex": null,
+        "bucket": "n/a"
+      },
+      "liveBench": {
+        "alias": "gpt-5.4-xhigh",
+        "categories": {
+          "coding": 77.5415,
+          "agenticCoding": 53.83833333333333,
+          "reasoning": 88.1155,
+          "instructionFollowing": 70.21674999999999
+        },
+        "buckets": {
+          "coding": "lagging",
+          "agenticCoding": "competitive",
+          "reasoning": "competitive",
+          "instructionFollowing": "top"
+        }
+      }
+    },
+    "gpt-5.3-codex": {
+      "artificialAnalysis": {
+        "alias": null,
+        "name": null,
+        "agenticIndex": null,
+        "bucket": "n/a"
+      },
+      "liveBench": {
+        "alias": null,
+        "categories": {
+          "coding": null,
+          "agenticCoding": null,
+          "reasoning": null,
+          "instructionFollowing": null
+        },
+        "buckets": {
+          "coding": "n/a",
+          "agenticCoding": "n/a",
+          "reasoning": "n/a",
+          "instructionFollowing": "n/a"
+        }
+      }
+    },
+    "gpt-5.4-mini": {
+      "artificialAnalysis": {
+        "alias": null,
+        "name": null,
+        "agenticIndex": null,
+        "bucket": "n/a"
+      },
+      "liveBench": {
+        "alias": "gpt-5.4-mini-xhigh",
+        "categories": {
+          "coding": 71.624,
+          "agenticCoding": 41.666666666666664,
+          "reasoning": 71.32375,
+          "instructionFollowing": 59.804
+        },
+        "buckets": {
+          "coding": "lagging",
+          "agenticCoding": "lagging",
+          "reasoning": "lagging",
+          "instructionFollowing": "lagging"
+        }
+      }
+    },
+    "gpt-5-mini": {
+      "artificialAnalysis": {
+        "alias": null,
+        "name": null,
+        "agenticIndex": null,
+        "bucket": "n/a"
+      },
+      "liveBench": {
+        "alias": null,
+        "categories": {
+          "coding": null,
+          "agenticCoding": null,
+          "reasoning": null,
+          "instructionFollowing": null
+        },
+        "buckets": {
+          "coding": "n/a",
+          "agenticCoding": "n/a",
+          "reasoning": "n/a",
+          "instructionFollowing": "n/a"
+        }
+      }
+    },
+    "gemini-3.1-pro-preview": {
+      "artificialAnalysis": {
+        "alias": null,
+        "name": null,
+        "agenticIndex": null,
+        "bucket": "n/a"
+      },
+      "liveBench": {
+        "alias": null,
+        "categories": {
+          "coding": null,
+          "agenticCoding": null,
+          "reasoning": null,
+          "instructionFollowing": null
+        },
+        "buckets": {
+          "coding": "n/a",
+          "agenticCoding": "n/a",
+          "reasoning": "n/a",
+          "instructionFollowing": "n/a"
+        }
+      }
+    },
+    "gemini-3.6-flash": {
+      "artificialAnalysis": {
+        "alias": "gemini-3-6-flash",
+        "name": "Gemini 3.6 Flash (high)",
+        "agenticIndex": 38.7246941580756,
+        "bucket": "lagging"
+      },
+      "liveBench": {
+        "alias": null,
+        "categories": {
+          "coding": null,
+          "agenticCoding": null,
+          "reasoning": null,
+          "instructionFollowing": null
+        },
+        "buckets": {
+          "coding": "n/a",
+          "agenticCoding": "n/a",
+          "reasoning": "n/a",
+          "instructionFollowing": "n/a"
+        }
+      }
+    },
+    "gemini-3.5-flash": {
+      "artificialAnalysis": {
+        "alias": null,
+        "name": null,
+        "agenticIndex": null,
+        "bucket": "n/a"
+      },
+      "liveBench": {
+        "alias": null,
+        "categories": {
+          "coding": null,
+          "agenticCoding": null,
+          "reasoning": null,
+          "instructionFollowing": null
+        },
+        "buckets": {
+          "coding": "n/a",
+          "agenticCoding": "n/a",
+          "reasoning": "n/a",
+          "instructionFollowing": "n/a"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "aliases": {
+    "claude-sonnet-5": { "artificialAnalysis": "claude-sonnet-5", "liveBench": "claude-sonnet-5-xhigh-effort" },
+    "claude-sonnet-4.6": { "artificialAnalysis": null, "liveBench": "claude-sonnet-4-6-thinking-auto-medium-effort" },
+    "claude-sonnet-4.5": { "artificialAnalysis": null, "liveBench": null },
+    "claude-haiku-4.5": { "artificialAnalysis": "claude-4-5-haiku-reasoning", "liveBench": null },
+    "claude-opus-5": { "artificialAnalysis": "claude-opus-5", "liveBench": "claude-opus-5-max-effort" },
+    "claude-opus-4.8": { "artificialAnalysis": "claude-opus-4-8", "liveBench": "claude-opus-4-8-max-effort" },
+    "claude-opus-4.7": { "artificialAnalysis": null, "liveBench": "claude-opus-4-7-xhigh-effort" },
+    "claude-opus-4.6": { "artificialAnalysis": null, "liveBench": "claude-opus-4-6-thinking-auto-high-effort" },
+    "claude-opus-4.6-fast": { "artificialAnalysis": null, "liveBench": null },
+    "claude-opus-4.5": { "artificialAnalysis": null, "liveBench": "claude-opus-4-5-20251101-thinking-64k-high-effort" },
+    "claude-fable-5": { "artificialAnalysis": "claude-fable-5", "liveBench": "claude-fable-5-max-effort" },
+    "gpt-5.6-sol": { "artificialAnalysis": "gpt-5-6-sol", "liveBench": "gpt-5.6-sol-max" },
+    "gpt-5.6-terra": { "artificialAnalysis": "gpt-5-6-terra", "liveBench": "gpt-5.6-terra-max" },
+    "gpt-5.6-luna": { "artificialAnalysis": "gpt-5-6-luna", "liveBench": "gpt-5.6-luna-max" },
+    "gpt-5.5": { "artificialAnalysis": null, "liveBench": "gpt-5.5-xhigh" },
+    "gpt-5.4": { "artificialAnalysis": null, "liveBench": "gpt-5.4-xhigh" },
+    "gpt-5.4-mini": { "artificialAnalysis": null, "liveBench": "gpt-5.4-mini-xhigh" },
+    "gpt-5.3-codex": { "artificialAnalysis": null, "liveBench": null },
+    "gpt-5.2-codex": { "artificialAnalysis": null, "liveBench": "gpt-5.2-codex" },
+    "gpt-5.2": { "artificialAnalysis": null, "liveBench": "gpt-5.2-2025-12-11-high" },
+    "gpt-5-mini": { "artificialAnalysis": null, "liveBench": null },
+    "gemini-3.1-pro-preview": { "artificialAnalysis": null, "liveBench": null },
+    "gemini-3.6-flash": { "artificialAnalysis": "gemini-3-6-flash", "liveBench": null },
+    "gemini-3.5-flash": { "artificialAnalysis": null, "liveBench": null },
+    "mai-code-1-flash-picker": { "artificialAnalysis": null, "liveBench": null }
+  }
+}

@@ -222,6 +222,7 @@ the 1st of each month and opens/updates a PR with:
 
 - `reports/task-profile-review.md` (summary + applied/suggested changes)
 - `task-profiles.json` updated directly in the PR (when suggestions apply)
+- `data/model-ranking-snapshot.json` advisory ranking snapshot (when live ranking data is available)
 
 The workflow selects models using **family-pattern matching** — each task class maps to an ordered
 list of model families (e.g. `deep-reasoning` → opus-family, then gpt-flagship-family). Within a
@@ -234,6 +235,29 @@ Changes are applied directly in the PR branch. You still approve/reject at merge
   https://docs.github.com/en/copilot/reference/ai-models/model-comparison
 - To block a specific model, add it to `$script:ModelDenylist` in `scripts/review-task-profiles.ps1`.
 - To change which family a task class prefers, edit `$classPreferences` in the same script.
+
+### Advisory model ranking data (non-authoritative)
+
+The monthly script also appends an **advisory-only** benchmark section in
+`reports/task-profile-review.md` and may refresh `data/model-ranking-snapshot.json`.
+
+Sources:
+- Artificial Analysis Agentic Index page (embedded server-rendered JSON extraction, no API key):
+  https://artificialanalysis.ai/?intelligence=agentic-index
+- LiveBench public release files from:
+  https://github.com/LiveBench/new-livebench/tree/main/public
+
+Guardrails:
+- GitHub model guidance + task-family policy stay authoritative for eligibility and selection.
+- Advisory rankings never auto-apply and never change task-family policy or profile selection logic.
+- Model matching is explicit via `config/model-ranking-aliases.json` (no fuzzy matching).
+- Missing/unmapped scores are `n/a`, never negative evidence.
+- Rankings are normalized into broad buckets (`top`, `competitive`, `lagging`, `n/a`) among currently available Copilot models.
+- If fetch/parsing/schema issues occur, profile selection remains unchanged; the script falls back to committed snapshot data when available, and labels stale snapshots (45-day threshold).
+
+Maintenance notes:
+- Artificial Analysis extraction can break if embedded schema/layout changes; failures are reported as unavailable instead of guessed.
+- Keep alias mappings current when new Copilot model IDs appear.
 
 ## Notes / limitations
 
