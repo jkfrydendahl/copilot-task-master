@@ -4,7 +4,7 @@ Reference: https://docs.github.com/en/copilot/reference/ai-models/model-comparis
 
 Model source: **copilot help config**
 
-Force benchmark consensus (manual first-run override): **False**
+Force benchmark consensus (manual first-run override): **True**
 
 ## Current profiles
 
@@ -13,24 +13,27 @@ Force benchmark consensus (manual first-run override): **False**
 | orchestrator | claude-sonnet-5 | medium | default |
 | quick | claude-haiku-4.5 | low | default |
 | default-development | claude-sonnet-5 | medium | default |
-| agentic-implementation | gpt-5.3-codex | high | default |
+| agentic-implementation | claude-opus-5 | high | default |
 | deep-reasoning | claude-opus-5 | high | long_context |
-| review | gpt-5.6-terra | medium | default |
+| review | gpt-5.6-sol | medium | default |
 | visual-ui | claude-sonnet-5 | medium | default |
 | mechanical | claude-haiku-4.5 | low | default |
 | triage | claude-sonnet-5 | low | default |
 
 ## Applied profile changes in this run
-- None.
+- "agentic-implementation": "gpt-5.3-codex" -> "claude-opus-5" (benchmark_consensus_forced)
+- "review": "gpt-5.6-terra" -> "gpt-5.6-sol" (benchmark_consensus_forced)
 
 ## Benchmark consensus pending
-- "review": candidate "gpt-5.6-sol", count=1
+- None.
 
 ## Active benchmark overrides
-- "review": "gpt-5.6-terra"
+- "agentic-implementation": "claude-opus-5"
+- "review": "gpt-5.6-sol"
 
 ## Benchmark consensus auto-applied changes
-- None.
+- "agentic-implementation": "gpt-5.3-codex" -> "claude-opus-5" (benchmark_consensus_forced - manual override, first qualifying run)
+- "review": "gpt-5.6-terra" -> "gpt-5.6-sol" (benchmark_consensus_forced - manual override, first qualifying run)
 
 ## Model admissibility (rule 9: availability confidence, capability/pricing freshness, profile ceilings, exclusion reasons)
 
@@ -232,9 +235,9 @@ Force benchmark consensus (manual first-run override): **False**
 - Artificial Analysis source date: 2026-07-24
 - Artificial Analysis Coding Agent source date: n/a
 - LiveBench source date: 2026-06-25
-- Artificial Analysis fetched at (UTC): 2026-07-30T15:19:20.2549419Z
-- Artificial Analysis Coding Agents fetched at (UTC): 2026-07-30T15:19:20.7637311Z
-- LiveBench fetched at (UTC): 2026-07-30T15:19:21.0272514Z
+- Artificial Analysis fetched at (UTC): 2026-07-30T14:56:32.4066551Z
+- Artificial Analysis Coding Agents fetched at (UTC): 2026-07-30T14:56:32.7775874Z
+- LiveBench fetched at (UTC): 2026-07-30T14:56:32.9419569Z
 
 > External rankings can auto-apply only after strict two-run consensus; verified availability, capabilities, pricing, and benchmark quality govern promotion, and family preferences are baseline-only.
 
