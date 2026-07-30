@@ -422,6 +422,18 @@ Run-Test "F4 Automatic family baseline selection freezes on unverified availabil
     Assert-True ($null -eq $result) "Expected unverified availability to freeze automatic baseline changes -- no model can pass the admissibility engine while availability is unverified."
 }
 
+Run-Test "F4b Precomputed admissible model list avoids cross-scope callback execution" {
+    $result = Get-PreferredModelForProfilePolicy -ProfileKey "default-development" `
+        -ValidModels @("claude-sonnet-5", "claude-sonnet-4.6") `
+        -AdmissibleModels @("claude-sonnet-4.6")
+    Assert-Eq "claude-sonnet-4.6" $result "Expected selection to use only the precomputed admissible model IDs."
+
+    $none = Get-PreferredModelForProfilePolicy -ProfileKey "default-development" `
+        -ValidModels @("claude-sonnet-5") `
+        -AdmissibleModels @()
+    Assert-True ($null -eq $none) "An explicitly empty admissible list must reject every baseline candidate."
+}
+
 # ---- strict profile-key requirement (model-policy-config.ps1) ----
 
 Run-Test "P4 Malformed policy (a known profile key missing from one requirement map) fails fast" {

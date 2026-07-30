@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAtUtc": "2026-07-30T11:29:15.4320027Z",
+  "generatedAtUtc": "2026-07-30T14:52:02.6750637Z",
   "staleAfterDays": 45,
   "status": "ok",
   "stale": false,
@@ -17,7 +17,7 @@
       "message": "Parsed embedded model records.",
       "sourceDate": "2026-07-24",
       "sourceVersion": "8ac9a6cb6996255a83db36c188112b53e90ef28f150d06958abb8b2e0fc79815",
-      "fetchedAtUtc": "2026-07-30T11:29:13.2632775Z",
+      "fetchedAtUtc": "2026-07-30T14:52:00.7815304Z",
       "sourceUrl": "https://artificialanalysis.ai/?intelligence=agentic-index"
     },
     "artificialAnalysisCodingAgents": {
@@ -25,7 +25,7 @@
       "message": "Parsed embedded coding-agent records.",
       "sourceDate": null,
       "sourceVersion": "30e68fb4f3e7cd69cd9062ba7d457517d30bed2fe22bce4d27824dc78147e619",
-      "fetchedAtUtc": "2026-07-30T11:29:13.7507473Z",
+      "fetchedAtUtc": "2026-07-30T14:52:01.3028915Z",
       "sourceUrl": "https://artificialanalysis.ai/agents/coding-agents"
     },
     "liveBench": {
@@ -33,7 +33,7 @@
       "message": "Parsed LiveBench table and categories.",
       "sourceDate": "2026-06-25",
       "sourceVersion": "2026-06-25",
-      "fetchedAtUtc": "2026-07-30T11:29:13.9123563Z",
+      "fetchedAtUtc": "2026-07-30T14:52:01.5577991Z",
       "sourceUrl": "https://github.com/LiveBench/new-livebench/blob/main/public/table_2026_06_25.csv"
     },
     "liveBenchCost": {
@@ -41,7 +41,7 @@
       "message": "Parsed complete LiveBench cost data.",
       "sourceDate": "2026-06-25",
       "sourceVersion": "2026-06-25",
-      "fetchedAtUtc": "2026-07-30T11:29:13.9123563Z",
+      "fetchedAtUtc": "2026-07-30T14:52:01.5577991Z",
       "sourceUrl": "https://github.com/LiveBench/new-livebench/blob/main/public/table_2026_06_25.csv"
     }
   },
@@ -913,7 +913,7 @@
             "liveBench": "2026-06-25",
             "artificialAnalysisCodingAgents": "30e68fb4f3e7cd69cd9062ba7d457517d30bed2fe22bce4d27824dc78147e619"
           },
-          "updatedAtUtc": "2026-07-30T14:41:18.3740927Z"
+          "updatedAtUtc": "2026-07-30T14:52:03.0801415Z"
         },
         "activeOverride": null
       },
@@ -922,7 +922,19 @@
         "activeOverride": null
       },
       "review": {
-        "pending": null,
+        "pending": {
+          "candidateModel": "gpt-5.6-sol",
+          "consecutiveQualifyingFullRuns": 1,
+          "sourceDates": {
+            "liveBench": "2026-06-25",
+            "artificialAnalysis": "2026-07-24"
+          },
+          "sourceVersions": {
+            "liveBench": "2026-06-25",
+            "artificialAnalysis": "8ac9a6cb6996255a83db36c188112b53e90ef28f150d06958abb8b2e0fc79815"
+          },
+          "updatedAtUtc": "2026-07-30T14:52:03.1702036Z"
+        },
         "activeOverride": {
           "model": "gpt-5.6-terra",
           "activatedAtUtc": "2026-07-30T11:29:15.8191436Z",
