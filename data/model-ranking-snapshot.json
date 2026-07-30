@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAtUtc": "2026-07-30T08:29:50.4453169Z",
+  "generatedAtUtc": "2026-07-30T08:33:37.6344156Z",
   "staleAfterDays": 45,
   "status": "ok",
   "stale": false,
@@ -15,14 +15,14 @@
       "status": "ok",
       "message": "Parsed embedded model records.",
       "sourceDate": "2026-07-24",
-      "fetchedAtUtc": "2026-07-30T08:29:48.9255825Z",
+      "fetchedAtUtc": "2026-07-30T08:33:36.6929429Z",
       "sourceUrl": "https://artificialanalysis.ai/?intelligence=agentic-index"
     },
     "liveBench": {
       "status": "ok",
       "message": "Parsed LiveBench table and categories.",
       "sourceDate": "2026-06-25",
-      "fetchedAtUtc": "2026-07-30T08:29:49.5329590Z",
+      "fetchedAtUtc": "2026-07-30T08:33:37.1384939Z",
       "sourceUrl": "https://github.com/LiveBench/new-livebench/blob/main/public/table_2026_06_25.csv"
     }
   },
