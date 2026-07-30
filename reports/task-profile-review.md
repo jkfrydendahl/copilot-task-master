@@ -13,7 +13,7 @@ Force benchmark consensus (manual first-run override): **True**
 | orchestrator | claude-sonnet-5 | medium | default |
 | quick | claude-haiku-4.5 | low | default |
 | default-development | claude-sonnet-5 | medium | default |
-| agentic-implementation | claude-opus-5 | high | default |
+| agentic-implementation | gpt-5.3-codex | high | default |
 | deep-reasoning | claude-opus-5 | high | long_context |
 | review | gpt-5.6-sol | medium | default |
 | visual-ui | claude-sonnet-5 | medium | default |
@@ -21,13 +21,12 @@ Force benchmark consensus (manual first-run override): **True**
 | triage | claude-sonnet-5 | low | default |
 
 ## Applied profile changes in this run
-- None.
+- "agentic-implementation": "claude-opus-5" -> "gpt-5.3-codex" (policy_preference)
 
 ## Benchmark consensus pending
 - None.
 
 ## Active benchmark overrides
-- "agentic-implementation": "claude-opus-5"
 - "review": "gpt-5.6-sol"
 
 ## Benchmark consensus auto-applied changes
@@ -104,7 +103,7 @@ Force benchmark consensus (manual first-run override): **True**
 
 - Availability confidence: **verified**
 - Pricing ceilings (per million tokens): input <= $10, output <= $50
-- Incumbent/current model: **claude-opus-5** — admissible: **True** (reasons: none)
+- Incumbent/current model: **gpt-5.3-codex** — admissible: **True** (reasons: none)
 - Exclusions:
 
 | Model | Reasons | Pricing tier | Input $/M | Output $/M | Capability as-of |
@@ -233,9 +232,9 @@ Force benchmark consensus (manual first-run override): **True**
 - Artificial Analysis source date: 2026-07-24
 - Artificial Analysis Coding Agent source date: n/a
 - LiveBench source date: 2026-06-25
-- Artificial Analysis fetched at (UTC): 2026-07-30T15:09:37.1961236Z
-- Artificial Analysis Coding Agents fetched at (UTC): 2026-07-30T15:09:37.5388458Z
-- LiveBench fetched at (UTC): 2026-07-30T15:09:37.6643029Z
+- Artificial Analysis fetched at (UTC): 2026-07-30T15:21:43.6109391Z
+- Artificial Analysis Coding Agents fetched at (UTC): 2026-07-30T15:21:44.0561993Z
+- LiveBench fetched at (UTC): 2026-07-30T15:21:44.2377342Z
 
 > External rankings can auto-apply only after strict two-run consensus; verified availability, capabilities, pricing, and benchmark quality govern promotion, and family preferences are baseline-only.
 
