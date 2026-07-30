@@ -21,8 +21,7 @@ Force benchmark consensus (manual first-run override): **True**
 | triage | claude-sonnet-5 | low | default |
 
 ## Applied profile changes in this run
-- "agentic-implementation": "gpt-5.3-codex" -> "claude-opus-5" (benchmark_consensus_forced)
-- "review": "gpt-5.6-terra" -> "gpt-5.6-sol" (benchmark_consensus_forced)
+- None.
 
 ## Benchmark consensus pending
 - None.
@@ -32,8 +31,7 @@ Force benchmark consensus (manual first-run override): **True**
 - "review": "gpt-5.6-sol"
 
 ## Benchmark consensus auto-applied changes
-- "agentic-implementation": "gpt-5.3-codex" -> "claude-opus-5" (benchmark_consensus_forced - manual override, first qualifying run)
-- "review": "gpt-5.6-terra" -> "gpt-5.6-sol" (benchmark_consensus_forced - manual override, first qualifying run)
+- None.
 
 ## Model admissibility (rule 9: availability confidence, capability/pricing freshness, profile ceilings, exclusion reasons)
 
@@ -106,7 +104,7 @@ Force benchmark consensus (manual first-run override): **True**
 
 - Availability confidence: **verified**
 - Pricing ceilings (per million tokens): input <= $10, output <= $50
-- Incumbent/current model: **gpt-5.3-codex** — admissible: **True** (reasons: none)
+- Incumbent/current model: **claude-opus-5** — admissible: **True** (reasons: none)
 - Exclusions:
 
 | Model | Reasons | Pricing tier | Input $/M | Output $/M | Capability as-of |
@@ -135,7 +133,7 @@ Force benchmark consensus (manual first-run override): **True**
 
 - Availability confidence: **verified**
 - Pricing ceilings (per million tokens): input <= $5, output <= $30
-- Incumbent/current model: **gpt-5.6-terra** — admissible: **True** (reasons: none)
+- Incumbent/current model: **gpt-5.6-sol** — admissible: **True** (reasons: none)
 - Exclusions:
 
 | Model | Reasons | Pricing tier | Input $/M | Output $/M | Capability as-of |
@@ -234,9 +232,9 @@ Force benchmark consensus (manual first-run override): **True**
 - Artificial Analysis source date: 2026-07-24
 - Artificial Analysis Coding Agent source date: n/a
 - LiveBench source date: 2026-06-25
-- Artificial Analysis fetched at (UTC): 2026-07-30T14:56:32.4066551Z
-- Artificial Analysis Coding Agents fetched at (UTC): 2026-07-30T14:56:32.7775874Z
-- LiveBench fetched at (UTC): 2026-07-30T14:56:32.9419569Z
+- Artificial Analysis fetched at (UTC): 2026-07-30T15:06:53.2651312Z
+- Artificial Analysis Coding Agents fetched at (UTC): 2026-07-30T15:06:53.6611218Z
+- LiveBench fetched at (UTC): 2026-07-30T15:06:53.7792945Z
 
 > External rankings can auto-apply only after strict two-run consensus; verified availability, capabilities, pricing, and benchmark quality govern promotion, and family preferences are baseline-only.
 
