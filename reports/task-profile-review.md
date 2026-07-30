@@ -2,7 +2,7 @@
 
 Reference: https://docs.github.com/en/copilot/reference/ai-models/model-comparison
 
-Model source: **copilot help config**
+Model source: **gh copilot help config**
 
 Direct-apply mode: **true**
 
@@ -63,8 +63,8 @@ Direct-apply mode: **true**
 - LiveBench URL: https://github.com/LiveBench/new-livebench/tree/main/public
 - Artificial Analysis source date: 2026-07-24
 - LiveBench source date: 2026-06-25
-- Artificial Analysis fetched at (UTC): 2026-07-30T08:29:48.9255825Z
-- LiveBench fetched at (UTC): 2026-07-30T08:29:49.5329590Z
+- Artificial Analysis fetched at (UTC): 2026-07-30T08:33:36.6929429Z
+- LiveBench fetched at (UTC): 2026-07-30T08:33:37.1384939Z
 
 > Advisory only: external rankings never auto-apply and never influence profile-selection policy.
 
