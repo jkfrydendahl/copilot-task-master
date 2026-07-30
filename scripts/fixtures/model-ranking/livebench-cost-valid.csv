@@ -1,0 +1,4 @@
+model,cost_per_successful_task
+claude-sonnet-5-xhigh-effort,0.90
+claude-opus-5-max-effort,1.10
+gpt-5.6-sol-max,1.40
