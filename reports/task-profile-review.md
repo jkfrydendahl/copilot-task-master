@@ -1,10 +1,10 @@
-# Monthly task profile review (2026-07-30)
+# Monthly task profile review (2026-07-31)
 
 Reference: https://docs.github.com/en/copilot/reference/ai-models/model-comparison
 
 Model source: **copilot help config**
 
-Force benchmark consensus (manual first-run override): **True**
+Force benchmark consensus (manual first-run override): **False**
 
 ## Current profiles
 
@@ -21,7 +21,7 @@ Force benchmark consensus (manual first-run override): **True**
 | triage | claude-sonnet-5 | low | default |
 
 ## Applied profile changes in this run
-- "agentic-implementation": "claude-opus-5" -> "gpt-5.3-codex" (policy_preference)
+- None.
 
 ## Benchmark consensus pending
 - None.
@@ -53,6 +53,7 @@ Force benchmark consensus (manual first-run override): **True**
 | gpt-5.6-sol | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 | 30 | 2026-07-30 |
 | gpt-5.5 | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 | 30 | 2026-07-30 |
 | gpt-5-mini | context_unsupported, effort_unsupported | default | 0.25 | 2 | 2026-07-30 |
+| mai-code-1-flash-picker | context_unsupported, effort_unsupported, pricing_missing | n/a | n/a | n/a | 2026-07-30 |
 
 ### quick
 
@@ -77,6 +78,7 @@ Force benchmark consensus (manual first-run override): **True**
 | gpt-5.4 | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 2.5 | 15 | 2026-07-30 |
 | gpt-5.3-codex | pricing_output_exceeds_ceiling | default | 1.75 | 14 | 2026-07-30 |
 | gpt-5-mini | context_unsupported, effort_unsupported | default | 0.25 | 2 | 2026-07-30 |
+| mai-code-1-flash-picker | context_unsupported, effort_unsupported, pricing_missing | n/a | n/a | n/a | 2026-07-30 |
 | gemini-3.1-pro-preview | pricing_output_exceeds_ceiling | default | 2 | 12 | 2026-07-30 |
 
 ### default-development
@@ -98,6 +100,7 @@ Force benchmark consensus (manual first-run override): **True**
 | gpt-5.6-sol | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 | 30 | 2026-07-30 |
 | gpt-5.5 | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 | 30 | 2026-07-30 |
 | gpt-5-mini | context_unsupported, effort_unsupported | default | 0.25 | 2 | 2026-07-30 |
+| mai-code-1-flash-picker | context_unsupported, effort_unsupported, pricing_missing | n/a | n/a | n/a | 2026-07-30 |
 
 ### agentic-implementation
 
@@ -111,6 +114,7 @@ Force benchmark consensus (manual first-run override): **True**
 | claude-sonnet-4.5 | context_unsupported, effort_unsupported | default | 3 | 15 | 2026-07-30 |
 | claude-opus-4.8-fast | context_unsupported, effort_unsupported, pricing_missing | n/a | n/a | n/a | 2026-07-30 |
 | gpt-5-mini | context_unsupported, effort_unsupported | default | 0.25 | 2 | 2026-07-30 |
+| mai-code-1-flash-picker | context_unsupported, effort_unsupported, pricing_missing | n/a | n/a | n/a | 2026-07-30 |
 
 ### deep-reasoning
 
@@ -127,6 +131,7 @@ Force benchmark consensus (manual first-run override): **True**
 | gpt-5.3-codex | context_unsupported | default | 1.75 | 14 | 2026-07-30 |
 | gpt-5.4-mini | context_unsupported | default | 0.75 | 4.5 | 2026-07-30 |
 | gpt-5-mini | context_unsupported, effort_unsupported | default | 0.25 | 2 | 2026-07-30 |
+| mai-code-1-flash-picker | context_unsupported, effort_unsupported, pricing_missing | n/a | n/a | n/a | 2026-07-30 |
 
 ### review
 
@@ -140,17 +145,17 @@ Force benchmark consensus (manual first-run override): **True**
 | claude-sonnet-4.5 | context_unsupported, effort_unsupported | default | 3 | 15 | 2026-07-30 |
 | claude-opus-4.8-fast | context_unsupported, effort_unsupported, pricing_missing | n/a | n/a | n/a | 2026-07-30 |
 | gpt-5-mini | context_unsupported, effort_unsupported | default | 0.25 | 2 | 2026-07-30 |
+| mai-code-1-flash-picker | context_unsupported, effort_unsupported, pricing_missing | n/a | n/a | n/a | 2026-07-30 |
 
 ### visual-ui
 
 - Availability confidence: **verified**
 - Pricing ceilings (per million tokens): input <= $3, output <= $15
-- Incumbent/current model: **claude-sonnet-4.6** — admissible: **True** (reasons: none)
+- Incumbent/current model: **claude-sonnet-5** — admissible: **False** (reasons: vision_unknown)
 - Exclusions:
 
 | Model | Reasons | Pricing tier | Input $/M | Output $/M | Capability as-of |
 |---|---|---|---|---|---|
-| claude-sonnet-5 | vision_unknown | default | 2 | 10 | 2026-07-30 |
 | claude-sonnet-4.5 | vision_unknown, context_unsupported, effort_unsupported | default | 3 | 15 | 2026-07-30 |
 | claude-haiku-4.5 | vision_unknown | default | 1 | 5 | 2026-07-30 |
 | claude-opus-5 | vision_unknown, pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 | 25 | 2026-07-30 |
@@ -167,6 +172,7 @@ Force benchmark consensus (manual first-run override): **True**
 | gpt-5.3-codex | vision_unknown | default | 1.75 | 14 | 2026-07-30 |
 | gpt-5.4-mini | vision_unknown | default | 0.75 | 4.5 | 2026-07-30 |
 | gpt-5-mini | context_unsupported, effort_unsupported | default | 0.25 | 2 | 2026-07-30 |
+| mai-code-1-flash-picker | vision_unknown, context_unsupported, effort_unsupported, pricing_missing | n/a | n/a | n/a | 2026-07-30 |
 | gemini-3.6-flash | vision_unknown | default | 1.5 | 7.5 | 2026-07-30 |
 | gemini-3.5-flash | vision_unknown | default | 1.5 | 9 | 2026-07-30 |
 
@@ -193,6 +199,7 @@ Force benchmark consensus (manual first-run override): **True**
 | gpt-5.4 | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 2.5 | 15 | 2026-07-30 |
 | gpt-5.3-codex | pricing_output_exceeds_ceiling | default | 1.75 | 14 | 2026-07-30 |
 | gpt-5-mini | context_unsupported, effort_unsupported | default | 0.25 | 2 | 2026-07-30 |
+| mai-code-1-flash-picker | context_unsupported, effort_unsupported, pricing_missing | n/a | n/a | n/a | 2026-07-30 |
 | gemini-3.1-pro-preview | pricing_output_exceeds_ceiling | default | 2 | 12 | 2026-07-30 |
 
 ### triage
@@ -218,6 +225,7 @@ Force benchmark consensus (manual first-run override): **True**
 | gpt-5.4 | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 2.5 | 15 | 2026-07-30 |
 | gpt-5.3-codex | pricing_output_exceeds_ceiling | default | 1.75 | 14 | 2026-07-30 |
 | gpt-5-mini | context_unsupported, effort_unsupported | default | 0.25 | 2 | 2026-07-30 |
+| mai-code-1-flash-picker | context_unsupported, effort_unsupported, pricing_missing | n/a | n/a | n/a | 2026-07-30 |
 | gemini-3.1-pro-preview | pricing_output_exceeds_ceiling | default | 2 | 12 | 2026-07-30 |
 
 ## External model ranking snapshot
@@ -232,9 +240,9 @@ Force benchmark consensus (manual first-run override): **True**
 - Artificial Analysis source date: 2026-07-24
 - Artificial Analysis Coding Agent source date: n/a
 - LiveBench source date: 2026-06-25
-- Artificial Analysis fetched at (UTC): 2026-07-30T15:21:43.6109391Z
-- Artificial Analysis Coding Agents fetched at (UTC): 2026-07-30T15:21:44.0561993Z
-- LiveBench fetched at (UTC): 2026-07-30T15:21:44.2377342Z
+- Artificial Analysis fetched at (UTC): 2026-07-31T06:13:59.7112621Z
+- Artificial Analysis Coding Agents fetched at (UTC): 2026-07-31T06:14:00.4578610Z
+- LiveBench fetched at (UTC): 2026-07-31T06:14:01.6293065Z
 
 > External rankings can auto-apply only after strict two-run consensus; verified availability, capabilities, pricing, and benchmark quality govern promotion, and family preferences are baseline-only.
 
@@ -258,6 +266,7 @@ Force benchmark consensus (manual first-run override): **True**
 | gpt-5.3-codex | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a |
 | gpt-5.4-mini | n/a | n/a | lagging | lagging | lagging | lagging | 0.3343 | top |
 | gpt-5-mini | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a |
+| mai-code-1-flash-picker | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a |
 | gemini-3.1-pro-preview | n/a | lagging | n/a | n/a | n/a | n/a | n/a | n/a |
 | gemini-3.6-flash | lagging | n/a | n/a | n/a | n/a | n/a | n/a | n/a |
 | gemini-3.5-flash | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a |

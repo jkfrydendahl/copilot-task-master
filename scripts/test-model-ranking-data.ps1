@@ -328,6 +328,11 @@ Run-Test "34 Active override is evaluated individually rather than displaced by 
     Assert-True (Test-ActiveOverrideQualitySupported -ActiveModel "gpt-5.6-terra" -PolicyPreferredModel "claude-sonnet-5" -IsFullFreshRun $true -ProfileKey "review" -Snapshot $snapshot) "The active override should retain its head-to-head win over the baseline while a better challenger follows normal consensus."
 }
 
+Run-Test "35 Grandfathered current model remains the effective benchmark incumbent" {
+    Assert-Eq "claude-sonnet-5" (Get-EffectivePolicyBaselineModel -CurrentModel "claude-sonnet-5" -PolicyPreferredModel "claude-sonnet-4.6" -GrandfatherCurrent $true) "Unknown vision must not silently make Sonnet 4.6 the effective incumbent while Sonnet 5 remains configured."
+    Assert-Eq "gpt-5.3-codex" (Get-EffectivePolicyBaselineModel -CurrentModel "claude-opus-5" -PolicyPreferredModel "gpt-5.3-codex" -GrandfatherCurrent $false) "Without grandfathering, the admissible policy baseline should be effective."
+}
+
 Write-Host ""
 Write-Host "Tests passed: $script:Passed"
 Write-Host "Tests failed: $script:Failed"

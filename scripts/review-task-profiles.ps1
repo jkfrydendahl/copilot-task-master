@@ -210,6 +210,19 @@ function Test-ActiveOverrideQualitySupported {
         ([double]$activeQuality.lbScore -gt [double]$baselineQuality.lbScore)
 }
 
+function Get-EffectivePolicyBaselineModel {
+    [OutputType([string])]
+    param(
+        [string]$CurrentModel,
+        [string]$PolicyPreferredModel,
+        [bool]$GrandfatherCurrent
+    )
+
+    if ($GrandfatherCurrent) { return $CurrentModel }
+    if (-not [string]::IsNullOrWhiteSpace($PolicyPreferredModel)) { return $PolicyPreferredModel }
+    return $CurrentModel
+}
+
 function Get-SnapshotConsensusProfilesMap {
     param($Snapshot)
     if ($Snapshot -is [System.Collections.IDictionary]) {
@@ -469,15 +482,14 @@ function Invoke-TaskProfileReview {
                 -ProfileRequirement $ctx.requirement -ProfileContextTier $ctx.contextTier -ProfileEffort $ctx.effort `
                 -CapabilityFreshnessDays $capabilityFreshnessDays
         }
-        # Rule 1 (grandfathering): if no admissible baseline exists
-        # ($policyPreferred is null/empty), the existing current model is
-        # kept unchanged rather than silently replaced -- this falls out of
-        # the else-branch below with no special-casing needed.
-        $target = if ($overrideValid) { $activeOverride } elseif ($grandfatherCurrent) { $currentModel } elseif (-not [string]::IsNullOrWhiteSpace($policyPreferred)) { $policyPreferred } else { $currentModel }
+        $effectiveBaseline = Get-EffectivePolicyBaselineModel -CurrentModel $currentModel `
+            -PolicyPreferredModel $policyPreferred -GrandfatherCurrent $grandfatherCurrent
+        $target = if ($overrideValid) { $activeOverride } else { $effectiveBaseline }
         $type = if ($overrideValid) { "active_override" } elseif ($target -ne $currentModel) { "policy_preference" } else { "none" }
         $decisions[$profileKey] = [pscustomobject]@{
             currentModel = $currentModel
             policyPreferred = $policyPreferred
+            effectiveBaseline = $effectiveBaseline
             incumbentAfterPolicy = $target
             finalModel = $target
             changeType = $type
@@ -529,18 +541,16 @@ function Invoke-TaskProfileReview {
                 -ProfileRequirement $ctx.requirement -ProfileContextTier $ctx.contextTier -ProfileEffort $ctx.effort `
                 -CapabilityFreshnessDays $capabilityFreshnessDays
 
-            if ($activeStillValid -and $isFullFresh -and -not [string]::IsNullOrWhiteSpace([string]$d.policyPreferred)) {
+            if ($activeStillValid -and $isFullFresh -and -not [string]::IsNullOrWhiteSpace([string]$d.effectiveBaseline)) {
                 $activeStillValid = Test-ActiveOverrideQualitySupported -ActiveModel $activeModel `
-                    -PolicyPreferredModel ([string]$d.policyPreferred) -IsFullFreshRun $isFullFresh `
+                    -PolicyPreferredModel ([string]$d.effectiveBaseline) -IsFullFreshRun $isFullFresh `
                     -ProfileKey $profileKey -Snapshot $rankingSnapshot
             }
         }
         $incumbent = if (-not [string]::IsNullOrWhiteSpace($activeModel) -and $activeStillValid) {
             $activeModel
-        } elseif (-not [string]::IsNullOrWhiteSpace([string]$d.policyPreferred)) {
-            [string]$d.policyPreferred
         } else {
-            [string]$d.currentModel
+            [string]$d.effectiveBaseline
         }
         # Rule 2: hardcoded fallback discovery (unverified) may still generate
         # baseline/report output, but must freeze benchmark promotion.
@@ -584,11 +594,11 @@ function Invoke-TaskProfileReview {
         $sourceDates = if ($isFullFresh -and $null -ne $candidate) { Get-RequiredSourceDatesForProfile -Snapshot $rankingSnapshot -ProfileKey $profileKey } else { @{} }
         $sourceVersions = if ($isFullFresh -and $null -ne $candidate) { Get-RequiredSourceVersionsForProfile -Snapshot $rankingSnapshot -ProfileKey $profileKey } else { @{} }
 
-        $resolved = Resolve-BenchmarkConsensusState -ProfileKey $profileKey -PolicyPreferredModel $d.policyPreferred -IncumbentModel $incumbent -CurrentState $profileState -IsFullFreshRun $isFullFresh -Candidate $candidate -SourceDates $sourceDates -SourceVersions $sourceVersions -ActiveOverrideStillValid $activeStillValid -ForceImmediateApply $forceBenchmarkConsensus
+        $resolved = Resolve-BenchmarkConsensusState -ProfileKey $profileKey -PolicyPreferredModel $d.effectiveBaseline -IncumbentModel $incumbent -CurrentState $profileState -IsFullFreshRun $isFullFresh -Candidate $candidate -SourceDates $sourceDates -SourceVersions $sourceVersions -ActiveOverrideStillValid $activeStillValid -ForceImmediateApply $forceBenchmarkConsensus
         $profileState = $resolved.state
         $d.pendingCount = $resolved.pendingCount
         if ($resolved.activeCleared -and $d.changeType -eq "active_override") {
-            $d.finalModel = if (-not [string]::IsNullOrWhiteSpace($d.policyPreferred)) { $d.policyPreferred } else { $d.currentModel }
+            $d.finalModel = $d.effectiveBaseline
             $d.changeType = "policy_preference"
         }
         if ($resolved.applied) {
