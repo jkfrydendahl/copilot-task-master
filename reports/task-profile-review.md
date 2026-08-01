@@ -1,4 +1,4 @@
-# Monthly task profile review (2026-07-31)
+# Monthly task profile review (2026-08-01)
 
 Reference: https://docs.github.com/en/copilot/reference/ai-models/model-comparison
 
@@ -237,12 +237,12 @@ Force benchmark consensus (manual first-run override): **False**
 - Artificial Analysis URL: https://artificialanalysis.ai/?intelligence=agentic-index
 - Artificial Analysis Coding Agents URL: https://artificialanalysis.ai/agents/coding-agents
 - LiveBench URL: https://github.com/LiveBench/new-livebench/tree/main/public
-- Artificial Analysis source date: 2026-07-24
+- Artificial Analysis source date: 2026-07-31
 - Artificial Analysis Coding Agent source date: n/a
 - LiveBench source date: 2026-06-25
-- Artificial Analysis fetched at (UTC): 2026-07-31T06:13:59.7112621Z
-- Artificial Analysis Coding Agents fetched at (UTC): 2026-07-31T06:14:00.4578610Z
-- LiveBench fetched at (UTC): 2026-07-31T06:14:01.6293065Z
+- Artificial Analysis fetched at (UTC): 2026-08-01T09:05:34.0329619Z
+- Artificial Analysis Coding Agents fetched at (UTC): 2026-08-01T09:05:34.4088896Z
+- LiveBench fetched at (UTC): 2026-08-01T09:05:34.5476419Z
 
 > External rankings can auto-apply only after strict two-run consensus; verified availability, capabilities, pricing, and benchmark quality govern promotion, and family preferences are baseline-only.
 
