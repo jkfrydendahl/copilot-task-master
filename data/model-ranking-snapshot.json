@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAtUtc": "2026-07-30T15:21:45.4038979Z",
+  "generatedAtUtc": "2026-08-01T09:05:35.3954840Z",
   "staleAfterDays": 45,
   "status": "ok",
   "stale": false,
@@ -15,17 +15,17 @@
     "artificialAnalysis": {
       "status": "ok",
       "message": "Parsed embedded model records.",
-      "sourceDate": "2026-07-24",
-      "sourceVersion": "8ac9a6cb6996255a83db36c188112b53e90ef28f150d06958abb8b2e0fc79815",
-      "fetchedAtUtc": "2026-07-30T15:21:43.6109391Z",
+      "sourceDate": "2026-07-31",
+      "sourceVersion": "7f9b98ade27d2258871964d5e3e76595505f1dfb048377df1cd3baad43dd30f2",
+      "fetchedAtUtc": "2026-08-01T09:05:34.0329619Z",
       "sourceUrl": "https://artificialanalysis.ai/?intelligence=agentic-index"
     },
     "artificialAnalysisCodingAgents": {
       "status": "ok",
       "message": "Parsed embedded coding-agent records.",
       "sourceDate": null,
-      "sourceVersion": "30e68fb4f3e7cd69cd9062ba7d457517d30bed2fe22bce4d27824dc78147e619",
-      "fetchedAtUtc": "2026-07-30T15:21:44.0561993Z",
+      "sourceVersion": "05854cc546dc0b246b7e2e68773511018affd74c2184c52f007126190178c5f8",
+      "fetchedAtUtc": "2026-08-01T09:05:34.4088896Z",
       "sourceUrl": "https://artificialanalysis.ai/agents/coding-agents"
     },
     "liveBench": {
@@ -33,7 +33,7 @@
       "message": "Parsed LiveBench table and categories.",
       "sourceDate": "2026-06-25",
       "sourceVersion": "2026-06-25",
-      "fetchedAtUtc": "2026-07-30T15:21:44.2377342Z",
+      "fetchedAtUtc": "2026-08-01T09:05:34.5476419Z",
       "sourceUrl": "https://github.com/LiveBench/new-livebench/blob/main/public/table_2026_06_25.csv"
     },
     "liveBenchCost": {
@@ -41,7 +41,7 @@
       "message": "Parsed complete LiveBench cost data.",
       "sourceDate": "2026-06-25",
       "sourceVersion": "2026-06-25",
-      "fetchedAtUtc": "2026-07-30T15:21:44.2377342Z",
+      "fetchedAtUtc": "2026-08-01T09:05:34.5476419Z",
       "sourceUrl": "https://github.com/LiveBench/new-livebench/blob/main/public/table_2026_06_25.csv"
     }
   },
@@ -766,6 +766,46 @@
         "costOrdinalRank": null
       }
     },
+    "mai-code-1-flash-picker": {
+      "artificialAnalysis": {
+        "alias": null,
+        "name": null,
+        "agenticIndex": null,
+        "bucket": "n/a",
+        "ordinalRank": null
+      },
+      "artificialAnalysisCodingAgents": {
+        "alias": null,
+        "name": null,
+        "codingAgentIndex": null,
+        "bucket": "n/a",
+        "ordinalRank": null
+      },
+      "liveBench": {
+        "alias": null,
+        "categories": {
+          "coding": null,
+          "agenticCoding": null,
+          "reasoning": null,
+          "instructionFollowing": null
+        },
+        "buckets": {
+          "coding": "n/a",
+          "agenticCoding": "n/a",
+          "reasoning": "n/a",
+          "instructionFollowing": "n/a"
+        },
+        "ordinalRanks": {
+          "coding": null,
+          "agenticCoding": null,
+          "reasoning": null,
+          "instructionFollowing": null
+        },
+        "costPerSuccessfulTask": null,
+        "costBucket": "n/a",
+        "costOrdinalRank": null
+      }
+    },
     "gemini-3.1-pro-preview": {
       "artificialAnalysis": {
         "alias": null,
@@ -777,7 +817,7 @@
       "artificialAnalysisCodingAgents": {
         "alias": "Gemini CLI - Gemini 3.1 Pro (high)",
         "name": "Gemini CLI - Gemini 3.1 Pro (high)",
-        "codingAgentIndex": 0.3033847027566694,
+        "codingAgentIndex": 0.30338470275666973,
         "bucket": "lagging",
         "ordinalRank": 3
       },
