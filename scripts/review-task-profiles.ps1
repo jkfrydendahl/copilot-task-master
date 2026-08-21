@@ -153,9 +153,15 @@ function Get-BenchmarkConsensusCandidate {
     }
 
     $incumbent = Get-ModelQualityDataForProfile -Snapshot $Snapshot -ProfileKey $ProfileKey -ModelId $IncumbentModel
-    if ($null -eq $incumbent -or $null -eq $incumbent.aaScore -or $null -eq $incumbent.lbScore) {
+    # LiveBench-only fallback: when Artificial Analysis hasn't indexed the
+    # incumbent yet (aaScore null) we can no longer require the AA leg of
+    # the dual-source comparison, but LiveBench coverage is still mandatory
+    # -- without it there is no comparative evidence at all.
+    if ($null -eq $incumbent -or $null -eq $incumbent.lbScore) {
         return $null
     }
+    $incumbentAaAvailable = $null -ne $incumbent.aaScore
+
     $qualifiers = New-Object System.Collections.Generic.List[object]
     foreach ($model in $ValidModels) {
         if ($model -eq $IncumbentModel) { continue }
@@ -168,22 +174,38 @@ function Get-BenchmarkConsensusCandidate {
 
         $candidate = Get-ModelQualityDataForProfile -Snapshot $Snapshot -ProfileKey $ProfileKey -ModelId $model
         if ($null -eq $candidate) { continue }
-        if ($candidate.aaBucket -ne "top" -or $candidate.lbBucket -ne "top") { continue }
-        if ($null -eq $candidate.aaScore -or $null -eq $candidate.lbScore) { continue }
+        # LB bucket "top" is always required. AA bucket "top" is only
+        # required when both sides actually have AA data to compare.
+        if ($candidate.lbBucket -ne "top" -or $null -eq $candidate.lbScore) { continue }
 
-        $winsBoth = ([double]$candidate.aaScore -gt [double]$incumbent.aaScore) -and ([double]$candidate.lbScore -gt [double]$incumbent.lbScore)
-        if (-not $winsBoth) { continue }
+        $candidateAaAvailable = $null -ne $candidate.aaScore
+        $aaFallbackUsed = -not ($incumbentAaAvailable -and $candidateAaAvailable)
 
-        $combinedRank = ([int]$candidate.aaRank) + ([int]$candidate.lbRank)
+        if ($aaFallbackUsed) {
+            $winsQualifying = [double]$candidate.lbScore -gt [double]$incumbent.lbScore
+        } else {
+            if ($candidate.aaBucket -ne "top") { continue }
+            $winsQualifying = ([double]$candidate.aaScore -gt [double]$incumbent.aaScore) -and ([double]$candidate.lbScore -gt [double]$incumbent.lbScore)
+        }
+        if (-not $winsQualifying) { continue }
+
+        $combinedRank = if ($null -ne $candidate.aaRank) { ([int]$candidate.aaRank) + ([int]$candidate.lbRank) } else { ([int]$candidate.lbRank) * 2 }
         $qualifiers.Add([pscustomobject]@{
             model = $model
             combinedRank = $combinedRank
             cost = [double]$candidate.cost
+            aaFallbackUsed = $aaFallbackUsed
         })
     }
 
     if ($qualifiers.Count -eq 0) { return $null }
-    return @($qualifiers | Sort-Object -Property @{ Expression = { $_.combinedRank }; Descending = $false }, @{ Expression = { $_.cost }; Descending = $false }, @{ Expression = { $_.model }; Descending = $false })[0]
+    $winner = @($qualifiers | Sort-Object -Property @{ Expression = { $_.combinedRank }; Descending = $false }, @{ Expression = { $_.cost }; Descending = $false }, @{ Expression = { $_.model }; Descending = $false })[0]
+    return [pscustomobject]@{
+        model = $winner.model
+        combinedRank = $winner.combinedRank
+        cost = $winner.cost
+        aaFallbackUsed = ((-not $incumbentAaAvailable) -or $winner.aaFallbackUsed)
+    }
 }
 
 function Test-ActiveOverrideQualitySupported {
@@ -204,10 +226,15 @@ function Test-ActiveOverrideQualitySupported {
     $activeQuality = Get-ModelQualityDataForProfile -Snapshot $Snapshot -ProfileKey $ProfileKey -ModelId $ActiveModel
     $baselineQuality = Get-ModelQualityDataForProfile -Snapshot $Snapshot -ProfileKey $ProfileKey -ModelId $PolicyPreferredModel
     if ($null -eq $activeQuality -or $null -eq $baselineQuality) { return $false }
-    if ($null -eq $activeQuality.aaScore -or $null -eq $activeQuality.lbScore) { return $false }
-    if ($null -eq $baselineQuality.aaScore -or $null -eq $baselineQuality.lbScore) { return $false }
-    return ([double]$activeQuality.aaScore -gt [double]$baselineQuality.aaScore) -and `
-        ([double]$activeQuality.lbScore -gt [double]$baselineQuality.lbScore)
+    if ($null -eq $activeQuality.lbScore -or $null -eq $baselineQuality.lbScore) { return $false }
+
+    # LiveBench-only fallback: when AA data is missing for either side, fall
+    # back to comparing LiveBench scores only instead of freezing the check.
+    if ($null -ne $activeQuality.aaScore -and $null -ne $baselineQuality.aaScore) {
+        return ([double]$activeQuality.aaScore -gt [double]$baselineQuality.aaScore) -and `
+            ([double]$activeQuality.lbScore -gt [double]$baselineQuality.lbScore)
+    }
+    return [double]$activeQuality.lbScore -gt [double]$baselineQuality.lbScore
 }
 
 function Get-EffectivePolicyBaselineModel {
@@ -513,6 +540,7 @@ function Invoke-TaskProfileReview {
     }
 
     $benchmarkChanges = New-Object System.Collections.Generic.List[string]
+    $aaFallbackLines = New-Object System.Collections.Generic.List[string]
     $profileAdmissibilityVerdicts = @{}
     foreach ($profile in $profiles) {
         $profileKey = [string]$profile.key
@@ -559,6 +587,18 @@ function Invoke-TaskProfileReview {
                 -AvailabilityVerified $availability.verified -Denylist $script:ModelDenylist -CapabilitiesCatalog $capabilitiesCatalog `
                 -ProfileRequirement $ctx.requirement -ProfileContextTier $ctx.contextTier -ProfileEffort $ctx.effort -CapabilityFreshnessDays $capabilityFreshnessDays
         } else { $null }
+
+        # Surface the AA-missing LiveBench-only fallback in the report even
+        # when it froze consensus entirely (no candidate qualified), so the
+        # gap is visible instead of silently showing "None".
+        if ($isFullFresh) {
+            $incumbentQualityForReport = Get-ModelQualityDataForProfile -Snapshot $rankingSnapshot -ProfileKey $profileKey -ModelId $incumbent
+            $incumbentAaMissing = ($null -ne $incumbentQualityForReport) -and ($null -ne $incumbentQualityForReport.lbScore) -and ($null -eq $incumbentQualityForReport.aaScore)
+            $candidateUsedAaFallback = ($null -ne $candidate) -and (Test-ObjectMember -InputObject $candidate -Name "aaFallbackUsed") -and [bool]$candidate.aaFallbackUsed
+            if ($incumbentAaMissing -or $candidateUsedAaFallback) {
+                $aaFallbackLines.Add(('- "{0}": AA data missing -- using LiveBench-only fallback' -f $profileKey))
+            }
+        }
 
         # Per-profile admissibility ledger for the review report (rule 9):
         # every discovered model other than the incumbent, with full reason
@@ -685,6 +725,9 @@ function Invoke-TaskProfileReview {
     $lines += ""
     $lines += "## Benchmark consensus pending"
     if ($pendingLines.Count -eq 0) { $lines += "- None." } else { $lines += @($pendingLines) }
+    $lines += ""
+    $lines += "## Benchmark consensus AA-data-missing fallback"
+    if ($aaFallbackLines.Count -eq 0) { $lines += "- None." } else { $lines += @($aaFallbackLines) }
     $lines += ""
     $lines += "## Active benchmark overrides"
     if ($activeLines.Count -eq 0) { $lines += "- None." } else { $lines += @($activeLines) }

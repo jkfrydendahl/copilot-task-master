@@ -333,6 +333,31 @@ Run-Test "35 Grandfathered current model remains the effective benchmark incumbe
     Assert-Eq "gpt-5.3-codex" (Get-EffectivePolicyBaselineModel -CurrentModel "claude-opus-5" -PolicyPreferredModel "gpt-5.3-codex" -GrandfatherCurrent $false) "Without grandfathering, the admissible policy baseline should be effective."
 }
 
+Run-Test "36 LiveBench-only fallback: AA missing for incumbent, candidate qualifies on LB alone" {
+    $snapshot = New-QualitySnapshot -AaScores @{ "claude-sonnet-5" = $null; "gpt-5.6-terra" = 80; "gpt-5.4" = 60 } -AaCodingScores @{ "claude-sonnet-5" = $null; "gpt-5.6-terra" = 80; "gpt-5.4" = 60 } -LbScores @{ "claude-sonnet-5" = 60; "gpt-5.6-terra" = 90; "gpt-5.4" = 50 } -Costs @{ "claude-sonnet-5" = 1.0; "gpt-5.6-terra" = 1.0; "gpt-5.4" = 1.0 }
+    $candidate = Get-BenchmarkConsensusCandidate -ProfileKey "default-development" -ValidModels @("claude-sonnet-5","gpt-5.6-terra","gpt-5.4") -IncumbentModel "claude-sonnet-5" -Snapshot $snapshot -AvailabilityVerified $true -Denylist $script:ModelDenylist -CapabilitiesCatalog $script:RealCapabilities -ProfileRequirement $script:DefaultDevRequirement -ProfileContextTier "default" -ProfileEffort "medium"
+    Assert-Eq "gpt-5.6-terra" $candidate.model "A missing incumbent AA score must no longer freeze the whole comparison when LiveBench alone qualifies a challenger."
+    Assert-True ([bool]$candidate.aaFallbackUsed) "Expected the candidate to be flagged as having qualified via the LiveBench-only fallback."
+}
+
+Run-Test "37 LiveBench-only fallback: AA missing for incumbent but no challenger beats it on LB either" {
+    $snapshot = New-QualitySnapshot -AaScores @{ "claude-sonnet-5" = $null; "gpt-5.6-terra" = 80; "gpt-5.4" = 60 } -AaCodingScores @{ "claude-sonnet-5" = $null; "gpt-5.6-terra" = 80; "gpt-5.4" = 60 } -LbScores @{ "claude-sonnet-5" = 90; "gpt-5.6-terra" = 70; "gpt-5.4" = 50 } -Costs @{ "claude-sonnet-5" = 1.0; "gpt-5.6-terra" = 1.0; "gpt-5.4" = 1.0 }
+    $candidate = Get-BenchmarkConsensusCandidate -ProfileKey "default-development" -ValidModels @("claude-sonnet-5","gpt-5.6-terra","gpt-5.4") -IncumbentModel "claude-sonnet-5" -Snapshot $snapshot -AvailabilityVerified $true -Denylist $script:ModelDenylist -CapabilitiesCatalog $script:RealCapabilities -ProfileRequirement $script:DefaultDevRequirement -ProfileContextTier "default" -ProfileEffort "medium"
+    Assert-True ($null -eq $candidate) "The LB-only fallback must still require an actual LiveBench win; it must not manufacture a qualifier."
+}
+
+Run-Test "38 Regression: both AA and LB present keeps the dual-source winsBoth behavior unchanged" {
+    $snapshot = New-QualitySnapshot -AaScores @{ "claude-sonnet-5" = 70; "gpt-5.6-terra" = 80; "gpt-5.4" = 60 } -AaCodingScores @{ "claude-sonnet-5" = 70; "gpt-5.6-terra" = 80; "gpt-5.4" = 60 } -LbScores @{ "claude-sonnet-5" = 70; "gpt-5.6-terra" = 80; "gpt-5.4" = 60 } -Costs @{ "claude-sonnet-5" = 1.0; "gpt-5.6-terra" = 1.1; "gpt-5.4" = 0.9 }
+    $candidate = Get-BenchmarkConsensusCandidate -ProfileKey "default-development" -ValidModels @("claude-sonnet-5","gpt-5.6-terra","gpt-5.4") -IncumbentModel "claude-sonnet-5" -Snapshot $snapshot -AvailabilityVerified $true -Denylist $script:ModelDenylist -CapabilitiesCatalog $script:RealCapabilities -ProfileRequirement $script:DefaultDevRequirement -ProfileContextTier "default" -ProfileEffort "medium"
+    Assert-Eq "gpt-5.6-terra" $candidate.model "Expected the same qualifier as before when both AA and LB scores are present."
+    Assert-True (-not [bool]$candidate.aaFallbackUsed) "A dual-source win must not be flagged as an AA fallback."
+}
+
+Run-Test "39 Test-ActiveOverrideQualitySupported falls back to LiveBench-only comparison when AA is missing on both sides" {
+    $snapshot = New-QualitySnapshot -AaScores @{ "claude-opus-5" = $null; "gpt-5.3-codex" = $null } -AaCodingScores @{ "claude-opus-5" = $null; "gpt-5.3-codex" = $null } -LbScores @{ "claude-opus-5" = 90; "gpt-5.3-codex" = 70 } -Costs @{}
+    Assert-True (Test-ActiveOverrideQualitySupported -ActiveModel "claude-opus-5" -PolicyPreferredModel "gpt-5.3-codex" -IsFullFreshRun $true -ProfileKey "agentic-implementation" -Snapshot $snapshot) "AA missing on both sides should not freeze the check; the active override still wins on LiveBench alone."
+}
+
 Write-Host ""
 Write-Host "Tests passed: $script:Passed"
 Write-Host "Tests failed: $script:Failed"
