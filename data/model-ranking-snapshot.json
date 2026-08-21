@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAtUtc": "2026-08-21T06:06:20.0413627Z",
+  "generatedAtUtc": "2026-08-21T07:04:33.2918671Z",
   "staleAfterDays": 45,
   "status": "ok",
   "stale": false,
@@ -17,7 +17,7 @@
       "message": "Parsed embedded model records.",
       "sourceDate": "2026-08-18",
       "sourceVersion": "dacd3078487507568e72ded550058adbf0df32f8e3312d887db16beff01c1ead",
-      "fetchedAtUtc": "2026-08-21T06:06:18.5443650Z",
+      "fetchedAtUtc": "2026-08-21T07:04:32.0975823Z",
       "sourceUrl": "https://artificialanalysis.ai/?intelligence=agentic-index"
     },
     "artificialAnalysisCodingAgents": {
@@ -25,7 +25,7 @@
       "message": "Parsed embedded coding-agent records.",
       "sourceDate": null,
       "sourceVersion": "53189f4c53dc5c0488da1e7e01acb7125ab2f5900ad50aeed18461bb2bb6a15e",
-      "fetchedAtUtc": "2026-08-21T06:06:19.1226268Z",
+      "fetchedAtUtc": "2026-08-21T07:04:32.6600638Z",
       "sourceUrl": "https://artificialanalysis.ai/agents/coding-agents"
     },
     "liveBench": {
@@ -33,7 +33,7 @@
       "message": "Parsed LiveBench table and categories.",
       "sourceDate": "2026-06-25",
       "sourceVersion": "2026-06-25",
-      "fetchedAtUtc": "2026-08-21T06:06:19.2263614Z",
+      "fetchedAtUtc": "2026-08-21T07:04:32.7629470Z",
       "sourceUrl": "https://github.com/LiveBench/new-livebench/blob/main/public/table_2026_06_25.csv"
     },
     "liveBenchCost": {
@@ -41,7 +41,7 @@
       "message": "Parsed complete LiveBench cost data.",
       "sourceDate": "2026-06-25",
       "sourceVersion": "2026-06-25",
-      "fetchedAtUtc": "2026-08-21T06:06:19.2263614Z",
+      "fetchedAtUtc": "2026-08-21T07:04:32.7629470Z",
       "sourceUrl": "https://github.com/LiveBench/new-livebench/blob/main/public/table_2026_06_25.csv"
     }
   },
@@ -971,7 +971,19 @@
     "profiles": {
       "orchestrator": {
         "pending": null,
-        "activeOverride": null
+        "activeOverride": {
+          "model": "gpt-5.4",
+          "activatedAtUtc": "2026-08-21T07:04:33.5818570Z",
+          "sourceDates": {
+            "liveBench": "2026-06-25",
+            "artificialAnalysis": "2026-08-18"
+          },
+          "sourceVersions": {
+            "liveBench": "2026-06-25",
+            "artificialAnalysis": "dacd3078487507568e72ded550058adbf0df32f8e3312d887db16beff01c1ead"
+          },
+          "forced": true
+        }
       },
       "quick": {
         "pending": null,
@@ -979,7 +991,19 @@
       },
       "default-development": {
         "pending": null,
-        "activeOverride": null
+        "activeOverride": {
+          "model": "gpt-5.6-luna",
+          "activatedAtUtc": "2026-08-21T07:04:33.7189657Z",
+          "sourceDates": {
+            "liveBench": "2026-06-25",
+            "artificialAnalysis": "2026-08-18"
+          },
+          "sourceVersions": {
+            "liveBench": "2026-06-25",
+            "artificialAnalysis": "dacd3078487507568e72ded550058adbf0df32f8e3312d887db16beff01c1ead"
+          },
+          "forced": true
+        }
       },
       "agentic-implementation": {
         "pending": null,
@@ -991,7 +1015,19 @@
       },
       "review": {
         "pending": null,
-        "activeOverride": null
+        "activeOverride": {
+          "model": "gpt-5.6-sol",
+          "activatedAtUtc": "2026-08-21T07:04:33.9209344Z",
+          "sourceDates": {
+            "liveBench": "2026-06-25",
+            "artificialAnalysis": "2026-08-18"
+          },
+          "sourceVersions": {
+            "liveBench": "2026-06-25",
+            "artificialAnalysis": "dacd3078487507568e72ded550058adbf0df32f8e3312d887db16beff01c1ead"
+          },
+          "forced": true
+        }
       },
       "visual-ui": {
         "pending": null,

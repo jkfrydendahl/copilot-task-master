@@ -4,33 +4,46 @@ Reference: https://docs.github.com/en/copilot/reference/ai-models/model-comparis
 
 Model source: **copilot help config**
 
-Force benchmark consensus (manual first-run override): **False**
+Force benchmark consensus (manual first-run override): **True**
 
 ## Current profiles
 
 | Key | Model | Effort | Context |
 |---|---|---|---|
-| orchestrator | claude-sonnet-5 | medium | default |
+| orchestrator | gpt-5.4 | medium | default |
 | quick | claude-haiku-4.5 | low | default |
-| default-development | claude-sonnet-5 | medium | default |
+| default-development | gpt-5.6-luna | medium | default |
 | agentic-implementation | gpt-5.3-codex | high | default |
 | deep-reasoning | claude-opus-5 | high | long_context |
-| review | claude-sonnet-5 | medium | default |
+| review | gpt-5.6-sol | medium | default |
 | visual-ui | claude-sonnet-5 | medium | default |
 | mechanical | claude-haiku-4.5 | low | default |
 | triage | claude-sonnet-5 | low | default |
 
 ## Applied profile changes in this run
-- "review": "gpt-5.6-sol" -> "claude-sonnet-5" (policy_preference)
+- "orchestrator": "claude-sonnet-5" -> "gpt-5.4" (benchmark_consensus_forced)
+- "default-development": "claude-sonnet-5" -> "gpt-5.6-luna" (benchmark_consensus_forced)
+- "review": "claude-sonnet-5" -> "gpt-5.6-sol" (benchmark_consensus_forced)
 
 ## Benchmark consensus pending
 - None.
 
+## Benchmark consensus AA-data-missing fallback
+- "orchestrator": AA data missing -- using LiveBench-only fallback
+- "default-development": AA data missing -- using LiveBench-only fallback
+- "review": AA data missing -- using LiveBench-only fallback
+- "visual-ui": AA data missing -- using LiveBench-only fallback
+- "triage": AA data missing -- using LiveBench-only fallback
+
 ## Active benchmark overrides
-- None.
+- "orchestrator": "gpt-5.4"
+- "default-development": "gpt-5.6-luna"
+- "review": "gpt-5.6-sol"
 
 ## Benchmark consensus auto-applied changes
-- None.
+- "orchestrator": "claude-sonnet-5" -> "gpt-5.4" (benchmark_consensus_forced - manual override, first qualifying run)
+- "default-development": "claude-sonnet-5" -> "gpt-5.6-luna" (benchmark_consensus_forced - manual override, first qualifying run)
+- "review": "claude-sonnet-5" -> "gpt-5.6-sol" (benchmark_consensus_forced - manual override, first qualifying run)
 
 ## Model admissibility (rule 9: availability confidence, capability/pricing freshness, profile ceilings, exclusion reasons)
 
@@ -249,9 +262,9 @@ Force benchmark consensus (manual first-run override): **False**
 - Artificial Analysis source date: 2026-08-18
 - Artificial Analysis Coding Agent source date: n/a
 - LiveBench source date: 2026-06-25
-- Artificial Analysis fetched at (UTC): 2026-08-21T06:06:18.5443650Z
-- Artificial Analysis Coding Agents fetched at (UTC): 2026-08-21T06:06:19.1226268Z
-- LiveBench fetched at (UTC): 2026-08-21T06:06:19.2263614Z
+- Artificial Analysis fetched at (UTC): 2026-08-21T07:04:32.0975823Z
+- Artificial Analysis Coding Agents fetched at (UTC): 2026-08-21T07:04:32.6600638Z
+- LiveBench fetched at (UTC): 2026-08-21T07:04:32.7629470Z
 
 > External rankings can auto-apply only after strict two-run consensus; verified availability, capabilities, pricing, and benchmark quality govern promotion, and family preferences are baseline-only.
 
