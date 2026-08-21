@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAtUtc": "2026-08-01T09:05:35.3954840Z",
+  "generatedAtUtc": "2026-08-21T06:06:20.0413627Z",
   "staleAfterDays": 45,
   "status": "ok",
   "stale": false,
@@ -15,17 +15,17 @@
     "artificialAnalysis": {
       "status": "ok",
       "message": "Parsed embedded model records.",
-      "sourceDate": "2026-07-31",
-      "sourceVersion": "7f9b98ade27d2258871964d5e3e76595505f1dfb048377df1cd3baad43dd30f2",
-      "fetchedAtUtc": "2026-08-01T09:05:34.0329619Z",
+      "sourceDate": "2026-08-18",
+      "sourceVersion": "dacd3078487507568e72ded550058adbf0df32f8e3312d887db16beff01c1ead",
+      "fetchedAtUtc": "2026-08-21T06:06:18.5443650Z",
       "sourceUrl": "https://artificialanalysis.ai/?intelligence=agentic-index"
     },
     "artificialAnalysisCodingAgents": {
       "status": "ok",
       "message": "Parsed embedded coding-agent records.",
       "sourceDate": null,
-      "sourceVersion": "05854cc546dc0b246b7e2e68773511018affd74c2184c52f007126190178c5f8",
-      "fetchedAtUtc": "2026-08-01T09:05:34.4088896Z",
+      "sourceVersion": "53189f4c53dc5c0488da1e7e01acb7125ab2f5900ad50aeed18461bb2bb6a15e",
+      "fetchedAtUtc": "2026-08-21T06:06:19.1226268Z",
       "sourceUrl": "https://artificialanalysis.ai/agents/coding-agents"
     },
     "liveBench": {
@@ -33,7 +33,7 @@
       "message": "Parsed LiveBench table and categories.",
       "sourceDate": "2026-06-25",
       "sourceVersion": "2026-06-25",
-      "fetchedAtUtc": "2026-08-01T09:05:34.5476419Z",
+      "fetchedAtUtc": "2026-08-21T06:06:19.2263614Z",
       "sourceUrl": "https://github.com/LiveBench/new-livebench/blob/main/public/table_2026_06_25.csv"
     },
     "liveBenchCost": {
@@ -41,7 +41,7 @@
       "message": "Parsed complete LiveBench cost data.",
       "sourceDate": "2026-06-25",
       "sourceVersion": "2026-06-25",
-      "fetchedAtUtc": "2026-08-01T09:05:34.5476419Z",
+      "fetchedAtUtc": "2026-08-21T06:06:19.2263614Z",
       "sourceUrl": "https://github.com/LiveBench/new-livebench/blob/main/public/table_2026_06_25.csv"
     }
   },
@@ -49,10 +49,10 @@
     "claude-sonnet-5": {
       "artificialAnalysis": {
         "alias": "claude-sonnet-5",
-        "name": "Claude Sonnet 5 (Adaptive Reasoning, Max Effort)",
-        "agenticIndex": 46.6941408934708,
-        "bucket": "competitive",
-        "ordinalRank": 5
+        "name": null,
+        "agenticIndex": null,
+        "bucket": "n/a",
+        "ordinalRank": null
       },
       "artificialAnalysisCodingAgents": {
         "alias": null,
@@ -81,144 +81,24 @@
           "reasoning": 6,
           "instructionFollowing": 7
         },
-        "costPerSuccessfulTask": 0.492,
-        "costBucket": "competitive",
-        "costOrdinalRank": 6
-      }
-    },
-    "claude-sonnet-4.6": {
-      "artificialAnalysis": {
-        "alias": null,
-        "name": null,
-        "agenticIndex": null,
-        "bucket": "n/a",
-        "ordinalRank": null
-      },
-      "artificialAnalysisCodingAgents": {
-        "alias": null,
-        "name": null,
-        "codingAgentIndex": null,
-        "bucket": "n/a",
-        "ordinalRank": null
-      },
-      "liveBench": {
-        "alias": "claude-sonnet-4-6-thinking-auto-medium-effort",
-        "categories": {
-          "coding": 79.2715,
-          "agenticCoding": 42.626,
-          "reasoning": 84.76925,
-          "instructionFollowing": 63.22075
-        },
-        "buckets": {
-          "coding": "lagging",
-          "agenticCoding": "lagging",
-          "reasoning": "lagging",
-          "instructionFollowing": "lagging"
-        },
-        "ordinalRanks": {
-          "coding": 9,
-          "agenticCoding": 11,
-          "reasoning": 11,
-          "instructionFollowing": 10
-        },
-        "costPerSuccessfulTask": 0.3062,
-        "costBucket": "top",
-        "costOrdinalRank": 2
-      }
-    },
-    "claude-sonnet-4.5": {
-      "artificialAnalysis": {
-        "alias": null,
-        "name": null,
-        "agenticIndex": null,
-        "bucket": "n/a",
-        "ordinalRank": null
-      },
-      "artificialAnalysisCodingAgents": {
-        "alias": null,
-        "name": null,
-        "codingAgentIndex": null,
-        "bucket": "n/a",
-        "ordinalRank": null
-      },
-      "liveBench": {
-        "alias": null,
-        "categories": {
-          "coding": null,
-          "agenticCoding": null,
-          "reasoning": null,
-          "instructionFollowing": null
-        },
-        "buckets": {
-          "coding": "n/a",
-          "agenticCoding": "n/a",
-          "reasoning": "n/a",
-          "instructionFollowing": "n/a"
-        },
-        "ordinalRanks": {
-          "coding": null,
-          "agenticCoding": null,
-          "reasoning": null,
-          "instructionFollowing": null
-        },
-        "costPerSuccessfulTask": null,
-        "costBucket": "n/a",
-        "costOrdinalRank": null
-      }
-    },
-    "claude-haiku-4.5": {
-      "artificialAnalysis": {
-        "alias": "claude-4-5-haiku-reasoning",
-        "name": "Claude 4.5 Haiku (Reasoning)",
-        "agenticIndex": 16.4030549828179,
-        "bucket": "lagging",
-        "ordinalRank": 8
-      },
-      "artificialAnalysisCodingAgents": {
-        "alias": null,
-        "name": null,
-        "codingAgentIndex": null,
-        "bucket": "n/a",
-        "ordinalRank": null
-      },
-      "liveBench": {
-        "alias": null,
-        "categories": {
-          "coding": null,
-          "agenticCoding": null,
-          "reasoning": null,
-          "instructionFollowing": null
-        },
-        "buckets": {
-          "coding": "n/a",
-          "agenticCoding": "n/a",
-          "reasoning": "n/a",
-          "instructionFollowing": "n/a"
-        },
-        "ordinalRanks": {
-          "coding": null,
-          "agenticCoding": null,
-          "reasoning": null,
-          "instructionFollowing": null
-        },
-        "costPerSuccessfulTask": null,
-        "costBucket": "n/a",
-        "costOrdinalRank": null
+        "costPerSuccessfulTask": 0.5134,
+        "costBucket": "lagging",
+        "costOrdinalRank": 9
       }
     },
     "claude-opus-5": {
       "artificialAnalysis": {
         "alias": "claude-opus-5",
         "name": "Claude Opus 5 (Adaptive Reasoning, Max Effort)",
-        "agenticIndex": 55.2554261168385,
+        "agenticIndex": 59.1729518900344,
         "bucket": "top",
         "ordinalRank": 1
       },
       "artificialAnalysisCodingAgents": {
         "alias": "Claude Code - Opus 5 (xhigh)",
         "name": "Claude Code - Opus 5 (xhigh)",
-        "codingAgentIndex": 0.6674377366641141,
-        "bucket": "top",
+        "codingAgentIndex": 0.6814975428587521,
+        "bucket": "competitive",
         "ordinalRank": 1
       },
       "liveBench": {
@@ -241,7 +121,7 @@
           "reasoning": 2,
           "instructionFollowing": 8
         },
-        "costPerSuccessfulTask": 0.6414,
+        "costPerSuccessfulTask": 0.7067,
         "costBucket": "lagging",
         "costOrdinalRank": 12
       }
@@ -249,10 +129,10 @@
     "claude-opus-4.8": {
       "artificialAnalysis": {
         "alias": "claude-opus-4-8",
-        "name": "Claude Opus 4.8 (Adaptive Reasoning, Max Effort)",
-        "agenticIndex": 47.1756219931271,
-        "bucket": "competitive",
-        "ordinalRank": 4
+        "name": null,
+        "agenticIndex": null,
+        "bucket": "n/a",
+        "ordinalRank": null
       },
       "artificialAnalysisCodingAgents": {
         "alias": null,
@@ -362,8 +242,48 @@
           "instructionFollowing": 5
         },
         "costPerSuccessfulTask": 0.5282,
-        "costBucket": "competitive",
-        "costOrdinalRank": 8
+        "costBucket": "lagging",
+        "costOrdinalRank": 10
+      }
+    },
+    "claude-sonnet-4.6": {
+      "artificialAnalysis": {
+        "alias": null,
+        "name": null,
+        "agenticIndex": null,
+        "bucket": "n/a",
+        "ordinalRank": null
+      },
+      "artificialAnalysisCodingAgents": {
+        "alias": null,
+        "name": null,
+        "codingAgentIndex": null,
+        "bucket": "n/a",
+        "ordinalRank": null
+      },
+      "liveBench": {
+        "alias": "claude-sonnet-4-6-thinking-auto-medium-effort",
+        "categories": {
+          "coding": 79.2715,
+          "agenticCoding": 42.626,
+          "reasoning": 84.76925,
+          "instructionFollowing": 63.22075
+        },
+        "buckets": {
+          "coding": "lagging",
+          "agenticCoding": "lagging",
+          "reasoning": "lagging",
+          "instructionFollowing": "lagging"
+        },
+        "ordinalRanks": {
+          "coding": 9,
+          "agenticCoding": 11,
+          "reasoning": 11,
+          "instructionFollowing": 10
+        },
+        "costPerSuccessfulTask": 0.3062,
+        "costBucket": "top",
+        "costOrdinalRank": 2
       }
     },
     "claude-opus-4.6": {
@@ -402,8 +322,48 @@
           "instructionFollowing": 9
         },
         "costPerSuccessfulTask": 0.4035,
-        "costBucket": "top",
-        "costOrdinalRank": 5
+        "costBucket": "competitive",
+        "costOrdinalRank": 6
+      }
+    },
+    "claude-sonnet-4.5": {
+      "artificialAnalysis": {
+        "alias": null,
+        "name": null,
+        "agenticIndex": null,
+        "bucket": "n/a",
+        "ordinalRank": null
+      },
+      "artificialAnalysisCodingAgents": {
+        "alias": null,
+        "name": null,
+        "codingAgentIndex": null,
+        "bucket": "n/a",
+        "ordinalRank": null
+      },
+      "liveBench": {
+        "alias": null,
+        "categories": {
+          "coding": null,
+          "agenticCoding": null,
+          "reasoning": null,
+          "instructionFollowing": null
+        },
+        "buckets": {
+          "coding": "n/a",
+          "agenticCoding": "n/a",
+          "reasoning": "n/a",
+          "instructionFollowing": "n/a"
+        },
+        "ordinalRanks": {
+          "coding": null,
+          "agenticCoding": null,
+          "reasoning": null,
+          "instructionFollowing": null
+        },
+        "costPerSuccessfulTask": null,
+        "costBucket": "n/a",
+        "costOrdinalRank": null
       }
     },
     "claude-opus-4.5": {
@@ -446,18 +406,58 @@
         "costOrdinalRank": 11
       }
     },
+    "claude-haiku-4.5": {
+      "artificialAnalysis": {
+        "alias": "claude-4-5-haiku-reasoning",
+        "name": "Claude 4.5 Haiku (Reasoning)",
+        "agenticIndex": 16.4717835051546,
+        "bucket": "lagging",
+        "ordinalRank": 5
+      },
+      "artificialAnalysisCodingAgents": {
+        "alias": null,
+        "name": null,
+        "codingAgentIndex": null,
+        "bucket": "n/a",
+        "ordinalRank": null
+      },
+      "liveBench": {
+        "alias": null,
+        "categories": {
+          "coding": null,
+          "agenticCoding": null,
+          "reasoning": null,
+          "instructionFollowing": null
+        },
+        "buckets": {
+          "coding": "n/a",
+          "agenticCoding": "n/a",
+          "reasoning": "n/a",
+          "instructionFollowing": "n/a"
+        },
+        "ordinalRanks": {
+          "coding": null,
+          "agenticCoding": null,
+          "reasoning": null,
+          "instructionFollowing": null
+        },
+        "costPerSuccessfulTask": null,
+        "costBucket": "n/a",
+        "costOrdinalRank": null
+      }
+    },
     "gpt-5.6-sol": {
       "artificialAnalysis": {
         "alias": "gpt-5-6-sol",
         "name": "GPT-5.6 Sol (max)",
-        "agenticIndex": 54.0035635738832,
+        "agenticIndex": 57.7836323024055,
         "bucket": "top",
         "ordinalRank": 2
       },
       "artificialAnalysisCodingAgents": {
         "alias": "Codex - GPT-5.6 Sol (max)",
         "name": "Codex - GPT-5.6 Sol (max)",
-        "codingAgentIndex": 0.6656984867090491,
+        "codingAgentIndex": 0.6505240024334411,
         "bucket": "competitive",
         "ordinalRank": 2
       },
@@ -481,17 +481,17 @@
           "reasoning": 1,
           "instructionFollowing": 2
         },
-        "costPerSuccessfulTask": 0.5887,
-        "costBucket": "lagging",
-        "costOrdinalRank": 10
+        "costPerSuccessfulTask": 0.507,
+        "costBucket": "competitive",
+        "costOrdinalRank": 8
       }
     },
     "gpt-5.6-terra": {
       "artificialAnalysis": {
         "alias": "gpt-5-6-terra",
         "name": "GPT-5.6 Terra (max)",
-        "agenticIndex": 47.3835257731959,
-        "bucket": "top",
+        "agenticIndex": 50.2013951890034,
+        "bucket": "competitive",
         "ordinalRank": 3
       },
       "artificialAnalysisCodingAgents": {
@@ -521,18 +521,18 @@
           "reasoning": 3,
           "instructionFollowing": 6
         },
-        "costPerSuccessfulTask": 0.4974,
-        "costBucket": "competitive",
-        "costOrdinalRank": 7
+        "costPerSuccessfulTask": 0.3437,
+        "costBucket": "top",
+        "costOrdinalRank": 4
       }
     },
     "gpt-5.6-luna": {
       "artificialAnalysis": {
         "alias": "gpt-5-6-luna",
         "name": "GPT-5.6 Luna (max)",
-        "agenticIndex": 45.5974982817869,
+        "agenticIndex": 46.9033402061856,
         "bucket": "lagging",
-        "ordinalRank": 6
+        "ordinalRank": 4
       },
       "artificialAnalysisCodingAgents": {
         "alias": null,
@@ -561,7 +561,7 @@
           "reasoning": 10,
           "instructionFollowing": 12
         },
-        "costPerSuccessfulTask": 0.202,
+        "costPerSuccessfulTask": 0.1677,
         "costBucket": "top",
         "costOrdinalRank": 1
       }
@@ -601,9 +601,9 @@
           "reasoning": 4,
           "instructionFollowing": 3
         },
-        "costPerSuccessfulTask": 0.5298,
-        "costBucket": "lagging",
-        "costOrdinalRank": 9
+        "costPerSuccessfulTask": 0.4356,
+        "costBucket": "competitive",
+        "costOrdinalRank": 7
       }
     },
     "gpt-5.4": {
@@ -643,47 +643,7 @@
         },
         "costPerSuccessfulTask": 0.3874,
         "costBucket": "top",
-        "costOrdinalRank": 4
-      }
-    },
-    "gpt-5.3-codex": {
-      "artificialAnalysis": {
-        "alias": null,
-        "name": null,
-        "agenticIndex": null,
-        "bucket": "n/a",
-        "ordinalRank": null
-      },
-      "artificialAnalysisCodingAgents": {
-        "alias": null,
-        "name": null,
-        "codingAgentIndex": null,
-        "bucket": "n/a",
-        "ordinalRank": null
-      },
-      "liveBench": {
-        "alias": null,
-        "categories": {
-          "coding": null,
-          "agenticCoding": null,
-          "reasoning": null,
-          "instructionFollowing": null
-        },
-        "buckets": {
-          "coding": "n/a",
-          "agenticCoding": "n/a",
-          "reasoning": "n/a",
-          "instructionFollowing": "n/a"
-        },
-        "ordinalRanks": {
-          "coding": null,
-          "agenticCoding": null,
-          "reasoning": null,
-          "instructionFollowing": null
-        },
-        "costPerSuccessfulTask": null,
-        "costBucket": "n/a",
-        "costOrdinalRank": null
+        "costOrdinalRank": 5
       }
     },
     "gpt-5.4-mini": {
@@ -724,6 +684,46 @@
         "costPerSuccessfulTask": 0.3343,
         "costBucket": "top",
         "costOrdinalRank": 3
+      }
+    },
+    "gpt-5.3-codex": {
+      "artificialAnalysis": {
+        "alias": null,
+        "name": null,
+        "agenticIndex": null,
+        "bucket": "n/a",
+        "ordinalRank": null
+      },
+      "artificialAnalysisCodingAgents": {
+        "alias": null,
+        "name": null,
+        "codingAgentIndex": null,
+        "bucket": "n/a",
+        "ordinalRank": null
+      },
+      "liveBench": {
+        "alias": null,
+        "categories": {
+          "coding": null,
+          "agenticCoding": null,
+          "reasoning": null,
+          "instructionFollowing": null
+        },
+        "buckets": {
+          "coding": "n/a",
+          "agenticCoding": "n/a",
+          "reasoning": "n/a",
+          "instructionFollowing": "n/a"
+        },
+        "ordinalRanks": {
+          "coding": null,
+          "agenticCoding": null,
+          "reasoning": null,
+          "instructionFollowing": null
+        },
+        "costPerSuccessfulTask": null,
+        "costBucket": "n/a",
+        "costOrdinalRank": null
       }
     },
     "gpt-5-mini": {
@@ -806,7 +806,7 @@
         "costOrdinalRank": null
       }
     },
-    "gemini-3.1-pro-preview": {
+    "gemini-3.7-flash": {
       "artificialAnalysis": {
         "alias": null,
         "name": null,
@@ -815,11 +815,11 @@
         "ordinalRank": null
       },
       "artificialAnalysisCodingAgents": {
-        "alias": "Gemini CLI - Gemini 3.1 Pro (high)",
-        "name": "Gemini CLI - Gemini 3.1 Pro (high)",
-        "codingAgentIndex": 0.30338470275666973,
-        "bucket": "lagging",
-        "ordinalRank": 3
+        "alias": null,
+        "name": null,
+        "codingAgentIndex": null,
+        "bucket": "n/a",
+        "ordinalRank": null
       },
       "liveBench": {
         "alias": null,
@@ -849,10 +849,10 @@
     "gemini-3.6-flash": {
       "artificialAnalysis": {
         "alias": "gemini-3-6-flash",
-        "name": "Gemini 3.6 Flash (high)",
-        "agenticIndex": 38.7246941580756,
-        "bucket": "lagging",
-        "ordinalRank": 7
+        "name": null,
+        "agenticIndex": null,
+        "bucket": "n/a",
+        "ordinalRank": null
       },
       "artificialAnalysisCodingAgents": {
         "alias": null,
@@ -925,6 +925,46 @@
         "costBucket": "n/a",
         "costOrdinalRank": null
       }
+    },
+    "gemini-3.1-pro-preview": {
+      "artificialAnalysis": {
+        "alias": null,
+        "name": null,
+        "agenticIndex": null,
+        "bucket": "n/a",
+        "ordinalRank": null
+      },
+      "artificialAnalysisCodingAgents": {
+        "alias": "Gemini CLI - Gemini 3.1 Pro (high)",
+        "name": null,
+        "codingAgentIndex": null,
+        "bucket": "n/a",
+        "ordinalRank": null
+      },
+      "liveBench": {
+        "alias": null,
+        "categories": {
+          "coding": null,
+          "agenticCoding": null,
+          "reasoning": null,
+          "instructionFollowing": null
+        },
+        "buckets": {
+          "coding": "n/a",
+          "agenticCoding": "n/a",
+          "reasoning": "n/a",
+          "instructionFollowing": "n/a"
+        },
+        "ordinalRanks": {
+          "coding": null,
+          "agenticCoding": null,
+          "reasoning": null,
+          "instructionFollowing": null
+        },
+        "costPerSuccessfulTask": null,
+        "costBucket": "n/a",
+        "costOrdinalRank": null
+      }
     }
   },
   "consensus": {
@@ -951,19 +991,7 @@
       },
       "review": {
         "pending": null,
-        "activeOverride": {
-          "model": "gpt-5.6-sol",
-          "activatedAtUtc": "2026-07-30T14:56:33.9935605Z",
-          "sourceDates": {
-            "liveBench": "2026-06-25",
-            "artificialAnalysis": "2026-07-24"
-          },
-          "sourceVersions": {
-            "liveBench": "2026-06-25",
-            "artificialAnalysis": "8ac9a6cb6996255a83db36c188112b53e90ef28f150d06958abb8b2e0fc79815"
-          },
-          "forced": true
-        }
+        "activeOverride": null
       },
       "visual-ui": {
         "pending": null,
