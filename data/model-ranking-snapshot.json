@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAtUtc": "2026-08-21T07:04:33.2918671Z",
+  "generatedAtUtc": "2026-08-27T11:09:39.5471196Z",
   "staleAfterDays": 45,
   "status": "ok",
   "stale": false,
@@ -15,17 +15,17 @@
     "artificialAnalysis": {
       "status": "ok",
       "message": "Parsed embedded model records.",
-      "sourceDate": "2026-08-18",
-      "sourceVersion": "dacd3078487507568e72ded550058adbf0df32f8e3312d887db16beff01c1ead",
-      "fetchedAtUtc": "2026-08-21T07:04:32.0975823Z",
+      "sourceDate": "2026-08-26",
+      "sourceVersion": "f6af83c94ab18da82fa071a4f8d24795adae11c326ce1ce7a5ff5def7ae4d7d3",
+      "fetchedAtUtc": "2026-08-27T11:09:36.9352656Z",
       "sourceUrl": "https://artificialanalysis.ai/?intelligence=agentic-index"
     },
     "artificialAnalysisCodingAgents": {
       "status": "ok",
       "message": "Parsed embedded coding-agent records.",
       "sourceDate": null,
-      "sourceVersion": "53189f4c53dc5c0488da1e7e01acb7125ab2f5900ad50aeed18461bb2bb6a15e",
-      "fetchedAtUtc": "2026-08-21T07:04:32.6600638Z",
+      "sourceVersion": "900017dfbde9f67fcc0a5db8ad242bfc0c9b8607701abd1ba2059c2678e81726",
+      "fetchedAtUtc": "2026-08-27T11:09:38.5690111Z",
       "sourceUrl": "https://artificialanalysis.ai/agents/coding-agents"
     },
     "liveBench": {
@@ -33,7 +33,7 @@
       "message": "Parsed LiveBench table and categories.",
       "sourceDate": "2026-06-25",
       "sourceVersion": "2026-06-25",
-      "fetchedAtUtc": "2026-08-21T07:04:32.7629470Z",
+      "fetchedAtUtc": "2026-08-27T11:09:38.7604765Z",
       "sourceUrl": "https://github.com/LiveBench/new-livebench/blob/main/public/table_2026_06_25.csv"
     },
     "liveBenchCost": {
@@ -41,7 +41,7 @@
       "message": "Parsed complete LiveBench cost data.",
       "sourceDate": "2026-06-25",
       "sourceVersion": "2026-06-25",
-      "fetchedAtUtc": "2026-08-21T07:04:32.7629470Z",
+      "fetchedAtUtc": "2026-08-27T11:09:38.7604765Z",
       "sourceUrl": "https://github.com/LiveBench/new-livebench/blob/main/public/table_2026_06_25.csv"
     }
   },
@@ -97,7 +97,7 @@
       "artificialAnalysisCodingAgents": {
         "alias": "Claude Code - Opus 5 (xhigh)",
         "name": "Claude Code - Opus 5 (xhigh)",
-        "codingAgentIndex": 0.6814975428587521,
+        "codingAgentIndex": 0.6814975428587517,
         "bucket": "competitive",
         "ordinalRank": 1
       },
@@ -457,7 +457,7 @@
       "artificialAnalysisCodingAgents": {
         "alias": "Codex - GPT-5.6 Sol (max)",
         "name": "Codex - GPT-5.6 Sol (max)",
-        "codingAgentIndex": 0.6505240024334411,
+        "codingAgentIndex": 0.6505240024334414,
         "bucket": "competitive",
         "ordinalRank": 2
       },
@@ -973,7 +973,7 @@
         "pending": null,
         "activeOverride": {
           "model": "gpt-5.4",
-          "activatedAtUtc": "2026-08-21T07:04:33.5818570Z",
+          "activatedAtUtc": "2026-08-21T07:04:33.581857Z",
           "sourceDates": {
             "liveBench": "2026-06-25",
             "artificialAnalysis": "2026-08-18"
