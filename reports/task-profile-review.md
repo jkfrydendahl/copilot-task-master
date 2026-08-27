@@ -1,4 +1,4 @@
-# Monthly task profile review (2026-08-21)
+# Monthly task profile review (2026-08-27)
 
 Reference: https://docs.github.com/en/copilot/reference/ai-models/model-comparison
 
@@ -21,17 +21,13 @@ Force benchmark consensus (manual first-run override): **True**
 | triage | claude-sonnet-5 | low | default |
 
 ## Applied profile changes in this run
-- "orchestrator": "claude-sonnet-5" -> "gpt-5.4" (benchmark_consensus_forced)
-- "default-development": "claude-sonnet-5" -> "gpt-5.6-luna" (benchmark_consensus_forced)
-- "review": "claude-sonnet-5" -> "gpt-5.6-sol" (benchmark_consensus_forced)
+- None.
 
 ## Benchmark consensus pending
 - None.
 
 ## Benchmark consensus AA-data-missing fallback
 - "orchestrator": AA data missing -- using LiveBench-only fallback
-- "default-development": AA data missing -- using LiveBench-only fallback
-- "review": AA data missing -- using LiveBench-only fallback
 - "visual-ui": AA data missing -- using LiveBench-only fallback
 - "triage": AA data missing -- using LiveBench-only fallback
 
@@ -41,9 +37,7 @@ Force benchmark consensus (manual first-run override): **True**
 - "review": "gpt-5.6-sol"
 
 ## Benchmark consensus auto-applied changes
-- "orchestrator": "claude-sonnet-5" -> "gpt-5.4" (benchmark_consensus_forced - manual override, first qualifying run)
-- "default-development": "claude-sonnet-5" -> "gpt-5.6-luna" (benchmark_consensus_forced - manual override, first qualifying run)
-- "review": "claude-sonnet-5" -> "gpt-5.6-sol" (benchmark_consensus_forced - manual override, first qualifying run)
+- None.
 
 ## Model admissibility (rule 9: availability confidence, capability/pricing freshness, profile ceilings, exclusion reasons)
 
@@ -51,7 +45,7 @@ Force benchmark consensus (manual first-run override): **True**
 
 - Availability confidence: **verified**
 - Pricing ceilings (per million tokens): input <= $3, output <= $15
-- Incumbent/current model: **claude-sonnet-5** — admissible: **True** (reasons: none)
+- Incumbent/current model: **gpt-5.4** — admissible: **True** (reasons: none)
 - Exclusions:
 
 | Model | Reasons | Pricing tier | Input $/M | Output $/M | Capability as-of |
@@ -100,7 +94,7 @@ Force benchmark consensus (manual first-run override): **True**
 
 - Availability confidence: **verified**
 - Pricing ceilings (per million tokens): input <= $3, output <= $15
-- Incumbent/current model: **claude-sonnet-5** — admissible: **True** (reasons: none)
+- Incumbent/current model: **gpt-5.6-luna** — admissible: **True** (reasons: none)
 - Exclusions:
 
 | Model | Reasons | Pricing tier | Input $/M | Output $/M | Capability as-of |
@@ -155,7 +149,7 @@ Force benchmark consensus (manual first-run override): **True**
 
 - Availability confidence: **verified**
 - Pricing ceilings (per million tokens): input <= $5, output <= $30
-- Incumbent/current model: **claude-sonnet-5** — admissible: **True** (reasons: none)
+- Incumbent/current model: **gpt-5.6-sol** — admissible: **True** (reasons: none)
 - Exclusions:
 
 | Model | Reasons | Pricing tier | Input $/M | Output $/M | Capability as-of |
@@ -259,12 +253,12 @@ Force benchmark consensus (manual first-run override): **True**
 - Artificial Analysis URL: https://artificialanalysis.ai/?intelligence=agentic-index
 - Artificial Analysis Coding Agents URL: https://artificialanalysis.ai/agents/coding-agents
 - LiveBench URL: https://github.com/LiveBench/new-livebench/tree/main/public
-- Artificial Analysis source date: 2026-08-18
+- Artificial Analysis source date: 2026-08-26
 - Artificial Analysis Coding Agent source date: n/a
 - LiveBench source date: 2026-06-25
-- Artificial Analysis fetched at (UTC): 2026-08-21T07:04:32.0975823Z
-- Artificial Analysis Coding Agents fetched at (UTC): 2026-08-21T07:04:32.6600638Z
-- LiveBench fetched at (UTC): 2026-08-21T07:04:32.7629470Z
+- Artificial Analysis fetched at (UTC): 2026-08-27T11:09:36.9352656Z
+- Artificial Analysis Coding Agents fetched at (UTC): 2026-08-27T11:09:38.5690111Z
+- LiveBench fetched at (UTC): 2026-08-27T11:09:38.7604765Z
 
 > External rankings can auto-apply only after strict two-run consensus; verified availability, capabilities, pricing, and benchmark quality govern promotion, and family preferences are baseline-only.
 
