@@ -12,7 +12,7 @@ Force benchmark consensus (manual first-run override): **False**
 |---|---|---|---|
 | orchestrator | claude-sonnet-5 | medium | default |
 | quick | claude-haiku-4.5 | low | default |
-| default-development | gpt-5.6-luna | medium | default |
+| default-development | claude-sonnet-5 | medium | default |
 | agentic-implementation | gpt-5.3-codex | high | default |
 | deep-reasoning | claude-opus-5 | high | long_context |
 | review | gpt-5.6-sol | medium | default |
@@ -21,7 +21,7 @@ Force benchmark consensus (manual first-run override): **False**
 | triage | claude-sonnet-5 | low | default |
 
 ## Applied profile changes in this run
-- "orchestrator": "gpt-5.4" -> "claude-sonnet-5" (policy_preference)
+- "default-development": "gpt-5.6-luna" -> "claude-sonnet-5" (policy_preference)
 
 ## Benchmark consensus pending
 - None.
@@ -47,7 +47,6 @@ _No `artificialAnalysis` alias is configured in `config/model-ranking-aliases.js
 - "triage": AA alias not configured -- excluded from consensus: claude-opus-4.5, claude-opus-4.6, claude-opus-4.7, claude-sonnet-4.6, gpt-5.4, gpt-5.4-mini, gpt-5.5
 
 ## Active benchmark overrides
-- "default-development": "gpt-5.6-luna"
 - "review": "gpt-5.6-sol"
 
 ## Benchmark consensus auto-applied changes
@@ -110,7 +109,7 @@ _No `artificialAnalysis` alias is configured in `config/model-ranking-aliases.js
 
 - Availability confidence: **verified**
 - Pricing ceilings (per million tokens): input <= $3, output <= $15
-- Incumbent/current model: **gpt-5.6-luna** — admissible: **True** (reasons: none)
+- Incumbent/current model: **claude-sonnet-5** — admissible: **True** (reasons: none)
 - Exclusions:
 
 | Model | Reasons | Pricing tier | Input $/M | Output $/M | Capability as-of |
@@ -269,10 +268,10 @@ _No `artificialAnalysis` alias is configured in `config/model-ranking-aliases.js
 
 ## External model ranking snapshot
 
-- Status: **partial**
+- Status: **ok**
 - Stale: **false**
 - Fallback used: **false**
-- Note: Ranking buckets generated from partial live data. The committed last-good snapshot was not replaced.
+- Note: Ranking buckets generated from live source data.
 - Artificial Analysis URL: https://artificialanalysis.ai/api/v2/data/llms/models
 - Artificial Analysis Coding Agents URL: https://artificialanalysis.ai/agents/coding-agents
 - LiveBench URL: https://github.com/LiveBench/new-livebench/tree/main/public
@@ -280,27 +279,27 @@ _No `artificialAnalysis` alias is configured in `config/model-ranking-aliases.js
 - Artificial Analysis source date: 
 - Artificial Analysis Coding Agent source date: n/a
 - LiveBench source date: 2026-06-25
-- Artificial Analysis fetched at (UTC): 2026-09-01T12:55:18.2312410Z
-- Artificial Analysis Coding Agents fetched at (UTC): 2026-09-01T12:55:19.0227392Z
-- LiveBench fetched at (UTC): 2026-09-01T12:55:19.2739416Z
+- Artificial Analysis fetched at (UTC): 2026-09-01T13:13:14.3287496Z
+- Artificial Analysis Coding Agents fetched at (UTC): 2026-09-01T13:13:15.6982663Z
+- LiveBench fetched at (UTC): 2026-09-01T13:13:15.8823855Z
 
 > External rankings can auto-apply only after strict two-run consensus; verified availability, capabilities, pricing, and benchmark quality govern promotion, and family preferences are baseline-only.
 
 | Model | AA Intelligence | AA Coding Agent | LB Coding | LB Agentic Coding | LB Reasoning | LB Instruction Following | LB Cost | LB Cost Bucket |
 |---|---|---|---|---|---|---|---|---|
-| claude-sonnet-5 | n/a | n/a | competitive | top | competitive | competitive | 0.5134 | lagging |
-| claude-opus-5 | n/a | competitive | competitive | top | top | competitive | 0.7067 | lagging |
-| claude-opus-4.8 | n/a | n/a | top | competitive | top | top | 0.9858 | lagging |
+| claude-sonnet-5 | competitive | n/a | competitive | top | competitive | competitive | 0.5134 | lagging |
+| claude-opus-5 | top | competitive | competitive | top | top | competitive | 0.7067 | lagging |
+| claude-opus-4.8 | top | n/a | top | competitive | top | top | 0.9858 | lagging |
 | claude-opus-4.8-fast | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a |
 | claude-opus-4.7 | n/a | n/a | top | competitive | lagging | top | 0.5282 | lagging |
 | claude-sonnet-4.6 | n/a | n/a | lagging | lagging | lagging | lagging | 0.3062 | top |
 | claude-opus-4.6 | n/a | n/a | lagging | lagging | competitive | lagging | 0.4035 | competitive |
 | claude-sonnet-4.5 | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a |
 | claude-opus-4.5 | n/a | n/a | competitive | lagging | lagging | lagging | 0.6104 | lagging |
-| claude-haiku-4.5 | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a |
-| gpt-5.6-sol | n/a | competitive | top | top | top | top | 0.507 | competitive |
-| gpt-5.6-terra | n/a | n/a | lagging | top | top | competitive | 0.3437 | top |
-| gpt-5.6-luna | n/a | n/a | top | lagging | lagging | lagging | 0.1677 | top |
+| claude-haiku-4.5 | lagging | n/a | n/a | n/a | n/a | n/a | n/a | n/a |
+| gpt-5.6-sol | top | competitive | top | top | top | top | 0.507 | competitive |
+| gpt-5.6-terra | competitive | n/a | lagging | top | top | competitive | 0.3437 | top |
+| gpt-5.6-luna | lagging | n/a | top | lagging | lagging | lagging | 0.1677 | top |
 | gpt-5.5 | n/a | n/a | top | top | top | top | 0.4356 | competitive |
 | gpt-5.4 | n/a | n/a | lagging | competitive | competitive | top | 0.3874 | top |
 | gpt-5.4-mini | n/a | n/a | lagging | lagging | lagging | lagging | 0.3343 | top |
@@ -309,6 +308,6 @@ _No `artificialAnalysis` alias is configured in `config/model-ranking-aliases.js
 | mai-code-1.1-flash | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a |
 | mai-code-1-flash-picker | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a |
 | gemini-3.7-flash | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a |
-| gemini-3.6-flash | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a |
+| gemini-3.6-flash | lagging | n/a | n/a | n/a | n/a | n/a | n/a | n/a |
 | gemini-3.5-flash | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a |
 | gemini-3.1-pro-preview | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a |
