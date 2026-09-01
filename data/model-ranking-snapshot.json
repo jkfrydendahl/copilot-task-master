@@ -1,31 +1,31 @@
 {
   "schemaVersion": 2,
-  "generatedAtUtc": "2026-08-27T11:09:39.5471196Z",
+  "generatedAtUtc": "2026-09-01T13:13:16.7599873Z",
   "staleAfterDays": 45,
   "status": "ok",
   "stale": false,
   "fallbackUsed": false,
   "message": "Ranking buckets generated from live source data.",
   "attribution": {
-    "artificialAnalysisUrl": "https://artificialanalysis.ai/?intelligence=agentic-index",
+    "artificialAnalysisUrl": "https://artificialanalysis.ai/api/v2/data/llms/models",
     "artificialAnalysisCodingAgentsUrl": "https://artificialanalysis.ai/agents/coding-agents",
     "liveBenchUrl": "https://github.com/LiveBench/new-livebench/tree/main/public"
   },
   "sourceStatus": {
     "artificialAnalysis": {
       "status": "ok",
-      "message": "Parsed embedded model records.",
-      "sourceDate": "2026-08-26",
-      "sourceVersion": "f6af83c94ab18da82fa071a4f8d24795adae11c326ce1ce7a5ff5def7ae4d7d3",
-      "fetchedAtUtc": "2026-08-27T11:09:36.9352656Z",
-      "sourceUrl": "https://artificialanalysis.ai/?intelligence=agentic-index"
+      "message": "Parsed Artificial Analysis Data API model records.",
+      "sourceDate": null,
+      "sourceVersion": "0d72f250ab656f9f0e63e498665b891ff752b0ecc2207d79d5cb888042818697",
+      "fetchedAtUtc": "2026-09-01T13:13:14.3287496Z",
+      "sourceUrl": "https://artificialanalysis.ai/api/v2/data/llms/models"
     },
     "artificialAnalysisCodingAgents": {
       "status": "ok",
       "message": "Parsed embedded coding-agent records.",
       "sourceDate": null,
-      "sourceVersion": "900017dfbde9f67fcc0a5db8ad242bfc0c9b8607701abd1ba2059c2678e81726",
-      "fetchedAtUtc": "2026-08-27T11:09:38.5690111Z",
+      "sourceVersion": "3c606d69eea32f3ebb65dd3aabb5f92d0999ba9719ae2a4a294e96ea8c22c1fb",
+      "fetchedAtUtc": "2026-09-01T13:13:15.6982663Z",
       "sourceUrl": "https://artificialanalysis.ai/agents/coding-agents"
     },
     "liveBench": {
@@ -33,7 +33,7 @@
       "message": "Parsed LiveBench table and categories.",
       "sourceDate": "2026-06-25",
       "sourceVersion": "2026-06-25",
-      "fetchedAtUtc": "2026-08-27T11:09:38.7604765Z",
+      "fetchedAtUtc": "2026-09-01T13:13:15.8823855Z",
       "sourceUrl": "https://github.com/LiveBench/new-livebench/blob/main/public/table_2026_06_25.csv"
     },
     "liveBenchCost": {
@@ -41,7 +41,7 @@
       "message": "Parsed complete LiveBench cost data.",
       "sourceDate": "2026-06-25",
       "sourceVersion": "2026-06-25",
-      "fetchedAtUtc": "2026-08-27T11:09:38.7604765Z",
+      "fetchedAtUtc": "2026-09-01T13:13:15.8823855Z",
       "sourceUrl": "https://github.com/LiveBench/new-livebench/blob/main/public/table_2026_06_25.csv"
     }
   },
@@ -49,10 +49,10 @@
     "claude-sonnet-5": {
       "artificialAnalysis": {
         "alias": "claude-sonnet-5",
-        "name": null,
-        "intelligenceIndex": null,
-        "bucket": "n/a",
-        "ordinalRank": null
+        "name": "Claude Sonnet 5 (Adaptive Reasoning, Max Effort)",
+        "intelligenceIndex": 55.3,
+        "bucket": "competitive",
+        "ordinalRank": 5
       },
       "artificialAnalysisCodingAgents": {
         "alias": null,
@@ -90,7 +90,7 @@
       "artificialAnalysis": {
         "alias": "claude-opus-5",
         "name": "Claude Opus 5 (Adaptive Reasoning, Max Effort)",
-        "intelligenceIndex": 59.1729518900344,
+        "intelligenceIndex": 63.1,
         "bucket": "top",
         "ordinalRank": 1
       },
@@ -129,10 +129,10 @@
     "claude-opus-4.8": {
       "artificialAnalysis": {
         "alias": "claude-opus-4-8",
-        "name": null,
-        "intelligenceIndex": null,
-        "bucket": "n/a",
-        "ordinalRank": null
+        "name": "Claude Opus 4.8 (Adaptive Reasoning, Max Effort)",
+        "intelligenceIndex": 57.3,
+        "bucket": "top",
+        "ordinalRank": 3
       },
       "artificialAnalysisCodingAgents": {
         "alias": null,
@@ -410,9 +410,9 @@
       "artificialAnalysis": {
         "alias": "claude-4-5-haiku-reasoning",
         "name": "Claude 4.5 Haiku (Reasoning)",
-        "intelligenceIndex": 16.4717835051546,
+        "intelligenceIndex": 29.9,
         "bucket": "lagging",
-        "ordinalRank": 5
+        "ordinalRank": 8
       },
       "artificialAnalysisCodingAgents": {
         "alias": null,
@@ -450,7 +450,7 @@
       "artificialAnalysis": {
         "alias": "gpt-5-6-sol",
         "name": "GPT-5.6 Sol (max)",
-        "intelligenceIndex": 57.7836323024055,
+        "intelligenceIndex": 60.9,
         "bucket": "top",
         "ordinalRank": 2
       },
@@ -490,9 +490,9 @@
       "artificialAnalysis": {
         "alias": "gpt-5-6-terra",
         "name": "GPT-5.6 Terra (max)",
-        "intelligenceIndex": 50.2013951890034,
+        "intelligenceIndex": 56.6,
         "bucket": "competitive",
-        "ordinalRank": 3
+        "ordinalRank": 4
       },
       "artificialAnalysisCodingAgents": {
         "alias": null,
@@ -530,9 +530,9 @@
       "artificialAnalysis": {
         "alias": "gpt-5-6-luna",
         "name": "GPT-5.6 Luna (max)",
-        "intelligenceIndex": 46.9033402061856,
+        "intelligenceIndex": 52.3,
         "bucket": "lagging",
-        "ordinalRank": 4
+        "ordinalRank": 6
       },
       "artificialAnalysisCodingAgents": {
         "alias": null,
@@ -766,6 +766,46 @@
         "costOrdinalRank": null
       }
     },
+    "mai-code-1.1-flash": {
+      "artificialAnalysis": {
+        "alias": null,
+        "name": null,
+        "intelligenceIndex": null,
+        "bucket": "n/a",
+        "ordinalRank": null
+      },
+      "artificialAnalysisCodingAgents": {
+        "alias": null,
+        "name": null,
+        "codingAgentIndex": null,
+        "bucket": "n/a",
+        "ordinalRank": null
+      },
+      "liveBench": {
+        "alias": null,
+        "categories": {
+          "coding": null,
+          "agenticCoding": null,
+          "reasoning": null,
+          "instructionFollowing": null
+        },
+        "buckets": {
+          "coding": "n/a",
+          "agenticCoding": "n/a",
+          "reasoning": "n/a",
+          "instructionFollowing": "n/a"
+        },
+        "ordinalRanks": {
+          "coding": null,
+          "agenticCoding": null,
+          "reasoning": null,
+          "instructionFollowing": null
+        },
+        "costPerSuccessfulTask": null,
+        "costBucket": "n/a",
+        "costOrdinalRank": null
+      }
+    },
     "mai-code-1-flash-picker": {
       "artificialAnalysis": {
         "alias": null,
@@ -849,10 +889,10 @@
     "gemini-3.6-flash": {
       "artificialAnalysis": {
         "alias": "gemini-3-6-flash",
-        "name": null,
-        "intelligenceIndex": null,
-        "bucket": "n/a",
-        "ordinalRank": null
+        "name": "Gemini 3.6 Flash (high)",
+        "intelligenceIndex": 51.6,
+        "bucket": "lagging",
+        "ordinalRank": 7
       },
       "artificialAnalysisCodingAgents": {
         "alias": null,
@@ -979,19 +1019,7 @@
       },
       "default-development": {
         "pending": null,
-        "activeOverride": {
-          "model": "gpt-5.6-luna",
-          "activatedAtUtc": "2026-08-21T07:04:33.7189657Z",
-          "sourceDates": {
-            "liveBench": "2026-06-25",
-            "artificialAnalysis": "2026-08-18"
-          },
-          "sourceVersions": {
-            "liveBench": "2026-06-25",
-            "artificialAnalysis": "dacd3078487507568e72ded550058adbf0df32f8e3312d887db16beff01c1ead"
-          },
-          "forced": true
-        }
+        "activeOverride": null
       },
       "agentic-implementation": {
         "pending": null,
@@ -1032,4 +1060,3 @@
     }
   }
 }
-

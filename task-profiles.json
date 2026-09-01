@@ -22,7 +22,7 @@
     "label": "Default development",
     "description": "Ordinary bug fixes, normal feature work, straightforward refactors, small D365 changes.",
     "hint": "When you open the chat, describe what you want to fix or build. The agent will plan before coding.",
-    "model": "gpt-5.6-luna",
+    "model": "claude-sonnet-5",
     "effort": "medium",
     "context": "default"
   },
