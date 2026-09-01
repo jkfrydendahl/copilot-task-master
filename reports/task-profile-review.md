@@ -10,7 +10,7 @@ Force benchmark consensus (manual first-run override): **False**
 
 | Key | Model | Effort | Context |
 |---|---|---|---|
-| orchestrator | gpt-5.4 | medium | default |
+| orchestrator | claude-sonnet-5 | medium | default |
 | quick | claude-haiku-4.5 | low | default |
 | default-development | gpt-5.6-luna | medium | default |
 | agentic-implementation | gpt-5.3-codex | high | default |
@@ -21,7 +21,7 @@ Force benchmark consensus (manual first-run override): **False**
 | triage | claude-sonnet-5 | low | default |
 
 ## Applied profile changes in this run
-- None.
+- "orchestrator": "gpt-5.4" -> "claude-sonnet-5" (policy_preference)
 
 ## Benchmark consensus pending
 - None.
@@ -34,12 +34,19 @@ _AA alias IS configured but Artificial Analysis returned no score this run. Live
 
 ## Benchmark consensus AA-alias-not-configured exclusions
 
-_No `artificialAnalysis` alias is configured in `config/model-ranking-aliases.json` for these models, so Artificial Analysis is never consulted for them. They are excluded from benchmark consensus entirely (no LiveBench-only promotion). Add an alias if a model deserves consideration._
+_No `artificialAnalysis` alias is configured in `config/model-ranking-aliases.json` for these models, so Artificial Analysis is never consulted for them. They are excluded from benchmark consensus entirely (no LiveBench-only promotion), and an active override on such a model is revoked. This section is config-derived and is reported on every run,     including partial/stale benchmark runs. Add an alias if a model deserves consideration._
 
+- "orchestrator": AA alias not configured -- excluded from consensus: claude-opus-4.5, claude-opus-4.6, claude-opus-4.7, claude-sonnet-4.6, gpt-5.4, gpt-5.4-mini, gpt-5.5
+- "quick": AA alias not configured -- excluded from consensus: claude-opus-4.5, claude-opus-4.6, claude-opus-4.7, claude-sonnet-4.6, gpt-5.4, gpt-5.4-mini, gpt-5.5
+- "default-development": AA alias not configured -- excluded from consensus: claude-opus-4.5, claude-opus-4.6, claude-opus-4.7, claude-sonnet-4.6, gpt-5.4, gpt-5.4-mini, gpt-5.5
 - "agentic-implementation": AA alias not configured -- excluded from consensus: claude-opus-4.5, claude-opus-4.6, claude-opus-4.7, claude-opus-4.8, claude-sonnet-4.6, claude-sonnet-5, gpt-5.4, gpt-5.4-mini, gpt-5.5, gpt-5.6-luna, gpt-5.6-terra
+- "deep-reasoning": AA alias not configured -- excluded from consensus: claude-opus-4.5, claude-opus-4.6, claude-opus-4.7, claude-sonnet-4.6, gpt-5.4, gpt-5.4-mini, gpt-5.5
+- "review": AA alias not configured -- excluded from consensus: claude-opus-4.5, claude-opus-4.6, claude-opus-4.7, claude-sonnet-4.6, gpt-5.4, gpt-5.4-mini, gpt-5.5
+- "visual-ui": AA alias not configured -- excluded from consensus: claude-opus-4.5, claude-opus-4.6, claude-opus-4.7, claude-sonnet-4.6, gpt-5.4, gpt-5.4-mini, gpt-5.5
+- "mechanical": AA alias not configured -- excluded from consensus: claude-opus-4.5, claude-opus-4.6, claude-opus-4.7, claude-sonnet-4.6, gpt-5.4, gpt-5.4-mini, gpt-5.5
+- "triage": AA alias not configured -- excluded from consensus: claude-opus-4.5, claude-opus-4.6, claude-opus-4.7, claude-sonnet-4.6, gpt-5.4, gpt-5.4-mini, gpt-5.5
 
 ## Active benchmark overrides
-- "orchestrator": "gpt-5.4"
 - "default-development": "gpt-5.6-luna"
 - "review": "gpt-5.6-sol"
 
@@ -52,7 +59,7 @@ _No `artificialAnalysis` alias is configured in `config/model-ranking-aliases.js
 
 - Availability confidence: **verified**
 - Pricing ceilings (per million tokens): input <= $3, output <= $15
-- Incumbent/current model: **gpt-5.4** — admissible: **True** (reasons: none)
+- Incumbent/current model: **claude-sonnet-5** — admissible: **True** (reasons: none)
 - Exclusions:
 
 | Model | Reasons | Pricing tier | Input $/M | Output $/M | Capability as-of |
@@ -266,15 +273,16 @@ _No `artificialAnalysis` alias is configured in `config/model-ranking-aliases.js
 - Stale: **false**
 - Fallback used: **false**
 - Note: Ranking buckets generated from partial live data. The committed last-good snapshot was not replaced.
-- Artificial Analysis URL: https://artificialanalysis.ai/?intelligence=agentic-index
+- Artificial Analysis URL: https://artificialanalysis.ai/api/v2/data/llms/models
 - Artificial Analysis Coding Agents URL: https://artificialanalysis.ai/agents/coding-agents
 - LiveBench URL: https://github.com/LiveBench/new-livebench/tree/main/public
+- Attribution: Artificial Analysis benchmark data from https://artificialanalysis.ai
 - Artificial Analysis source date: 
 - Artificial Analysis Coding Agent source date: n/a
 - LiveBench source date: 2026-06-25
-- Artificial Analysis fetched at (UTC): 2026-09-01T12:08:42.5273948Z
-- Artificial Analysis Coding Agents fetched at (UTC): 2026-09-01T12:08:42.9636539Z
-- LiveBench fetched at (UTC): 2026-09-01T12:08:43.2059367Z
+- Artificial Analysis fetched at (UTC): 2026-09-01T12:55:18.2312410Z
+- Artificial Analysis Coding Agents fetched at (UTC): 2026-09-01T12:55:19.0227392Z
+- LiveBench fetched at (UTC): 2026-09-01T12:55:19.2739416Z
 
 > External rankings can auto-apply only after strict two-run consensus; verified availability, capabilities, pricing, and benchmark quality govern promotion, and family preferences are baseline-only.
 

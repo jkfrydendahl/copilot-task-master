@@ -971,19 +971,7 @@
     "profiles": {
       "orchestrator": {
         "pending": null,
-        "activeOverride": {
-          "model": "gpt-5.4",
-          "activatedAtUtc": "2026-08-21T07:04:33.581857Z",
-          "sourceDates": {
-            "liveBench": "2026-06-25",
-            "artificialAnalysis": "2026-08-18"
-          },
-          "sourceVersions": {
-            "liveBench": "2026-06-25",
-            "artificialAnalysis": "dacd3078487507568e72ded550058adbf0df32f8e3312d887db16beff01c1ead"
-          },
-          "forced": true
-        }
+        "activeOverride": null
       },
       "quick": {
         "pending": null,
