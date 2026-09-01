@@ -10,6 +10,7 @@ $ErrorActionPreference = "Stop"
 
 $script:ModelPolicyConfigPath = Join-Path (Join-Path $PSScriptRoot "..") "config/model-policy.json"
 $script:ModelCapabilitiesConfigPath = Join-Path (Join-Path $PSScriptRoot "..") "config/model-capabilities.json"
+$script:ModelRankingAliasesConfigPath = Join-Path (Join-Path $PSScriptRoot "..") "config/model-ranking-aliases.json"
 $script:ModelPolicyConfig = Get-ModelPolicyConfig -PolicyPath $script:ModelPolicyConfigPath
 $script:ModelDenylist = @($script:ModelPolicyConfig.denylist)
 
@@ -196,6 +197,10 @@ function Get-BenchmarkConsensusCandidate {
         [string]$ProfileEffort = "medium",
         [int]$CapabilityFreshnessDays = 60,
         [int]$LiveBenchOnlyFallbackMaxSourceAgeDays = 90,
+        # Optional authoritative alias config. When supplied it takes
+        # precedence over the snapshot-embedded alias fields, so the check
+        # never depends on a snapshot having been produced successfully.
+        $Aliases = $null,
         [datetime]$NowUtc = ((Get-Date).ToUniversalTime())
     )
 
@@ -223,7 +228,10 @@ function Get-BenchmarkConsensusCandidate {
     # never asked, so a "LiveBench-only" win is not a degraded dual-source
     # check -- it is a single-source check dressed up as one. Such a profile
     # gets no benchmark consensus at all and stays on the static baseline.
-    if (-not $incumbentAaAvailable -and -not $incumbent.aaAliasConfigured) {
+    $incumbentAliasConfigured = if ($null -ne $Aliases) {
+        Test-ProfileBenchmarkAliasConfigured -Aliases $Aliases -ProfileKey $ProfileKey -ModelId $IncumbentModel
+    } else { [bool]$incumbent.aaAliasConfigured }
+    if (-not $incumbentAaAvailable -and -not $incumbentAliasConfigured) {
         return $null
     }
     # Sole-evidence promotions additionally require the LiveBench source data
@@ -250,7 +258,10 @@ function Get-BenchmarkConsensusCandidate {
         # Same rule on the challenger side: a challenger AA never looked at
         # cannot be promoted on LiveBench alone. Skip it, but keep evaluating
         # the remaining challengers.
-        if (-not $candidateAaAvailable -and -not $candidate.aaAliasConfigured) { continue }
+        $candidateAliasConfigured = if ($null -ne $Aliases) {
+            Test-ProfileBenchmarkAliasConfigured -Aliases $Aliases -ProfileKey $ProfileKey -ModelId $model
+        } else { [bool]$candidate.aaAliasConfigured }
+        if (-not $candidateAaAvailable -and -not $candidateAliasConfigured) { continue }
         $aaFallbackUsed = -not ($incumbentAaAvailable -and $candidateAaAvailable)
 
         if ($aaFallbackUsed) {
@@ -326,6 +337,128 @@ function Test-ActiveOverrideQualitySupported {
     }
 
     return [double]$activeQuality.lbScore -gt [double]$baselineQuality.lbScore
+}
+
+function Get-ProfileAaAliasSourceName {
+    # Which Artificial Analysis feed a profile is scored against.
+    [OutputType([string])]
+    param([string]$ProfileKey)
+    if ($ProfileKey -eq "agentic-implementation") { return "artificialAnalysisCodingAgents" }
+    return "artificialAnalysis"
+}
+
+function Test-ProfileBenchmarkAliasConfigured {
+    # Configuration-derived, run-independent answer to "was Artificial
+    # Analysis ever asked about this model for this profile?".
+    #
+    # This deliberately reads config/model-ranking-aliases.json rather than
+    # the snapshot. A snapshot only exists (and only carries alias fields)
+    # when the benchmark fetch succeeded, but whether an alias is configured
+    # is a property of the repository, not of any particular run. Deriving it
+    # from the snapshot made the check silently unavailable exactly when the
+    # live fetch failed -- which is how an ineligible override survived.
+    [OutputType([bool])]
+    param(
+        $Aliases,
+        [string]$ProfileKey,
+        [string]$ModelId
+    )
+    if ($null -eq $Aliases -or [string]::IsNullOrWhiteSpace($ModelId)) { return $false }
+    $entry = $null
+    if ($Aliases -is [System.Collections.IDictionary]) {
+        if (-not $Aliases.Contains($ModelId)) { return $false }
+        $entry = $Aliases[$ModelId]
+    } else {
+        if (-not (Test-ObjectMember -InputObject $Aliases -Name $ModelId)) { return $false }
+        $entry = Get-ObjectMemberValue -InputObject $Aliases -Name $ModelId
+    }
+    if ($null -eq $entry) { return $false }
+    $sourceName = Get-ProfileAaAliasSourceName -ProfileKey $ProfileKey
+    if (-not (Test-ObjectMember -InputObject $entry -Name $sourceName)) { return $false }
+    return -not [string]::IsNullOrWhiteSpace([string](Get-ObjectMemberValue -InputObject $entry -Name $sourceName))
+}
+
+function Test-ModelBenchmarkable {
+    # A model is only worth naming in the alias-gap report if it is otherwise
+    # comparable for this profile, i.e. it has a LiveBench alias configured.
+    [OutputType([bool])]
+    param($Aliases, [string]$ModelId)
+    if ($null -eq $Aliases -or [string]::IsNullOrWhiteSpace($ModelId)) { return $false }
+    $entry = $null
+    if ($Aliases -is [System.Collections.IDictionary]) {
+        if (-not $Aliases.Contains($ModelId)) { return $false }
+        $entry = $Aliases[$ModelId]
+    } else {
+        if (-not (Test-ObjectMember -InputObject $Aliases -Name $ModelId)) { return $false }
+        $entry = Get-ObjectMemberValue -InputObject $Aliases -Name $ModelId
+    }
+    if ($null -eq $entry) { return $false }
+    if (-not (Test-ObjectMember -InputObject $entry -Name "liveBench")) { return $false }
+    return -not [string]::IsNullOrWhiteSpace([string](Get-ObjectMemberValue -InputObject $entry -Name "liveBench"))
+}
+
+function Test-ActiveOverrideBenchmarkEligible {
+    # An active override must be revocable on grounds that can never be
+    # satisfied by fresher data. A model with no configured Artificial
+    # Analysis alias can never be cross-validated, no matter how many runs
+    # happen, so the override is not merely "unproven this run" -- it is
+    # permanently unprovable and must not survive.
+    [OutputType([bool])]
+    param(
+        $Aliases,
+        [string]$ProfileKey,
+        [string]$ActiveModel
+    )
+    if ([string]::IsNullOrWhiteSpace($ActiveModel)) { return $true }
+    return Test-ProfileBenchmarkAliasConfigured -Aliases $Aliases -ProfileKey $ProfileKey -ModelId $ActiveModel
+}
+
+function Resolve-ActiveOverrideValidity {
+    # Single source of truth for "is this active override still valid?",
+    # extracted from Invoke-TaskProfileReview's second loop so the exact
+    # production gating order is testable rather than only reproducible by
+    # replaying the whole review against live data.
+    #
+    # Gate ordering matters:
+    #   1. admissibility        -- always applied (already run-independent).
+    #   2. benchmark ELIGIBILITY -- config-derived, so ALWAYS applied on a
+    #      verified run, including partial/stale benchmark runs. This is the
+    #      gate that was previously trapped behind $IsFullFreshRun.
+    #   3. quality support      -- data-derived, so only on a full fresh run;
+    #      partial data must never revoke on quality grounds.
+    [OutputType([bool])]
+    param(
+        [string]$ActiveModel,
+        [string]$ProfileKey,
+        [bool]$AdmissibilityValid,
+        [bool]$AvailabilityVerified,
+        [bool]$IsFullFreshRun,
+        [string]$EffectiveBaselineModel,
+        $Aliases,
+        $Snapshot,
+        [int]$LiveBenchOnlyFallbackMaxSourceAgeDays = 90,
+        [datetime]$NowUtc = ((Get-Date).ToUniversalTime())
+    )
+
+    if ([string]::IsNullOrWhiteSpace($ActiveModel)) { return $true }
+    if (-not $AdmissibilityValid) { return $false }
+
+    # Rule 2 is preserved: unverified availability discovery still freezes
+    # every revocation path, benchmark eligibility included.
+    if ($AvailabilityVerified) {
+        if (-not (Test-ActiveOverrideBenchmarkEligible -Aliases $Aliases -ProfileKey $ProfileKey -ActiveModel $ActiveModel)) {
+            return $false
+        }
+    }
+
+    if ($IsFullFreshRun -and -not [string]::IsNullOrWhiteSpace($EffectiveBaselineModel)) {
+        return Test-ActiveOverrideQualitySupported -ActiveModel $ActiveModel `
+            -PolicyPreferredModel $EffectiveBaselineModel -IsFullFreshRun $IsFullFreshRun `
+            -ProfileKey $ProfileKey -Snapshot $Snapshot `
+            -LiveBenchOnlyFallbackMaxSourceAgeDays $LiveBenchOnlyFallbackMaxSourceAgeDays -NowUtc $NowUtc
+    }
+
+    return $true
 }
 
 function Get-EffectivePolicyBaselineModel {
@@ -565,6 +698,10 @@ function Invoke-TaskProfileReview {
     $priorSnapshot = Read-ModelRankingSnapshotFile -SnapshotPath $snapshotPath
     if ($null -eq $priorSnapshot) { $priorSnapshot = New-UnavailableModelRankingSnapshot }
 
+    # Alias configuration is read straight from the repository, so benchmark
+    # eligibility stays computable even when every live benchmark fetch fails.
+    $rankingAliases = Get-ModelRankingAliases -AliasesPath $script:ModelRankingAliasesConfigPath
+
     $decisions = @{}
     foreach ($profile in $profiles) {
         $profileKey = [string]$profile.key
@@ -600,6 +737,12 @@ function Invoke-TaskProfileReview {
                 -CapabilityRecord $(if ($capabilitiesCatalog.ContainsKey($activeOverride)) { $capabilitiesCatalog[$activeOverride] } else { $null }) `
                 -ProfileRequirement $ctx.requirement -ProfileContextTier $ctx.contextTier -ProfileEffort $ctx.effort `
                 -CapabilityFreshnessDays $capabilityFreshnessDays
+            # Config-derived benchmark eligibility, applied here too so the
+            # provisional decision never even proposes an override that the
+            # second loop is about to clear.
+            if ($overrideValid -and $availability.verified) {
+                $overrideValid = Test-ActiveOverrideBenchmarkEligible -Aliases $rankingAliases -ProfileKey $profileKey -ActiveModel $activeOverride
+            }
         }
         $effectiveBaseline = Get-EffectivePolicyBaselineModel -CurrentModel $currentModel `
             -PolicyPreferredModel $policyPreferred -GrandfatherCurrent $grandfatherCurrent
@@ -656,18 +799,17 @@ function Invoke-TaskProfileReview {
         $isFullFresh = (Test-FullFreshConsensusRunForProfile -Snapshot $rankingSnapshot -ProfileKey $profileKey) -and $availability.verified
         $activeStillValid = $true
         if (-not [string]::IsNullOrWhiteSpace($activeModel)) {
-            $activeStillValid = Test-ActiveOverrideAdmissible -ProfileKey $profileKey -ModelId $activeModel `
+            $admissibilityValid = Test-ActiveOverrideAdmissible -ProfileKey $profileKey -ModelId $activeModel `
                 -AvailabilityVerified $availability.verified -Denylist $script:ModelDenylist -AvailableModels $validModels `
                 -CapabilityRecord $(if ($capabilitiesCatalog.ContainsKey($activeModel)) { $capabilitiesCatalog[$activeModel] } else { $null }) `
                 -ProfileRequirement $ctx.requirement -ProfileContextTier $ctx.contextTier -ProfileEffort $ctx.effort `
                 -CapabilityFreshnessDays $capabilityFreshnessDays
 
-            if ($activeStillValid -and $isFullFresh -and -not [string]::IsNullOrWhiteSpace([string]$d.effectiveBaseline)) {
-                $activeStillValid = Test-ActiveOverrideQualitySupported -ActiveModel $activeModel `
-                    -PolicyPreferredModel ([string]$d.effectiveBaseline) -IsFullFreshRun $isFullFresh `
-                    -ProfileKey $profileKey -Snapshot $rankingSnapshot `
-                    -LiveBenchOnlyFallbackMaxSourceAgeDays $lbOnlyFallbackMaxSourceAgeDays
-            }
+            $activeStillValid = Resolve-ActiveOverrideValidity -ActiveModel $activeModel -ProfileKey $profileKey `
+                -AdmissibilityValid $admissibilityValid -AvailabilityVerified $availability.verified `
+                -IsFullFreshRun $isFullFresh -EffectiveBaselineModel ([string]$d.effectiveBaseline) `
+                -Aliases $rankingAliases -Snapshot $rankingSnapshot `
+                -LiveBenchOnlyFallbackMaxSourceAgeDays $lbOnlyFallbackMaxSourceAgeDays
         }
         $incumbent = if (-not [string]::IsNullOrWhiteSpace($activeModel) -and $activeStillValid) {
             $activeModel
@@ -680,7 +822,7 @@ function Invoke-TaskProfileReview {
             Get-BenchmarkConsensusCandidate -ProfileKey $profileKey -ValidModels $validModels -IncumbentModel $incumbent -Snapshot $rankingSnapshot `
                 -AvailabilityVerified $availability.verified -Denylist $script:ModelDenylist -CapabilitiesCatalog $capabilitiesCatalog `
                 -ProfileRequirement $ctx.requirement -ProfileContextTier $ctx.contextTier -ProfileEffort $ctx.effort -CapabilityFreshnessDays $capabilityFreshnessDays `
-                -LiveBenchOnlyFallbackMaxSourceAgeDays $lbOnlyFallbackMaxSourceAgeDays
+                -LiveBenchOnlyFallbackMaxSourceAgeDays $lbOnlyFallbackMaxSourceAgeDays -Aliases $rankingAliases
         } else { $null }
 
         # Surface the AA-missing LiveBench-only fallback in the report even
@@ -690,11 +832,11 @@ function Invoke-TaskProfileReview {
         # human responses: a data gap resolves itself when AA indexes the
         # model, while a configuration gap only resolves when somebody adds
         # the alias to config/model-ranking-aliases.json.
+        $incumbentAliasMissing = -not (Test-ProfileBenchmarkAliasConfigured -Aliases $rankingAliases -ProfileKey $profileKey -ModelId $incumbent)
         if ($isFullFresh) {
             $incumbentQualityForReport = Get-ModelQualityDataForProfile -Snapshot $rankingSnapshot -ProfileKey $profileKey -ModelId $incumbent
             $incumbentHasLb = ($null -ne $incumbentQualityForReport) -and ($null -ne $incumbentQualityForReport.lbScore)
             $incumbentAaMissing = $incumbentHasLb -and ($null -eq $incumbentQualityForReport.aaScore)
-            $incumbentAliasMissing = $incumbentAaMissing -and (-not $incumbentQualityForReport.aaAliasConfigured)
             $candidateUsedAaFallback = ($null -ne $candidate) -and (Test-ObjectMember -InputObject $candidate -Name "aaFallbackUsed") -and [bool]$candidate.aaFallbackUsed
             $fallbackFresh = Test-LiveBenchOnlyFallbackSourceFresh -Snapshot $rankingSnapshot -MaxSourceAgeDays $lbOnlyFallbackMaxSourceAgeDays
 
@@ -702,23 +844,22 @@ function Invoke-TaskProfileReview {
                 $suffix = if ($fallbackFresh) { "" } else { (" (blocked: LiveBench source data older than {0} days)" -f $lbOnlyFallbackMaxSourceAgeDays) }
                 $aaFallbackLines.Add(('- "{0}": AA data missing despite a configured alias -- using LiveBench-only fallback{1}' -f $profileKey, $suffix))
             }
+        }
 
-            # Models that would otherwise be comparable for this profile
-            # (they have a LiveBench score) but are permanently invisible to
-            # Artificial Analysis because no AA alias is configured.
-            $aliasGapModels = New-Object System.Collections.Generic.List[string]
-            foreach ($m in @(@($incumbent) + @($validModels) | Where-Object { -not [string]::IsNullOrWhiteSpace($_) } | Select-Object -Unique)) {
-                $q = Get-ModelQualityDataForProfile -Snapshot $rankingSnapshot -ProfileKey $profileKey -ModelId $m
-                if ($null -eq $q) { continue }
-                if ($null -ne $q.aaScore) { continue }
-                if ($q.aaAliasConfigured) { continue }
-                if ($null -eq $q.lbScore) { continue }
-                $aliasGapModels.Add($m)
-            }
-            if ($aliasGapModels.Count -gt 0) {
-                $incumbentNote = if ($incumbentAliasMissing) { (' -- incumbent "{0}" is affected, so this profile has NO benchmark consensus this run' -f $incumbent) } else { "" }
-                $aaAliasGapLines.Add(('- "{0}": AA alias not configured -- excluded from consensus: {1}{2}' -f $profileKey, (($aliasGapModels | Sort-Object) -join ", "), $incumbentNote))
-            }
+        # The alias-gap report is config-derived and therefore emitted on
+        # EVERY run, including partial/stale benchmark runs. Gating it behind
+        # $isFullFresh previously hid the very profiles whose overrides were
+        # wrongly surviving, because a failed Artificial Analysis fetch made
+        # $isFullFresh false for exactly those profiles.
+        $aliasGapModels = New-Object System.Collections.Generic.List[string]
+        foreach ($m in @(@($incumbent) + @($validModels) | Where-Object { -not [string]::IsNullOrWhiteSpace($_) } | Select-Object -Unique)) {
+            if (Test-ProfileBenchmarkAliasConfigured -Aliases $rankingAliases -ProfileKey $profileKey -ModelId $m) { continue }
+            if (-not (Test-ModelBenchmarkable -Aliases $rankingAliases -ModelId $m)) { continue }
+            $aliasGapModels.Add($m)
+        }
+        if ($aliasGapModels.Count -gt 0) {
+            $incumbentNote = if ($incumbentAliasMissing -and ($aliasGapModels -contains $incumbent)) { (' -- incumbent "{0}" is affected, so this profile has NO benchmark consensus this run' -f $incumbent) } else { "" }
+            $aaAliasGapLines.Add(('- "{0}": AA alias not configured -- excluded from consensus: {1}{2}' -f $profileKey, (($aliasGapModels | Sort-Object) -join ", "), $incumbentNote))
         }
 
         # Per-profile admissibility ledger for the review report (rule 9):
@@ -855,7 +996,7 @@ function Invoke-TaskProfileReview {
     $lines += ""
     $lines += "## Benchmark consensus AA-alias-not-configured exclusions"
     $lines += ""
-    $lines += "_No ``artificialAnalysis`` alias is configured in ``config/model-ranking-aliases.json`` for these models, so Artificial Analysis is never consulted for them. They are excluded from benchmark consensus entirely (no LiveBench-only promotion). Add an alias if a model deserves consideration._"
+    $lines += "_No ``artificialAnalysis`` alias is configured in ``config/model-ranking-aliases.json`` for these models, so Artificial Analysis is never consulted for them. They are excluded from benchmark consensus entirely (no LiveBench-only promotion), and an active override on such a model is revoked. This section is config-derived and is reported on every run,     including partial/stale benchmark runs. Add an alias if a model deserves consideration._"
     $lines += ""
     if ($aaAliasGapLines.Count -eq 0) { $lines += "- None." } else { $lines += @($aaAliasGapLines) }
     $lines += ""

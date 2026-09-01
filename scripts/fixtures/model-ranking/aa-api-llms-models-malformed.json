@@ -1,0 +1,15 @@
+{
+  "status": 200,
+  "prompt_options": {
+    "parallel_queries": 1,
+    "prompt_length": "medium"
+  },
+  "datax": [
+    {
+      "slug": "claude-sonnet-5",
+      "evaluations": {
+        "artificial_analysis_agentic_index": 68.3
+      }
+    }
+  ]
+}

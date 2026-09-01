@@ -47,6 +47,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           FORCE_BENCHMARK_CONSENSUS: ${{ github.event_name == 'workflow_dispatch' && inputs.force_benchmark_consensus || 'false' }}
+          ARTIFICIAL_ANALYSIS_API_KEY: ${{ secrets.ARTIFICIAL_ANALYSIS_API_KEY }}
 
       - name: Create/update PR
         uses: peter-evans/create-pull-request@v8

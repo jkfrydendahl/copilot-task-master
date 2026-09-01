@@ -2,7 +2,9 @@ Set-StrictMode -Version Latest
 
 $script:ModelRankingSchemaVersion = 2
 $script:ModelRankingStaleAfterDays = 45
-$script:ArtificialAnalysisUrl = "https://artificialanalysis.ai/?intelligence=agentic-index"
+$script:ArtificialAnalysisApiBaseUrl = "https://artificialanalysis.ai/api/v2"
+$script:ArtificialAnalysisLlmModelsApiUrl = "$script:ArtificialAnalysisApiBaseUrl/data/llms/models"
+$script:ArtificialAnalysisUrl = $script:ArtificialAnalysisLlmModelsApiUrl
 $script:ArtificialAnalysisCodingAgentsUrl = "https://artificialanalysis.ai/agents/coding-agents"
 $script:LiveBenchContentsApiUrl = "https://api.github.com/repos/LiveBench/new-livebench/contents/public"
 $script:LiveBenchRepoUrl = "https://github.com/LiveBench/new-livebench/tree/main/public"
@@ -47,6 +49,83 @@ function Invoke-JsonFetch {
             status = "error"
             value = $null
             error = $_.Exception.Message
+        }
+    }
+}
+
+function Invoke-ArtificialAnalysisApiFetch {
+    [OutputType([pscustomobject])]
+    param(
+        [Parameter(Mandatory = $true)][string]$Url,
+        [string]$ApiKeyEnvVarName = "ARTIFICIAL_ANALYSIS_API_KEY",
+        [int]$TimeoutSec = 30
+    )
+
+    $apiKey = [Environment]::GetEnvironmentVariable($ApiKeyEnvVarName, "Process")
+    if ([string]::IsNullOrWhiteSpace([string]$apiKey)) {
+        return [pscustomobject]@{
+            status = "error"
+            value = $null
+            error = "Missing or empty environment variable '$ApiKeyEnvVarName'."
+            statusCode = $null
+            retryAfterSeconds = $null
+            rateLimitLimit = $null
+            rateLimitRemaining = $null
+            rateLimitReset = $null
+        }
+    }
+
+    try {
+        $headers = @{
+            "User-Agent" = "copilot-task-master-model-ranking"
+            "x-api-key" = $apiKey
+        }
+        $response = Invoke-WebRequest -Uri $Url -TimeoutSec $TimeoutSec -Headers $headers
+
+        $parsed = $null
+        if (-not [string]::IsNullOrWhiteSpace([string]$response.Content)) {
+            $parsed = ConvertFrom-JsonAsHashtableCompat -JsonText ([string]$response.Content)
+        }
+
+        return [pscustomobject]@{
+            status = "ok"
+            value = $parsed
+            error = $null
+            statusCode = [int]$response.StatusCode
+            retryAfterSeconds = $null
+            rateLimitLimit = [string]$response.Headers["X-RateLimit-Limit"]
+            rateLimitRemaining = [string]$response.Headers["X-RateLimit-Remaining"]
+            rateLimitReset = [string]$response.Headers["X-RateLimit-Reset"]
+        }
+    } catch {
+        $statusCode = $null
+        $retryAfter = $null
+        $rateLimitLimit = $null
+        $rateLimitRemaining = $null
+        $rateLimitReset = $null
+        $message = $_.Exception.Message
+
+        if ($null -ne $_.Exception.Response) {
+            try { $statusCode = [int]$_.Exception.Response.StatusCode } catch { }
+            try { $retryAfter = [string]$_.Exception.Response.Headers["Retry-After"] } catch { }
+            try { $rateLimitLimit = [string]$_.Exception.Response.Headers["X-RateLimit-Limit"] } catch { }
+            try { $rateLimitRemaining = [string]$_.Exception.Response.Headers["X-RateLimit-Remaining"] } catch { }
+            try { $rateLimitReset = [string]$_.Exception.Response.Headers["X-RateLimit-Reset"] } catch { }
+        }
+
+        if ($statusCode -eq 429 -and -not [string]::IsNullOrWhiteSpace($retryAfter)) {
+            $message = "Artificial Analysis API rate limited (HTTP 429). Retry-After: $retryAfter seconds."
+        }
+
+        return [pscustomobject]@{
+            status = "error"
+            value = $null
+            error = $message
+            statusCode = $statusCode
+            retryAfterSeconds = $retryAfter
+            rateLimitLimit = $rateLimitLimit
+            rateLimitRemaining = $rateLimitRemaining
+            rateLimitReset = $rateLimitReset
         }
     }
 }
@@ -118,59 +197,82 @@ function Get-ModelScoreFingerprint {
     }
 }
 
-function Parse-ArtificialAnalysisAgenticIndexFromHtml {
-    [OutputType([pscustomobject])]
+function Get-ArtificialAnalysisSourceDateFromApiResponse {
+    [OutputType([string])]
     param(
-        [Parameter(Mandatory = $true)][AllowEmptyString()][string]$Html
+        [Parameter(Mandatory = $true)]$ApiResponse
     )
 
-    if ([string]::IsNullOrWhiteSpace($Html)) {
+    foreach ($field in @("source_date", "sourceDate", "updated_at", "updatedAt", "last_updated", "lastUpdated", "generated_at", "generatedAt", "as_of_date", "asOfDate")) {
+        $value = Get-ObjectMemberValue -InputObject $ApiResponse -Name $field
+        if ([string]::IsNullOrWhiteSpace([string]$value)) { continue }
+        $parsed = $null
+        $styles = [System.Globalization.DateTimeStyles]::AssumeUniversal -bor [System.Globalization.DateTimeStyles]::AdjustToUniversal
+        if ([datetime]::TryParse([string]$value, [System.Globalization.CultureInfo]::InvariantCulture, $styles, [ref]$parsed)) {
+            return $parsed.ToString("yyyy-MM-dd")
+        }
+    }
+
+    return $null
+}
+
+function Parse-ArtificialAnalysisLlmModelsFromApiResponse {
+    [OutputType([pscustomobject])]
+    param(
+        [Parameter(Mandatory = $true)]$ApiResponse,
+        [Parameter(Mandatory = $true)][string]$EvaluationField,
+        [Parameter(Mandatory = $true)][string]$OutputScoreProperty,
+        [string]$SourceNameForMessages = "Artificial Analysis"
+    )
+
+    if ($null -eq $ApiResponse) {
         return [pscustomobject]@{
             status = "unavailable"
-            message = "Artificial Analysis HTML was empty."
+            message = "$SourceNameForMessages API response was empty."
             models = @{}
             sourceDate = $null
         }
     }
 
-    $pattern = '\\\"slug\\\":\\\"(?<slug>[^\\\"]+)\\\",\\\"name\\\":\\\"(?<name>[^\\\"]+)\\\"(?:(?!\\\"slug\\\":).){0,2000}?\\\"releaseDate\\\":\\\"(?<releaseDate>[^\\\"]+)\\\"(?:(?!\\\"slug\\\":).){0,4000}?\\\"agenticIndex\\\":(?<agenticIndex>-?\d+(?:\.\d+)?)'
-    $matches = [regex]::Matches($Html, $pattern, [System.Text.RegularExpressions.RegexOptions]::Singleline)
-
-    if ($matches.Count -eq 0) {
+    $data = Get-ObjectMemberValue -InputObject $ApiResponse -Name "data"
+    if ($null -eq $data) {
         return [pscustomobject]@{
             status = "unavailable"
-            message = "Artificial Analysis embedded model records with agenticIndex were not found."
+            message = "$SourceNameForMessages API response did not contain a 'data' array."
+            models = @{}
+            sourceDate = $null
+        }
+    }
+
+    $rows = @($data)
+    if ($rows.Count -eq 0) {
+        return [pscustomobject]@{
+            status = "unavailable"
+            message = "$SourceNameForMessages API response contained an empty 'data' array."
             models = @{}
             sourceDate = $null
         }
     }
 
     $models = @{}
-    $maxDate = $null
-    foreach ($match in $matches) {
-        $slug = [string]$match.Groups["slug"].Value
-        $name = [string]$match.Groups["name"].Value
-        $scoreText = [string]$match.Groups["agenticIndex"].Value
-        $releaseDateText = [string]$match.Groups["releaseDate"].Value
+    foreach ($row in $rows) {
+        $slug = [string](Get-ObjectMemberValue -InputObject $row -Name "slug")
+        $name = [string](Get-ObjectMemberValue -InputObject $row -Name "name")
+        if ([string]::IsNullOrWhiteSpace($slug)) { continue }
+
+        $evaluations = Get-ObjectMemberValue -InputObject $row -Name "evaluations"
+        if ($null -eq $evaluations) { continue }
+        $scoreRaw = Get-ObjectMemberValue -InputObject $evaluations -Name $EvaluationField
+        if ($null -eq $scoreRaw) { continue }
 
         $score = 0.0
-        if (-not [double]::TryParse($scoreText, [System.Globalization.NumberStyles]::Float, [System.Globalization.CultureInfo]::InvariantCulture, [ref]$score)) {
-            continue
-        }
-
-        $releaseDate = $null
-        try {
-            $releaseDate = [datetime]::Parse($releaseDateText, [System.Globalization.CultureInfo]::InvariantCulture)
-            if ($null -eq $maxDate -or $releaseDate -gt $maxDate) {
-                $maxDate = $releaseDate
-            }
-        } catch { }
+        if (-not [double]::TryParse(([string]$scoreRaw), [System.Globalization.NumberStyles]::Float, [System.Globalization.CultureInfo]::InvariantCulture, [ref]$score)) { continue }
 
         if ($models.ContainsKey($slug)) {
-            if ([math]::Abs([double]$models[$slug].agenticIndex - $score) -gt 0.000001) {
+            if ([math]::Abs([double](Get-ObjectMemberValue -InputObject $models[$slug] -Name $OutputScoreProperty) - $score) -gt 0.000001) {
                 return [pscustomobject]@{
                     status = "unavailable"
-                    message = "Artificial Analysis embedded data was ambiguous for model slug '$slug'."
+                    message = "$SourceNameForMessages API data was ambiguous for model slug '$slug'."
                     models = @{}
                     sourceDate = $null
                 }
@@ -178,17 +280,15 @@ function Parse-ArtificialAnalysisAgenticIndexFromHtml {
             continue
         }
 
-        $models[$slug] = [pscustomobject]@{
-            slug = $slug
-            name = $name
-            agenticIndex = $score
-        }
+        $entry = [ordered]@{ slug = $slug; name = $name }
+        $entry[$OutputScoreProperty] = $score
+        $models[$slug] = [pscustomobject]$entry
     }
 
     if ($models.Count -eq 0) {
         return [pscustomobject]@{
             status = "unavailable"
-            message = "Artificial Analysis parsing found no numeric agentic index records."
+            message = "$SourceNameForMessages API parsing found no numeric '$EvaluationField' records."
             models = @{}
             sourceDate = $null
         }
@@ -196,9 +296,53 @@ function Parse-ArtificialAnalysisAgenticIndexFromHtml {
 
     return [pscustomobject]@{
         status = "ok"
-        message = "Parsed embedded model records."
+        message = "Parsed Artificial Analysis Data API model records."
         models = $models
-        sourceDate = if ($null -ne $maxDate) { $maxDate.ToString("yyyy-MM-dd") } else { $null }
+        sourceDate = Get-ArtificialAnalysisSourceDateFromApiResponse -ApiResponse $ApiResponse
+    }
+}
+
+function Get-ArtificialAnalysisAgenticIndexData {
+    [OutputType([pscustomobject])]
+    param(
+        [string]$Url = $script:ArtificialAnalysisLlmModelsApiUrl,
+        [scriptblock]$FetchJson = $null,
+        [string]$ApiKeyEnvVarName = "ARTIFICIAL_ANALYSIS_API_KEY"
+    )
+
+    $fetchedAtUtc = (Get-Date).ToUniversalTime().ToString("o")
+    if ($null -eq $FetchJson) {
+        $FetchJson = { param($u, $envVarName) Invoke-ArtificialAnalysisApiFetch -Url $u -ApiKeyEnvVarName $envVarName -TimeoutSec 30 }
+    }
+
+    $fetchResult = & $FetchJson $Url $ApiKeyEnvVarName
+    if ($fetchResult.status -ne "ok") {
+        $message = "Fetch failed: $($fetchResult.error)"
+        if ((Get-ObjectMemberValue -InputObject $fetchResult -Name "statusCode") -eq 429) {
+            $retryAfter = Get-ObjectMemberValue -InputObject $fetchResult -Name "retryAfterSeconds"
+            if (-not [string]::IsNullOrWhiteSpace([string]$retryAfter)) {
+                $message = "Fetch failed: Artificial Analysis API rate limited (HTTP 429). Retry-After: $retryAfter seconds."
+            }
+        }
+        return [pscustomobject]@{
+            status = "error"
+            message = $message
+            models = @{}
+            sourceDate = $null
+            fetchedAtUtc = $fetchedAtUtc
+            sourceUrl = $Url
+        }
+    }
+
+    $parsed = Parse-ArtificialAnalysisLlmModelsFromApiResponse -ApiResponse $fetchResult.value -EvaluationField "artificial_analysis_agentic_index" -OutputScoreProperty "agenticIndex" -SourceNameForMessages "Artificial Analysis agentic index"
+    return [pscustomobject]@{
+        status = $parsed.status
+        message = $parsed.message
+        models = $parsed.models
+        sourceDate = $parsed.sourceDate
+        sourceVersion = if ($parsed.status -eq "ok") { Get-ModelScoreFingerprint -Models $parsed.models -ScoreProperty "agenticIndex" } else { $null }
+        fetchedAtUtc = $fetchedAtUtc
+        sourceUrl = $Url
     }
 }
 
@@ -208,6 +352,9 @@ function Parse-ArtificialAnalysisCodingAgentIndexFromHtml {
         [Parameter(Mandatory = $true)][AllowEmptyString()][string]$Html
     )
 
+    # As of 2026-09: AA does not document a Data API endpoint for the harness-
+    # specific Coding Agents leaderboard variants, so this parser remains the
+    # authoritative source for coding-agent benchmark data.
     if ([string]::IsNullOrWhiteSpace($Html)) {
         return [pscustomobject]@{
             status = "unavailable"
@@ -273,42 +420,6 @@ function Parse-ArtificialAnalysisCodingAgentIndexFromHtml {
         message = "Parsed embedded coding-agent records."
         models = $models
         sourceDate = $null
-    }
-}
-
-function Get-ArtificialAnalysisAgenticIndexData {
-    [OutputType([pscustomobject])]
-    param(
-        [string]$Url = $script:ArtificialAnalysisUrl,
-        [scriptblock]$FetchText = $null
-    )
-
-    $fetchedAtUtc = (Get-Date).ToUniversalTime().ToString("o")
-    if ($null -eq $FetchText) {
-        $FetchText = { param($u) Invoke-TextFetch -Url $u -TimeoutSec 30 }
-    }
-
-    $fetchResult = & $FetchText $Url
-    if ($fetchResult.status -ne "ok") {
-        return [pscustomobject]@{
-            status = "error"
-            message = "Fetch failed: $($fetchResult.error)"
-            models = @{}
-            sourceDate = $null
-            fetchedAtUtc = $fetchedAtUtc
-            sourceUrl = $Url
-        }
-    }
-
-    $parsed = Parse-ArtificialAnalysisAgenticIndexFromHtml -Html ([string]$fetchResult.content)
-    return [pscustomobject]@{
-        status = $parsed.status
-        message = $parsed.message
-        models = $parsed.models
-        sourceDate = $parsed.sourceDate
-        sourceVersion = if ($parsed.status -eq "ok") { Get-ModelScoreFingerprint -Models $parsed.models -ScoreProperty "agenticIndex" } else { $null }
-        fetchedAtUtc = $fetchedAtUtc
-        sourceUrl = $Url
     }
 }
 
@@ -1127,6 +1238,7 @@ function Get-AdvisoryModelRankingSnapshot {
         [Parameter(Mandatory = $true)][string[]]$ValidModels,
         [string]$AliasesPath = "",
         [string]$SnapshotPath = "",
+        [scriptblock]$FetchArtificialAnalysisJson = $null,
         [scriptblock]$FetchArtificialAnalysisText = $null,
         [scriptblock]$FetchLiveBenchJson = $null,
         [scriptblock]$FetchLiveBenchText = $null
@@ -1142,7 +1254,7 @@ function Get-AdvisoryModelRankingSnapshot {
     $aliases = Get-ModelRankingAliases -AliasesPath $AliasesPath
     $fallbackSnapshot = Read-ModelRankingSnapshotFile -SnapshotPath $SnapshotPath
 
-    $aaData = Get-ArtificialAnalysisAgenticIndexData -FetchText $FetchArtificialAnalysisText
+    $aaData = Get-ArtificialAnalysisAgenticIndexData -FetchJson $FetchArtificialAnalysisJson
     $aaCodingAgentData = Get-ArtificialAnalysisCodingAgentIndexData -FetchText $FetchArtificialAnalysisText
     $lbData = Get-LiveBenchData -FetchJson $FetchLiveBenchJson -FetchText $FetchLiveBenchText
 
@@ -1189,6 +1301,7 @@ function Get-ModelRankingReportLines {
     $lines.Add("- Artificial Analysis URL: $aaUrl")
     $lines.Add("- Artificial Analysis Coding Agents URL: $aaCodingUrl")
     $lines.Add("- LiveBench URL: $lbUrl")
+    $lines.Add("- Attribution: Artificial Analysis benchmark data from https://artificialanalysis.ai")
     $lines.Add("- Artificial Analysis source date: $aaDate")
     $lines.Add("- Artificial Analysis Coding Agent source date: $(if ($aaCodingDate) { $aaCodingDate } else { 'n/a' })")
     $lines.Add("- LiveBench source date: $lbDate")

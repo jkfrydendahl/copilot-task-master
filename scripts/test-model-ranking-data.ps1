@@ -102,20 +102,75 @@ function New-QualitySnapshot {
     }
 }
 
-Run-Test "1 Coding Agents valid parsing" {
+Run-Test "1 Artificial Analysis agentic API parsing succeeds with expected shape" {
+    $apiJson = ConvertFrom-JsonAsHashtableCompat -JsonText (Get-Content -Path (Join-Path $fixtureRoot "aa-api-llms-models-valid.json") -Raw)
+    $parsed = Get-ArtificialAnalysisAgenticIndexData -FetchJson {
+        param($u, $envVar)
+        return [pscustomobject]@{ status = "ok"; value = $apiJson; error = $null }
+    }
+    Assert-Eq "ok" $parsed.status "Expected successful parse from mocked API payload."
+    Assert-True ($parsed.models.ContainsKey("gpt-5-6-sol")) "Expected model map to be keyed by API slug."
+    Assert-Eq "71.8" $parsed.models["gpt-5-6-sol"].agenticIndex "Expected parsed agentic index value."
+    $aliases = Get-ModelRankingAliases -AliasesPath (Join-Path (Split-Path $PSScriptRoot -Parent) "config/model-ranking-aliases.json")
+    foreach ($modelId in $aliases.Keys) {
+        $entry = $aliases[$modelId]
+        if ($null -ne $entry.artificialAnalysis) {
+            Assert-True ($parsed.models.ContainsKey([string]$entry.artificialAnalysis)) "AA alias key mismatch for $modelId."
+        }
+    }
+}
+
+Run-Test "2 Coding Agents valid parsing" {
     $html = Get-Content -Path (Join-Path $fixtureRoot "aa-coding-agents-valid.html") -Raw
     $parsed = Parse-ArtificialAnalysisCodingAgentIndexFromHtml -Html $html
     Assert-Eq "ok" $parsed.status "Expected ok parse status."
     Assert-True ($parsed.models.ContainsKey("Claude Code - Opus 5 (xhigh)")) "Expected coding-agent label."
 }
 
-Run-Test "2 Coding Agents malformed parsing" {
+Run-Test "3 Coding Agents malformed parsing" {
     $html = Get-Content -Path (Join-Path $fixtureRoot "aa-coding-agents-malformed.html") -Raw
     $parsed = Parse-ArtificialAnalysisCodingAgentIndexFromHtml -Html $html
     Assert-Eq "unavailable" $parsed.status "Malformed should fail safe."
 }
 
-Run-Test "3 LiveBench cost parsing and lower-is-better buckets" {
+Run-Test "4 Missing/empty AA API key returns clean error status" {
+    $envName = "ARTIFICIAL_ANALYSIS_API_KEY_TEST_ONLY"
+    $prior = [Environment]::GetEnvironmentVariable($envName, "Process")
+    try {
+        [Environment]::SetEnvironmentVariable($envName, "", "Process")
+        $f = Invoke-ArtificialAnalysisApiFetch -Url "https://artificialanalysis.ai/api/v2/data/llms/models" -ApiKeyEnvVarName $envName -TimeoutSec 5
+        Assert-Eq "error" $f.status "Missing API key should be a normal error result."
+        Assert-True ($f.error -like "*$envName*") "Error should identify the missing env var."
+    } finally {
+        [Environment]::SetEnvironmentVariable($envName, $prior, "Process")
+    }
+}
+
+Run-Test "5 Malformed/unexpected AA API JSON is handled safely" {
+    $apiJson = ConvertFrom-JsonAsHashtableCompat -JsonText (Get-Content -Path (Join-Path $fixtureRoot "aa-api-llms-models-malformed.json") -Raw)
+    $parsed = Get-ArtificialAnalysisAgenticIndexData -FetchJson {
+        param($u, $envVar)
+        return [pscustomobject]@{ status = "ok"; value = $apiJson; error = $null }
+    }
+    Assert-Eq "unavailable" $parsed.status "Unexpected JSON shape must fail safe."
+}
+
+Run-Test "6 AA API 429/rate limit result is surfaced as error status" {
+    $parsed = Get-ArtificialAnalysisAgenticIndexData -FetchJson {
+        param($u, $envVar)
+        return [pscustomobject]@{
+            status = "error"
+            value = $null
+            error = "Too Many Requests"
+            statusCode = 429
+            retryAfterSeconds = "120"
+        }
+    }
+    Assert-Eq "error" $parsed.status "Rate limiting should not crash parsing."
+    Assert-True ($parsed.message -like "*429*") "Rate-limit message should mention HTTP 429."
+}
+
+Run-Test "7 LiveBench cost parsing and lower-is-better buckets" {
     $csv = Get-Content -Path (Join-Path $fixtureRoot "livebench-valid.csv") -Raw
     $cats = Get-Content -Path (Join-Path $fixtureRoot "livebench-categories-valid.json") -Raw
     $cost = Get-Content -Path (Join-Path $fixtureRoot "livebench-cost-valid.csv") -Raw
@@ -130,50 +185,50 @@ Run-Test "3 LiveBench cost parsing and lower-is-better buckets" {
     Assert-Eq "top" $b."claude-sonnet-5-xhigh-effort" "Lowest cost should be top."
 }
 
-Run-Test "4 Baseline family-match helper (renamed, informational only) works across non-first families" {
+Run-Test "8 Baseline family-match helper (renamed, informational only) works across non-first families" {
     $valid = @("gpt-5.6-luna", "claude-haiku-4.5")
     Assert-True (Test-ModelMatchesProfileFamilyPolicy -ProfileKey "quick" -ModelId "gpt-5.6-luna" -ValidModels $valid) "Expected gpt-luna to match quick's baseline family list."
 }
 
-Run-Test "5 Challenger top+raw higher both qualifies (real capability/pricing admissibility applied)" {
+Run-Test "9 Challenger top+raw higher both qualifies (real capability/pricing admissibility applied)" {
     $snapshot = New-QualitySnapshot -AaScores @{ "claude-sonnet-5" = 70; "gpt-5.6-terra" = 80; "gpt-5.4" = 60 } -AaCodingScores @{ "claude-sonnet-5" = 70; "gpt-5.6-terra" = 80; "gpt-5.4" = 60 } -LbScores @{ "claude-sonnet-5" = 70; "gpt-5.6-terra" = 80; "gpt-5.4" = 60 } -Costs @{ "claude-sonnet-5" = 1.0; "gpt-5.6-terra" = 1.1; "gpt-5.4" = 0.9 }
     $candidate = Get-BenchmarkConsensusCandidate -ProfileKey "default-development" -ValidModels @("claude-sonnet-5","gpt-5.6-terra","gpt-5.4") -IncumbentModel "claude-sonnet-5" -Snapshot $snapshot -AvailabilityVerified $true -Denylist $script:ModelDenylist -CapabilitiesCatalog $script:RealCapabilities -ProfileRequirement $script:DefaultDevRequirement -ProfileContextTier "default" -ProfileEffort "medium"
     Assert-Eq "gpt-5.6-terra" $candidate.model "Expected challenger to qualify."
 }
 
-Run-Test "6 Top challenger losing one raw signal does not qualify" {
+Run-Test "10 Top challenger losing one raw signal does not qualify" {
     $snapshot = New-QualitySnapshot -AaScores @{ "claude-sonnet-5" = 80; "gpt-5.6-terra" = 79; "gpt-5.4" = 60 } -AaCodingScores @{ "claude-sonnet-5" = 80; "gpt-5.6-terra" = 79; "gpt-5.4" = 60 } -LbScores @{ "claude-sonnet-5" = 70; "gpt-5.6-terra" = 90; "gpt-5.4" = 60 } -Costs @{ "claude-sonnet-5" = 1.0; "gpt-5.6-terra" = 1.0; "gpt-5.4" = 0.9 }
     $candidate = Get-BenchmarkConsensusCandidate -ProfileKey "default-development" -ValidModels @("claude-sonnet-5","gpt-5.6-terra","gpt-5.4") -IncumbentModel "claude-sonnet-5" -Snapshot $snapshot -AvailabilityVerified $true -Denylist $script:ModelDenylist -CapabilitiesCatalog $script:RealCapabilities -ProfileRequirement $script:DefaultDevRequirement -ProfileContextTier "default" -ProfileEffort "medium"
     Assert-True ($null -eq $candidate) "Expected no qualifier when one raw signal loses."
 }
 
-Run-Test "7 Top challenger cannot replace an unscored incumbent" {
+Run-Test "11 Top challenger cannot replace an unscored incumbent" {
     $snapshot = New-QualitySnapshot -AaScores @{ "claude-sonnet-5" = $null; "gpt-5.6-terra" = 80; "gpt-5.4" = 60; "gpt-5.5" = 50 } -AaCodingScores @{ "claude-sonnet-5" = $null; "gpt-5.6-terra" = 80; "gpt-5.4" = 60; "gpt-5.5" = 50 } -LbScores @{ "claude-sonnet-5" = $null; "gpt-5.6-terra" = 90; "gpt-5.4" = 60; "gpt-5.5" = 50 } -Costs @{ "claude-sonnet-5" = $null; "gpt-5.6-terra" = 0.85; "gpt-5.4" = 0.9; "gpt-5.5" = 0.8 }
     $candidate = Get-BenchmarkConsensusCandidate -ProfileKey "default-development" -ValidModels @("claude-sonnet-5","gpt-5.6-terra","gpt-5.4","gpt-5.5") -IncumbentModel "claude-sonnet-5" -Snapshot $snapshot -AvailabilityVerified $true -Denylist $script:ModelDenylist -CapabilitiesCatalog $script:RealCapabilities -ProfileRequirement $script:DefaultDevRequirement -ProfileContextTier "default" -ProfileEffort "medium"
     Assert-True ($null -eq $candidate) "Missing incumbent benchmark coverage must not be treated as evidence that the challenger is better."
 }
 
-Run-Test "8 Rule 7: cost tie-break orders equal combinedRank challengers by lowest cost, not a hard gate" {
+Run-Test "12 Rule 7: cost tie-break orders equal combinedRank challengers by lowest cost, not a hard gate" {
     # terra and luna tie on combinedRank (both aaRank=1,lbRank=1 -> combinedRank=2); terra costs more, so luna must win the tie-break.
     $snapshot = New-QualitySnapshot -AaScores @{ "claude-haiku-4.5" = 50; "gpt-5.6-terra" = 90; "gpt-5.6-luna" = 90 } -AaCodingScores @{ "claude-haiku-4.5" = 50; "gpt-5.6-terra" = 90; "gpt-5.6-luna" = 90 } -LbScores @{ "claude-haiku-4.5" = 50; "gpt-5.6-terra" = 90; "gpt-5.6-luna" = 90 } -Costs @{ "claude-haiku-4.5" = 1.0; "gpt-5.6-terra" = 5.0; "gpt-5.6-luna" = 0.5 }
     $candidate = Get-BenchmarkConsensusCandidate -ProfileKey "quick" -ValidModels @("claude-haiku-4.5","gpt-5.6-terra","gpt-5.6-luna") -IncumbentModel "claude-haiku-4.5" -Snapshot $snapshot -AvailabilityVerified $true -Denylist $script:ModelDenylist -CapabilitiesCatalog $script:RealCapabilities -ProfileRequirement $script:PermissiveRequirement -ProfileContextTier "default" -ProfileEffort "low"
     Assert-Eq "gpt-5.6-luna" $candidate.model "Expected lower-cost model to win the combinedRank tie."
 }
 
-Run-Test "9 Rule 7: a much higher-cost qualifying challenger is no longer blocked (cost-sensitive profile)" {
+Run-Test "13 Rule 7: a much higher-cost qualifying challenger is no longer blocked (cost-sensitive profile)" {
     # A third (non-candidate) filler model is included purely so bucket assignment (needs >=3 scored entries) puts gpt-5.6-terra in "top".
     $snapshot = New-QualitySnapshot -AaScores @{ "claude-haiku-4.5" = 50; "gpt-5.6-terra" = 90; "gpt-5.4" = 10 } -AaCodingScores @{ "claude-haiku-4.5" = 50; "gpt-5.6-terra" = 90; "gpt-5.4" = 10 } -LbScores @{ "claude-haiku-4.5" = 50; "gpt-5.6-terra" = 90; "gpt-5.4" = 10 } -Costs @{ "claude-haiku-4.5" = 0.1; "gpt-5.6-terra" = 500.0; "gpt-5.4" = 0.2 }
     $candidate = Get-BenchmarkConsensusCandidate -ProfileKey "quick" -ValidModels @("claude-haiku-4.5","gpt-5.6-terra") -IncumbentModel "claude-haiku-4.5" -Snapshot $snapshot -AvailabilityVerified $true -Denylist $script:ModelDenylist -CapabilitiesCatalog $script:RealCapabilities -ProfileRequirement $script:PermissiveRequirement -ProfileContextTier "default" -ProfileEffort "low"
     Assert-Eq "gpt-5.6-terra" $candidate.model "A cost-sensitive profile's much-higher-cost challenger must still qualify; cost no longer gates."
 }
 
-Run-Test "10 Rule 7: missing incumbent cost no longer required for qualification" {
+Run-Test "14 Rule 7: missing incumbent cost no longer required for qualification" {
     $snapshot = New-QualitySnapshot -AaScores @{ "claude-sonnet-5" = 60; "gpt-5.6-terra" = 90; "gpt-5.4" = 10 } -AaCodingScores @{ "claude-sonnet-5" = 60; "gpt-5.6-terra" = 90; "gpt-5.4" = 10 } -LbScores @{ "claude-sonnet-5" = 60; "gpt-5.6-terra" = 90; "gpt-5.4" = 10 } -Costs @{ "claude-sonnet-5" = $null; "gpt-5.6-terra" = 999.0; "gpt-5.4" = 0.2 }
     $candidate = Get-BenchmarkConsensusCandidate -ProfileKey "default-development" -ValidModels @("claude-sonnet-5","gpt-5.6-terra") -IncumbentModel "claude-sonnet-5" -Snapshot $snapshot -AvailabilityVerified $true -Denylist $script:ModelDenylist -CapabilitiesCatalog $script:RealCapabilities -ProfileRequirement $script:DefaultDevRequirement -ProfileContextTier "default" -ProfileEffort "medium"
     Assert-Eq "gpt-5.6-terra" $candidate.model "Missing incumbent cost combined with an unbounded challenger cost must not block qualification."
 }
 
-Run-Test "11 Rule 7: missing challenger cost no longer blocks qualification" {
+Run-Test "15 Rule 7: missing challenger cost no longer blocks qualification" {
     # A third (non-candidate) filler model is included purely so bucket assignment (needs >=3 scored entries) puts gpt-5.6-terra in "top".
     $snapshot = New-QualitySnapshot -AaScores @{ "claude-sonnet-5" = 60; "gpt-5.6-terra" = 90; "gpt-5.4" = 10 } -AaCodingScores @{ "claude-sonnet-5" = 60; "gpt-5.6-terra" = 90; "gpt-5.4" = 10 } -LbScores @{ "claude-sonnet-5" = 60; "gpt-5.6-terra" = 90; "gpt-5.4" = 10 } -Costs @{ "claude-sonnet-5" = 1.0; "gpt-5.6-terra" = $null; "gpt-5.4" = 0.2 }
     $candidate = Get-BenchmarkConsensusCandidate -ProfileKey "default-development" -ValidModels @("claude-sonnet-5","gpt-5.6-terra") -IncumbentModel "claude-sonnet-5" -Snapshot $snapshot -AvailabilityVerified $true -Denylist $script:ModelDenylist -CapabilitiesCatalog $script:RealCapabilities -ProfileRequirement $script:DefaultDevRequirement -ProfileContextTier "default" -ProfileEffort "medium"
@@ -428,6 +483,86 @@ Run-Test "46 Active override whose AA alias was never configured is not quality-
 Run-Test "47 Active override backed by a genuine AA data gap is frozen, not revoked, when LiveBench is stale" {
     $stale = New-QualitySnapshot -AaScores @{ "gpt-5.6-terra" = $null; "claude-sonnet-5" = $null } -AaCodingScores @{ "gpt-5.6-terra" = $null; "claude-sonnet-5" = $null } -LbScores @{ "gpt-5.6-terra" = 60; "claude-sonnet-5" = 90 } -Costs @{} -LiveBenchSourceDate ((Get-Date).ToUniversalTime().AddDays(-200).ToString("yyyy-MM-dd"))
     Assert-True (Test-ActiveOverrideQualitySupported -ActiveModel "gpt-5.6-terra" -PolicyPreferredModel "claude-sonnet-5" -IsFullFreshRun $true -ProfileKey "orchestrator" -Snapshot $stale -LiveBenchOnlyFallbackMaxSourceAgeDays 90) "Transient upstream lag must freeze the check (preserve status quo), not revoke the override."
+}
+
+Run-Test "48 Production repro: a failed Artificial Analysis fetch makes only agentic-implementation full-fresh" {
+    # Exactly the state of the merged runs 84c989e / 7aad2e4: the AA
+    # agentic-index scrape returned nothing (all AA buckets n/a, blank source
+    # date) while AA Coding Agents and LiveBench were fine.
+    $snapshot = New-QualitySnapshot -AaScores @{ "gpt-5.4" = $null; "claude-sonnet-5" = $null } -AaCodingScores @{ "gpt-5.4" = $null; "claude-sonnet-5" = 80 } -LbScores @{ "gpt-5.4" = 70; "claude-sonnet-5" = 64 } -Costs @{}
+    $snapshot.sourceStatus.artificialAnalysis.status = "unavailable"
+    $snapshot.sourceStatus.artificialAnalysis.sourceDate = $null
+    Assert-True (-not (Test-FullFreshConsensusRunForProfile -Snapshot $snapshot -ProfileKey "orchestrator")) "A failed AA agentic-index fetch must mark non-agentic profiles as not full-fresh."
+    Assert-True (Test-FullFreshConsensusRunForProfile -Snapshot $snapshot -ProfileKey "agentic-implementation") "agentic-implementation scores against Coding Agents and must stay full-fresh."
+}
+
+Run-Test "49 Benchmark eligibility is derived from the real alias config, not from a snapshot" {
+    $aliases = Get-ModelRankingAliases -AliasesPath (Join-Path $repoRoot "config/model-ranking-aliases.json")
+    Assert-True (-not (Test-ProfileBenchmarkAliasConfigured -Aliases $aliases -ProfileKey "orchestrator" -ModelId "gpt-5.4")) "gpt-5.4 has artificialAnalysis=null in the shipped alias config."
+    Assert-True (Test-ProfileBenchmarkAliasConfigured -Aliases $aliases -ProfileKey "orchestrator" -ModelId "claude-sonnet-5") "claude-sonnet-5 has a configured AA alias."
+    Assert-True (-not (Test-ProfileBenchmarkAliasConfigured -Aliases $aliases -ProfileKey "orchestrator" -ModelId "gemini-3.7-flash")) "A model absent from the alias config must count as not configured."
+    Assert-True (Test-ProfileBenchmarkAliasConfigured -Aliases $aliases -ProfileKey "agentic-implementation" -ModelId "gpt-5.6-sol") "agentic-implementation must resolve against the Coding Agents alias."
+    Assert-True (-not (Test-ProfileBenchmarkAliasConfigured -Aliases $aliases -ProfileKey "agentic-implementation" -ModelId "claude-sonnet-5") ) "claude-sonnet-5 has no Coding Agents alias, so it is not eligible for that profile."
+}
+
+Run-Test "50 Regression (production bug): an ineligible override is revoked on a PARTIAL benchmark run, not just a full-fresh one" {
+    # This is the case both merged CI runs hit and the previous fix missed:
+    # $isFullFresh was false for orchestrator, so the eligibility check never
+    # ran and gpt-5.4 survived. Config-derived gates must not be data-gated.
+    $aliases = Get-ModelRankingAliases -AliasesPath (Join-Path $repoRoot "config/model-ranking-aliases.json")
+    $snapshot = New-QualitySnapshot -AaScores @{ "gpt-5.4" = $null; "claude-sonnet-5" = $null } -AaCodingScores @{ "gpt-5.4" = $null; "claude-sonnet-5" = $null } -LbScores @{ "gpt-5.4" = 70; "claude-sonnet-5" = 64 } -Costs @{}
+    $valid = Resolve-ActiveOverrideValidity -ActiveModel "gpt-5.4" -ProfileKey "orchestrator" -AdmissibilityValid $true `
+        -AvailabilityVerified $true -IsFullFreshRun $false -EffectiveBaselineModel "claude-sonnet-5" `
+        -Aliases $aliases -Snapshot $snapshot
+    Assert-True (-not $valid) "An override with no configured AA alias must be revoked even when the benchmark run is partial."
+}
+
+Run-Test "51 Regression: a genuine AA data gap is still frozen (not revoked) on a partial run" {
+    $aliases = Get-ModelRankingAliases -AliasesPath (Join-Path $repoRoot "config/model-ranking-aliases.json")
+    $snapshot = New-QualitySnapshot -AaScores @{ "gpt-5.6-sol" = $null; "claude-sonnet-5" = $null } -AaCodingScores @{ "gpt-5.6-sol" = $null; "claude-sonnet-5" = $null } -LbScores @{ "gpt-5.6-sol" = 50; "claude-sonnet-5" = 90 } -Costs @{}
+    # gpt-5.6-sol loses on LiveBench, but the run is partial, so no quality
+    # judgement may be made and the override must survive untouched.
+    $valid = Resolve-ActiveOverrideValidity -ActiveModel "gpt-5.6-sol" -ProfileKey "orchestrator" -AdmissibilityValid $true `
+        -AvailabilityVerified $true -IsFullFreshRun $false -EffectiveBaselineModel "claude-sonnet-5" `
+        -Aliases $aliases -Snapshot $snapshot
+    Assert-True $valid "Partial data must never revoke an eligible override on quality grounds."
+}
+
+Run-Test "52 Rule 2 preserved: unverified availability freezes even the config-derived eligibility revocation" {
+    $aliases = Get-ModelRankingAliases -AliasesPath (Join-Path $repoRoot "config/model-ranking-aliases.json")
+    $valid = Resolve-ActiveOverrideValidity -ActiveModel "gpt-5.4" -ProfileKey "orchestrator" -AdmissibilityValid $true `
+        -AvailabilityVerified $false -IsFullFreshRun $false -EffectiveBaselineModel "claude-sonnet-5" `
+        -Aliases $aliases -Snapshot $null
+    Assert-True $valid "Unverified availability discovery must not revoke overrides (rule 2)."
+}
+
+Run-Test "53 Regression: full-fresh quality revocation still works through the extracted resolver" {
+    $aliases = Get-ModelRankingAliases -AliasesPath (Join-Path $repoRoot "config/model-ranking-aliases.json")
+    $snapshot = New-QualitySnapshot -AaScores @{ "gpt-5.6-sol" = $null; "claude-sonnet-5" = $null } -AaCodingScores @{ "gpt-5.6-sol" = $null; "claude-sonnet-5" = $null } -LbScores @{ "gpt-5.6-sol" = 50; "claude-sonnet-5" = 90 } -Costs @{}
+    $valid = Resolve-ActiveOverrideValidity -ActiveModel "gpt-5.6-sol" -ProfileKey "orchestrator" -AdmissibilityValid $true `
+        -AvailabilityVerified $true -IsFullFreshRun $true -EffectiveBaselineModel "claude-sonnet-5" `
+        -Aliases $aliases -Snapshot $snapshot -LiveBenchOnlyFallbackMaxSourceAgeDays 90
+    Assert-True (-not $valid) "An eligible override that loses its head-to-head on a full fresh run must still clear."
+    Assert-True (-not (Resolve-ActiveOverrideValidity -ActiveModel "gpt-5.4" -ProfileKey "orchestrator" -AdmissibilityValid $false -AvailabilityVerified $true -IsFullFreshRun $true -EffectiveBaselineModel "claude-sonnet-5" -Aliases $aliases -Snapshot $snapshot)) "An inadmissible override must still clear first."
+}
+
+Run-Test "54 Revocation on a partial run actually clears the persisted override state" {
+    # Resolve-BenchmarkConsensusState returns early for non-full-fresh runs;
+    # this pins that the clearing happens BEFORE that early return, so a
+    # partial-run revocation really reaches the snapshot that gets written.
+    $state = [ordered]@{ pending = $null; activeOverride = [ordered]@{ model = "gpt-5.4" } }
+    $r = Resolve-BenchmarkConsensusState -ProfileKey "orchestrator" -PolicyPreferredModel "claude-sonnet-5" -IncumbentModel "claude-sonnet-5" -CurrentState $state -IsFullFreshRun $false -Candidate $null -SourceDates @{} -ActiveOverrideStillValid $false
+    Assert-True ($r.activeCleared) "Expected the override to be cleared on a partial run."
+    Assert-True ($null -eq $r.state.activeOverride) "Expected the persisted state to carry a null activeOverride."
+    Assert-Eq "claude-sonnet-5" $r.finalModel "Expected the profile to fall back to the static baseline."
+}
+
+Run-Test "55 Alias-gap reporting inputs are config-derived and independent of any snapshot" {
+    $aliases = Get-ModelRankingAliases -AliasesPath (Join-Path $repoRoot "config/model-ranking-aliases.json")
+    Assert-True (Test-ModelBenchmarkable -Aliases $aliases -ModelId "gpt-5.4") "gpt-5.4 has a LiveBench alias, so it is otherwise comparable and must be named in the gap report."
+    Assert-True (-not (Test-ModelBenchmarkable -Aliases $aliases -ModelId "claude-sonnet-4.5")) "A model with no LiveBench alias is not comparable and must not add noise to the gap report."
+    Assert-True (-not (Test-ActiveOverrideBenchmarkEligible -Aliases $aliases -ProfileKey "orchestrator" -ActiveModel "gpt-5.4")) "gpt-5.4 must be reported ineligible for orchestrator with no snapshot involved at all."
+    Assert-True (Test-ActiveOverrideBenchmarkEligible -Aliases $aliases -ProfileKey "orchestrator" -ActiveModel "") "An empty active model means there is nothing to revoke."
 }
 
 Write-Host ""

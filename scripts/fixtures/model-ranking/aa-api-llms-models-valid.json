@@ -1,0 +1,119 @@
+{
+  "status": 200,
+  "prompt_options": {
+    "parallel_queries": 1,
+    "prompt_length": "medium"
+  },
+  "data": [
+    {
+      "id": "m-claude-sonnet-5",
+      "name": "Claude Sonnet 5",
+      "slug": "claude-sonnet-5",
+      "model_creator": { "id": "anthropic", "name": "Anthropic", "slug": "anthropic" },
+      "evaluations": {
+        "artificial_analysis_intelligence_index": 74.1,
+        "artificial_analysis_agentic_index": 68.3,
+        "artificial_analysis_coding_index": 63.5
+      }
+    },
+    {
+      "id": "m-claude-4-5-haiku-reasoning",
+      "name": "Claude 4.5 Haiku Reasoning",
+      "slug": "claude-4-5-haiku-reasoning",
+      "model_creator": { "id": "anthropic", "name": "Anthropic", "slug": "anthropic" },
+      "evaluations": {
+        "artificial_analysis_intelligence_index": 60.1,
+        "artificial_analysis_agentic_index": 52.2,
+        "artificial_analysis_coding_index": 49.7
+      }
+    },
+    {
+      "id": "m-claude-opus-5",
+      "name": "Claude Opus 5",
+      "slug": "claude-opus-5",
+      "model_creator": { "id": "anthropic", "name": "Anthropic", "slug": "anthropic" },
+      "evaluations": {
+        "artificial_analysis_intelligence_index": 80.2,
+        "artificial_analysis_agentic_index": 73.7,
+        "artificial_analysis_coding_index": 70.4
+      }
+    },
+    {
+      "id": "m-claude-opus-4-8",
+      "name": "Claude Opus 4.8",
+      "slug": "claude-opus-4-8",
+      "model_creator": { "id": "anthropic", "name": "Anthropic", "slug": "anthropic" },
+      "evaluations": {
+        "artificial_analysis_intelligence_index": 77.4,
+        "artificial_analysis_agentic_index": 69.6,
+        "artificial_analysis_coding_index": 66.2
+      }
+    },
+    {
+      "id": "m-claude-fable-5",
+      "name": "Claude Fable 5",
+      "slug": "claude-fable-5",
+      "model_creator": { "id": "anthropic", "name": "Anthropic", "slug": "anthropic" },
+      "evaluations": {
+        "artificial_analysis_intelligence_index": 78.8,
+        "artificial_analysis_agentic_index": 72.9,
+        "artificial_analysis_coding_index": 69.1
+      }
+    },
+    {
+      "id": "m-gpt-5-6-sol",
+      "name": "GPT-5.6 Sol",
+      "slug": "gpt-5-6-sol",
+      "model_creator": { "id": "openai", "name": "OpenAI", "slug": "openai" },
+      "evaluations": {
+        "artificial_analysis_intelligence_index": 79.5,
+        "artificial_analysis_agentic_index": 71.8,
+        "artificial_analysis_coding_index": 72.6
+      }
+    },
+    {
+      "id": "m-gpt-5-6-terra",
+      "name": "GPT-5.6 Terra",
+      "slug": "gpt-5-6-terra",
+      "model_creator": { "id": "openai", "name": "OpenAI", "slug": "openai" },
+      "evaluations": {
+        "artificial_analysis_intelligence_index": 77.1,
+        "artificial_analysis_agentic_index": 70.3,
+        "artificial_analysis_coding_index": 69.8
+      }
+    },
+    {
+      "id": "m-gpt-5-6-luna",
+      "name": "GPT-5.6 Luna",
+      "slug": "gpt-5-6-luna",
+      "model_creator": { "id": "openai", "name": "OpenAI", "slug": "openai" },
+      "evaluations": {
+        "artificial_analysis_intelligence_index": 74.3,
+        "artificial_analysis_agentic_index": 67.5,
+        "artificial_analysis_coding_index": 66.4
+      }
+    },
+    {
+      "id": "m-gemini-3-6-flash",
+      "name": "Gemini 3.6 Flash",
+      "slug": "gemini-3-6-flash",
+      "model_creator": { "id": "google", "name": "Google", "slug": "google" },
+      "evaluations": {
+        "artificial_analysis_intelligence_index": 65.8,
+        "artificial_analysis_agentic_index": 58.1,
+        "artificial_analysis_coding_index": 56.9
+      }
+    },
+    {
+      "id": "m-gemini-3-1-pro-preview",
+      "name": "Gemini 3.1 Pro Preview",
+      "slug": "gemini-3-1-pro-preview",
+      "model_creator": { "id": "google", "name": "Google", "slug": "google" },
+      "evaluations": {
+        "artificial_analysis_intelligence_index": 71.2,
+        "artificial_analysis_agentic_index": 64.5,
+        "artificial_analysis_coding_index": 62.8
+      }
+    }
+  ]
+}
