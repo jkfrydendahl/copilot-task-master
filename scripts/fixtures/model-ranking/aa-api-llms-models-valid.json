@@ -12,7 +12,6 @@
       "model_creator": { "id": "anthropic", "name": "Anthropic", "slug": "anthropic" },
       "evaluations": {
         "artificial_analysis_intelligence_index": 74.1,
-        "artificial_analysis_agentic_index": 68.3,
         "artificial_analysis_coding_index": 63.5
       }
     },
@@ -23,7 +22,6 @@
       "model_creator": { "id": "anthropic", "name": "Anthropic", "slug": "anthropic" },
       "evaluations": {
         "artificial_analysis_intelligence_index": 60.1,
-        "artificial_analysis_agentic_index": 52.2,
         "artificial_analysis_coding_index": 49.7
       }
     },
@@ -34,7 +32,6 @@
       "model_creator": { "id": "anthropic", "name": "Anthropic", "slug": "anthropic" },
       "evaluations": {
         "artificial_analysis_intelligence_index": 80.2,
-        "artificial_analysis_agentic_index": 73.7,
         "artificial_analysis_coding_index": 70.4
       }
     },
@@ -45,7 +42,6 @@
       "model_creator": { "id": "anthropic", "name": "Anthropic", "slug": "anthropic" },
       "evaluations": {
         "artificial_analysis_intelligence_index": 77.4,
-        "artificial_analysis_agentic_index": 69.6,
         "artificial_analysis_coding_index": 66.2
       }
     },
@@ -56,7 +52,6 @@
       "model_creator": { "id": "anthropic", "name": "Anthropic", "slug": "anthropic" },
       "evaluations": {
         "artificial_analysis_intelligence_index": 78.8,
-        "artificial_analysis_agentic_index": 72.9,
         "artificial_analysis_coding_index": 69.1
       }
     },
@@ -66,9 +61,23 @@
       "slug": "gpt-5-6-sol",
       "model_creator": { "id": "openai", "name": "OpenAI", "slug": "openai" },
       "evaluations": {
-        "artificial_analysis_intelligence_index": 79.5,
-        "artificial_analysis_agentic_index": 71.8,
-        "artificial_analysis_coding_index": 72.6
+        "artificial_analysis_intelligence_index": 57.5,
+        "artificial_analysis_coding_index": 71.5,
+        "artificial_analysis_math_index": null,
+        "mmlu_pro": null,
+        "gpqa": 0.912,
+        "hle": 0.399,
+        "livecodebench": null,
+        "scicode": 0.461,
+        "math_500": null,
+        "aime": null,
+        "aime_25": null,
+        "ifbench": null,
+        "lcr": 0.78,
+        "terminalbench_hard": null,
+        "terminalbench_v2_1": 0.842696629213483,
+        "tau2": null,
+        "tau_banking": 0.472164948453608
       }
     },
     {
@@ -78,7 +87,6 @@
       "model_creator": { "id": "openai", "name": "OpenAI", "slug": "openai" },
       "evaluations": {
         "artificial_analysis_intelligence_index": 77.1,
-        "artificial_analysis_agentic_index": 70.3,
         "artificial_analysis_coding_index": 69.8
       }
     },
@@ -89,7 +97,6 @@
       "model_creator": { "id": "openai", "name": "OpenAI", "slug": "openai" },
       "evaluations": {
         "artificial_analysis_intelligence_index": 74.3,
-        "artificial_analysis_agentic_index": 67.5,
         "artificial_analysis_coding_index": 66.4
       }
     },
@@ -100,19 +107,7 @@
       "model_creator": { "id": "google", "name": "Google", "slug": "google" },
       "evaluations": {
         "artificial_analysis_intelligence_index": 65.8,
-        "artificial_analysis_agentic_index": 58.1,
         "artificial_analysis_coding_index": 56.9
-      }
-    },
-    {
-      "id": "m-gemini-3-1-pro-preview",
-      "name": "Gemini 3.1 Pro Preview",
-      "slug": "gemini-3-1-pro-preview",
-      "model_creator": { "id": "google", "name": "Google", "slug": "google" },
-      "evaluations": {
-        "artificial_analysis_intelligence_index": 71.2,
-        "artificial_analysis_agentic_index": 64.5,
-        "artificial_analysis_coding_index": 62.8
       }
     }
   ]

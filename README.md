@@ -339,8 +339,8 @@ External benchmarks can auto-select models, but only under strict guardrails:
     policy ownership resumes.
 
 Sources:
-- Artificial Analysis Agentic Index page (embedded server-rendered JSON extraction, no API key):
-  https://artificialanalysis.ai/?intelligence=agentic-index
+- Artificial Analysis Intelligence Index (Data API, free tier):
+  https://artificialanalysis.ai/api/v2/data/llms/models
 - Artificial Analysis Coding Agent Index page (used only for `agentic-implementation`):
   https://artificialanalysis.ai/agents/coding-agents
 - LiveBench public release files from:
@@ -351,10 +351,10 @@ Sources:
 Guardrails:
 - Quality requirements per profile:
   - `agentic-implementation`: AA Coding Agent Index + LiveBench `agenticCoding`
-  - `deep-reasoning`: AA Agentic Index + LiveBench `reasoning`
-  - `orchestrator` / `triage`: AA Agentic Index + LiveBench `instructionFollowing`
-  - `default-development` / `visual-ui` / `quick` / `mechanical`: AA Agentic Index + LiveBench `coding`
-  - `review`: AA Agentic Index + LiveBench `reasoning`
+  - `deep-reasoning`: AA Intelligence Index + LiveBench `reasoning`
+  - `orchestrator` / `triage`: AA Intelligence Index + LiveBench `instructionFollowing`
+  - `default-development` / `visual-ui` / `quick` / `mechanical`: AA Intelligence Index + LiveBench `coding`
+  - `review`: AA Intelligence Index + LiveBench `reasoning`
 - Challenger must be **top bucket in both required signals**, the incumbent must have comparable
   raw scores in both signals, and the challenger must score strictly higher in both. Missing
   incumbent coverage preserves the current model rather than treating absence of evidence as a

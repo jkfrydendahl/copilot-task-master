@@ -69,7 +69,7 @@ function New-QualitySnapshot {
     $lbRanks = Get-OrdinalRankAssignments -ScoresByModel $LbScores
     $costBuckets = Get-RankingBucketAssignments -ScoresByModel $Costs -LowerIsBetter
     foreach ($m in $AaScores.Keys) {
-        $aaEntry = [ordered]@{ agenticIndex = $AaScores[$m]; bucket = $aaBuckets[$m]; ordinalRank = $aaRanks[$m] }
+        $aaEntry = [ordered]@{ intelligenceIndex = $AaScores[$m]; bucket = $aaBuckets[$m]; ordinalRank = $aaRanks[$m] }
         $aaCodingEntry = [ordered]@{ codingAgentIndex = $AaCodingScores[$m]; bucket = $aaCodingBuckets[$m]; ordinalRank = $aaCodingRanks[$m] }
         if ($OmitAaAliasMember -notcontains $m) {
             $aliasValue = if ($AaAliasNotConfigured -contains $m) { $null } else { "$m-aa-alias" }
@@ -102,15 +102,15 @@ function New-QualitySnapshot {
     }
 }
 
-Run-Test "1 Artificial Analysis agentic API parsing succeeds with expected shape" {
+Run-Test "1 Artificial Analysis intelligence API parsing succeeds with expected shape" {
     $apiJson = ConvertFrom-JsonAsHashtableCompat -JsonText (Get-Content -Path (Join-Path $fixtureRoot "aa-api-llms-models-valid.json") -Raw)
-    $parsed = Get-ArtificialAnalysisAgenticIndexData -FetchJson {
+    $parsed = Get-ArtificialAnalysisIntelligenceIndexData -FetchJson {
         param($u, $envVar)
         return [pscustomobject]@{ status = "ok"; value = $apiJson; error = $null }
     }
     Assert-Eq "ok" $parsed.status "Expected successful parse from mocked API payload."
     Assert-True ($parsed.models.ContainsKey("gpt-5-6-sol")) "Expected model map to be keyed by API slug."
-    Assert-Eq "71.8" $parsed.models["gpt-5-6-sol"].agenticIndex "Expected parsed agentic index value."
+    Assert-Eq "57.5" $parsed.models["gpt-5-6-sol"].intelligenceIndex "Expected parsed intelligence index value."
     $aliases = Get-ModelRankingAliases -AliasesPath (Join-Path (Split-Path $PSScriptRoot -Parent) "config/model-ranking-aliases.json")
     foreach ($modelId in $aliases.Keys) {
         $entry = $aliases[$modelId]
@@ -148,7 +148,7 @@ Run-Test "4 Missing/empty AA API key returns clean error status" {
 
 Run-Test "5 Malformed/unexpected AA API JSON is handled safely" {
     $apiJson = ConvertFrom-JsonAsHashtableCompat -JsonText (Get-Content -Path (Join-Path $fixtureRoot "aa-api-llms-models-malformed.json") -Raw)
-    $parsed = Get-ArtificialAnalysisAgenticIndexData -FetchJson {
+    $parsed = Get-ArtificialAnalysisIntelligenceIndexData -FetchJson {
         param($u, $envVar)
         return [pscustomobject]@{ status = "ok"; value = $apiJson; error = $null }
     }
@@ -156,7 +156,7 @@ Run-Test "5 Malformed/unexpected AA API JSON is handled safely" {
 }
 
 Run-Test "6 AA API 429/rate limit result is surfaced as error status" {
-    $parsed = Get-ArtificialAnalysisAgenticIndexData -FetchJson {
+    $parsed = Get-ArtificialAnalysisIntelligenceIndexData -FetchJson {
         param($u, $envVar)
         return [pscustomobject]@{
             status = "error"
@@ -170,7 +170,17 @@ Run-Test "6 AA API 429/rate limit result is surfaced as error status" {
     Assert-True ($parsed.message -like "*429*") "Rate-limit message should mention HTTP 429."
 }
 
-Run-Test "7 LiveBench cost parsing and lower-is-better buckets" {
+Run-Test "7 Intelligence parser ignores unrelated null eval fields" {
+    $apiJson = ConvertFrom-JsonAsHashtableCompat -JsonText (Get-Content -Path (Join-Path $fixtureRoot "aa-api-llms-models-valid.json") -Raw)
+    $parsed = Get-ArtificialAnalysisIntelligenceIndexData -FetchJson {
+        param($u, $envVar)
+        return [pscustomobject]@{ status = "ok"; value = $apiJson; error = $null }
+    }
+    Assert-Eq "ok" $parsed.status "Expected parse success with nulls in unrelated fields."
+    Assert-Eq "57.5" $parsed.models["gpt-5-6-sol"].intelligenceIndex "Expected intelligence extraction despite unrelated null fields."
+}
+
+Run-Test "8 LiveBench cost parsing and lower-is-better buckets" {
     $csv = Get-Content -Path (Join-Path $fixtureRoot "livebench-valid.csv") -Raw
     $cats = Get-Content -Path (Join-Path $fixtureRoot "livebench-categories-valid.json") -Raw
     $cost = Get-Content -Path (Join-Path $fixtureRoot "livebench-cost-valid.csv") -Raw
@@ -185,50 +195,50 @@ Run-Test "7 LiveBench cost parsing and lower-is-better buckets" {
     Assert-Eq "top" $b."claude-sonnet-5-xhigh-effort" "Lowest cost should be top."
 }
 
-Run-Test "8 Baseline family-match helper (renamed, informational only) works across non-first families" {
+Run-Test "9 Baseline family-match helper (renamed, informational only) works across non-first families" {
     $valid = @("gpt-5.6-luna", "claude-haiku-4.5")
     Assert-True (Test-ModelMatchesProfileFamilyPolicy -ProfileKey "quick" -ModelId "gpt-5.6-luna" -ValidModels $valid) "Expected gpt-luna to match quick's baseline family list."
 }
 
-Run-Test "9 Challenger top+raw higher both qualifies (real capability/pricing admissibility applied)" {
+Run-Test "10 Challenger top+raw higher both qualifies (real capability/pricing admissibility applied)" {
     $snapshot = New-QualitySnapshot -AaScores @{ "claude-sonnet-5" = 70; "gpt-5.6-terra" = 80; "gpt-5.4" = 60 } -AaCodingScores @{ "claude-sonnet-5" = 70; "gpt-5.6-terra" = 80; "gpt-5.4" = 60 } -LbScores @{ "claude-sonnet-5" = 70; "gpt-5.6-terra" = 80; "gpt-5.4" = 60 } -Costs @{ "claude-sonnet-5" = 1.0; "gpt-5.6-terra" = 1.1; "gpt-5.4" = 0.9 }
     $candidate = Get-BenchmarkConsensusCandidate -ProfileKey "default-development" -ValidModels @("claude-sonnet-5","gpt-5.6-terra","gpt-5.4") -IncumbentModel "claude-sonnet-5" -Snapshot $snapshot -AvailabilityVerified $true -Denylist $script:ModelDenylist -CapabilitiesCatalog $script:RealCapabilities -ProfileRequirement $script:DefaultDevRequirement -ProfileContextTier "default" -ProfileEffort "medium"
     Assert-Eq "gpt-5.6-terra" $candidate.model "Expected challenger to qualify."
 }
 
-Run-Test "10 Top challenger losing one raw signal does not qualify" {
+Run-Test "11 Top challenger losing one raw signal does not qualify" {
     $snapshot = New-QualitySnapshot -AaScores @{ "claude-sonnet-5" = 80; "gpt-5.6-terra" = 79; "gpt-5.4" = 60 } -AaCodingScores @{ "claude-sonnet-5" = 80; "gpt-5.6-terra" = 79; "gpt-5.4" = 60 } -LbScores @{ "claude-sonnet-5" = 70; "gpt-5.6-terra" = 90; "gpt-5.4" = 60 } -Costs @{ "claude-sonnet-5" = 1.0; "gpt-5.6-terra" = 1.0; "gpt-5.4" = 0.9 }
     $candidate = Get-BenchmarkConsensusCandidate -ProfileKey "default-development" -ValidModels @("claude-sonnet-5","gpt-5.6-terra","gpt-5.4") -IncumbentModel "claude-sonnet-5" -Snapshot $snapshot -AvailabilityVerified $true -Denylist $script:ModelDenylist -CapabilitiesCatalog $script:RealCapabilities -ProfileRequirement $script:DefaultDevRequirement -ProfileContextTier "default" -ProfileEffort "medium"
     Assert-True ($null -eq $candidate) "Expected no qualifier when one raw signal loses."
 }
 
-Run-Test "11 Top challenger cannot replace an unscored incumbent" {
+Run-Test "12 Top challenger cannot replace an unscored incumbent" {
     $snapshot = New-QualitySnapshot -AaScores @{ "claude-sonnet-5" = $null; "gpt-5.6-terra" = 80; "gpt-5.4" = 60; "gpt-5.5" = 50 } -AaCodingScores @{ "claude-sonnet-5" = $null; "gpt-5.6-terra" = 80; "gpt-5.4" = 60; "gpt-5.5" = 50 } -LbScores @{ "claude-sonnet-5" = $null; "gpt-5.6-terra" = 90; "gpt-5.4" = 60; "gpt-5.5" = 50 } -Costs @{ "claude-sonnet-5" = $null; "gpt-5.6-terra" = 0.85; "gpt-5.4" = 0.9; "gpt-5.5" = 0.8 }
     $candidate = Get-BenchmarkConsensusCandidate -ProfileKey "default-development" -ValidModels @("claude-sonnet-5","gpt-5.6-terra","gpt-5.4","gpt-5.5") -IncumbentModel "claude-sonnet-5" -Snapshot $snapshot -AvailabilityVerified $true -Denylist $script:ModelDenylist -CapabilitiesCatalog $script:RealCapabilities -ProfileRequirement $script:DefaultDevRequirement -ProfileContextTier "default" -ProfileEffort "medium"
     Assert-True ($null -eq $candidate) "Missing incumbent benchmark coverage must not be treated as evidence that the challenger is better."
 }
 
-Run-Test "12 Rule 7: cost tie-break orders equal combinedRank challengers by lowest cost, not a hard gate" {
+Run-Test "13 Rule 7: cost tie-break orders equal combinedRank challengers by lowest cost, not a hard gate" {
     # terra and luna tie on combinedRank (both aaRank=1,lbRank=1 -> combinedRank=2); terra costs more, so luna must win the tie-break.
     $snapshot = New-QualitySnapshot -AaScores @{ "claude-haiku-4.5" = 50; "gpt-5.6-terra" = 90; "gpt-5.6-luna" = 90 } -AaCodingScores @{ "claude-haiku-4.5" = 50; "gpt-5.6-terra" = 90; "gpt-5.6-luna" = 90 } -LbScores @{ "claude-haiku-4.5" = 50; "gpt-5.6-terra" = 90; "gpt-5.6-luna" = 90 } -Costs @{ "claude-haiku-4.5" = 1.0; "gpt-5.6-terra" = 5.0; "gpt-5.6-luna" = 0.5 }
     $candidate = Get-BenchmarkConsensusCandidate -ProfileKey "quick" -ValidModels @("claude-haiku-4.5","gpt-5.6-terra","gpt-5.6-luna") -IncumbentModel "claude-haiku-4.5" -Snapshot $snapshot -AvailabilityVerified $true -Denylist $script:ModelDenylist -CapabilitiesCatalog $script:RealCapabilities -ProfileRequirement $script:PermissiveRequirement -ProfileContextTier "default" -ProfileEffort "low"
     Assert-Eq "gpt-5.6-luna" $candidate.model "Expected lower-cost model to win the combinedRank tie."
 }
 
-Run-Test "13 Rule 7: a much higher-cost qualifying challenger is no longer blocked (cost-sensitive profile)" {
+Run-Test "14 Rule 7: a much higher-cost qualifying challenger is no longer blocked (cost-sensitive profile)" {
     # A third (non-candidate) filler model is included purely so bucket assignment (needs >=3 scored entries) puts gpt-5.6-terra in "top".
     $snapshot = New-QualitySnapshot -AaScores @{ "claude-haiku-4.5" = 50; "gpt-5.6-terra" = 90; "gpt-5.4" = 10 } -AaCodingScores @{ "claude-haiku-4.5" = 50; "gpt-5.6-terra" = 90; "gpt-5.4" = 10 } -LbScores @{ "claude-haiku-4.5" = 50; "gpt-5.6-terra" = 90; "gpt-5.4" = 10 } -Costs @{ "claude-haiku-4.5" = 0.1; "gpt-5.6-terra" = 500.0; "gpt-5.4" = 0.2 }
     $candidate = Get-BenchmarkConsensusCandidate -ProfileKey "quick" -ValidModels @("claude-haiku-4.5","gpt-5.6-terra") -IncumbentModel "claude-haiku-4.5" -Snapshot $snapshot -AvailabilityVerified $true -Denylist $script:ModelDenylist -CapabilitiesCatalog $script:RealCapabilities -ProfileRequirement $script:PermissiveRequirement -ProfileContextTier "default" -ProfileEffort "low"
     Assert-Eq "gpt-5.6-terra" $candidate.model "A cost-sensitive profile's much-higher-cost challenger must still qualify; cost no longer gates."
 }
 
-Run-Test "14 Rule 7: missing incumbent cost no longer required for qualification" {
+Run-Test "15 Rule 7: missing incumbent cost no longer required for qualification" {
     $snapshot = New-QualitySnapshot -AaScores @{ "claude-sonnet-5" = 60; "gpt-5.6-terra" = 90; "gpt-5.4" = 10 } -AaCodingScores @{ "claude-sonnet-5" = 60; "gpt-5.6-terra" = 90; "gpt-5.4" = 10 } -LbScores @{ "claude-sonnet-5" = 60; "gpt-5.6-terra" = 90; "gpt-5.4" = 10 } -Costs @{ "claude-sonnet-5" = $null; "gpt-5.6-terra" = 999.0; "gpt-5.4" = 0.2 }
     $candidate = Get-BenchmarkConsensusCandidate -ProfileKey "default-development" -ValidModels @("claude-sonnet-5","gpt-5.6-terra") -IncumbentModel "claude-sonnet-5" -Snapshot $snapshot -AvailabilityVerified $true -Denylist $script:ModelDenylist -CapabilitiesCatalog $script:RealCapabilities -ProfileRequirement $script:DefaultDevRequirement -ProfileContextTier "default" -ProfileEffort "medium"
     Assert-Eq "gpt-5.6-terra" $candidate.model "Missing incumbent cost combined with an unbounded challenger cost must not block qualification."
 }
 
-Run-Test "15 Rule 7: missing challenger cost no longer blocks qualification" {
+Run-Test "16 Rule 7: missing challenger cost no longer blocks qualification" {
     # A third (non-candidate) filler model is included purely so bucket assignment (needs >=3 scored entries) puts gpt-5.6-terra in "top".
     $snapshot = New-QualitySnapshot -AaScores @{ "claude-sonnet-5" = 60; "gpt-5.6-terra" = 90; "gpt-5.4" = 10 } -AaCodingScores @{ "claude-sonnet-5" = 60; "gpt-5.6-terra" = 90; "gpt-5.4" = 10 } -LbScores @{ "claude-sonnet-5" = 60; "gpt-5.6-terra" = 90; "gpt-5.4" = 10 } -Costs @{ "claude-sonnet-5" = 1.0; "gpt-5.6-terra" = $null; "gpt-5.4" = 0.2 }
     $candidate = Get-BenchmarkConsensusCandidate -ProfileKey "default-development" -ValidModels @("claude-sonnet-5","gpt-5.6-terra") -IncumbentModel "claude-sonnet-5" -Snapshot $snapshot -AvailabilityVerified $true -Denylist $script:ModelDenylist -CapabilitiesCatalog $script:RealCapabilities -ProfileRequirement $script:DefaultDevRequirement -ProfileContextTier "default" -ProfileEffort "medium"
@@ -345,7 +355,7 @@ Run-Test "26 Unrelated source failure does not block profile consensus" {
     Assert-True (Test-FullFreshConsensusRunForProfile -Snapshot $snapshot -ProfileKey "default-development") "Default development should not require Coding Agents."
     $snapshot.sourceStatus.artificialAnalysis.status = "unavailable"
     $snapshot.sourceStatus.artificialAnalysisCodingAgents.status = "ok"
-    Assert-True (Test-FullFreshConsensusRunForProfile -Snapshot $snapshot -ProfileKey "agentic-implementation") "Agentic implementation should not require AA Agentic."
+    Assert-True (Test-FullFreshConsensusRunForProfile -Snapshot $snapshot -ProfileKey "agentic-implementation") "Agentic implementation should not require AA Intelligence."
 }
 
 Run-Test "27 Force flag applies first run immediately" {

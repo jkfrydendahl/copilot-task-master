@@ -50,7 +50,7 @@
       "artificialAnalysis": {
         "alias": "claude-sonnet-5",
         "name": null,
-        "agenticIndex": null,
+        "intelligenceIndex": null,
         "bucket": "n/a",
         "ordinalRank": null
       },
@@ -90,7 +90,7 @@
       "artificialAnalysis": {
         "alias": "claude-opus-5",
         "name": "Claude Opus 5 (Adaptive Reasoning, Max Effort)",
-        "agenticIndex": 59.1729518900344,
+        "intelligenceIndex": 59.1729518900344,
         "bucket": "top",
         "ordinalRank": 1
       },
@@ -130,7 +130,7 @@
       "artificialAnalysis": {
         "alias": "claude-opus-4-8",
         "name": null,
-        "agenticIndex": null,
+        "intelligenceIndex": null,
         "bucket": "n/a",
         "ordinalRank": null
       },
@@ -170,7 +170,7 @@
       "artificialAnalysis": {
         "alias": null,
         "name": null,
-        "agenticIndex": null,
+        "intelligenceIndex": null,
         "bucket": "n/a",
         "ordinalRank": null
       },
@@ -210,7 +210,7 @@
       "artificialAnalysis": {
         "alias": null,
         "name": null,
-        "agenticIndex": null,
+        "intelligenceIndex": null,
         "bucket": "n/a",
         "ordinalRank": null
       },
@@ -250,7 +250,7 @@
       "artificialAnalysis": {
         "alias": null,
         "name": null,
-        "agenticIndex": null,
+        "intelligenceIndex": null,
         "bucket": "n/a",
         "ordinalRank": null
       },
@@ -290,7 +290,7 @@
       "artificialAnalysis": {
         "alias": null,
         "name": null,
-        "agenticIndex": null,
+        "intelligenceIndex": null,
         "bucket": "n/a",
         "ordinalRank": null
       },
@@ -330,7 +330,7 @@
       "artificialAnalysis": {
         "alias": null,
         "name": null,
-        "agenticIndex": null,
+        "intelligenceIndex": null,
         "bucket": "n/a",
         "ordinalRank": null
       },
@@ -370,7 +370,7 @@
       "artificialAnalysis": {
         "alias": null,
         "name": null,
-        "agenticIndex": null,
+        "intelligenceIndex": null,
         "bucket": "n/a",
         "ordinalRank": null
       },
@@ -410,7 +410,7 @@
       "artificialAnalysis": {
         "alias": "claude-4-5-haiku-reasoning",
         "name": "Claude 4.5 Haiku (Reasoning)",
-        "agenticIndex": 16.4717835051546,
+        "intelligenceIndex": 16.4717835051546,
         "bucket": "lagging",
         "ordinalRank": 5
       },
@@ -450,7 +450,7 @@
       "artificialAnalysis": {
         "alias": "gpt-5-6-sol",
         "name": "GPT-5.6 Sol (max)",
-        "agenticIndex": 57.7836323024055,
+        "intelligenceIndex": 57.7836323024055,
         "bucket": "top",
         "ordinalRank": 2
       },
@@ -490,7 +490,7 @@
       "artificialAnalysis": {
         "alias": "gpt-5-6-terra",
         "name": "GPT-5.6 Terra (max)",
-        "agenticIndex": 50.2013951890034,
+        "intelligenceIndex": 50.2013951890034,
         "bucket": "competitive",
         "ordinalRank": 3
       },
@@ -530,7 +530,7 @@
       "artificialAnalysis": {
         "alias": "gpt-5-6-luna",
         "name": "GPT-5.6 Luna (max)",
-        "agenticIndex": 46.9033402061856,
+        "intelligenceIndex": 46.9033402061856,
         "bucket": "lagging",
         "ordinalRank": 4
       },
@@ -570,7 +570,7 @@
       "artificialAnalysis": {
         "alias": null,
         "name": null,
-        "agenticIndex": null,
+        "intelligenceIndex": null,
         "bucket": "n/a",
         "ordinalRank": null
       },
@@ -610,7 +610,7 @@
       "artificialAnalysis": {
         "alias": null,
         "name": null,
-        "agenticIndex": null,
+        "intelligenceIndex": null,
         "bucket": "n/a",
         "ordinalRank": null
       },
@@ -650,7 +650,7 @@
       "artificialAnalysis": {
         "alias": null,
         "name": null,
-        "agenticIndex": null,
+        "intelligenceIndex": null,
         "bucket": "n/a",
         "ordinalRank": null
       },
@@ -690,7 +690,7 @@
       "artificialAnalysis": {
         "alias": null,
         "name": null,
-        "agenticIndex": null,
+        "intelligenceIndex": null,
         "bucket": "n/a",
         "ordinalRank": null
       },
@@ -730,7 +730,7 @@
       "artificialAnalysis": {
         "alias": null,
         "name": null,
-        "agenticIndex": null,
+        "intelligenceIndex": null,
         "bucket": "n/a",
         "ordinalRank": null
       },
@@ -770,7 +770,7 @@
       "artificialAnalysis": {
         "alias": null,
         "name": null,
-        "agenticIndex": null,
+        "intelligenceIndex": null,
         "bucket": "n/a",
         "ordinalRank": null
       },
@@ -810,7 +810,7 @@
       "artificialAnalysis": {
         "alias": null,
         "name": null,
-        "agenticIndex": null,
+        "intelligenceIndex": null,
         "bucket": "n/a",
         "ordinalRank": null
       },
@@ -850,7 +850,7 @@
       "artificialAnalysis": {
         "alias": "gemini-3-6-flash",
         "name": null,
-        "agenticIndex": null,
+        "intelligenceIndex": null,
         "bucket": "n/a",
         "ordinalRank": null
       },
@@ -890,7 +890,7 @@
       "artificialAnalysis": {
         "alias": null,
         "name": null,
-        "agenticIndex": null,
+        "intelligenceIndex": null,
         "bucket": "n/a",
         "ordinalRank": null
       },
@@ -930,7 +930,7 @@
       "artificialAnalysis": {
         "alias": null,
         "name": null,
-        "agenticIndex": null,
+        "intelligenceIndex": null,
         "bucket": "n/a",
         "ordinalRank": null
       },
@@ -1032,3 +1032,4 @@
     }
   }
 }
+

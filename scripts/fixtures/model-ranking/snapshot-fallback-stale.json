@@ -28,7 +28,7 @@
   },
   "models": {
     "claude-sonnet-5": {
-      "artificialAnalysis": { "alias": "claude-sonnet-5", "name": "Claude Sonnet 5", "agenticIndex": 46.7, "bucket": "competitive" },
+      "artificialAnalysis": { "alias": "claude-sonnet-5", "name": "Claude Sonnet 5", "intelligenceIndex": 46.7, "bucket": "competitive" },
       "liveBench": {
         "alias": "claude-sonnet-5-xhigh-effort",
         "categories": { "coding": 81, "agenticCoding": 72, "reasoning": 82, "instructionFollowing": 71 },

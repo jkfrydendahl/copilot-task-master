@@ -331,11 +331,11 @@ Run-Test "M23 Forced bootstrap candidate still cannot bypass admissibility" {
     $snapshot = [pscustomobject]@{
         models = [ordered]@{
             "claude-sonnet-5" = [ordered]@{
-                artificialAnalysis = [ordered]@{ agenticIndex = 50; bucket = "competitive"; ordinalRank = 2 }
+                artificialAnalysis = [ordered]@{ intelligenceIndex = 50; bucket = "competitive"; ordinalRank = 2 }
                 liveBench = [ordered]@{ categories = [ordered]@{ coding = 50 }; buckets = [ordered]@{ coding = "competitive" }; ordinalRanks = [ordered]@{ coding = 2 }; costPerSuccessfulTask = 1.0; costBucket = "competitive" }
             }
             "claude-fable-5" = [ordered]@{
-                artificialAnalysis = [ordered]@{ agenticIndex = 99; bucket = "top"; ordinalRank = 1 }
+                artificialAnalysis = [ordered]@{ intelligenceIndex = 99; bucket = "top"; ordinalRank = 1 }
                 liveBench = [ordered]@{ categories = [ordered]@{ coding = 99 }; buckets = [ordered]@{ coding = "top" }; ordinalRanks = [ordered]@{ coding = 1 }; costPerSuccessfulTask = 0.1; costBucket = "top" }
             }
         }
@@ -369,11 +369,11 @@ Run-Test "M24 LiveBench cost no longer blocks a qualifying challenger, only brea
     $snapshot = [pscustomobject]@{
         models = [ordered]@{
             "claude-sonnet-5" = [ordered]@{
-                artificialAnalysis = [ordered]@{ agenticIndex = 70; bucket = "competitive"; ordinalRank = 2 }
+                artificialAnalysis = [ordered]@{ intelligenceIndex = 70; bucket = "competitive"; ordinalRank = 2 }
                 liveBench = [ordered]@{ categories = [ordered]@{ coding = 70 }; buckets = [ordered]@{ coding = "competitive" }; ordinalRanks = [ordered]@{ coding = 2 }; costPerSuccessfulTask = 1.0; costBucket = "competitive" }
             }
             "gpt-5.6-terra" = [ordered]@{
-                artificialAnalysis = [ordered]@{ agenticIndex = 80; bucket = "top"; ordinalRank = 1 }
+                artificialAnalysis = [ordered]@{ intelligenceIndex = 80; bucket = "top"; ordinalRank = 1 }
                 liveBench = [ordered]@{ categories = [ordered]@{ coding = 80 }; buckets = [ordered]@{ coding = "top" }; ordinalRanks = [ordered]@{ coding = 1 }; costPerSuccessfulTask = 50.0; costBucket = "lagging" }
             }
         }

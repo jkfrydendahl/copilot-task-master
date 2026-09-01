@@ -152,7 +152,7 @@ function Get-ModelQualityDataForProfile {
             $aaAliasConfigured = Test-BenchmarkAliasConfigured -SourceEntry $aaCodingData
         }
     } else {
-        $aaScore = $entry.artificialAnalysis.agenticIndex
+        $aaScore = $entry.artificialAnalysis.intelligenceIndex
         $aaBucket = [string]$entry.artificialAnalysis.bucket
         $aaRank = $entry.artificialAnalysis.ordinalRank
         $aaAliasConfigured = Test-BenchmarkAliasConfigured -SourceEntry $entry.artificialAnalysis

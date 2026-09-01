@@ -302,7 +302,7 @@ function Parse-ArtificialAnalysisLlmModelsFromApiResponse {
     }
 }
 
-function Get-ArtificialAnalysisAgenticIndexData {
+function Get-ArtificialAnalysisIntelligenceIndexData {
     [OutputType([pscustomobject])]
     param(
         [string]$Url = $script:ArtificialAnalysisLlmModelsApiUrl,
@@ -334,13 +334,13 @@ function Get-ArtificialAnalysisAgenticIndexData {
         }
     }
 
-    $parsed = Parse-ArtificialAnalysisLlmModelsFromApiResponse -ApiResponse $fetchResult.value -EvaluationField "artificial_analysis_agentic_index" -OutputScoreProperty "agenticIndex" -SourceNameForMessages "Artificial Analysis agentic index"
+    $parsed = Parse-ArtificialAnalysisLlmModelsFromApiResponse -ApiResponse $fetchResult.value -EvaluationField "artificial_analysis_intelligence_index" -OutputScoreProperty "intelligenceIndex" -SourceNameForMessages "Artificial Analysis intelligence index"
     return [pscustomobject]@{
         status = $parsed.status
         message = $parsed.message
         models = $parsed.models
         sourceDate = $parsed.sourceDate
-        sourceVersion = if ($parsed.status -eq "ok") { Get-ModelScoreFingerprint -Models $parsed.models -ScoreProperty "agenticIndex" } else { $null }
+        sourceVersion = if ($parsed.status -eq "ok") { Get-ModelScoreFingerprint -Models $parsed.models -ScoreProperty "intelligenceIndex" } else { $null }
         fetchedAtUtc = $fetchedAtUtc
         sourceUrl = $Url
     }
@@ -1031,7 +1031,7 @@ function Resolve-ModelRankingSnapshot {
         $aaScore = $null
         $aaName = $null
         if (-not [string]::IsNullOrWhiteSpace([string]$aaSlug) -and $ArtificialAnalysisData.models.ContainsKey([string]$aaSlug)) {
-            $aaScore = [double]$ArtificialAnalysisData.models[[string]$aaSlug].agenticIndex
+            $aaScore = [double]$ArtificialAnalysisData.models[[string]$aaSlug].intelligenceIndex
             $aaName = [string]$ArtificialAnalysisData.models[[string]$aaSlug].name
         }
         $aaScores[$model] = $aaScore
@@ -1067,7 +1067,7 @@ function Resolve-ModelRankingSnapshot {
             artificialAnalysis = [ordered]@{
                 alias = $aaSlug
                 name = $aaName
-                agenticIndex = $aaScore
+                intelligenceIndex = $aaScore
                 bucket = "n/a"
                 ordinalRank = $null
             }
@@ -1254,7 +1254,7 @@ function Get-AdvisoryModelRankingSnapshot {
     $aliases = Get-ModelRankingAliases -AliasesPath $AliasesPath
     $fallbackSnapshot = Read-ModelRankingSnapshotFile -SnapshotPath $SnapshotPath
 
-    $aaData = Get-ArtificialAnalysisAgenticIndexData -FetchJson $FetchArtificialAnalysisJson
+    $aaData = Get-ArtificialAnalysisIntelligenceIndexData -FetchJson $FetchArtificialAnalysisJson
     $aaCodingAgentData = Get-ArtificialAnalysisCodingAgentIndexData -FetchText $FetchArtificialAnalysisText
     $lbData = Get-LiveBenchData -FetchJson $FetchLiveBenchJson -FetchText $FetchLiveBenchText
 
@@ -1311,7 +1311,7 @@ function Get-ModelRankingReportLines {
     $lines.Add("")
     $lines.Add("> External rankings can auto-apply only after strict two-run consensus; verified availability, capabilities, pricing, and benchmark quality govern promotion, and family preferences are baseline-only.")
     $lines.Add("")
-    $lines.Add("| Model | AA Agentic | AA Coding Agent | LB Coding | LB Agentic Coding | LB Reasoning | LB Instruction Following | LB Cost | LB Cost Bucket |")
+    $lines.Add("| Model | AA Intelligence | AA Coding Agent | LB Coding | LB Agentic Coding | LB Reasoning | LB Instruction Following | LB Cost | LB Cost Bucket |")
     $lines.Add("|---|---|---|---|---|---|---|---|---|")
     foreach ($model in $ValidModels) {
         $modelData = $null

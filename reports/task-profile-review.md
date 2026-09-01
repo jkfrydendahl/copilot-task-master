@@ -286,7 +286,7 @@ _No `artificialAnalysis` alias is configured in `config/model-ranking-aliases.js
 
 > External rankings can auto-apply only after strict two-run consensus; verified availability, capabilities, pricing, and benchmark quality govern promotion, and family preferences are baseline-only.
 
-| Model | AA Agentic | AA Coding Agent | LB Coding | LB Agentic Coding | LB Reasoning | LB Instruction Following | LB Cost | LB Cost Bucket |
+| Model | AA Intelligence | AA Coding Agent | LB Coding | LB Agentic Coding | LB Reasoning | LB Instruction Following | LB Cost | LB Cost Bucket |
 |---|---|---|---|---|---|---|---|---|
 | claude-sonnet-5 | n/a | n/a | competitive | top | competitive | competitive | 0.5134 | lagging |
 | claude-opus-5 | n/a | competitive | competitive | top | top | competitive | 0.7067 | lagging |
