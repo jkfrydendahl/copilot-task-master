@@ -27,7 +27,16 @@ Force benchmark consensus (manual first-run override): **True**
 - None.
 
 ## Benchmark consensus AA-data-missing fallback
+
+_AA alias IS configured but Artificial Analysis returned no score this run. LiveBench-only comparison is allowed as a temporary bridge, provided the LiveBench source data is at most 90 days old._
+
 - None.
+
+## Benchmark consensus AA-alias-not-configured exclusions
+
+_No `artificialAnalysis` alias is configured in `config/model-ranking-aliases.json` for these models, so Artificial Analysis is never consulted for them. They are excluded from benchmark consensus entirely (no LiveBench-only promotion). Add an alias if a model deserves consideration._
+
+- "agentic-implementation": AA alias not configured -- excluded from consensus: claude-opus-4.5, claude-opus-4.6, claude-opus-4.7, claude-opus-4.8, claude-sonnet-4.6, claude-sonnet-5, gpt-5.4, gpt-5.4-mini, gpt-5.5, gpt-5.6-luna, gpt-5.6-terra
 
 ## Active benchmark overrides
 - "orchestrator": "gpt-5.4"
@@ -263,9 +272,9 @@ Force benchmark consensus (manual first-run override): **True**
 - Artificial Analysis source date: 
 - Artificial Analysis Coding Agent source date: n/a
 - LiveBench source date: 2026-06-25
-- Artificial Analysis fetched at (UTC): 2026-09-01T09:45:10.7433584Z
-- Artificial Analysis Coding Agents fetched at (UTC): 2026-09-01T09:45:10.9993426Z
-- LiveBench fetched at (UTC): 2026-09-01T09:45:11.2146572Z
+- Artificial Analysis fetched at (UTC): 2026-09-01T12:06:27.5863149Z
+- Artificial Analysis Coding Agents fetched at (UTC): 2026-09-01T12:06:28.4787855Z
+- LiveBench fetched at (UTC): 2026-09-01T12:06:29.0869475Z
 
 > External rankings can auto-apply only after strict two-run consensus; verified availability, capabilities, pricing, and benchmark quality govern promotion, and family preferences are baseline-only.
 
