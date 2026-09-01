@@ -83,6 +83,55 @@ function Get-ModelSnapshotData {
     return $null
 }
 
+function Test-BenchmarkAliasConfigured {
+    # Distinguishes the two situations that both surface as a null score in
+    # data/model-ranking-snapshot.json:
+    #   1. an alias IS configured in config/model-ranking-aliases.json but the
+    #      live source returned nothing for it this run (genuine data gap), and
+    #   2. no alias was ever configured, so the source was NEVER consulted for
+    #      this model (configuration gap).
+    # Only case 1 may legitimately bypass the dual-source requirement.
+    # Fail-safe: a snapshot entry that carries no 'alias' member at all cannot
+    # prove the source was consulted, so it is treated as NOT configured.
+    [OutputType([bool])]
+    param($SourceEntry)
+    if ($null -eq $SourceEntry) { return $false }
+    if (-not (Test-ObjectMember -InputObject $SourceEntry -Name "alias")) { return $false }
+    $alias = Get-ObjectMemberValue -InputObject $SourceEntry -Name "alias"
+    return -not [string]::IsNullOrWhiteSpace([string]$alias)
+}
+
+function Test-LiveBenchOnlyFallbackSourceFresh {
+    # The LiveBench-only fallback removes the cross-source corroboration that
+    # normally protects a promotion, so LiveBench becomes the SOLE evidence.
+    # Sole evidence must at least be recent: LiveBench publishes on an
+    # irregular multi-week cadence, so the threshold allows a couple of missed
+    # releases but blocks promotions driven by an abandoned dataset.
+    # The dual-source path is deliberately NOT gated by this (two independent
+    # benchmarks corroborate each other, and gating it would change shipped,
+    # well-tested behavior).
+    [OutputType([bool])]
+    param(
+        $Snapshot,
+        [int]$MaxSourceAgeDays = 90,
+        [datetime]$NowUtc = ((Get-Date).ToUniversalTime())
+    )
+    if ($MaxSourceAgeDays -le 0) { return $true }
+    if ($null -eq $Snapshot) { return $false }
+    $sourceStatus = Get-ObjectMemberValue -InputObject $Snapshot -Name "sourceStatus"
+    if ($null -eq $sourceStatus) { return $false }
+    $liveBench = Get-ObjectMemberValue -InputObject $sourceStatus -Name "liveBench"
+    if ($null -eq $liveBench) { return $false }
+    $sourceDate = [string](Get-ObjectMemberValue -InputObject $liveBench -Name "sourceDate")
+    if ([string]::IsNullOrWhiteSpace($sourceDate)) { return $false }
+    $parsed = [datetime]::MinValue
+    $styles = [System.Globalization.DateTimeStyles]::AssumeUniversal -bor [System.Globalization.DateTimeStyles]::AdjustToUniversal
+    if (-not [datetime]::TryParse($sourceDate, [System.Globalization.CultureInfo]::InvariantCulture, $styles, [ref]$parsed)) {
+        return $false
+    }
+    return (($NowUtc - $parsed).TotalDays -le [double]$MaxSourceAgeDays)
+}
+
 function Get-ModelQualityDataForProfile {
     param($Snapshot, [string]$ProfileKey, [string]$ModelId)
     $entry = Get-ModelSnapshotData -Snapshot $Snapshot -ModelId $ModelId
@@ -92,17 +141,20 @@ function Get-ModelQualityDataForProfile {
     $aaScore = $null
     $aaBucket = "n/a"
     $aaRank = $null
+    $aaAliasConfigured = $false
     if ($ProfileKey -eq "agentic-implementation") {
         $aaCodingData = Get-ObjectMemberValue -InputObject $entry -Name "artificialAnalysisCodingAgents"
         if ($aaCodingData) {
             $aaScore = $aaCodingData.codingAgentIndex
             $aaBucket = [string]$aaCodingData.bucket
             $aaRank = $aaCodingData.ordinalRank
+            $aaAliasConfigured = Test-BenchmarkAliasConfigured -SourceEntry $aaCodingData
         }
     } else {
         $aaScore = $entry.artificialAnalysis.agenticIndex
         $aaBucket = [string]$entry.artificialAnalysis.bucket
         $aaRank = $entry.artificialAnalysis.ordinalRank
+        $aaAliasConfigured = Test-BenchmarkAliasConfigured -SourceEntry $entry.artificialAnalysis
     }
     $lbScore = $entry.liveBench.categories.$lbCategory
     $lbBucket = [string]$entry.liveBench.buckets.$lbCategory
@@ -111,6 +163,10 @@ function Get-ModelQualityDataForProfile {
         aaScore = $aaScore
         aaBucket = $aaBucket
         aaRank = $aaRank
+        # $true when an AA alias exists for this model, i.e. AA was actually
+        # asked about it. A null $aaScore with $aaAliasConfigured = $false is a
+        # never-configured alias, not a data gap.
+        aaAliasConfigured = $aaAliasConfigured
         lbScore = $lbScore
         lbBucket = $lbBucket
         lbRank = $lbRank
@@ -139,6 +195,7 @@ function Get-BenchmarkConsensusCandidate {
         [string]$ProfileContextTier = "default",
         [string]$ProfileEffort = "medium",
         [int]$CapabilityFreshnessDays = 60,
+        [int]$LiveBenchOnlyFallbackMaxSourceAgeDays = 90,
         [datetime]$NowUtc = ((Get-Date).ToUniversalTime())
     )
 
@@ -161,6 +218,17 @@ function Get-BenchmarkConsensusCandidate {
         return $null
     }
     $incumbentAaAvailable = $null -ne $incumbent.aaScore
+    # The fallback is only defensible when AA was actually consulted for this
+    # model and came back empty. If no AA alias was ever configured, AA was
+    # never asked, so a "LiveBench-only" win is not a degraded dual-source
+    # check -- it is a single-source check dressed up as one. Such a profile
+    # gets no benchmark consensus at all and stays on the static baseline.
+    if (-not $incumbentAaAvailable -and -not $incumbent.aaAliasConfigured) {
+        return $null
+    }
+    # Sole-evidence promotions additionally require the LiveBench source data
+    # itself to be recent; see Test-LiveBenchOnlyFallbackSourceFresh.
+    $fallbackSourceFresh = Test-LiveBenchOnlyFallbackSourceFresh -Snapshot $Snapshot -MaxSourceAgeDays $LiveBenchOnlyFallbackMaxSourceAgeDays -NowUtc $NowUtc
 
     $qualifiers = New-Object System.Collections.Generic.List[object]
     foreach ($model in $ValidModels) {
@@ -179,9 +247,14 @@ function Get-BenchmarkConsensusCandidate {
         if ($candidate.lbBucket -ne "top" -or $null -eq $candidate.lbScore) { continue }
 
         $candidateAaAvailable = $null -ne $candidate.aaScore
+        # Same rule on the challenger side: a challenger AA never looked at
+        # cannot be promoted on LiveBench alone. Skip it, but keep evaluating
+        # the remaining challengers.
+        if (-not $candidateAaAvailable -and -not $candidate.aaAliasConfigured) { continue }
         $aaFallbackUsed = -not ($incumbentAaAvailable -and $candidateAaAvailable)
 
         if ($aaFallbackUsed) {
+            if (-not $fallbackSourceFresh) { continue }
             $winsQualifying = [double]$candidate.lbScore -gt [double]$incumbent.lbScore
         } else {
             if ($candidate.aaBucket -ne "top") { continue }
@@ -215,7 +288,9 @@ function Test-ActiveOverrideQualitySupported {
         [string]$PolicyPreferredModel,
         [bool]$IsFullFreshRun,
         [string]$ProfileKey,
-        $Snapshot
+        $Snapshot,
+        [int]$LiveBenchOnlyFallbackMaxSourceAgeDays = 90,
+        [datetime]$NowUtc = ((Get-Date).ToUniversalTime())
     )
 
     if ([string]::IsNullOrWhiteSpace($ActiveModel)) { return $true }
@@ -234,6 +309,22 @@ function Test-ActiveOverrideQualitySupported {
         return ([double]$activeQuality.aaScore -gt [double]$baselineQuality.aaScore) -and `
             ([double]$activeQuality.lbScore -gt [double]$baselineQuality.lbScore)
     }
+
+    # Configuration gap, not a data gap: a side whose AA alias was never
+    # configured has no cross-source evidence and never could have. The
+    # override was therefore never legitimately established, so it is not
+    # supported and must clear -- exactly the pre-fallback behaviour.
+    $activeAaMissingUnchecked = ($null -eq $activeQuality.aaScore) -and (-not $activeQuality.aaAliasConfigured)
+    $baselineAaMissingUnchecked = ($null -eq $baselineQuality.aaScore) -and (-not $baselineQuality.aaAliasConfigured)
+    if ($activeAaMissingUnchecked -or $baselineAaMissingUnchecked) { return $false }
+
+    # Transient upstream lag, by contrast, is not evidence against the
+    # override: freeze (preserve the status quo) rather than revoke it, in
+    # line with how partial/fallback runs are already treated.
+    if (-not (Test-LiveBenchOnlyFallbackSourceFresh -Snapshot $Snapshot -MaxSourceAgeDays $LiveBenchOnlyFallbackMaxSourceAgeDays -NowUtc $NowUtc)) {
+        return $true
+    }
+
     return [double]$activeQuality.lbScore -gt [double]$baselineQuality.lbScore
 }
 
@@ -449,6 +540,7 @@ function Invoke-TaskProfileReview {
     $modelComparisonUrl = "https://docs.github.com/en/copilot/reference/ai-models/model-comparison"
     $forceBenchmarkConsensus = Get-ForceBenchmarkConsensusFlag
     $capabilityFreshnessDays = [int]$script:ModelPolicyConfig.consensusPolicy.capabilityFreshnessDays
+    $lbOnlyFallbackMaxSourceAgeDays = [int]$script:ModelPolicyConfig.consensusPolicy.liveBenchOnlyFallbackMaxSourceAgeDays
 
     $repoRoot = Resolve-Path (Join-Path $PSScriptRoot "..")
     $profilesPath = Join-Path $repoRoot "task-profiles.json"
@@ -541,6 +633,7 @@ function Invoke-TaskProfileReview {
 
     $benchmarkChanges = New-Object System.Collections.Generic.List[string]
     $aaFallbackLines = New-Object System.Collections.Generic.List[string]
+    $aaAliasGapLines = New-Object System.Collections.Generic.List[string]
     $profileAdmissibilityVerdicts = @{}
     foreach ($profile in $profiles) {
         $profileKey = [string]$profile.key
@@ -572,7 +665,8 @@ function Invoke-TaskProfileReview {
             if ($activeStillValid -and $isFullFresh -and -not [string]::IsNullOrWhiteSpace([string]$d.effectiveBaseline)) {
                 $activeStillValid = Test-ActiveOverrideQualitySupported -ActiveModel $activeModel `
                     -PolicyPreferredModel ([string]$d.effectiveBaseline) -IsFullFreshRun $isFullFresh `
-                    -ProfileKey $profileKey -Snapshot $rankingSnapshot
+                    -ProfileKey $profileKey -Snapshot $rankingSnapshot `
+                    -LiveBenchOnlyFallbackMaxSourceAgeDays $lbOnlyFallbackMaxSourceAgeDays
             }
         }
         $incumbent = if (-not [string]::IsNullOrWhiteSpace($activeModel) -and $activeStillValid) {
@@ -585,18 +679,45 @@ function Invoke-TaskProfileReview {
         $candidate = if ($isFullFresh) {
             Get-BenchmarkConsensusCandidate -ProfileKey $profileKey -ValidModels $validModels -IncumbentModel $incumbent -Snapshot $rankingSnapshot `
                 -AvailabilityVerified $availability.verified -Denylist $script:ModelDenylist -CapabilitiesCatalog $capabilitiesCatalog `
-                -ProfileRequirement $ctx.requirement -ProfileContextTier $ctx.contextTier -ProfileEffort $ctx.effort -CapabilityFreshnessDays $capabilityFreshnessDays
+                -ProfileRequirement $ctx.requirement -ProfileContextTier $ctx.contextTier -ProfileEffort $ctx.effort -CapabilityFreshnessDays $capabilityFreshnessDays `
+                -LiveBenchOnlyFallbackMaxSourceAgeDays $lbOnlyFallbackMaxSourceAgeDays
         } else { $null }
 
         # Surface the AA-missing LiveBench-only fallback in the report even
         # when it froze consensus entirely (no candidate qualified), so the
-        # gap is visible instead of silently showing "None".
+        # gap is visible instead of silently showing "None". The two AA-null
+        # situations are reported separately because they need different
+        # human responses: a data gap resolves itself when AA indexes the
+        # model, while a configuration gap only resolves when somebody adds
+        # the alias to config/model-ranking-aliases.json.
         if ($isFullFresh) {
             $incumbentQualityForReport = Get-ModelQualityDataForProfile -Snapshot $rankingSnapshot -ProfileKey $profileKey -ModelId $incumbent
-            $incumbentAaMissing = ($null -ne $incumbentQualityForReport) -and ($null -ne $incumbentQualityForReport.lbScore) -and ($null -eq $incumbentQualityForReport.aaScore)
+            $incumbentHasLb = ($null -ne $incumbentQualityForReport) -and ($null -ne $incumbentQualityForReport.lbScore)
+            $incumbentAaMissing = $incumbentHasLb -and ($null -eq $incumbentQualityForReport.aaScore)
+            $incumbentAliasMissing = $incumbentAaMissing -and (-not $incumbentQualityForReport.aaAliasConfigured)
             $candidateUsedAaFallback = ($null -ne $candidate) -and (Test-ObjectMember -InputObject $candidate -Name "aaFallbackUsed") -and [bool]$candidate.aaFallbackUsed
-            if ($incumbentAaMissing -or $candidateUsedAaFallback) {
-                $aaFallbackLines.Add(('- "{0}": AA data missing -- using LiveBench-only fallback' -f $profileKey))
+            $fallbackFresh = Test-LiveBenchOnlyFallbackSourceFresh -Snapshot $rankingSnapshot -MaxSourceAgeDays $lbOnlyFallbackMaxSourceAgeDays
+
+            if (($incumbentAaMissing -and -not $incumbentAliasMissing) -or $candidateUsedAaFallback) {
+                $suffix = if ($fallbackFresh) { "" } else { (" (blocked: LiveBench source data older than {0} days)" -f $lbOnlyFallbackMaxSourceAgeDays) }
+                $aaFallbackLines.Add(('- "{0}": AA data missing despite a configured alias -- using LiveBench-only fallback{1}' -f $profileKey, $suffix))
+            }
+
+            # Models that would otherwise be comparable for this profile
+            # (they have a LiveBench score) but are permanently invisible to
+            # Artificial Analysis because no AA alias is configured.
+            $aliasGapModels = New-Object System.Collections.Generic.List[string]
+            foreach ($m in @(@($incumbent) + @($validModels) | Where-Object { -not [string]::IsNullOrWhiteSpace($_) } | Select-Object -Unique)) {
+                $q = Get-ModelQualityDataForProfile -Snapshot $rankingSnapshot -ProfileKey $profileKey -ModelId $m
+                if ($null -eq $q) { continue }
+                if ($null -ne $q.aaScore) { continue }
+                if ($q.aaAliasConfigured) { continue }
+                if ($null -eq $q.lbScore) { continue }
+                $aliasGapModels.Add($m)
+            }
+            if ($aliasGapModels.Count -gt 0) {
+                $incumbentNote = if ($incumbentAliasMissing) { (' -- incumbent "{0}" is affected, so this profile has NO benchmark consensus this run' -f $incumbent) } else { "" }
+                $aaAliasGapLines.Add(('- "{0}": AA alias not configured -- excluded from consensus: {1}{2}' -f $profileKey, (($aliasGapModels | Sort-Object) -join ", "), $incumbentNote))
             }
         }
 
@@ -727,7 +848,16 @@ function Invoke-TaskProfileReview {
     if ($pendingLines.Count -eq 0) { $lines += "- None." } else { $lines += @($pendingLines) }
     $lines += ""
     $lines += "## Benchmark consensus AA-data-missing fallback"
+    $lines += ""
+    $lines += "_AA alias IS configured but Artificial Analysis returned no score this run. LiveBench-only comparison is allowed as a temporary bridge, provided the LiveBench source data is at most $lbOnlyFallbackMaxSourceAgeDays days old._"
+    $lines += ""
     if ($aaFallbackLines.Count -eq 0) { $lines += "- None." } else { $lines += @($aaFallbackLines) }
+    $lines += ""
+    $lines += "## Benchmark consensus AA-alias-not-configured exclusions"
+    $lines += ""
+    $lines += "_No ``artificialAnalysis`` alias is configured in ``config/model-ranking-aliases.json`` for these models, so Artificial Analysis is never consulted for them. They are excluded from benchmark consensus entirely (no LiveBench-only promotion). Add an alias if a model deserves consideration._"
+    $lines += ""
+    if ($aaAliasGapLines.Count -eq 0) { $lines += "- None." } else { $lines += @($aaAliasGapLines) }
     $lines += ""
     $lines += "## Active benchmark overrides"
     if ($activeLines.Count -eq 0) { $lines += "- None." } else { $lines += @($activeLines) }

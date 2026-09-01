@@ -110,7 +110,7 @@ function Get-ModelPolicyConfig {
     if (-not ($parsed.consensusPolicy -is [hashtable])) {
         throw "Malformed model-policy.json: 'consensusPolicy' must be an object."
     }
-    foreach ($field in @("staleAfterDays", "capabilityFreshnessDays")) {
+    foreach ($field in @("staleAfterDays", "capabilityFreshnessDays", "liveBenchOnlyFallbackMaxSourceAgeDays")) {
         if (-not $parsed.consensusPolicy.ContainsKey($field)) {
             throw "Malformed model-policy.json: consensusPolicy is missing required field '$field'."
         }

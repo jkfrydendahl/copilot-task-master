@@ -48,7 +48,17 @@ function New-QualitySnapshot {
         [hashtable]$AaScores,
         [hashtable]$AaCodingScores,
         [hashtable]$LbScores,
-        [hashtable]$Costs
+        [hashtable]$Costs,
+        # Models listed here get a null `alias` on their Artificial Analysis
+        # sub-objects, i.e. "no AA alias was ever configured" (configuration
+        # gap) rather than "AA was asked and returned nothing" (data gap).
+        [string[]]$AaAliasNotConfigured = @(),
+        # Models listed here get no `alias` member at all, emulating a legacy
+        # snapshot written before the field existed.
+        [string[]]$OmitAaAliasMember = @(),
+        # Relative by default so the LiveBench-only-fallback staleness gate is
+        # exercised deterministically instead of drifting with the wall clock.
+        [string]$LiveBenchSourceDate = ((Get-Date).ToUniversalTime().AddDays(-10).ToString("yyyy-MM-dd"))
     )
     $models = [ordered]@{}
     $aaBuckets = Get-RankingBucketAssignments -ScoresByModel $AaScores
@@ -59,10 +69,18 @@ function New-QualitySnapshot {
     $lbRanks = Get-OrdinalRankAssignments -ScoresByModel $LbScores
     $costBuckets = Get-RankingBucketAssignments -ScoresByModel $Costs -LowerIsBetter
     foreach ($m in $AaScores.Keys) {
+        $aaEntry = [ordered]@{ agenticIndex = $AaScores[$m]; bucket = $aaBuckets[$m]; ordinalRank = $aaRanks[$m] }
+        $aaCodingEntry = [ordered]@{ codingAgentIndex = $AaCodingScores[$m]; bucket = $aaCodingBuckets[$m]; ordinalRank = $aaCodingRanks[$m] }
+        if ($OmitAaAliasMember -notcontains $m) {
+            $aliasValue = if ($AaAliasNotConfigured -contains $m) { $null } else { "$m-aa-alias" }
+            $aaEntry["alias"] = $aliasValue
+            $aaCodingEntry["alias"] = $aliasValue
+        }
         $models[$m] = [ordered]@{
-            artificialAnalysis = [ordered]@{ agenticIndex = $AaScores[$m]; bucket = $aaBuckets[$m]; ordinalRank = $aaRanks[$m] }
-            artificialAnalysisCodingAgents = [ordered]@{ codingAgentIndex = $AaCodingScores[$m]; bucket = $aaCodingBuckets[$m]; ordinalRank = $aaCodingRanks[$m] }
+            artificialAnalysis = $aaEntry
+            artificialAnalysisCodingAgents = $aaCodingEntry
             liveBench = [ordered]@{
+                alias = "$m-lb-alias"
                 categories = [ordered]@{ coding = $LbScores[$m]; agenticCoding = $LbScores[$m]; reasoning = $LbScores[$m]; instructionFollowing = $LbScores[$m] }
                 buckets = [ordered]@{ coding = $lbBuckets[$m]; agenticCoding = $lbBuckets[$m]; reasoning = $lbBuckets[$m]; instructionFollowing = $lbBuckets[$m] }
                 ordinalRanks = [ordered]@{ coding = $lbRanks[$m]; agenticCoding = $lbRanks[$m]; reasoning = $lbRanks[$m]; instructionFollowing = $lbRanks[$m] }
@@ -76,8 +94,8 @@ function New-QualitySnapshot {
         sourceStatus = [ordered]@{
             artificialAnalysis = [ordered]@{ status = "ok"; sourceDate = "2026-07-24" }
             artificialAnalysisCodingAgents = [ordered]@{ status = "ok"; sourceDate = "2026-07-24" }
-            liveBench = [ordered]@{ status = "ok"; sourceDate = "2026-06-25" }
-            liveBenchCost = [ordered]@{ status = "ok"; sourceDate = "2026-06-25" }
+            liveBench = [ordered]@{ status = "ok"; sourceDate = $LiveBenchSourceDate }
+            liveBenchCost = [ordered]@{ status = "ok"; sourceDate = $LiveBenchSourceDate }
         }
         models = $models
         consensus = [ordered]@{ profiles = [ordered]@{} }
@@ -356,6 +374,60 @@ Run-Test "38 Regression: both AA and LB present keeps the dual-source winsBoth b
 Run-Test "39 Test-ActiveOverrideQualitySupported falls back to LiveBench-only comparison when AA is missing on both sides" {
     $snapshot = New-QualitySnapshot -AaScores @{ "claude-opus-5" = $null; "gpt-5.3-codex" = $null } -AaCodingScores @{ "claude-opus-5" = $null; "gpt-5.3-codex" = $null } -LbScores @{ "claude-opus-5" = 90; "gpt-5.3-codex" = 70 } -Costs @{}
     Assert-True (Test-ActiveOverrideQualitySupported -ActiveModel "claude-opus-5" -PolicyPreferredModel "gpt-5.3-codex" -IsFullFreshRun $true -ProfileKey "agentic-implementation" -Snapshot $snapshot) "AA missing on both sides should not freeze the check; the active override still wins on LiveBench alone."
+}
+
+Run-Test "40 AA alias never configured: incumbent is excluded from consensus entirely" {
+    $snapshot = New-QualitySnapshot -AaScores @{ "gpt-5.4" = $null; "gpt-5.6-terra" = 80; "claude-sonnet-5" = 70 } -AaCodingScores @{ "gpt-5.4" = $null; "gpt-5.6-terra" = 80; "claude-sonnet-5" = 70 } -LbScores @{ "gpt-5.4" = 60; "gpt-5.6-terra" = 90; "claude-sonnet-5" = 70 } -Costs @{ "gpt-5.4" = 1.0; "gpt-5.6-terra" = 1.0; "claude-sonnet-5" = 1.0 } -AaAliasNotConfigured @("gpt-5.4")
+    $candidate = Get-BenchmarkConsensusCandidate -ProfileKey "default-development" -ValidModels @("gpt-5.4","gpt-5.6-terra","claude-sonnet-5") -IncumbentModel "gpt-5.4" -Snapshot $snapshot -AvailabilityVerified $true -Denylist $script:ModelDenylist -CapabilitiesCatalog $script:RealCapabilities -ProfileRequirement $script:DefaultDevRequirement -ProfileContextTier "default" -ProfileEffort "medium"
+    Assert-True ($null -eq $candidate) "An incumbent whose AA alias was never configured has no cross-source evidence and must not drive a LiveBench-only promotion."
+}
+
+Run-Test "41 AA alias never configured: challenger is skipped even though it would win on LiveBench alone" {
+    # gpt-5.4 has the highest LiveBench score and shares the "top" bucket with
+    # gpt-5.6-terra, but AA was never asked about it, so only gpt-5.6-terra
+    # (configured alias, genuine AA data gap) may qualify via the fallback.
+    $snapshot = New-QualitySnapshot -AaScores @{ "claude-sonnet-5" = $null; "gpt-5.4" = $null; "gpt-5.6-terra" = $null; "gpt-5.4-mini" = $null } -AaCodingScores @{ "claude-sonnet-5" = $null; "gpt-5.4" = $null; "gpt-5.6-terra" = $null; "gpt-5.4-mini" = $null } -LbScores @{ "claude-sonnet-5" = 60; "gpt-5.4" = 95; "gpt-5.6-terra" = 90; "gpt-5.4-mini" = 40 } -Costs @{ "claude-sonnet-5" = 1.0; "gpt-5.4" = 1.0; "gpt-5.6-terra" = 1.0; "gpt-5.4-mini" = 1.0 } -AaAliasNotConfigured @("gpt-5.4")
+    $candidate = Get-BenchmarkConsensusCandidate -ProfileKey "default-development" -ValidModels @("claude-sonnet-5","gpt-5.4","gpt-5.6-terra","gpt-5.4-mini") -IncumbentModel "claude-sonnet-5" -Snapshot $snapshot -AvailabilityVerified $true -Denylist $script:ModelDenylist -CapabilitiesCatalog $script:RealCapabilities -ProfileRequirement $script:DefaultDevRequirement -ProfileContextTier "default" -ProfileEffort "medium"
+    Assert-Eq "gpt-5.6-terra" $candidate.model "A challenger with no configured AA alias must be skipped, not promoted on LiveBench alone."
+}
+
+Run-Test "42 Missing alias member (legacy snapshot shape) is treated as not configured" {
+    $snapshot = New-QualitySnapshot -AaScores @{ "claude-sonnet-5" = $null; "gpt-5.6-terra" = $null; "gpt-5.4" = $null; "gpt-5.4-mini" = $null } -AaCodingScores @{ "claude-sonnet-5" = $null; "gpt-5.6-terra" = $null; "gpt-5.4" = $null; "gpt-5.4-mini" = $null } -LbScores @{ "claude-sonnet-5" = 60; "gpt-5.6-terra" = 95; "gpt-5.4" = 90; "gpt-5.4-mini" = 40 } -Costs @{ "claude-sonnet-5" = 1.0; "gpt-5.6-terra" = 1.0; "gpt-5.4" = 1.0; "gpt-5.4-mini" = 1.0 } -OmitAaAliasMember @("claude-sonnet-5","gpt-5.6-terra","gpt-5.4","gpt-5.4-mini")
+    $candidate = Get-BenchmarkConsensusCandidate -ProfileKey "default-development" -ValidModels @("claude-sonnet-5","gpt-5.6-terra","gpt-5.4","gpt-5.4-mini") -IncumbentModel "claude-sonnet-5" -Snapshot $snapshot -AvailabilityVerified $true -Denylist $script:ModelDenylist -CapabilitiesCatalog $script:RealCapabilities -ProfileRequirement $script:DefaultDevRequirement -ProfileContextTier "default" -ProfileEffort "medium"
+    Assert-True ($null -eq $candidate) "A snapshot entry that cannot prove AA was consulted must fail safe rather than enable the fallback."
+}
+
+Run-Test "43 Get-ModelQualityDataForProfile reports AA alias configuration state" {
+    $snapshot = New-QualitySnapshot -AaScores @{ "claude-sonnet-5" = $null; "gpt-5.4" = $null } -AaCodingScores @{ "claude-sonnet-5" = $null; "gpt-5.4" = $null } -LbScores @{ "claude-sonnet-5" = 60; "gpt-5.4" = 90 } -Costs @{} -AaAliasNotConfigured @("gpt-5.4")
+    $configured = Get-ModelQualityDataForProfile -Snapshot $snapshot -ProfileKey "default-development" -ModelId "claude-sonnet-5"
+    $notConfigured = Get-ModelQualityDataForProfile -Snapshot $snapshot -ProfileKey "default-development" -ModelId "gpt-5.4"
+    Assert-True ([bool]$configured.aaAliasConfigured) "A non-null alias must be reported as configured."
+    Assert-True (-not [bool]$notConfigured.aaAliasConfigured) "A null alias must be reported as not configured."
+}
+
+Run-Test "44 Stale LiveBench source data disqualifies the LiveBench-only fallback" {
+    # Same data as test 36 (which promotes gpt-5.6-terra), only the LiveBench
+    # source date is old -- so the only difference is the staleness gate.
+    $stale = New-QualitySnapshot -AaScores @{ "claude-sonnet-5" = $null; "gpt-5.6-terra" = 80; "gpt-5.4" = 60 } -AaCodingScores @{ "claude-sonnet-5" = $null; "gpt-5.6-terra" = 80; "gpt-5.4" = 60 } -LbScores @{ "claude-sonnet-5" = 60; "gpt-5.6-terra" = 90; "gpt-5.4" = 50 } -Costs @{ "claude-sonnet-5" = 1.0; "gpt-5.6-terra" = 1.0; "gpt-5.4" = 1.0 } -LiveBenchSourceDate ((Get-Date).ToUniversalTime().AddDays(-200).ToString("yyyy-MM-dd"))
+    $candidate = Get-BenchmarkConsensusCandidate -ProfileKey "default-development" -ValidModels @("claude-sonnet-5","gpt-5.6-terra","gpt-5.4") -IncumbentModel "claude-sonnet-5" -Snapshot $stale -AvailabilityVerified $true -Denylist $script:ModelDenylist -CapabilitiesCatalog $script:RealCapabilities -ProfileRequirement $script:DefaultDevRequirement -ProfileContextTier "default" -ProfileEffort "medium" -LiveBenchOnlyFallbackMaxSourceAgeDays 90
+    Assert-True ($null -eq $candidate) "Sole-evidence LiveBench data beyond the staleness threshold must not promote anything."
+    Assert-True (-not (Test-LiveBenchOnlyFallbackSourceFresh -Snapshot $stale -MaxSourceAgeDays 90)) "Expected the 200-day-old LiveBench source to be judged stale."
+}
+
+Run-Test "45 Stale LiveBench source data does not gate the dual-source path" {
+    $stale = New-QualitySnapshot -AaScores @{ "claude-sonnet-5" = 70; "gpt-5.6-terra" = 80; "gpt-5.4" = 60 } -AaCodingScores @{ "claude-sonnet-5" = 70; "gpt-5.6-terra" = 80; "gpt-5.4" = 60 } -LbScores @{ "claude-sonnet-5" = 70; "gpt-5.6-terra" = 80; "gpt-5.4" = 60 } -Costs @{ "claude-sonnet-5" = 1.0; "gpt-5.6-terra" = 1.1; "gpt-5.4" = 0.9 } -LiveBenchSourceDate ((Get-Date).ToUniversalTime().AddDays(-200).ToString("yyyy-MM-dd"))
+    $candidate = Get-BenchmarkConsensusCandidate -ProfileKey "default-development" -ValidModels @("claude-sonnet-5","gpt-5.6-terra","gpt-5.4") -IncumbentModel "claude-sonnet-5" -Snapshot $stale -AvailabilityVerified $true -Denylist $script:ModelDenylist -CapabilitiesCatalog $script:RealCapabilities -ProfileRequirement $script:DefaultDevRequirement -ProfileContextTier "default" -ProfileEffort "medium" -LiveBenchOnlyFallbackMaxSourceAgeDays 90
+    Assert-Eq "gpt-5.6-terra" $candidate.model "Backward compatibility: the corroborated dual-source path must remain unaffected by the LiveBench staleness gate."
+}
+
+Run-Test "46 Active override whose AA alias was never configured is not quality-supported and clears" {
+    $snapshot = New-QualitySnapshot -AaScores @{ "gpt-5.4" = $null; "claude-sonnet-5" = $null } -AaCodingScores @{ "gpt-5.4" = $null; "claude-sonnet-5" = $null } -LbScores @{ "gpt-5.4" = 90; "claude-sonnet-5" = 70 } -Costs @{} -AaAliasNotConfigured @("gpt-5.4")
+    Assert-True (-not (Test-ActiveOverrideQualitySupported -ActiveModel "gpt-5.4" -PolicyPreferredModel "claude-sonnet-5" -IsFullFreshRun $true -ProfileKey "orchestrator" -Snapshot $snapshot)) "An override that was never cross-validated against AA must clear, even though it leads on LiveBench."
+}
+
+Run-Test "47 Active override backed by a genuine AA data gap is frozen, not revoked, when LiveBench is stale" {
+    $stale = New-QualitySnapshot -AaScores @{ "gpt-5.6-terra" = $null; "claude-sonnet-5" = $null } -AaCodingScores @{ "gpt-5.6-terra" = $null; "claude-sonnet-5" = $null } -LbScores @{ "gpt-5.6-terra" = 60; "claude-sonnet-5" = 90 } -Costs @{} -LiveBenchSourceDate ((Get-Date).ToUniversalTime().AddDays(-200).ToString("yyyy-MM-dd"))
+    Assert-True (Test-ActiveOverrideQualitySupported -ActiveModel "gpt-5.6-terra" -PolicyPreferredModel "claude-sonnet-5" -IsFullFreshRun $true -ProfileKey "orchestrator" -Snapshot $stale -LiveBenchOnlyFallbackMaxSourceAgeDays 90) "Transient upstream lag must freeze the check (preserve status quo), not revoke the override."
 }
 
 Write-Host ""

@@ -51,6 +51,7 @@
   },
   "consensusPolicy": {
     "staleAfterDays": 45,
-    "capabilityFreshnessDays": 60
+    "capabilityFreshnessDays": 60,
+    "liveBenchOnlyFallbackMaxSourceAgeDays": 90
   }
 }
