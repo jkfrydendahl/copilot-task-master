@@ -4,7 +4,7 @@ Reference: https://docs.github.com/en/copilot/reference/ai-models/model-comparis
 
 Model source: **copilot help config**
 
-Force benchmark consensus (manual first-run override): **True**
+Force benchmark consensus (manual first-run override): **False**
 
 ## Current profiles
 
@@ -272,9 +272,9 @@ _No `artificialAnalysis` alias is configured in `config/model-ranking-aliases.js
 - Artificial Analysis source date: 
 - Artificial Analysis Coding Agent source date: n/a
 - LiveBench source date: 2026-06-25
-- Artificial Analysis fetched at (UTC): 2026-09-01T12:06:27.5863149Z
-- Artificial Analysis Coding Agents fetched at (UTC): 2026-09-01T12:06:28.4787855Z
-- LiveBench fetched at (UTC): 2026-09-01T12:06:29.0869475Z
+- Artificial Analysis fetched at (UTC): 2026-09-01T12:08:42.5273948Z
+- Artificial Analysis Coding Agents fetched at (UTC): 2026-09-01T12:08:42.9636539Z
+- LiveBench fetched at (UTC): 2026-09-01T12:08:43.2059367Z
 
 > External rankings can auto-apply only after strict two-run consensus; verified availability, capabilities, pricing, and benchmark quality govern promotion, and family preferences are baseline-only.
 
