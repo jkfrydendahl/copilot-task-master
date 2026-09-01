@@ -1,4 +1,4 @@
-# Monthly task profile review (2026-08-27)
+# Monthly task profile review (2026-09-01)
 
 Reference: https://docs.github.com/en/copilot/reference/ai-models/model-comparison
 
@@ -27,9 +27,7 @@ Force benchmark consensus (manual first-run override): **True**
 - None.
 
 ## Benchmark consensus AA-data-missing fallback
-- "orchestrator": AA data missing -- using LiveBench-only fallback
-- "visual-ui": AA data missing -- using LiveBench-only fallback
-- "triage": AA data missing -- using LiveBench-only fallback
+- None.
 
 ## Active benchmark overrides
 - "orchestrator": "gpt-5.4"
@@ -60,6 +58,7 @@ Force benchmark consensus (manual first-run override): **True**
 | gpt-5.6-sol | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 | 30 | 2026-07-30 |
 | gpt-5.5 | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 | 30 | 2026-07-30 |
 | gpt-5-mini | context_unsupported, effort_unsupported | default | 0.25 | 2 | 2026-07-30 |
+| mai-code-1.1-flash | capabilities_missing | n/a | n/a | n/a | n/a |
 | mai-code-1-flash-picker | context_unsupported, effort_unsupported, pricing_missing | n/a | n/a | n/a | 2026-07-30 |
 | gemini-3.7-flash | capabilities_missing | n/a | n/a | n/a | n/a |
 
@@ -86,6 +85,7 @@ Force benchmark consensus (manual first-run override): **True**
 | gpt-5.4 | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 2.5 | 15 | 2026-07-30 |
 | gpt-5.3-codex | pricing_output_exceeds_ceiling | default | 1.75 | 14 | 2026-07-30 |
 | gpt-5-mini | context_unsupported, effort_unsupported | default | 0.25 | 2 | 2026-07-30 |
+| mai-code-1.1-flash | capabilities_missing | n/a | n/a | n/a | n/a |
 | mai-code-1-flash-picker | context_unsupported, effort_unsupported, pricing_missing | n/a | n/a | n/a | 2026-07-30 |
 | gemini-3.7-flash | capabilities_missing | n/a | n/a | n/a | n/a |
 | gemini-3.1-pro-preview | pricing_output_exceeds_ceiling | default | 2 | 12 | 2026-07-30 |
@@ -109,6 +109,7 @@ Force benchmark consensus (manual first-run override): **True**
 | gpt-5.6-sol | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 | 30 | 2026-07-30 |
 | gpt-5.5 | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 | 30 | 2026-07-30 |
 | gpt-5-mini | context_unsupported, effort_unsupported | default | 0.25 | 2 | 2026-07-30 |
+| mai-code-1.1-flash | capabilities_missing | n/a | n/a | n/a | n/a |
 | mai-code-1-flash-picker | context_unsupported, effort_unsupported, pricing_missing | n/a | n/a | n/a | 2026-07-30 |
 | gemini-3.7-flash | capabilities_missing | n/a | n/a | n/a | n/a |
 
@@ -124,6 +125,7 @@ Force benchmark consensus (manual first-run override): **True**
 | claude-opus-4.8-fast | context_unsupported, effort_unsupported, pricing_missing | n/a | n/a | n/a | 2026-07-30 |
 | claude-sonnet-4.5 | context_unsupported, effort_unsupported | default | 3 | 15 | 2026-07-30 |
 | gpt-5-mini | context_unsupported, effort_unsupported | default | 0.25 | 2 | 2026-07-30 |
+| mai-code-1.1-flash | capabilities_missing | n/a | n/a | n/a | n/a |
 | mai-code-1-flash-picker | context_unsupported, effort_unsupported, pricing_missing | n/a | n/a | n/a | 2026-07-30 |
 | gemini-3.7-flash | capabilities_missing | n/a | n/a | n/a | n/a |
 
@@ -142,6 +144,7 @@ Force benchmark consensus (manual first-run override): **True**
 | gpt-5.4-mini | context_unsupported | default | 0.75 | 4.5 | 2026-07-30 |
 | gpt-5.3-codex | context_unsupported | default | 1.75 | 14 | 2026-07-30 |
 | gpt-5-mini | context_unsupported, effort_unsupported | default | 0.25 | 2 | 2026-07-30 |
+| mai-code-1.1-flash | capabilities_missing | n/a | n/a | n/a | n/a |
 | mai-code-1-flash-picker | context_unsupported, effort_unsupported, pricing_missing | n/a | n/a | n/a | 2026-07-30 |
 | gemini-3.7-flash | capabilities_missing | n/a | n/a | n/a | n/a |
 
@@ -157,6 +160,7 @@ Force benchmark consensus (manual first-run override): **True**
 | claude-opus-4.8-fast | context_unsupported, effort_unsupported, pricing_missing | n/a | n/a | n/a | 2026-07-30 |
 | claude-sonnet-4.5 | context_unsupported, effort_unsupported | default | 3 | 15 | 2026-07-30 |
 | gpt-5-mini | context_unsupported, effort_unsupported | default | 0.25 | 2 | 2026-07-30 |
+| mai-code-1.1-flash | capabilities_missing | n/a | n/a | n/a | n/a |
 | mai-code-1-flash-picker | context_unsupported, effort_unsupported, pricing_missing | n/a | n/a | n/a | 2026-07-30 |
 | gemini-3.7-flash | capabilities_missing | n/a | n/a | n/a | n/a |
 
@@ -185,6 +189,7 @@ Force benchmark consensus (manual first-run override): **True**
 | gpt-5.4-mini | vision_unknown | default | 0.75 | 4.5 | 2026-07-30 |
 | gpt-5.3-codex | vision_unknown | default | 1.75 | 14 | 2026-07-30 |
 | gpt-5-mini | context_unsupported, effort_unsupported | default | 0.25 | 2 | 2026-07-30 |
+| mai-code-1.1-flash | capabilities_missing | n/a | n/a | n/a | n/a |
 | mai-code-1-flash-picker | vision_unknown, context_unsupported, effort_unsupported, pricing_missing | n/a | n/a | n/a | 2026-07-30 |
 | gemini-3.7-flash | capabilities_missing | n/a | n/a | n/a | n/a |
 | gemini-3.6-flash | vision_unknown | default | 1.5 | 7.5 | 2026-07-30 |
@@ -213,6 +218,7 @@ Force benchmark consensus (manual first-run override): **True**
 | gpt-5.4 | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 2.5 | 15 | 2026-07-30 |
 | gpt-5.3-codex | pricing_output_exceeds_ceiling | default | 1.75 | 14 | 2026-07-30 |
 | gpt-5-mini | context_unsupported, effort_unsupported | default | 0.25 | 2 | 2026-07-30 |
+| mai-code-1.1-flash | capabilities_missing | n/a | n/a | n/a | n/a |
 | mai-code-1-flash-picker | context_unsupported, effort_unsupported, pricing_missing | n/a | n/a | n/a | 2026-07-30 |
 | gemini-3.7-flash | capabilities_missing | n/a | n/a | n/a | n/a |
 | gemini-3.1-pro-preview | pricing_output_exceeds_ceiling | default | 2 | 12 | 2026-07-30 |
@@ -240,32 +246,33 @@ Force benchmark consensus (manual first-run override): **True**
 | gpt-5.4 | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 2.5 | 15 | 2026-07-30 |
 | gpt-5.3-codex | pricing_output_exceeds_ceiling | default | 1.75 | 14 | 2026-07-30 |
 | gpt-5-mini | context_unsupported, effort_unsupported | default | 0.25 | 2 | 2026-07-30 |
+| mai-code-1.1-flash | capabilities_missing | n/a | n/a | n/a | n/a |
 | mai-code-1-flash-picker | context_unsupported, effort_unsupported, pricing_missing | n/a | n/a | n/a | 2026-07-30 |
 | gemini-3.7-flash | capabilities_missing | n/a | n/a | n/a | n/a |
 | gemini-3.1-pro-preview | pricing_output_exceeds_ceiling | default | 2 | 12 | 2026-07-30 |
 
 ## External model ranking snapshot
 
-- Status: **ok**
+- Status: **partial**
 - Stale: **false**
 - Fallback used: **false**
-- Note: Ranking buckets generated from live source data.
+- Note: Ranking buckets generated from partial live data. The committed last-good snapshot was not replaced.
 - Artificial Analysis URL: https://artificialanalysis.ai/?intelligence=agentic-index
 - Artificial Analysis Coding Agents URL: https://artificialanalysis.ai/agents/coding-agents
 - LiveBench URL: https://github.com/LiveBench/new-livebench/tree/main/public
-- Artificial Analysis source date: 2026-08-26
+- Artificial Analysis source date: 
 - Artificial Analysis Coding Agent source date: n/a
 - LiveBench source date: 2026-06-25
-- Artificial Analysis fetched at (UTC): 2026-08-27T11:09:36.9352656Z
-- Artificial Analysis Coding Agents fetched at (UTC): 2026-08-27T11:09:38.5690111Z
-- LiveBench fetched at (UTC): 2026-08-27T11:09:38.7604765Z
+- Artificial Analysis fetched at (UTC): 2026-09-01T09:45:10.7433584Z
+- Artificial Analysis Coding Agents fetched at (UTC): 2026-09-01T09:45:10.9993426Z
+- LiveBench fetched at (UTC): 2026-09-01T09:45:11.2146572Z
 
 > External rankings can auto-apply only after strict two-run consensus; verified availability, capabilities, pricing, and benchmark quality govern promotion, and family preferences are baseline-only.
 
 | Model | AA Agentic | AA Coding Agent | LB Coding | LB Agentic Coding | LB Reasoning | LB Instruction Following | LB Cost | LB Cost Bucket |
 |---|---|---|---|---|---|---|---|---|
 | claude-sonnet-5 | n/a | n/a | competitive | top | competitive | competitive | 0.5134 | lagging |
-| claude-opus-5 | top | competitive | competitive | top | top | competitive | 0.7067 | lagging |
+| claude-opus-5 | n/a | competitive | competitive | top | top | competitive | 0.7067 | lagging |
 | claude-opus-4.8 | n/a | n/a | top | competitive | top | top | 0.9858 | lagging |
 | claude-opus-4.8-fast | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a |
 | claude-opus-4.7 | n/a | n/a | top | competitive | lagging | top | 0.5282 | lagging |
@@ -273,15 +280,16 @@ Force benchmark consensus (manual first-run override): **True**
 | claude-opus-4.6 | n/a | n/a | lagging | lagging | competitive | lagging | 0.4035 | competitive |
 | claude-sonnet-4.5 | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a |
 | claude-opus-4.5 | n/a | n/a | competitive | lagging | lagging | lagging | 0.6104 | lagging |
-| claude-haiku-4.5 | lagging | n/a | n/a | n/a | n/a | n/a | n/a | n/a |
-| gpt-5.6-sol | top | competitive | top | top | top | top | 0.507 | competitive |
-| gpt-5.6-terra | competitive | n/a | lagging | top | top | competitive | 0.3437 | top |
-| gpt-5.6-luna | lagging | n/a | top | lagging | lagging | lagging | 0.1677 | top |
+| claude-haiku-4.5 | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a |
+| gpt-5.6-sol | n/a | competitive | top | top | top | top | 0.507 | competitive |
+| gpt-5.6-terra | n/a | n/a | lagging | top | top | competitive | 0.3437 | top |
+| gpt-5.6-luna | n/a | n/a | top | lagging | lagging | lagging | 0.1677 | top |
 | gpt-5.5 | n/a | n/a | top | top | top | top | 0.4356 | competitive |
 | gpt-5.4 | n/a | n/a | lagging | competitive | competitive | top | 0.3874 | top |
 | gpt-5.4-mini | n/a | n/a | lagging | lagging | lagging | lagging | 0.3343 | top |
 | gpt-5.3-codex | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a |
 | gpt-5-mini | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a |
+| mai-code-1.1-flash | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a |
 | mai-code-1-flash-picker | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a |
 | gemini-3.7-flash | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a |
 | gemini-3.6-flash | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a |
