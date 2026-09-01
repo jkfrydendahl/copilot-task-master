@@ -272,9 +272,9 @@ _No `artificialAnalysis` alias is configured in `config/model-ranking-aliases.js
 - Artificial Analysis source date: 
 - Artificial Analysis Coding Agent source date: n/a
 - LiveBench source date: 2026-06-25
-- Artificial Analysis fetched at (UTC): 2026-09-01T12:08:42.5273948Z
-- Artificial Analysis Coding Agents fetched at (UTC): 2026-09-01T12:08:42.9636539Z
-- LiveBench fetched at (UTC): 2026-09-01T12:08:43.2059367Z
+- Artificial Analysis fetched at (UTC): 2026-09-01T12:21:41.0550945Z
+- Artificial Analysis Coding Agents fetched at (UTC): 2026-09-01T12:21:41.3339445Z
+- LiveBench fetched at (UTC): 2026-09-01T12:21:41.4920432Z
 
 > External rankings can auto-apply only after strict two-run consensus; verified availability, capabilities, pricing, and benchmark quality govern promotion, and family preferences are baseline-only.
 
