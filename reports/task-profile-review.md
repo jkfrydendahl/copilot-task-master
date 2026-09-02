@@ -1,4 +1,4 @@
-# Monthly task profile review (2026-09-01)
+# Monthly task profile review (2026-09-02)
 
 Reference: https://docs.github.com/en/copilot/reference/ai-models/model-comparison
 
@@ -20,8 +20,22 @@ Force benchmark consensus (manual first-run override): **False**
 | mechanical | claude-haiku-4.5 | low | default |
 | triage | claude-sonnet-5 | low | default |
 
+## Artificial Analysis metric routing
+
+| Profile | AA metric used for consensus |
+|---|---|
+| orchestrator | intelligence |
+| quick | coding |
+| default-development | coding |
+| agentic-implementation | coding-agents (HTML leaderboard feed) |
+| deep-reasoning | intelligence |
+| review | intelligence |
+| visual-ui | coding |
+| mechanical | coding |
+| triage | intelligence |
+
 ## Applied profile changes in this run
-- "default-development": "gpt-5.6-luna" -> "claude-sonnet-5" (policy_preference)
+- None.
 
 ## Benchmark consensus pending
 - None.
@@ -279,35 +293,35 @@ _No `artificialAnalysis` alias is configured in `config/model-ranking-aliases.js
 - Artificial Analysis source date: 
 - Artificial Analysis Coding Agent source date: n/a
 - LiveBench source date: 2026-06-25
-- Artificial Analysis fetched at (UTC): 2026-09-01T13:13:14.3287496Z
-- Artificial Analysis Coding Agents fetched at (UTC): 2026-09-01T13:13:15.6982663Z
-- LiveBench fetched at (UTC): 2026-09-01T13:13:15.8823855Z
+- Artificial Analysis fetched at (UTC): 2026-09-02T06:15:16.3959081Z
+- Artificial Analysis Coding Agents fetched at (UTC): 2026-09-02T06:15:17.3861411Z
+- LiveBench fetched at (UTC): 2026-09-02T06:15:17.5379871Z
 
 > External rankings can auto-apply only after strict two-run consensus; verified availability, capabilities, pricing, and benchmark quality govern promotion, and family preferences are baseline-only.
 
 | Model | AA Intelligence | AA Coding | AA Coding Agent | LB Coding | LB Agentic Coding | LB Reasoning | LB Instruction Following | LB Cost | LB Cost Bucket |
 |---|---|---|---|---|---|---|---|---|---|
-| claude-sonnet-5 | competitive | n/a | competitive | top | competitive | competitive | 0.5134 | lagging |
-| claude-opus-5 | top | competitive | competitive | top | top | competitive | 0.7067 | lagging |
-| claude-opus-4.8 | top | n/a | top | competitive | top | top | 0.9858 | lagging |
-| claude-opus-4.8-fast | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a |
-| claude-opus-4.7 | n/a | n/a | top | competitive | lagging | top | 0.5282 | lagging |
-| claude-sonnet-4.6 | n/a | n/a | lagging | lagging | lagging | lagging | 0.3062 | top |
-| claude-opus-4.6 | n/a | n/a | lagging | lagging | competitive | lagging | 0.4035 | competitive |
-| claude-sonnet-4.5 | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a |
-| claude-opus-4.5 | n/a | n/a | competitive | lagging | lagging | lagging | 0.6104 | lagging |
-| claude-haiku-4.5 | lagging | n/a | n/a | n/a | n/a | n/a | n/a | n/a |
-| gpt-5.6-sol | top | competitive | top | top | top | top | 0.507 | competitive |
-| gpt-5.6-terra | competitive | n/a | lagging | top | top | competitive | 0.3437 | top |
-| gpt-5.6-luna | lagging | n/a | top | lagging | lagging | lagging | 0.1677 | top |
-| gpt-5.5 | n/a | n/a | top | top | top | top | 0.4356 | competitive |
-| gpt-5.4 | n/a | n/a | lagging | competitive | competitive | top | 0.3874 | top |
-| gpt-5.4-mini | n/a | n/a | lagging | lagging | lagging | lagging | 0.3343 | top |
-| gpt-5.3-codex | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a |
-| gpt-5-mini | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a |
-| mai-code-1.1-flash | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a |
-| mai-code-1-flash-picker | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a |
-| gemini-3.7-flash | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a |
-| gemini-3.6-flash | lagging | n/a | n/a | n/a | n/a | n/a | n/a | n/a |
-| gemini-3.5-flash | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a |
-| gemini-3.1-pro-preview | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a |
+| claude-sonnet-5 | competitive | competitive | n/a | competitive | top | competitive | competitive | 0.5134 | lagging |
+| claude-opus-5 | top | top | competitive | competitive | top | top | competitive | 0.7067 | lagging |
+| claude-opus-4.8 | top | competitive | n/a | top | competitive | top | top | 0.9858 | lagging |
+| claude-opus-4.8-fast | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a |
+| claude-opus-4.7 | n/a | n/a | n/a | top | competitive | lagging | top | 0.5282 | lagging |
+| claude-sonnet-4.6 | n/a | n/a | n/a | lagging | lagging | lagging | lagging | 0.3062 | top |
+| claude-opus-4.6 | n/a | n/a | n/a | lagging | lagging | competitive | lagging | 0.4035 | competitive |
+| claude-sonnet-4.5 | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a |
+| claude-opus-4.5 | n/a | n/a | n/a | competitive | lagging | lagging | lagging | 0.6104 | lagging |
+| claude-haiku-4.5 | lagging | lagging | n/a | n/a | n/a | n/a | n/a | n/a | n/a |
+| gpt-5.6-sol | top | top | competitive | top | top | top | top | 0.507 | competitive |
+| gpt-5.6-terra | competitive | top | n/a | lagging | top | top | competitive | 0.3437 | top |
+| gpt-5.6-luna | lagging | lagging | n/a | top | lagging | lagging | lagging | 0.1677 | top |
+| gpt-5.5 | n/a | n/a | n/a | top | top | top | top | 0.4356 | competitive |
+| gpt-5.4 | n/a | n/a | n/a | lagging | competitive | competitive | top | 0.3874 | top |
+| gpt-5.4-mini | n/a | n/a | n/a | lagging | lagging | lagging | lagging | 0.3343 | top |
+| gpt-5.3-codex | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a |
+| gpt-5-mini | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a |
+| mai-code-1.1-flash | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a |
+| mai-code-1-flash-picker | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a |
+| gemini-3.7-flash | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a |
+| gemini-3.6-flash | lagging | lagging | n/a | n/a | n/a | n/a | n/a | n/a | n/a |
+| gemini-3.5-flash | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a |
+| gemini-3.1-pro-preview | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a |
