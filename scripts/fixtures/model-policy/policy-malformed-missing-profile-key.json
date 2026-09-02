@@ -28,6 +28,15 @@
     "visual-ui": "coding",
     "quick": "coding"
   },
+  "profileArtificialAnalysisMetrics": {
+    "default-development": "coding",
+    "visual-ui": "coding",
+    "quick": "coding",
+    "orchestrator": "intelligence",
+    "triage": "intelligence",
+    "deep-reasoning": "intelligence",
+    "review": "intelligence"
+  },
   "profileRequirements": {
     "quick": { "inputCeilingPerMillion": 2, "outputCeilingPerMillion": 10, "requiresVision": false, "requiresCliAgent": true, "costSensitive": true },
     "mechanical": { "inputCeilingPerMillion": 2, "outputCeilingPerMillion": 10, "requiresVision": false, "requiresCliAgent": true, "costSensitive": true },
@@ -39,5 +48,5 @@
     "agentic-implementation": { "inputCeilingPerMillion": 10, "outputCeilingPerMillion": 50, "requiresVision": false, "requiresCliAgent": true, "costSensitive": false },
     "deep-reasoning": { "inputCeilingPerMillion": 10, "outputCeilingPerMillion": 45, "requiresVision": false, "requiresCliAgent": true, "costSensitive": false }
   },
-  "consensusPolicy": { "staleAfterDays": 45, "capabilityFreshnessDays": 60 }
+  "consensusPolicy": { "staleAfterDays": 45, "capabilityFreshnessDays": 60, "liveBenchOnlyFallbackMaxSourceAgeDays": 90 }
 }

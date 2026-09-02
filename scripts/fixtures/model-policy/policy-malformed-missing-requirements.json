@@ -4,5 +4,6 @@
   "familyPatterns": {},
   "classPreferences": {},
   "profileLiveBenchCategories": {},
-  "consensusPolicy": { "staleAfterDays": 45, "capabilityFreshnessDays": 60 }
+  "profileArtificialAnalysisMetrics": {},
+  "consensusPolicy": { "staleAfterDays": 45, "capabilityFreshnessDays": 60, "liveBenchOnlyFallbackMaxSourceAgeDays": 90 }
 }

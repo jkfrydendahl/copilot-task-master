@@ -4,8 +4,9 @@
   "familyPatterns": {},
   "classPreferences": {},
   "profileLiveBenchCategories": {},
+  "profileArtificialAnalysisMetrics": {},
   "profileRequirements": {
     "quick": { "inputCeilingPerMillion": "not-a-number", "outputCeilingPerMillion": 10, "requiresVision": false, "requiresCliAgent": true, "costSensitive": true }
   },
-  "consensusPolicy": { "staleAfterDays": 45, "capabilityFreshnessDays": 60 }
+  "consensusPolicy": { "staleAfterDays": 45, "capabilityFreshnessDays": 60, "liveBenchOnlyFallbackMaxSourceAgeDays": 90 }
 }

@@ -46,6 +46,7 @@ function Run-Test {
 function New-QualitySnapshot {
     param(
         [hashtable]$AaScores,
+        [hashtable]$AaCodingScoresMain = $null,
         [hashtable]$AaCodingScores,
         [hashtable]$LbScores,
         [hashtable]$Costs,
@@ -60,16 +61,28 @@ function New-QualitySnapshot {
         # exercised deterministically instead of drifting with the wall clock.
         [string]$LiveBenchSourceDate = ((Get-Date).ToUniversalTime().AddDays(-10).ToString("yyyy-MM-dd"))
     )
+    if ($null -eq $AaCodingScoresMain) { $AaCodingScoresMain = $AaScores }
     $models = [ordered]@{}
-    $aaBuckets = Get-RankingBucketAssignments -ScoresByModel $AaScores
-    $aaRanks = Get-OrdinalRankAssignments -ScoresByModel $AaScores
+    $aaIntelligenceBuckets = Get-RankingBucketAssignments -ScoresByModel $AaScores
+    $aaIntelligenceRanks = Get-OrdinalRankAssignments -ScoresByModel $AaScores
+    $aaCodingMainBuckets = Get-RankingBucketAssignments -ScoresByModel $AaCodingScoresMain
+    $aaCodingMainRanks = Get-OrdinalRankAssignments -ScoresByModel $AaCodingScoresMain
     $aaCodingBuckets = Get-RankingBucketAssignments -ScoresByModel $AaCodingScores
     $aaCodingRanks = Get-OrdinalRankAssignments -ScoresByModel $AaCodingScores
     $lbBuckets = Get-RankingBucketAssignments -ScoresByModel $LbScores
     $lbRanks = Get-OrdinalRankAssignments -ScoresByModel $LbScores
     $costBuckets = Get-RankingBucketAssignments -ScoresByModel $Costs -LowerIsBetter
     foreach ($m in $AaScores.Keys) {
-        $aaEntry = [ordered]@{ intelligenceIndex = $AaScores[$m]; bucket = $aaBuckets[$m]; ordinalRank = $aaRanks[$m] }
+        $aaEntry = [ordered]@{
+            intelligenceIndex = $AaScores[$m]
+            codingIndex = $AaCodingScoresMain[$m]
+            intelligenceBucket = $aaIntelligenceBuckets[$m]
+            intelligenceOrdinalRank = $aaIntelligenceRanks[$m]
+            codingBucket = $aaCodingMainBuckets[$m]
+            codingOrdinalRank = $aaCodingMainRanks[$m]
+            bucket = $aaIntelligenceBuckets[$m]
+            ordinalRank = $aaIntelligenceRanks[$m]
+        }
         $aaCodingEntry = [ordered]@{ codingAgentIndex = $AaCodingScores[$m]; bucket = $aaCodingBuckets[$m]; ordinalRank = $aaCodingRanks[$m] }
         if ($OmitAaAliasMember -notcontains $m) {
             $aliasValue = if ($AaAliasNotConfigured -contains $m) { $null } else { "$m-aa-alias" }
@@ -111,6 +124,7 @@ Run-Test "1 Artificial Analysis intelligence API parsing succeeds with expected 
     Assert-Eq "ok" $parsed.status "Expected successful parse from mocked API payload."
     Assert-True ($parsed.models.ContainsKey("gpt-5-6-sol")) "Expected model map to be keyed by API slug."
     Assert-Eq "57.5" $parsed.models["gpt-5-6-sol"].intelligenceIndex "Expected parsed intelligence index value."
+    Assert-Eq "71.5" $parsed.models["gpt-5-6-sol"].codingIndex "Expected parsed coding index value from same API payload."
     $aliases = Get-ModelRankingAliases -AliasesPath (Join-Path (Split-Path $PSScriptRoot -Parent) "config/model-ranking-aliases.json")
     foreach ($modelId in $aliases.Keys) {
         $entry = $aliases[$modelId]
@@ -304,7 +318,7 @@ Run-Test "20 Report renders ordered-dictionary coding and cost data" {
     $snapshot.sourceStatus.artificialAnalysisCodingAgents.fetchedAtUtc = "2026-07-30T00:00:00Z"
     $lines = Get-ModelRankingReportLines -Snapshot $snapshot -ValidModels @("claude-opus-5")
     $tableLine = @($lines | Where-Object { $_ -like "| claude-opus-5 |*" })[0]
-    Assert-Eq "| claude-opus-5 | competitive | competitive | competitive | competitive | competitive | competitive | 0.75 | competitive |" $tableLine "Expected Coding Agents and cost values in report."
+    Assert-Eq "| claude-opus-5 | competitive | competitive | competitive | competitive | competitive | competitive | competitive | 0.75 | competitive |" $tableLine "Expected Coding Agents and cost values in report."
     Assert-True ($lines -contains "- Artificial Analysis Coding Agents fetched at (UTC): 2026-07-30T00:00:00Z") "Expected Coding Agents fetch timestamp."
 }
 
@@ -348,7 +362,24 @@ Run-Test "25 Agentic quality reads ordered-dictionary Coding Agents data" {
     Assert-Eq "90" $quality.aaScore "Expected Coding Agents score for agentic profile."
 }
 
-Run-Test "26 Unrelated source failure does not block profile consensus" {
+Run-Test "26 Profile AA metric routing picks coding vs intelligence as configured" {
+    Assert-Eq "codingIndex" (Get-ProfileAaScoreProperty -ProfileKey "default-development") "default-development should use AA coding index."
+    Assert-Eq "intelligenceIndex" (Get-ProfileAaScoreProperty -ProfileKey "review") "review should use AA intelligence index."
+}
+
+Run-Test "27 default-development AA score reads codingIndex, not intelligenceIndex" {
+    $snapshot = New-QualitySnapshot `
+        -AaScores @{ "claude-sonnet-5" = 10; "gpt-5.6-terra" = 20; "gpt-5.4" = 5 } `
+        -AaCodingScoresMain @{ "claude-sonnet-5" = 70; "gpt-5.6-terra" = 90; "gpt-5.4" = 10 } `
+        -AaCodingScores @{ "claude-sonnet-5" = 1; "gpt-5.6-terra" = 2; "gpt-5.4" = 1 } `
+        -LbScores @{ "claude-sonnet-5" = 80; "gpt-5.6-terra" = 85; "gpt-5.4" = 60 } `
+        -Costs @{ "claude-sonnet-5" = 1.0; "gpt-5.6-terra" = 1.0; "gpt-5.4" = 1.0 }
+    $quality = Get-ModelQualityDataForProfile -Snapshot $snapshot -ProfileKey "default-development" -ModelId "gpt-5.6-terra"
+    Assert-Eq "90" $quality.aaScore "Expected coding-routed profile to read artificialAnalysis.codingIndex."
+    Assert-Eq "top" $quality.aaBucket "Expected bucket from coding metric routing."
+}
+
+Run-Test "28 Unrelated source failure does not block profile consensus" {
     $snapshot = New-QualitySnapshot -AaScores @{ "claude-sonnet-5" = 80 } -AaCodingScores @{ "claude-sonnet-5" = 90 } -LbScores @{ "claude-sonnet-5" = 85 } -Costs @{ "claude-sonnet-5" = 0.75 }
     $snapshot.status = "partial"
     $snapshot.sourceStatus.artificialAnalysisCodingAgents.status = "unavailable"
@@ -358,7 +389,7 @@ Run-Test "26 Unrelated source failure does not block profile consensus" {
     Assert-True (Test-FullFreshConsensusRunForProfile -Snapshot $snapshot -ProfileKey "agentic-implementation") "Agentic implementation should not require AA Intelligence."
 }
 
-Run-Test "27 Force flag applies first run immediately" {
+Run-Test "29 Force flag applies first run immediately" {
     $state = [ordered]@{ pending = $null; activeOverride = $null }
     $r = Resolve-BenchmarkConsensusState -ProfileKey "default-development" -PolicyPreferredModel "inc" -IncumbentModel "inc" -CurrentState $state -IsFullFreshRun $true -Candidate ([pscustomobject]@{ model = "ch" }) -SourceDates @{a="1"} -SourceVersions @{a="1"} -ActiveOverrideStillValid $true -ForceImmediateApply $true
     Assert-True ($r.applied) "Expected forced apply on first run."
@@ -367,7 +398,7 @@ Run-Test "27 Force flag applies first run immediately" {
     Assert-True ($r.state.activeOverride.forced) "Expected activeOverride to record forced flag."
 }
 
-Run-Test "28 Default (force flag false) still requires second run" {
+Run-Test "30 Default (force flag false) still requires second run" {
     $state = [ordered]@{ pending = $null; activeOverride = $null }
     $r = Resolve-BenchmarkConsensusState -ProfileKey "default-development" -PolicyPreferredModel "inc" -IncumbentModel "inc" -CurrentState $state -IsFullFreshRun $true -Candidate ([pscustomobject]@{ model = "ch" }) -SourceDates @{a="1"} -SourceVersions @{a="1"} -ActiveOverrideStillValid $true
     Assert-True (-not $r.applied) "Should not apply first run when force flag is not set."
@@ -375,21 +406,21 @@ Run-Test "28 Default (force flag false) still requires second run" {
     Assert-Eq "1" $r.pendingCount "Expected pending count 1 without force."
 }
 
-Run-Test "29 Force flag does not apply when no candidate qualifies" {
+Run-Test "31 Force flag does not apply when no candidate qualifies" {
     $state = [ordered]@{ pending = $null; activeOverride = $null }
     $r = Resolve-BenchmarkConsensusState -ProfileKey "default-development" -PolicyPreferredModel "inc" -IncumbentModel "inc" -CurrentState $state -IsFullFreshRun $true -Candidate $null -SourceDates @{} -ActiveOverrideStillValid $true -ForceImmediateApply $true
     Assert-True (-not $r.applied) "Force must not fabricate a candidate."
     Assert-True (-not $r.forcedApply) "forcedApply must be false with no candidate."
 }
 
-Run-Test "30 Force flag does not apply on partial/stale/fallback runs" {
+Run-Test "32 Force flag does not apply on partial/stale/fallback runs" {
     $state = [ordered]@{ pending = $null; activeOverride = $null }
     $r = Resolve-BenchmarkConsensusState -ProfileKey "default-development" -PolicyPreferredModel "inc" -IncumbentModel "inc" -CurrentState $state -IsFullFreshRun $false -Candidate ([pscustomobject]@{ model = "ch" }) -SourceDates @{} -ActiveOverrideStillValid $true -ForceImmediateApply $true
     Assert-True (-not $r.applied) "Force must not bypass source completeness/freshness requirement."
     Assert-True (-not $r.forcedApply) "forcedApply must be false when run is not full/fresh."
 }
 
-Run-Test "31 Force flag does not resurrect an already-cleared invalid active override" {
+Run-Test "33 Force flag does not resurrect an already-cleared invalid active override" {
     $state = [ordered]@{ pending = $null; activeOverride = [ordered]@{ model = "bad" } }
     $r = Resolve-BenchmarkConsensusState -ProfileKey "default-development" -PolicyPreferredModel "inc" -IncumbentModel "inc" -CurrentState $state -IsFullFreshRun $true -Candidate ([pscustomobject]@{ model = "ch" }) -SourceDates @{a="1"} -SourceVersions @{a="1"} -ActiveOverrideStillValid $false -ForceImmediateApply $true
     Assert-True ($r.activeCleared) "Invalid active override must still be cleared."

@@ -75,6 +75,9 @@ Run-Test "P1 Real model-policy.json loads and validates" {
     Assert-Eq "2" $policy.profileRequirements["quick"].inputCeilingPerMillion "Expected quick input ceiling 2."
     Assert-Eq "45" $policy.profileRequirements["deep-reasoning"].outputCeilingPerMillion "Expected deep-reasoning output ceiling 45."
     Assert-True ([bool]$policy.profileRequirements["visual-ui"].requiresVision) "Expected visual-ui to require vision."
+    Assert-Eq "coding" $policy.profileArtificialAnalysisMetrics["default-development"] "Expected default-development routed to AA coding metric."
+    Assert-Eq "intelligence" $policy.profileArtificialAnalysisMetrics["review"] "Expected review routed to AA intelligence metric."
+    Assert-True (-not $policy.profileArtificialAnalysisMetrics.ContainsKey("agentic-implementation")) "agentic-implementation should stay on the dedicated coding-agents feed."
 }
 
 Run-Test "P2 Malformed policy (missing profileRequirements) fails fast" {
@@ -369,11 +372,31 @@ Run-Test "M24 LiveBench cost no longer blocks a qualifying challenger, only brea
     $snapshot = [pscustomobject]@{
         models = [ordered]@{
             "claude-sonnet-5" = [ordered]@{
-                artificialAnalysis = [ordered]@{ intelligenceIndex = 70; bucket = "competitive"; ordinalRank = 2 }
+                artificialAnalysis = [ordered]@{
+                    alias = "claude-sonnet-5"
+                    intelligenceIndex = 70
+                    codingIndex = 70
+                    intelligenceBucket = "competitive"
+                    intelligenceOrdinalRank = 2
+                    codingBucket = "competitive"
+                    codingOrdinalRank = 2
+                    bucket = "competitive"
+                    ordinalRank = 2
+                }
                 liveBench = [ordered]@{ categories = [ordered]@{ coding = 70 }; buckets = [ordered]@{ coding = "competitive" }; ordinalRanks = [ordered]@{ coding = 2 }; costPerSuccessfulTask = 1.0; costBucket = "competitive" }
             }
             "gpt-5.6-terra" = [ordered]@{
-                artificialAnalysis = [ordered]@{ intelligenceIndex = 80; bucket = "top"; ordinalRank = 1 }
+                artificialAnalysis = [ordered]@{
+                    alias = "gpt-5.6-terra"
+                    intelligenceIndex = 80
+                    codingIndex = 80
+                    intelligenceBucket = "top"
+                    intelligenceOrdinalRank = 1
+                    codingBucket = "top"
+                    codingOrdinalRank = 1
+                    bucket = "top"
+                    ordinalRank = 1
+                }
                 liveBench = [ordered]@{ categories = [ordered]@{ coding = 80 }; buckets = [ordered]@{ coding = "top" }; ordinalRanks = [ordered]@{ coding = 1 }; costPerSuccessfulTask = 50.0; costBucket = "lagging" }
             }
         }
@@ -420,12 +443,14 @@ Run-Test "F4 Automatic family baseline selection freezes on unverified availabil
     }
     $requirement = New-Requirement -InputCeiling 3 -OutputCeiling 15
     $validModels = @("claude-sonnet-5", "gpt-5.6-terra")
-    $filter = {
-        param($modelId)
-        $rec = if ($capCatalog.ContainsKey($modelId)) { $capCatalog[$modelId] } else { $null }
-        (Get-ModelAdmissibilityVerdict -ModelId $modelId -ProfileKey "default-development" -AvailabilityVerified $false -Denylist @() -AvailableModels $validModels -CapabilityRecord $rec -ProfileRequirement $requirement -ProfileContextTier "default" -ProfileEffort "medium").admissible
-    }.GetNewClosure()
-    $result = Get-PreferredModelForProfilePolicy -ProfileKey "default-development" -ValidModels $validModels -AdmissibilityFilter $filter
+    $admissible = @(
+        $validModels | Where-Object {
+            $modelId = $_
+            $rec = if ($capCatalog.ContainsKey($modelId)) { $capCatalog[$modelId] } else { $null }
+            (Get-ModelAdmissibilityVerdict -ModelId $modelId -ProfileKey "default-development" -AvailabilityVerified $false -Denylist @() -AvailableModels $validModels -CapabilityRecord $rec -ProfileRequirement $requirement -ProfileContextTier "default" -ProfileEffort "medium").admissible
+        }
+    )
+    $result = Get-PreferredModelForProfilePolicy -ProfileKey "default-development" -ValidModels $validModels -AdmissibleModels $admissible
     Assert-True ($null -eq $result) "Expected unverified availability to freeze automatic baseline changes -- no model can pass the admissibility engine while availability is unverified."
 }
 

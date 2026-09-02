@@ -351,10 +351,8 @@ Sources:
 Guardrails:
 - Quality requirements per profile:
   - `agentic-implementation`: AA Coding Agent Index + LiveBench `agenticCoding`
-  - `deep-reasoning`: AA Intelligence Index + LiveBench `reasoning`
-  - `orchestrator` / `triage`: AA Intelligence Index + LiveBench `instructionFollowing`
-  - `default-development` / `visual-ui` / `quick` / `mechanical`: AA Intelligence Index + LiveBench `coding`
-  - `review`: AA Intelligence Index + LiveBench `reasoning`
+  - `default-development` / `visual-ui` / `quick` / `mechanical`: AA Coding Index + LiveBench `coding`
+  - `orchestrator` / `triage` / `deep-reasoning` / `review`: AA Intelligence Index + LiveBench `instructionFollowing`/`reasoning` (by profile)
 - Challenger must be **top bucket in both required signals**, the incumbent must have comparable
   raw scores in both signals, and the challenger must score strictly higher in both. Missing
   incumbent coverage preserves the current model rather than treating absence of evidence as a

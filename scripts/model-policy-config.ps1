@@ -34,7 +34,7 @@ function Get-ModelPolicyConfig {
         throw "PowerShell 6+ with ConvertFrom-Json -AsHashtable is required to load model-policy.json."
     }
 
-    foreach ($required in @("schemaVersion", "denylist", "familyPatterns", "classPreferences", "profileLiveBenchCategories", "profileRequirements", "consensusPolicy")) {
+    foreach ($required in @("schemaVersion", "denylist", "familyPatterns", "classPreferences", "profileLiveBenchCategories", "profileArtificialAnalysisMetrics", "profileRequirements", "consensusPolicy")) {
         if (-not $parsed.ContainsKey($required)) {
             throw "Malformed model-policy.json: missing required top-level key '$required'."
         }
@@ -51,6 +51,9 @@ function Get-ModelPolicyConfig {
     }
     if (-not ($parsed.profileLiveBenchCategories -is [hashtable])) {
         throw "Malformed model-policy.json: 'profileLiveBenchCategories' must be an object."
+    }
+    if (-not ($parsed.profileArtificialAnalysisMetrics -is [hashtable])) {
+        throw "Malformed model-policy.json: 'profileArtificialAnalysisMetrics' must be an object."
     }
     if (-not ($parsed.profileRequirements -is [hashtable])) {
         throw "Malformed model-policy.json: 'profileRequirements' must be an object."
@@ -104,6 +107,16 @@ function Get-ModelPolicyConfig {
         }
         if (-not $parsed.profileLiveBenchCategories.ContainsKey($requiredProfileKey)) {
             throw "Malformed model-policy.json: profileLiveBenchCategories is missing required profile key '$requiredProfileKey'."
+        }
+        if ($requiredProfileKey -ne "agentic-implementation" -and -not $parsed.profileArtificialAnalysisMetrics.ContainsKey($requiredProfileKey)) {
+            throw "Malformed model-policy.json: profileArtificialAnalysisMetrics is missing required profile key '$requiredProfileKey'."
+        }
+    }
+
+    foreach ($profileKey in @($parsed.profileArtificialAnalysisMetrics.Keys)) {
+        $metric = [string]$parsed.profileArtificialAnalysisMetrics[$profileKey]
+        if ($metric -ne "intelligence" -and $metric -ne "coding") {
+            throw "Malformed model-policy.json: profileArtificialAnalysisMetrics.$profileKey must be 'intelligence' or 'coding'."
         }
     }
 

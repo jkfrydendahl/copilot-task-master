@@ -38,6 +38,16 @@
     "quick": "coding",
     "mechanical": "coding"
   },
+  "profileArtificialAnalysisMetrics": {
+    "default-development": "coding",
+    "visual-ui": "coding",
+    "quick": "coding",
+    "mechanical": "coding",
+    "orchestrator": "intelligence",
+    "triage": "intelligence",
+    "deep-reasoning": "intelligence",
+    "review": "intelligence"
+  },
   "profileRequirements": {
     "quick": { "inputCeilingPerMillion": 2, "outputCeilingPerMillion": 10, "requiresVision": false, "requiresCliAgent": true, "costSensitive": true },
     "mechanical": { "inputCeilingPerMillion": 2, "outputCeilingPerMillion": 10, "requiresVision": false, "requiresCliAgent": true, "costSensitive": true },

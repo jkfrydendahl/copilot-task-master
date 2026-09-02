@@ -220,8 +220,6 @@ function Parse-ArtificialAnalysisLlmModelsFromApiResponse {
     [OutputType([pscustomobject])]
     param(
         [Parameter(Mandatory = $true)]$ApiResponse,
-        [Parameter(Mandatory = $true)][string]$EvaluationField,
-        [Parameter(Mandatory = $true)][string]$OutputScoreProperty,
         [string]$SourceNameForMessages = "Artificial Analysis"
     )
 
@@ -262,14 +260,33 @@ function Parse-ArtificialAnalysisLlmModelsFromApiResponse {
 
         $evaluations = Get-ObjectMemberValue -InputObject $row -Name "evaluations"
         if ($null -eq $evaluations) { continue }
-        $scoreRaw = Get-ObjectMemberValue -InputObject $evaluations -Name $EvaluationField
-        if ($null -eq $scoreRaw) { continue }
+        $intelligenceRaw = Get-ObjectMemberValue -InputObject $evaluations -Name "artificial_analysis_intelligence_index"
+        $codingRaw = Get-ObjectMemberValue -InputObject $evaluations -Name "artificial_analysis_coding_index"
 
-        $score = 0.0
-        if (-not [double]::TryParse(([string]$scoreRaw), [System.Globalization.NumberStyles]::Float, [System.Globalization.CultureInfo]::InvariantCulture, [ref]$score)) { continue }
+        $intelligence = $null
+        if ($null -ne $intelligenceRaw) {
+            $parsedIntelligence = 0.0
+            if ([double]::TryParse(([string]$intelligenceRaw), [System.Globalization.NumberStyles]::Float, [System.Globalization.CultureInfo]::InvariantCulture, [ref]$parsedIntelligence)) {
+                $intelligence = $parsedIntelligence
+            }
+        }
+
+        $coding = $null
+        if ($null -ne $codingRaw) {
+            $parsedCoding = 0.0
+            if ([double]::TryParse(([string]$codingRaw), [System.Globalization.NumberStyles]::Float, [System.Globalization.CultureInfo]::InvariantCulture, [ref]$parsedCoding)) {
+                $coding = $parsedCoding
+            }
+        }
+
+        if ($null -eq $intelligence -and $null -eq $coding) { continue }
 
         if ($models.ContainsKey($slug)) {
-            if ([math]::Abs([double](Get-ObjectMemberValue -InputObject $models[$slug] -Name $OutputScoreProperty) - $score) -gt 0.000001) {
+            $existingIntelligence = Get-ObjectMemberValue -InputObject $models[$slug] -Name "intelligenceIndex"
+            $existingCoding = Get-ObjectMemberValue -InputObject $models[$slug] -Name "codingIndex"
+            $intelligenceChanged = ($null -ne $existingIntelligence -or $null -ne $intelligence) -and ($null -eq $existingIntelligence -or $null -eq $intelligence -or [math]::Abs([double]$existingIntelligence - [double]$intelligence) -gt 0.000001)
+            $codingChanged = ($null -ne $existingCoding -or $null -ne $coding) -and ($null -eq $existingCoding -or $null -eq $coding -or [math]::Abs([double]$existingCoding - [double]$coding) -gt 0.000001)
+            if ($intelligenceChanged -or $codingChanged) {
                 return [pscustomobject]@{
                     status = "unavailable"
                     message = "$SourceNameForMessages API data was ambiguous for model slug '$slug'."
@@ -281,14 +298,15 @@ function Parse-ArtificialAnalysisLlmModelsFromApiResponse {
         }
 
         $entry = [ordered]@{ slug = $slug; name = $name }
-        $entry[$OutputScoreProperty] = $score
+        $entry["intelligenceIndex"] = $intelligence
+        $entry["codingIndex"] = $coding
         $models[$slug] = [pscustomobject]$entry
     }
 
     if ($models.Count -eq 0) {
         return [pscustomobject]@{
             status = "unavailable"
-            message = "$SourceNameForMessages API parsing found no numeric '$EvaluationField' records."
+            message = "$SourceNameForMessages API parsing found no numeric intelligence/coding index records."
             models = @{}
             sourceDate = $null
         }
@@ -334,13 +352,15 @@ function Get-ArtificialAnalysisIntelligenceIndexData {
         }
     }
 
-    $parsed = Parse-ArtificialAnalysisLlmModelsFromApiResponse -ApiResponse $fetchResult.value -EvaluationField "artificial_analysis_intelligence_index" -OutputScoreProperty "intelligenceIndex" -SourceNameForMessages "Artificial Analysis intelligence index"
+    $parsed = Parse-ArtificialAnalysisLlmModelsFromApiResponse -ApiResponse $fetchResult.value -SourceNameForMessages "Artificial Analysis intelligence index"
+    $intelligenceVersion = if ($parsed.status -eq "ok") { Get-ModelScoreFingerprint -Models $parsed.models -ScoreProperty "intelligenceIndex" } else { $null }
+    $codingVersion = if ($parsed.status -eq "ok") { Get-ModelScoreFingerprint -Models $parsed.models -ScoreProperty "codingIndex" } else { $null }
     return [pscustomobject]@{
         status = $parsed.status
         message = $parsed.message
         models = $parsed.models
         sourceDate = $parsed.sourceDate
-        sourceVersion = if ($parsed.status -eq "ok") { Get-ModelScoreFingerprint -Models $parsed.models -ScoreProperty "intelligenceIndex" } else { $null }
+        sourceVersion = if ($parsed.status -eq "ok") { "$intelligenceVersion|$codingVersion" } else { $null }
         fetchedAtUtc = $fetchedAtUtc
         sourceUrl = $Url
     }
@@ -1003,7 +1023,8 @@ function Resolve-ModelRankingSnapshot {
         sourceUrl = $LiveBenchData.sourceUrl
     }
 
-    $aaScores = @{}
+    $aaIntelligenceScores = @{}
+    $aaCodingScores = @{}
     $aaCodingAgentScores = @{}
     $lbCodingScores = @{}
     $lbAgenticCodingScores = @{}
@@ -1028,21 +1049,29 @@ function Resolve-ModelRankingSnapshot {
             }
         }
 
-        $aaScore = $null
+        $aaIntelligenceScore = $null
+        $aaCodingScore = $null
         $aaName = $null
         if (-not [string]::IsNullOrWhiteSpace([string]$aaSlug) -and $ArtificialAnalysisData.models.ContainsKey([string]$aaSlug)) {
-            $aaScore = [double]$ArtificialAnalysisData.models[[string]$aaSlug].intelligenceIndex
+            $aaRecord = $ArtificialAnalysisData.models[[string]$aaSlug]
+            if ($null -ne (Get-ObjectMemberValue -InputObject $aaRecord -Name "intelligenceIndex")) {
+                $aaIntelligenceScore = [double]$aaRecord.intelligenceIndex
+            }
+            if ($null -ne (Get-ObjectMemberValue -InputObject $aaRecord -Name "codingIndex")) {
+                $aaCodingScore = [double]$aaRecord.codingIndex
+            }
             $aaName = [string]$ArtificialAnalysisData.models[[string]$aaSlug].name
         }
-        $aaScores[$model] = $aaScore
+        $aaIntelligenceScores[$model] = $aaIntelligenceScore
+        $aaCodingScores[$model] = $aaCodingScore
 
-        $aaCodingScore = $null
+        $aaCodingAgentScore = $null
         $aaCodingName = $null
         if (-not [string]::IsNullOrWhiteSpace([string]$aaCodingSlug) -and $ArtificialAnalysisCodingAgentData.models.ContainsKey([string]$aaCodingSlug)) {
-            $aaCodingScore = [double]$ArtificialAnalysisCodingAgentData.models[[string]$aaCodingSlug].codingAgentIndex
+            $aaCodingAgentScore = [double]$ArtificialAnalysisCodingAgentData.models[[string]$aaCodingSlug].codingAgentIndex
             $aaCodingName = [string]$ArtificialAnalysisCodingAgentData.models[[string]$aaCodingSlug].name
         }
-        $aaCodingAgentScores[$model] = $aaCodingScore
+        $aaCodingAgentScores[$model] = $aaCodingAgentScore
 
         $lbCoding = $null
         $lbAgenticCoding = $null
@@ -1067,14 +1096,19 @@ function Resolve-ModelRankingSnapshot {
             artificialAnalysis = [ordered]@{
                 alias = $aaSlug
                 name = $aaName
-                intelligenceIndex = $aaScore
+                intelligenceIndex = $aaIntelligenceScore
+                codingIndex = $aaCodingScore
+                intelligenceBucket = "n/a"
+                intelligenceOrdinalRank = $null
+                codingBucket = "n/a"
+                codingOrdinalRank = $null
                 bucket = "n/a"
                 ordinalRank = $null
             }
             artificialAnalysisCodingAgents = [ordered]@{
                 alias = $aaCodingSlug
                 name = $aaCodingName
-                codingAgentIndex = $aaCodingScore
+                codingAgentIndex = $aaCodingAgentScore
                 bucket = "n/a"
                 ordinalRank = $null
             }
@@ -1105,10 +1139,12 @@ function Resolve-ModelRankingSnapshot {
         }
     }
 
-    $aaBuckets = Get-RankingBucketAssignments -ScoresByModel $aaScores
-    $aaRanks = Get-OrdinalRankAssignments -ScoresByModel $aaScores
-    $aaCodingBuckets = Get-RankingBucketAssignments -ScoresByModel $aaCodingAgentScores
-    $aaCodingRanks = Get-OrdinalRankAssignments -ScoresByModel $aaCodingAgentScores
+    $aaIntelligenceBuckets = Get-RankingBucketAssignments -ScoresByModel $aaIntelligenceScores
+    $aaIntelligenceRanks = Get-OrdinalRankAssignments -ScoresByModel $aaIntelligenceScores
+    $aaCodingBuckets = Get-RankingBucketAssignments -ScoresByModel $aaCodingScores
+    $aaCodingRanks = Get-OrdinalRankAssignments -ScoresByModel $aaCodingScores
+    $aaCodingAgentBuckets = Get-RankingBucketAssignments -ScoresByModel $aaCodingAgentScores
+    $aaCodingAgentRanks = Get-OrdinalRankAssignments -ScoresByModel $aaCodingAgentScores
     $lbCodingBuckets = Get-RankingBucketAssignments -ScoresByModel $lbCodingScores
     $lbCodingRanks = Get-OrdinalRankAssignments -ScoresByModel $lbCodingScores
     $lbAgenticCodingBuckets = Get-RankingBucketAssignments -ScoresByModel $lbAgenticCodingScores
@@ -1122,10 +1158,15 @@ function Resolve-ModelRankingSnapshot {
 
     $hasAnyBucketedData = $false
     foreach ($model in $ValidModels) {
-        $snapshot.models[$model].artificialAnalysis.bucket = $aaBuckets[$model]
-        $snapshot.models[$model].artificialAnalysis.ordinalRank = $aaRanks[$model]
-        $snapshot.models[$model].artificialAnalysisCodingAgents.bucket = $aaCodingBuckets[$model]
-        $snapshot.models[$model].artificialAnalysisCodingAgents.ordinalRank = $aaCodingRanks[$model]
+        $snapshot.models[$model].artificialAnalysis.intelligenceBucket = $aaIntelligenceBuckets[$model]
+        $snapshot.models[$model].artificialAnalysis.intelligenceOrdinalRank = $aaIntelligenceRanks[$model]
+        $snapshot.models[$model].artificialAnalysis.codingBucket = $aaCodingBuckets[$model]
+        $snapshot.models[$model].artificialAnalysis.codingOrdinalRank = $aaCodingRanks[$model]
+        # Backward-compatible aliases for legacy readers that still expect one AA bucket/rank.
+        $snapshot.models[$model].artificialAnalysis.bucket = $aaIntelligenceBuckets[$model]
+        $snapshot.models[$model].artificialAnalysis.ordinalRank = $aaIntelligenceRanks[$model]
+        $snapshot.models[$model].artificialAnalysisCodingAgents.bucket = $aaCodingAgentBuckets[$model]
+        $snapshot.models[$model].artificialAnalysisCodingAgents.ordinalRank = $aaCodingAgentRanks[$model]
         $snapshot.models[$model].liveBench.buckets.coding = $lbCodingBuckets[$model]
         $snapshot.models[$model].liveBench.ordinalRanks.coding = $lbCodingRanks[$model]
         $snapshot.models[$model].liveBench.buckets.agenticCoding = $lbAgenticCodingBuckets[$model]
@@ -1138,8 +1179,9 @@ function Resolve-ModelRankingSnapshot {
         $snapshot.models[$model].liveBench.costOrdinalRank = $lbCostRanks[$model]
 
         if (
-            $aaBuckets[$model] -ne "n/a" -or
+            $aaIntelligenceBuckets[$model] -ne "n/a" -or
             $aaCodingBuckets[$model] -ne "n/a" -or
+            $aaCodingAgentBuckets[$model] -ne "n/a" -or
             $lbCodingBuckets[$model] -ne "n/a" -or
             $lbAgenticCodingBuckets[$model] -ne "n/a" -or
             $lbReasoningBuckets[$model] -ne "n/a" -or
@@ -1311,8 +1353,8 @@ function Get-ModelRankingReportLines {
     $lines.Add("")
     $lines.Add("> External rankings can auto-apply only after strict two-run consensus; verified availability, capabilities, pricing, and benchmark quality govern promotion, and family preferences are baseline-only.")
     $lines.Add("")
-    $lines.Add("| Model | AA Intelligence | AA Coding Agent | LB Coding | LB Agentic Coding | LB Reasoning | LB Instruction Following | LB Cost | LB Cost Bucket |")
-    $lines.Add("|---|---|---|---|---|---|---|---|---|")
+    $lines.Add("| Model | AA Intelligence | AA Coding | AA Coding Agent | LB Coding | LB Agentic Coding | LB Reasoning | LB Instruction Following | LB Cost | LB Cost Bucket |")
+    $lines.Add("|---|---|---|---|---|---|---|---|---|---|")
     foreach ($model in $ValidModels) {
         $modelData = $null
         if ($Snapshot.models -is [System.Collections.IDictionary]) {
@@ -1323,12 +1365,13 @@ function Get-ModelRankingReportLines {
             $modelData = $Snapshot.models.PSObject.Properties[$model].Value
         }
         if ($null -eq $modelData) {
-            $lines.Add("| $model | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a |")
+            $lines.Add("| $model | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a |")
             continue
         }
-        $aaBucket = if ($modelData.artificialAnalysis -and $modelData.artificialAnalysis.bucket) { [string]$modelData.artificialAnalysis.bucket } else { "n/a" }
+        $aaIntelligenceBucket = if ($modelData.artificialAnalysis -and (Test-ObjectMember -InputObject $modelData.artificialAnalysis -Name "intelligenceBucket") -and $modelData.artificialAnalysis.intelligenceBucket) { [string]$modelData.artificialAnalysis.intelligenceBucket } elseif ($modelData.artificialAnalysis -and $modelData.artificialAnalysis.bucket) { [string]$modelData.artificialAnalysis.bucket } else { "n/a" }
+        $aaMainCodingBucket = if ($modelData.artificialAnalysis -and (Test-ObjectMember -InputObject $modelData.artificialAnalysis -Name "codingBucket") -and $modelData.artificialAnalysis.codingBucket) { [string]$modelData.artificialAnalysis.codingBucket } else { "n/a" }
         $aaCodingData = Get-ObjectMemberValue -InputObject $modelData -Name "artificialAnalysisCodingAgents"
-        $aaCodingBucket = if ($aaCodingData -and $aaCodingData.bucket) { [string]$aaCodingData.bucket } else { "n/a" }
+        $aaCodingAgentBucket = if ($aaCodingData -and $aaCodingData.bucket) { [string]$aaCodingData.bucket } else { "n/a" }
         $lbCodingBucket = if ($modelData.liveBench -and $modelData.liveBench.buckets -and $modelData.liveBench.buckets.coding) { [string]$modelData.liveBench.buckets.coding } else { "n/a" }
         $lbAgenticBucket = if ($modelData.liveBench -and $modelData.liveBench.buckets -and $modelData.liveBench.buckets.agenticCoding) { [string]$modelData.liveBench.buckets.agenticCoding } else { "n/a" }
         $lbReasoningBucket = if ($modelData.liveBench -and $modelData.liveBench.buckets -and $modelData.liveBench.buckets.reasoning) { [string]$modelData.liveBench.buckets.reasoning } else { "n/a" }
@@ -1337,7 +1380,7 @@ function Get-ModelRankingReportLines {
         if ($modelData.liveBench -and (Test-ObjectMember -InputObject $modelData.liveBench -Name "costPerSuccessfulTask") -and $null -ne $modelData.liveBench.costPerSuccessfulTask) { $hasCostValue = $true }
         $lbCost = if ($hasCostValue) { [string]([double]$modelData.liveBench.costPerSuccessfulTask) } else { "n/a" }
         $lbCostBucket = if ($modelData.liveBench -and (Test-ObjectMember -InputObject $modelData.liveBench -Name "costBucket") -and $modelData.liveBench.costBucket) { [string]$modelData.liveBench.costBucket } else { "n/a" }
-        $lines.Add("| $model | $aaBucket | $aaCodingBucket | $lbCodingBucket | $lbAgenticBucket | $lbReasoningBucket | $lbInstructionBucket | $lbCost | $lbCostBucket |")
+        $lines.Add("| $model | $aaIntelligenceBucket | $aaMainCodingBucket | $aaCodingAgentBucket | $lbCodingBucket | $lbAgenticBucket | $lbReasoningBucket | $lbInstructionBucket | $lbCost | $lbCostBucket |")
     }
     $lines.Add("")
 

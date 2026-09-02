@@ -33,6 +33,22 @@ function Get-ProfileLiveBenchCategory {
     return $null
 }
 
+function Get-ProfileAaScoreProperty {
+    [OutputType([string])]
+    param(
+        [string]$ProfileKey,
+        [hashtable]$Map = $script:ModelPolicyConfig.profileArtificialAnalysisMetrics
+    )
+
+    if ($null -eq $Map -or -not $Map.ContainsKey($ProfileKey)) {
+        return "intelligenceIndex"
+    }
+
+    $metric = [string]$Map[$ProfileKey]
+    if ($metric -eq "coding") { return "codingIndex" }
+    return "intelligenceIndex"
+}
+
 function Test-FullFreshConsensusRunForProfile {
     param($Snapshot, [string]$ProfileKey)
     if ($null -eq $Snapshot -or [bool]$Snapshot.fallbackUsed -or [bool]$Snapshot.stale) { return $false }
@@ -152,9 +168,14 @@ function Get-ModelQualityDataForProfile {
             $aaAliasConfigured = Test-BenchmarkAliasConfigured -SourceEntry $aaCodingData
         }
     } else {
-        $aaScore = $entry.artificialAnalysis.intelligenceIndex
-        $aaBucket = [string]$entry.artificialAnalysis.bucket
-        $aaRank = $entry.artificialAnalysis.ordinalRank
+        $aaScoreProperty = Get-ProfileAaScoreProperty -ProfileKey $ProfileKey
+        $aaScore = Get-ObjectMemberValue -InputObject $entry.artificialAnalysis -Name $aaScoreProperty
+        $bucketProperty = if ($aaScoreProperty -eq "codingIndex") { "codingBucket" } else { "intelligenceBucket" }
+        $rankProperty = if ($aaScoreProperty -eq "codingIndex") { "codingOrdinalRank" } else { "intelligenceOrdinalRank" }
+        $aaBucketValue = Get-ObjectMemberValue -InputObject $entry.artificialAnalysis -Name $bucketProperty
+        $aaRankValue = Get-ObjectMemberValue -InputObject $entry.artificialAnalysis -Name $rankProperty
+        $aaBucket = if ([string]::IsNullOrWhiteSpace([string]$aaBucketValue)) { [string]$entry.artificialAnalysis.bucket } else { [string]$aaBucketValue }
+        $aaRank = if ($null -eq $aaRankValue) { $entry.artificialAnalysis.ordinalRank } else { $aaRankValue }
         $aaAliasConfigured = Test-BenchmarkAliasConfigured -SourceEntry $entry.artificialAnalysis
     }
     $lbScore = $entry.liveBench.categories.$lbCategory
@@ -659,7 +680,7 @@ function Get-ProfileAdmissibilityRequirement {
     # would be asked to serve for this profile).
     param($ProfilesByKey, [string]$ProfileKey)
     if (-not $script:ModelPolicyConfig.profileRequirements.ContainsKey($ProfileKey)) {
-        throw "No profileRequirements entry configured for profile key '$ProfileKey' in config/model-policy.json. Refusing to fall back to an unlimited/no-requirements default -- add the missing profile entry (profileRequirements, classPreferences, and profileLiveBenchCategories are all required per known profile key)."
+        throw "No profileRequirements entry configured for profile key '$ProfileKey' in config/model-policy.json. Refusing to fall back to an unlimited/no-requirements default -- add the missing profile entry (profileRequirements, classPreferences, profileLiveBenchCategories, and profileArtificialAnalysisMetrics are required per known profile key, except agentic-implementation for the AA metric map)."
     }
     $requirement = $script:ModelPolicyConfig.profileRequirements[$ProfileKey]
     $profile = $ProfilesByKey[$ProfileKey]
@@ -981,6 +1002,16 @@ function Invoke-TaskProfileReview {
     $lines += "| Key | Model | Effort | Context |"
     $lines += "|---|---|---|---|"
     foreach ($profile in $profiles) { $lines += "| $($profile.key) | $($profile.model) | $($profile.effort) | $($profile.context) |" }
+    $lines += ""
+    $lines += "## Artificial Analysis metric routing"
+    $lines += ""
+    $lines += "| Profile | AA metric used for consensus |"
+    $lines += "|---|---|"
+    foreach ($profile in $profiles) {
+        $profileKey = [string]$profile.key
+        $metricLabel = if ($profileKey -eq "agentic-implementation") { "coding-agents (HTML leaderboard feed)" } elseif ((Get-ProfileAaScoreProperty -ProfileKey $profileKey) -eq "codingIndex") { "coding" } else { "intelligence" }
+        $lines += "| $profileKey | $metricLabel |"
+    }
     $lines += ""
     $lines += "## Applied profile changes in this run"
     if ($appliedChanges.Count -eq 0) { $lines += "- None." } else { $lines += @($appliedChanges) }
