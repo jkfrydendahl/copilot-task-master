@@ -8,6 +8,21 @@ description: When to use the shared skills, plus the post-implementation self-re
 These skills are installed globally (personal skills dir) and available in every repo.
 Choose the right workflow for the size of the task — don't over-ceremony small work.
 
+## Precedence: task-master skills vs. repo-local skills
+
+Some repos ship their own `.github/skills/` alongside these global ones. When a request could be
+handled by **either** a task-master (personal, global) skill **or** a repo-local skill:
+
+- **Always prefer the task-master skill.** It is the maintained, cross-repo canonical version.
+- **Only fall back to a repo-local skill** when no task-master skill covers that need — e.g. a
+  repo-local skill with genuinely unique scope (such as a domain-specific variant with no global
+  equivalent).
+- If a repo-local skill's name or purpose merely duplicates a task-master skill, treat it as
+  superseded — do not invoke it, and note the duplication to the user if relevant.
+- This precedence applies to skill *selection/invocation* behavior. It does not require deleting
+  or renaming repo-local skills — that's a per-repo decision — but this session should default to
+  the task-master version whenever both exist.
+
 ## Skill routing
 
 | Task size | Approach |
