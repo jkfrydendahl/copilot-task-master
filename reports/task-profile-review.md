@@ -4,26 +4,27 @@ Availability: **True** (copilot help config); manual confirmation override: **Fa
 
 ## Profile decisions
 
-| Profile | Current | Recommended | Applied/current after run | Effort / context | Outcome | Confidence |
-|---|---|---|---|---|---|---|
-| orchestrator | claude-sonnet-5 | claude-opus-5 | claude-sonnet-5 | medium / default | pending_quality_winner | reduced |
-| quick | claude-haiku-4.5 | gemini-3.8-flash | claude-haiku-4.5 | low / default | pending_quality_winner | reduced |
-| default-development | claude-sonnet-5 | gpt-5.6-sol | claude-sonnet-5 | medium / default | pending_quality_winner | reduced |
-| agentic-implementation | gpt-5.3-codex | gpt-5.6-sol | gpt-5.3-codex | high / default | pending_aa_coding_fallback | reduced |
-| deep-reasoning | claude-opus-5 | claude-opus-5 | claude-opus-5 | high / long_context | quality_winner | reduced |
-| review | gpt-5.6-sol | claude-opus-5 | gpt-5.6-sol | medium / default | pending_quality_winner | reduced |
-| visual-ui | claude-sonnet-5 | claude-opus-5 | claude-sonnet-5 | medium / default | pending_quality_winner | reduced |
-| mechanical | claude-haiku-4.5 | gemini-3.8-flash | claude-haiku-4.5 | low / default | pending_quality_winner | reduced |
-| triage | claude-sonnet-5 | gemini-3.7-flash | claude-sonnet-5 | low / default | pending_budget_constrained_choice | reduced |
+| Profile | Strategy | Current | Recommended | Applied/current after run | Effort / context | Outcome | Confidence |
+|---|---|---|---|---|---|---|---|
+| orchestrator | value_balanced | claude-sonnet-5 | gemini-3.8-flash | claude-sonnet-5 | medium / default | pending_value_balanced_choice | reduced |
+| quick | value_balanced | claude-haiku-4.5 | gemini-3.8-flash | claude-haiku-4.5 | low / default | pending_value_balanced_choice | reduced |
+| default-development | quality_first | claude-sonnet-5 | gpt-5.6-sol | claude-sonnet-5 | medium / default | pending_quality_winner | reduced |
+| agentic-implementation | quality_first | gpt-5.3-codex | gpt-5.6-sol | gpt-5.3-codex | high / default | pending_aa_coding_fallback | reduced |
+| deep-reasoning | quality_first | claude-opus-5 | claude-opus-5 | claude-opus-5 | high / long_context | quality_winner | reduced |
+| review | quality_first | gpt-5.6-sol | claude-opus-5 | gpt-5.6-sol | medium / default | pending_quality_winner | reduced |
+| visual-ui | quality_first | claude-sonnet-5 | claude-opus-5 | claude-sonnet-5 | medium / default | pending_quality_winner | reduced |
+| mechanical | value_balanced | claude-haiku-4.5 | gemini-3.8-flash | claude-haiku-4.5 | low / default | pending_value_balanced_choice | reduced |
+| triage | value_balanced | claude-sonnet-5 | gemini-3.7-flash | claude-sonnet-5 | low / default | pending_budget_constrained_choice | reduced |
 
 Recommendations rank eligible configurations, not all models globally. AA is primary; LiveBench is corroboration or a labelled fallback. Unknown publication age, cached evidence, single-source coverage and external agent harnesses reduce confidence. A context capability is not a benchmark measurement at that context length.
+Value-balanced profiles minimize reference AIC within a configured gap of their best eligible score. Bands are source-specific policy tolerances, not capability percentages or proof of task success. Quality-first profiles still maximize score with cost breaking exact ties.
 
 ## Pricing refresh
 
 - Status: **partial**. Source: https://docs.github.com/en/copilot/reference/copilot-billing/models-and-pricing
-- Last successful page fetch: 2026-09-08T13:51:54.6105833Z. Per-model verification ages govern eligibility.
+- Last successful page fetch: 2026-09-08T14:28:18.8645529Z. Per-model verification ages govern eligibility.
 - Freshness limit: 45 days. Missing rows retain their original timestamps. Capabilities are never refreshed by pricing.
-- Tie-break illustration: Aggregate uncached usage across requests within the selected context tier, not a single 1M-token request or predicted task cost. Cache reads/writes are excluded.
+- Reference-cost comparison: Aggregate uncached usage across requests within the selected context tier, not a single 1M-token request or predicted task cost. Cache reads/writes are excluded.
 - Reference tokens: input 1000000, output 100000.
 
 | Changed model | Tier | Previous input / output USD per M | Current input / output USD per M | Previous cached input / cache write | Current cached input / cache write |
@@ -36,9 +37,9 @@ Recommendations rank eligible configurations, not all models globally. AA is pri
 
 | Source | Status | Published | Retrieved | Observation identity |
 |---|---|---|---|---|
-| artificialAnalysis | ok | n/a | 2026-09-08T13:52:01.3629234Z | 506d3c93a96a673e63414dcfe067268e8547db84f9ee318a15e83658958ffa0d&#124;d05c150ea87c63259c6fa3bdafa35331c973c75286876b90ab11eb0e66ed30af |
-| artificialAnalysisCodingAgents | ok | n/a | 2026-09-08T13:52:02.8543063Z | 7da45df0f719be322977d4c08e09c2d75c37fddeb5d5205f8d106ec66676fb54 |
-| liveBench | ok | 2026-06-25 | 2026-09-08T13:52:02.9680321Z | 6389c04aca01a1b8c020c9cf92df2731fc206ae6d73e4767fbf11732bb688360 |
+| artificialAnalysis | ok | n/a | 2026-09-08T14:28:25.8838163Z | 506d3c93a96a673e63414dcfe067268e8547db84f9ee318a15e83658958ffa0d&#124;d05c150ea87c63259c6fa3bdafa35331c973c75286876b90ab11eb0e66ed30af |
+| artificialAnalysisCodingAgents | ok | n/a | 2026-09-08T14:28:27.1707070Z | 7da45df0f719be322977d4c08e09c2d75c37fddeb5d5205f8d106ec66676fb54 |
+| liveBench | ok | 2026-06-25 | 2026-09-08T14:28:27.3184159Z | 6389c04aca01a1b8c020c9cf92df2731fc206ae6d73e4767fbf11732bb688360 |
 
 Source fingerprints identify observations, not benchmark methodology versions. Unknown publication dates are not replaced with fetch dates. AA API scores are not replaced by public-page scores. Data attribution: https://artificialanalysis.ai and https://github.com/LiveBench/new-livebench.
 
@@ -275,38 +276,41 @@ Source fingerprints identify observations, not benchmark methodology versions. U
 
 Budget: **advisory**, input 3 / output 15 USD per million. Deciding source: artificialAnalysis.
 Quality leader before hard-budget exclusions: claude-opus-5. Family fallback (informational, not a winner): claude-sonnet-5.
-Pending distinct deciding-source observations: 1 / 2.
+Strategy: **value_balanced**.
+Eligible quality reference: claude-opus-5 (49.5). Candidate gap: **2.7 / 3** absolute intelligenceIndex score points.
+Lowest reference cost within the band wins; an equally priced incumbent stays. Reference usage: candidate **112.5 AIC**; incumbent **300 AIC** (1 AIC = USD 0.01).
+Pending distinct deciding-source observations for gemini-3.8-flash (artificialAnalysis): 1 / 2.
 
 <details>
 <summary>Eligibility and exact benchmark evidence</summary>
 
 | Model | Eligible | Exclusions | Advisory warnings | Price tier | Input / output USD per M | Price verified | Capability as-of |
 |---|---|---|---|---|---|---|---|
-| claude-fable-5.1 | False | capabilities_missing | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 10 / 50 | 2026-09-08T13:51:54.6105833Z | n/a |
-| claude-haiku-4.5 | True | n/a | n/a | default | 1 / 5 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| claude-opus-4.7 | True | n/a | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 / 25 | 2026-09-08T13:51:54.6105833Z | 2026-07-30 |
-| claude-opus-4.8 | True | n/a | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 / 25 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| claude-opus-4.8-fast | True | n/a | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 10 / 50 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| claude-opus-5 | True | n/a | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 / 25 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| claude-sonnet-4.6 | True | n/a | n/a | default | 3 / 15 | 2026-09-08T13:51:54.6105833Z | 2026-07-30 |
-| claude-sonnet-5 | True | n/a | n/a | default | 2 / 10 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| gemini-3.5-flash | True | n/a | n/a | default | 1.5 / 9 | 2026-09-08T13:51:54.6105833Z | 2026-07-30 |
-| gemini-3.6-flash | True | n/a | n/a | default | 0.75 / 3.75 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| gemini-3.7-flash | True | n/a | n/a | default | 0.75 / 3.75 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| gemini-3.8-flash | True | n/a | n/a | default | 0.75 / 3.75 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| gpt-5-mini | False | context_unsupported, effort_unsupported | n/a | default | 0.25 / 2 | 2026-09-08T13:51:54.6105833Z | 2026-07-30 |
-| gpt-5.3-codex | True | n/a | n/a | default | 1.75 / 14 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| gpt-5.4 | True | n/a | n/a | default | 2.5 / 15 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| gpt-5.4-mini | True | n/a | n/a | default | 0.75 / 4.5 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| gpt-5.5 | True | n/a | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 / 30 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| gpt-5.6-luna | True | n/a | n/a | default | 0.2 / 1.2 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| gpt-5.6-sol | True | n/a | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 4 / 20 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| gpt-5.6-terra | True | n/a | n/a | default | 2 / 12 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| grok-4.5 | True | n/a | n/a | default | 2 / 6 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| kimi-k2.7-code | False | capabilities_missing | n/a | default | 0.95 / 4 | 2026-09-08T13:51:54.6105833Z | n/a |
-| kimi-k3 | False | capabilities_missing | n/a | default | 3 / 15 | 2026-09-08T13:51:54.6105833Z | n/a |
-| mai-code-1-flash-picker | True | n/a | n/a | default | 0.75 / 4.5 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| mai-code-1.1-flash | True | n/a | n/a | default | 0.2 / 1.2 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
+| claude-fable-5.1 | False | capabilities_missing | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 10 / 50 | 2026-09-08T14:28:18.8645529Z | n/a |
+| claude-haiku-4.5 | True | n/a | n/a | default | 1 / 5 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| claude-opus-4.7 | True | n/a | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 / 25 | 2026-09-08T14:28:18.8645529Z | 2026-07-30 |
+| claude-opus-4.8 | True | n/a | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 / 25 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| claude-opus-4.8-fast | True | n/a | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 10 / 50 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| claude-opus-5 | True | n/a | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 / 25 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| claude-sonnet-4.6 | True | n/a | n/a | default | 3 / 15 | 2026-09-08T14:28:18.8645529Z | 2026-07-30 |
+| claude-sonnet-5 | True | n/a | n/a | default | 2 / 10 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| gemini-3.5-flash | True | n/a | n/a | default | 1.5 / 9 | 2026-09-08T14:28:18.8645529Z | 2026-07-30 |
+| gemini-3.6-flash | True | n/a | n/a | default | 0.75 / 3.75 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| gemini-3.7-flash | True | n/a | n/a | default | 0.75 / 3.75 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| gemini-3.8-flash | True | n/a | n/a | default | 0.75 / 3.75 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| gpt-5-mini | False | context_unsupported, effort_unsupported | n/a | default | 0.25 / 2 | 2026-09-08T14:28:18.8645529Z | 2026-07-30 |
+| gpt-5.3-codex | True | n/a | n/a | default | 1.75 / 14 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| gpt-5.4 | True | n/a | n/a | default | 2.5 / 15 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| gpt-5.4-mini | True | n/a | n/a | default | 0.75 / 4.5 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| gpt-5.5 | True | n/a | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 / 30 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| gpt-5.6-luna | True | n/a | n/a | default | 0.2 / 1.2 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| gpt-5.6-sol | True | n/a | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 4 / 20 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| gpt-5.6-terra | True | n/a | n/a | default | 2 / 12 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| grok-4.5 | True | n/a | n/a | default | 2 / 6 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| kimi-k2.7-code | False | capabilities_missing | n/a | default | 0.95 / 4 | 2026-09-08T14:28:18.8645529Z | n/a |
+| kimi-k3 | False | capabilities_missing | n/a | default | 3 / 15 | 2026-09-08T14:28:18.8645529Z | n/a |
+| mai-code-1-flash-picker | True | n/a | n/a | default | 0.75 / 4.5 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| mai-code-1.1-flash | True | n/a | n/a | default | 0.2 / 1.2 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
 
 | Model | Source | Exact alias | Effort | Metric | Score | Publication age unknown | Cached | Harness |
 |---|---|---|---|---|---|---|---|---|
@@ -327,38 +331,41 @@ Evidence gaps are grouped by affected profile in [Coverage and exclusions](#cove
 
 Budget: **hard**, input 2 / output 10 USD per million. Deciding source: artificialAnalysis.
 Quality leader before hard-budget exclusions: gemini-3.8-flash. Family fallback (informational, not a winner): claude-haiku-4.5.
-Pending distinct deciding-source observations: 1 / 2.
+Strategy: **value_balanced**.
+Eligible quality reference: gemini-3.8-flash (73.5). Candidate gap: **0 / 3** absolute codingIndex score points.
+Lowest reference cost within the band wins; an equally priced incumbent stays. Reference usage: candidate **112.5 AIC**; incumbent **150 AIC** (1 AIC = USD 0.01).
+Pending distinct deciding-source observations for gemini-3.8-flash (artificialAnalysis): 1 / 2.
 
 <details>
 <summary>Eligibility and exact benchmark evidence</summary>
 
 | Model | Eligible | Exclusions | Advisory warnings | Price tier | Input / output USD per M | Price verified | Capability as-of |
 |---|---|---|---|---|---|---|---|
-| claude-fable-5.1 | False | capabilities_missing, pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-09-08T13:51:54.6105833Z | n/a |
-| claude-haiku-4.5 | True | n/a | n/a | default | 1 / 5 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| claude-opus-4.7 | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-09-08T13:51:54.6105833Z | 2026-07-30 |
-| claude-opus-4.8 | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| claude-opus-4.8-fast | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| claude-opus-5 | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| claude-sonnet-4.6 | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 3 / 15 | 2026-09-08T13:51:54.6105833Z | 2026-07-30 |
-| claude-sonnet-5 | True | n/a | n/a | default | 2 / 10 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| gemini-3.5-flash | True | n/a | n/a | default | 1.5 / 9 | 2026-09-08T13:51:54.6105833Z | 2026-07-30 |
-| gemini-3.6-flash | True | n/a | n/a | default | 0.75 / 3.75 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| gemini-3.7-flash | True | n/a | n/a | default | 0.75 / 3.75 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| gemini-3.8-flash | True | n/a | n/a | default | 0.75 / 3.75 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| gpt-5-mini | False | context_unsupported, effort_unsupported | n/a | default | 0.25 / 2 | 2026-09-08T13:51:54.6105833Z | 2026-07-30 |
-| gpt-5.3-codex | False | pricing_output_exceeds_ceiling | n/a | default | 1.75 / 14 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| gpt-5.4 | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 2.5 / 15 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| gpt-5.4-mini | True | n/a | n/a | default | 0.75 / 4.5 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| gpt-5.5 | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 30 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| gpt-5.6-luna | True | n/a | n/a | default | 0.2 / 1.2 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| gpt-5.6-sol | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 4 / 20 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| gpt-5.6-terra | False | pricing_output_exceeds_ceiling | n/a | default | 2 / 12 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| grok-4.5 | True | n/a | n/a | default | 2 / 6 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| kimi-k2.7-code | False | capabilities_missing | n/a | default | 0.95 / 4 | 2026-09-08T13:51:54.6105833Z | n/a |
-| kimi-k3 | False | capabilities_missing, pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 3 / 15 | 2026-09-08T13:51:54.6105833Z | n/a |
-| mai-code-1-flash-picker | True | n/a | n/a | default | 0.75 / 4.5 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| mai-code-1.1-flash | True | n/a | n/a | default | 0.2 / 1.2 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
+| claude-fable-5.1 | False | capabilities_missing, pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-09-08T14:28:18.8645529Z | n/a |
+| claude-haiku-4.5 | True | n/a | n/a | default | 1 / 5 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| claude-opus-4.7 | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-09-08T14:28:18.8645529Z | 2026-07-30 |
+| claude-opus-4.8 | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| claude-opus-4.8-fast | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| claude-opus-5 | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| claude-sonnet-4.6 | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 3 / 15 | 2026-09-08T14:28:18.8645529Z | 2026-07-30 |
+| claude-sonnet-5 | True | n/a | n/a | default | 2 / 10 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| gemini-3.5-flash | True | n/a | n/a | default | 1.5 / 9 | 2026-09-08T14:28:18.8645529Z | 2026-07-30 |
+| gemini-3.6-flash | True | n/a | n/a | default | 0.75 / 3.75 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| gemini-3.7-flash | True | n/a | n/a | default | 0.75 / 3.75 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| gemini-3.8-flash | True | n/a | n/a | default | 0.75 / 3.75 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| gpt-5-mini | False | context_unsupported, effort_unsupported | n/a | default | 0.25 / 2 | 2026-09-08T14:28:18.8645529Z | 2026-07-30 |
+| gpt-5.3-codex | False | pricing_output_exceeds_ceiling | n/a | default | 1.75 / 14 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| gpt-5.4 | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 2.5 / 15 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| gpt-5.4-mini | True | n/a | n/a | default | 0.75 / 4.5 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| gpt-5.5 | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 30 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| gpt-5.6-luna | True | n/a | n/a | default | 0.2 / 1.2 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| gpt-5.6-sol | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 4 / 20 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| gpt-5.6-terra | False | pricing_output_exceeds_ceiling | n/a | default | 2 / 12 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| grok-4.5 | True | n/a | n/a | default | 2 / 6 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| kimi-k2.7-code | False | capabilities_missing | n/a | default | 0.95 / 4 | 2026-09-08T14:28:18.8645529Z | n/a |
+| kimi-k3 | False | capabilities_missing, pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 3 / 15 | 2026-09-08T14:28:18.8645529Z | n/a |
+| mai-code-1-flash-picker | True | n/a | n/a | default | 0.75 / 4.5 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| mai-code-1.1-flash | True | n/a | n/a | default | 0.2 / 1.2 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
 
 | Model | Source | Exact alias | Effort | Metric | Score | Publication age unknown | Cached | Harness |
 |---|---|---|---|---|---|---|---|---|
@@ -377,38 +384,39 @@ Evidence gaps are grouped by affected profile in [Coverage and exclusions](#cove
 
 Budget: **advisory**, input 3 / output 15 USD per million. Deciding source: artificialAnalysis.
 Quality leader before hard-budget exclusions: gpt-5.6-sol. Family fallback (informational, not a winner): claude-sonnet-5.
-Pending distinct deciding-source observations: 1 / 2.
+Strategy: **quality_first**.
+Pending distinct deciding-source observations for gpt-5.6-sol (artificialAnalysis): 1 / 2.
 
 <details>
 <summary>Eligibility and exact benchmark evidence</summary>
 
 | Model | Eligible | Exclusions | Advisory warnings | Price tier | Input / output USD per M | Price verified | Capability as-of |
 |---|---|---|---|---|---|---|---|
-| claude-fable-5.1 | False | capabilities_missing | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 10 / 50 | 2026-09-08T13:51:54.6105833Z | n/a |
-| claude-haiku-4.5 | True | n/a | n/a | default | 1 / 5 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| claude-opus-4.7 | True | n/a | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 / 25 | 2026-09-08T13:51:54.6105833Z | 2026-07-30 |
-| claude-opus-4.8 | True | n/a | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 / 25 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| claude-opus-4.8-fast | True | n/a | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 10 / 50 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| claude-opus-5 | True | n/a | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 / 25 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| claude-sonnet-4.6 | True | n/a | n/a | default | 3 / 15 | 2026-09-08T13:51:54.6105833Z | 2026-07-30 |
-| claude-sonnet-5 | True | n/a | n/a | default | 2 / 10 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| gemini-3.5-flash | True | n/a | n/a | default | 1.5 / 9 | 2026-09-08T13:51:54.6105833Z | 2026-07-30 |
-| gemini-3.6-flash | True | n/a | n/a | default | 0.75 / 3.75 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| gemini-3.7-flash | True | n/a | n/a | default | 0.75 / 3.75 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| gemini-3.8-flash | True | n/a | n/a | default | 0.75 / 3.75 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| gpt-5-mini | False | context_unsupported, effort_unsupported | n/a | default | 0.25 / 2 | 2026-09-08T13:51:54.6105833Z | 2026-07-30 |
-| gpt-5.3-codex | True | n/a | n/a | default | 1.75 / 14 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| gpt-5.4 | True | n/a | n/a | default | 2.5 / 15 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| gpt-5.4-mini | True | n/a | n/a | default | 0.75 / 4.5 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| gpt-5.5 | True | n/a | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 / 30 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| gpt-5.6-luna | True | n/a | n/a | default | 0.2 / 1.2 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| gpt-5.6-sol | True | n/a | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 4 / 20 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| gpt-5.6-terra | True | n/a | n/a | default | 2 / 12 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| grok-4.5 | True | n/a | n/a | default | 2 / 6 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| kimi-k2.7-code | False | capabilities_missing | n/a | default | 0.95 / 4 | 2026-09-08T13:51:54.6105833Z | n/a |
-| kimi-k3 | False | capabilities_missing | n/a | default | 3 / 15 | 2026-09-08T13:51:54.6105833Z | n/a |
-| mai-code-1-flash-picker | True | n/a | n/a | default | 0.75 / 4.5 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| mai-code-1.1-flash | True | n/a | n/a | default | 0.2 / 1.2 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
+| claude-fable-5.1 | False | capabilities_missing | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 10 / 50 | 2026-09-08T14:28:18.8645529Z | n/a |
+| claude-haiku-4.5 | True | n/a | n/a | default | 1 / 5 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| claude-opus-4.7 | True | n/a | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 / 25 | 2026-09-08T14:28:18.8645529Z | 2026-07-30 |
+| claude-opus-4.8 | True | n/a | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 / 25 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| claude-opus-4.8-fast | True | n/a | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 10 / 50 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| claude-opus-5 | True | n/a | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 / 25 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| claude-sonnet-4.6 | True | n/a | n/a | default | 3 / 15 | 2026-09-08T14:28:18.8645529Z | 2026-07-30 |
+| claude-sonnet-5 | True | n/a | n/a | default | 2 / 10 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| gemini-3.5-flash | True | n/a | n/a | default | 1.5 / 9 | 2026-09-08T14:28:18.8645529Z | 2026-07-30 |
+| gemini-3.6-flash | True | n/a | n/a | default | 0.75 / 3.75 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| gemini-3.7-flash | True | n/a | n/a | default | 0.75 / 3.75 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| gemini-3.8-flash | True | n/a | n/a | default | 0.75 / 3.75 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| gpt-5-mini | False | context_unsupported, effort_unsupported | n/a | default | 0.25 / 2 | 2026-09-08T14:28:18.8645529Z | 2026-07-30 |
+| gpt-5.3-codex | True | n/a | n/a | default | 1.75 / 14 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| gpt-5.4 | True | n/a | n/a | default | 2.5 / 15 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| gpt-5.4-mini | True | n/a | n/a | default | 0.75 / 4.5 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| gpt-5.5 | True | n/a | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 / 30 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| gpt-5.6-luna | True | n/a | n/a | default | 0.2 / 1.2 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| gpt-5.6-sol | True | n/a | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 4 / 20 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| gpt-5.6-terra | True | n/a | n/a | default | 2 / 12 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| grok-4.5 | True | n/a | n/a | default | 2 / 6 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| kimi-k2.7-code | False | capabilities_missing | n/a | default | 0.95 / 4 | 2026-09-08T14:28:18.8645529Z | n/a |
+| kimi-k3 | False | capabilities_missing | n/a | default | 3 / 15 | 2026-09-08T14:28:18.8645529Z | n/a |
+| mai-code-1-flash-picker | True | n/a | n/a | default | 0.75 / 4.5 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| mai-code-1.1-flash | True | n/a | n/a | default | 0.2 / 1.2 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
 
 | Model | Source | Exact alias | Effort | Metric | Score | Publication age unknown | Cached | Harness |
 |---|---|---|---|---|---|---|---|---|
@@ -428,38 +436,39 @@ Evidence gaps are grouped by affected profile in [Coverage and exclusions](#cove
 
 Budget: **advisory**, input 10 / output 50 USD per million. Deciding source: artificialAnalysis.
 Quality leader before hard-budget exclusions: gpt-5.6-sol. Family fallback (informational, not a winner): gpt-5.3-codex.
-Pending distinct deciding-source observations: 1 / 2.
+Strategy: **quality_first**.
+Pending distinct deciding-source observations for gpt-5.6-sol (artificialAnalysis): 1 / 2.
 
 <details>
 <summary>Eligibility and exact benchmark evidence</summary>
 
 | Model | Eligible | Exclusions | Advisory warnings | Price tier | Input / output USD per M | Price verified | Capability as-of |
 |---|---|---|---|---|---|---|---|
-| claude-fable-5.1 | False | capabilities_missing | n/a | default | 10 / 50 | 2026-09-08T13:51:54.6105833Z | n/a |
-| claude-haiku-4.5 | True | n/a | n/a | default | 1 / 5 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| claude-opus-4.7 | True | n/a | n/a | default | 5 / 25 | 2026-09-08T13:51:54.6105833Z | 2026-07-30 |
-| claude-opus-4.8 | True | n/a | n/a | default | 5 / 25 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| claude-opus-4.8-fast | True | n/a | n/a | default | 10 / 50 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| claude-opus-5 | True | n/a | n/a | default | 5 / 25 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| claude-sonnet-4.6 | True | n/a | n/a | default | 3 / 15 | 2026-09-08T13:51:54.6105833Z | 2026-07-30 |
-| claude-sonnet-5 | True | n/a | n/a | default | 2 / 10 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| gemini-3.5-flash | True | n/a | n/a | default | 1.5 / 9 | 2026-09-08T13:51:54.6105833Z | 2026-07-30 |
-| gemini-3.6-flash | True | n/a | n/a | default | 0.75 / 3.75 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| gemini-3.7-flash | True | n/a | n/a | default | 0.75 / 3.75 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| gemini-3.8-flash | True | n/a | n/a | default | 0.75 / 3.75 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| gpt-5-mini | False | context_unsupported, effort_unsupported | n/a | default | 0.25 / 2 | 2026-09-08T13:51:54.6105833Z | 2026-07-30 |
-| gpt-5.3-codex | True | n/a | n/a | default | 1.75 / 14 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| gpt-5.4 | True | n/a | n/a | default | 2.5 / 15 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| gpt-5.4-mini | True | n/a | n/a | default | 0.75 / 4.5 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| gpt-5.5 | True | n/a | n/a | default | 5 / 30 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| gpt-5.6-luna | True | n/a | n/a | default | 0.2 / 1.2 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| gpt-5.6-sol | True | n/a | n/a | default | 4 / 20 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| gpt-5.6-terra | True | n/a | n/a | default | 2 / 12 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| grok-4.5 | True | n/a | n/a | default | 2 / 6 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| kimi-k2.7-code | False | capabilities_missing | n/a | default | 0.95 / 4 | 2026-09-08T13:51:54.6105833Z | n/a |
-| kimi-k3 | False | capabilities_missing | n/a | default | 3 / 15 | 2026-09-08T13:51:54.6105833Z | n/a |
-| mai-code-1-flash-picker | True | n/a | n/a | default | 0.75 / 4.5 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| mai-code-1.1-flash | True | n/a | n/a | default | 0.2 / 1.2 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
+| claude-fable-5.1 | False | capabilities_missing | n/a | default | 10 / 50 | 2026-09-08T14:28:18.8645529Z | n/a |
+| claude-haiku-4.5 | True | n/a | n/a | default | 1 / 5 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| claude-opus-4.7 | True | n/a | n/a | default | 5 / 25 | 2026-09-08T14:28:18.8645529Z | 2026-07-30 |
+| claude-opus-4.8 | True | n/a | n/a | default | 5 / 25 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| claude-opus-4.8-fast | True | n/a | n/a | default | 10 / 50 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| claude-opus-5 | True | n/a | n/a | default | 5 / 25 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| claude-sonnet-4.6 | True | n/a | n/a | default | 3 / 15 | 2026-09-08T14:28:18.8645529Z | 2026-07-30 |
+| claude-sonnet-5 | True | n/a | n/a | default | 2 / 10 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| gemini-3.5-flash | True | n/a | n/a | default | 1.5 / 9 | 2026-09-08T14:28:18.8645529Z | 2026-07-30 |
+| gemini-3.6-flash | True | n/a | n/a | default | 0.75 / 3.75 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| gemini-3.7-flash | True | n/a | n/a | default | 0.75 / 3.75 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| gemini-3.8-flash | True | n/a | n/a | default | 0.75 / 3.75 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| gpt-5-mini | False | context_unsupported, effort_unsupported | n/a | default | 0.25 / 2 | 2026-09-08T14:28:18.8645529Z | 2026-07-30 |
+| gpt-5.3-codex | True | n/a | n/a | default | 1.75 / 14 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| gpt-5.4 | True | n/a | n/a | default | 2.5 / 15 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| gpt-5.4-mini | True | n/a | n/a | default | 0.75 / 4.5 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| gpt-5.5 | True | n/a | n/a | default | 5 / 30 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| gpt-5.6-luna | True | n/a | n/a | default | 0.2 / 1.2 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| gpt-5.6-sol | True | n/a | n/a | default | 4 / 20 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| gpt-5.6-terra | True | n/a | n/a | default | 2 / 12 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| grok-4.5 | True | n/a | n/a | default | 2 / 6 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| kimi-k2.7-code | False | capabilities_missing | n/a | default | 0.95 / 4 | 2026-09-08T14:28:18.8645529Z | n/a |
+| kimi-k3 | False | capabilities_missing | n/a | default | 3 / 15 | 2026-09-08T14:28:18.8645529Z | n/a |
+| mai-code-1-flash-picker | True | n/a | n/a | default | 0.75 / 4.5 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| mai-code-1.1-flash | True | n/a | n/a | default | 0.2 / 1.2 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
 
 | Model | Source | Exact alias | Effort | Metric | Score | Publication age unknown | Cached | Harness |
 |---|---|---|---|---|---|---|---|---|
@@ -479,37 +488,38 @@ Evidence gaps are grouped by affected profile in [Coverage and exclusions](#cove
 
 Budget: **advisory**, input 10 / output 45 USD per million. Deciding source: artificialAnalysis.
 Quality leader before hard-budget exclusions: claude-opus-5. Family fallback (informational, not a winner): claude-opus-5.
+Strategy: **quality_first**.
 
 <details>
 <summary>Eligibility and exact benchmark evidence</summary>
 
 | Model | Eligible | Exclusions | Advisory warnings | Price tier | Input / output USD per M | Price verified | Capability as-of |
 |---|---|---|---|---|---|---|---|
-| claude-fable-5.1 | False | capabilities_missing | pricing_output_exceeds_ceiling | default | 10 / 50 | 2026-09-08T13:51:54.6105833Z | n/a |
-| claude-haiku-4.5 | False | context_unsupported | n/a | default | 1 / 5 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| claude-opus-4.7 | True | n/a | n/a | default | 5 / 25 | 2026-09-08T13:51:54.6105833Z | 2026-07-30 |
-| claude-opus-4.8 | True | n/a | n/a | default | 5 / 25 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| claude-opus-4.8-fast | True | n/a | pricing_output_exceeds_ceiling | default | 10 / 50 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| claude-opus-5 | True | n/a | n/a | default | 5 / 25 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| claude-sonnet-4.6 | True | n/a | n/a | default | 3 / 15 | 2026-09-08T13:51:54.6105833Z | 2026-07-30 |
-| claude-sonnet-5 | True | n/a | n/a | default | 2 / 10 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| gemini-3.5-flash | True | n/a | n/a | default | 1.5 / 9 | 2026-09-08T13:51:54.6105833Z | 2026-07-30 |
-| gemini-3.6-flash | True | n/a | n/a | default | 0.75 / 3.75 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| gemini-3.7-flash | True | n/a | n/a | default | 0.75 / 3.75 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| gemini-3.8-flash | True | n/a | n/a | default | 0.75 / 3.75 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| gpt-5-mini | False | context_unsupported, effort_unsupported | n/a | default | 0.25 / 2 | 2026-09-08T13:51:54.6105833Z | 2026-07-30 |
-| gpt-5.3-codex | False | context_unsupported | n/a | default | 1.75 / 14 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| gpt-5.4 | True | n/a | n/a | long_context | 5 / 22.5 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| gpt-5.4-mini | False | context_unsupported | n/a | default | 0.75 / 4.5 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| gpt-5.5 | True | n/a | n/a | long_context | 10 / 45 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| gpt-5.6-luna | True | n/a | n/a | long_context | 0.4 / 1.8 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| gpt-5.6-sol | True | n/a | n/a | long_context | 8 / 30 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| gpt-5.6-terra | True | n/a | n/a | long_context | 4 / 18 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| grok-4.5 | True | n/a | n/a | long_context | 4 / 12 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| kimi-k2.7-code | False | capabilities_missing | n/a | default | 0.95 / 4 | 2026-09-08T13:51:54.6105833Z | n/a |
-| kimi-k3 | False | capabilities_missing | n/a | default | 3 / 15 | 2026-09-08T13:51:54.6105833Z | n/a |
-| mai-code-1-flash-picker | False | context_unsupported | n/a | default | 0.75 / 4.5 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| mai-code-1.1-flash | False | context_unsupported | n/a | default | 0.2 / 1.2 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
+| claude-fable-5.1 | False | capabilities_missing | pricing_output_exceeds_ceiling | default | 10 / 50 | 2026-09-08T14:28:18.8645529Z | n/a |
+| claude-haiku-4.5 | False | context_unsupported | n/a | default | 1 / 5 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| claude-opus-4.7 | True | n/a | n/a | default | 5 / 25 | 2026-09-08T14:28:18.8645529Z | 2026-07-30 |
+| claude-opus-4.8 | True | n/a | n/a | default | 5 / 25 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| claude-opus-4.8-fast | True | n/a | pricing_output_exceeds_ceiling | default | 10 / 50 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| claude-opus-5 | True | n/a | n/a | default | 5 / 25 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| claude-sonnet-4.6 | True | n/a | n/a | default | 3 / 15 | 2026-09-08T14:28:18.8645529Z | 2026-07-30 |
+| claude-sonnet-5 | True | n/a | n/a | default | 2 / 10 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| gemini-3.5-flash | True | n/a | n/a | default | 1.5 / 9 | 2026-09-08T14:28:18.8645529Z | 2026-07-30 |
+| gemini-3.6-flash | True | n/a | n/a | default | 0.75 / 3.75 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| gemini-3.7-flash | True | n/a | n/a | default | 0.75 / 3.75 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| gemini-3.8-flash | True | n/a | n/a | default | 0.75 / 3.75 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| gpt-5-mini | False | context_unsupported, effort_unsupported | n/a | default | 0.25 / 2 | 2026-09-08T14:28:18.8645529Z | 2026-07-30 |
+| gpt-5.3-codex | False | context_unsupported | n/a | default | 1.75 / 14 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| gpt-5.4 | True | n/a | n/a | long_context | 5 / 22.5 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| gpt-5.4-mini | False | context_unsupported | n/a | default | 0.75 / 4.5 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| gpt-5.5 | True | n/a | n/a | long_context | 10 / 45 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| gpt-5.6-luna | True | n/a | n/a | long_context | 0.4 / 1.8 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| gpt-5.6-sol | True | n/a | n/a | long_context | 8 / 30 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| gpt-5.6-terra | True | n/a | n/a | long_context | 4 / 18 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| grok-4.5 | True | n/a | n/a | long_context | 4 / 12 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| kimi-k2.7-code | False | capabilities_missing | n/a | default | 0.95 / 4 | 2026-09-08T14:28:18.8645529Z | n/a |
+| kimi-k3 | False | capabilities_missing | n/a | default | 3 / 15 | 2026-09-08T14:28:18.8645529Z | n/a |
+| mai-code-1-flash-picker | False | context_unsupported | n/a | default | 0.75 / 4.5 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| mai-code-1.1-flash | False | context_unsupported | n/a | default | 0.2 / 1.2 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
 
 | Model | Source | Exact alias | Effort | Metric | Score | Publication age unknown | Cached | Harness |
 |---|---|---|---|---|---|---|---|---|
@@ -530,38 +540,39 @@ Evidence gaps are grouped by affected profile in [Coverage and exclusions](#cove
 
 Budget: **advisory**, input 5 / output 30 USD per million. Deciding source: artificialAnalysis.
 Quality leader before hard-budget exclusions: claude-opus-5. Family fallback (informational, not a winner): claude-sonnet-5.
-Pending distinct deciding-source observations: 1 / 2.
+Strategy: **quality_first**.
+Pending distinct deciding-source observations for claude-opus-5 (artificialAnalysis): 1 / 2.
 
 <details>
 <summary>Eligibility and exact benchmark evidence</summary>
 
 | Model | Eligible | Exclusions | Advisory warnings | Price tier | Input / output USD per M | Price verified | Capability as-of |
 |---|---|---|---|---|---|---|---|
-| claude-fable-5.1 | False | capabilities_missing | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 10 / 50 | 2026-09-08T13:51:54.6105833Z | n/a |
-| claude-haiku-4.5 | True | n/a | n/a | default | 1 / 5 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| claude-opus-4.7 | True | n/a | n/a | default | 5 / 25 | 2026-09-08T13:51:54.6105833Z | 2026-07-30 |
-| claude-opus-4.8 | True | n/a | n/a | default | 5 / 25 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| claude-opus-4.8-fast | True | n/a | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 10 / 50 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| claude-opus-5 | True | n/a | n/a | default | 5 / 25 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| claude-sonnet-4.6 | True | n/a | n/a | default | 3 / 15 | 2026-09-08T13:51:54.6105833Z | 2026-07-30 |
-| claude-sonnet-5 | True | n/a | n/a | default | 2 / 10 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| gemini-3.5-flash | True | n/a | n/a | default | 1.5 / 9 | 2026-09-08T13:51:54.6105833Z | 2026-07-30 |
-| gemini-3.6-flash | True | n/a | n/a | default | 0.75 / 3.75 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| gemini-3.7-flash | True | n/a | n/a | default | 0.75 / 3.75 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| gemini-3.8-flash | True | n/a | n/a | default | 0.75 / 3.75 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| gpt-5-mini | False | context_unsupported, effort_unsupported | n/a | default | 0.25 / 2 | 2026-09-08T13:51:54.6105833Z | 2026-07-30 |
-| gpt-5.3-codex | True | n/a | n/a | default | 1.75 / 14 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| gpt-5.4 | True | n/a | n/a | default | 2.5 / 15 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| gpt-5.4-mini | True | n/a | n/a | default | 0.75 / 4.5 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| gpt-5.5 | True | n/a | n/a | default | 5 / 30 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| gpt-5.6-luna | True | n/a | n/a | default | 0.2 / 1.2 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| gpt-5.6-sol | True | n/a | n/a | default | 4 / 20 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| gpt-5.6-terra | True | n/a | n/a | default | 2 / 12 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| grok-4.5 | True | n/a | n/a | default | 2 / 6 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| kimi-k2.7-code | False | capabilities_missing | n/a | default | 0.95 / 4 | 2026-09-08T13:51:54.6105833Z | n/a |
-| kimi-k3 | False | capabilities_missing | n/a | default | 3 / 15 | 2026-09-08T13:51:54.6105833Z | n/a |
-| mai-code-1-flash-picker | True | n/a | n/a | default | 0.75 / 4.5 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| mai-code-1.1-flash | True | n/a | n/a | default | 0.2 / 1.2 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
+| claude-fable-5.1 | False | capabilities_missing | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 10 / 50 | 2026-09-08T14:28:18.8645529Z | n/a |
+| claude-haiku-4.5 | True | n/a | n/a | default | 1 / 5 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| claude-opus-4.7 | True | n/a | n/a | default | 5 / 25 | 2026-09-08T14:28:18.8645529Z | 2026-07-30 |
+| claude-opus-4.8 | True | n/a | n/a | default | 5 / 25 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| claude-opus-4.8-fast | True | n/a | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 10 / 50 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| claude-opus-5 | True | n/a | n/a | default | 5 / 25 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| claude-sonnet-4.6 | True | n/a | n/a | default | 3 / 15 | 2026-09-08T14:28:18.8645529Z | 2026-07-30 |
+| claude-sonnet-5 | True | n/a | n/a | default | 2 / 10 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| gemini-3.5-flash | True | n/a | n/a | default | 1.5 / 9 | 2026-09-08T14:28:18.8645529Z | 2026-07-30 |
+| gemini-3.6-flash | True | n/a | n/a | default | 0.75 / 3.75 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| gemini-3.7-flash | True | n/a | n/a | default | 0.75 / 3.75 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| gemini-3.8-flash | True | n/a | n/a | default | 0.75 / 3.75 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| gpt-5-mini | False | context_unsupported, effort_unsupported | n/a | default | 0.25 / 2 | 2026-09-08T14:28:18.8645529Z | 2026-07-30 |
+| gpt-5.3-codex | True | n/a | n/a | default | 1.75 / 14 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| gpt-5.4 | True | n/a | n/a | default | 2.5 / 15 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| gpt-5.4-mini | True | n/a | n/a | default | 0.75 / 4.5 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| gpt-5.5 | True | n/a | n/a | default | 5 / 30 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| gpt-5.6-luna | True | n/a | n/a | default | 0.2 / 1.2 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| gpt-5.6-sol | True | n/a | n/a | default | 4 / 20 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| gpt-5.6-terra | True | n/a | n/a | default | 2 / 12 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| grok-4.5 | True | n/a | n/a | default | 2 / 6 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| kimi-k2.7-code | False | capabilities_missing | n/a | default | 0.95 / 4 | 2026-09-08T14:28:18.8645529Z | n/a |
+| kimi-k3 | False | capabilities_missing | n/a | default | 3 / 15 | 2026-09-08T14:28:18.8645529Z | n/a |
+| mai-code-1-flash-picker | True | n/a | n/a | default | 0.75 / 4.5 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| mai-code-1.1-flash | True | n/a | n/a | default | 0.2 / 1.2 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
 
 | Model | Source | Exact alias | Effort | Metric | Score | Publication age unknown | Cached | Harness |
 |---|---|---|---|---|---|---|---|---|
@@ -582,38 +593,39 @@ Evidence gaps are grouped by affected profile in [Coverage and exclusions](#cove
 
 Budget: **advisory**, input 3 / output 15 USD per million. Deciding source: artificialAnalysis.
 Quality leader before hard-budget exclusions: claude-opus-5. Family fallback (informational, not a winner): claude-sonnet-5.
-Pending distinct deciding-source observations: 1 / 2.
+Strategy: **quality_first**.
+Pending distinct deciding-source observations for claude-opus-5 (artificialAnalysis): 1 / 2.
 
 <details>
 <summary>Eligibility and exact benchmark evidence</summary>
 
 | Model | Eligible | Exclusions | Advisory warnings | Price tier | Input / output USD per M | Price verified | Capability as-of |
 |---|---|---|---|---|---|---|---|
-| claude-fable-5.1 | False | capabilities_missing | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 10 / 50 | 2026-09-08T13:51:54.6105833Z | n/a |
-| claude-haiku-4.5 | False | vision_unknown | n/a | default | 1 / 5 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| claude-opus-4.7 | False | vision_unknown | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 / 25 | 2026-09-08T13:51:54.6105833Z | 2026-07-30 |
-| claude-opus-4.8 | False | vision_unknown | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 / 25 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| claude-opus-4.8-fast | False | vision_unknown | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 10 / 50 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| claude-opus-5 | True | n/a | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 / 25 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| claude-sonnet-4.6 | True | n/a | n/a | default | 3 / 15 | 2026-09-08T13:51:54.6105833Z | 2026-07-30 |
-| claude-sonnet-5 | True | n/a | n/a | default | 2 / 10 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| gemini-3.5-flash | False | vision_unknown | n/a | default | 1.5 / 9 | 2026-09-08T13:51:54.6105833Z | 2026-07-30 |
-| gemini-3.6-flash | False | vision_unknown | n/a | default | 0.75 / 3.75 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| gemini-3.7-flash | False | vision_unknown | n/a | default | 0.75 / 3.75 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| gemini-3.8-flash | True | n/a | n/a | default | 0.75 / 3.75 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| gpt-5-mini | False | context_unsupported, effort_unsupported | n/a | default | 0.25 / 2 | 2026-09-08T13:51:54.6105833Z | 2026-07-30 |
-| gpt-5.3-codex | False | vision_unknown | n/a | default | 1.75 / 14 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| gpt-5.4 | False | vision_unknown | n/a | default | 2.5 / 15 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| gpt-5.4-mini | False | vision_unknown | n/a | default | 0.75 / 4.5 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| gpt-5.5 | False | vision_unknown | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 / 30 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| gpt-5.6-luna | False | vision_unknown | n/a | default | 0.2 / 1.2 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| gpt-5.6-sol | False | vision_unknown | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 4 / 20 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| gpt-5.6-terra | False | vision_unknown | n/a | default | 2 / 12 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| grok-4.5 | False | vision_unknown | n/a | default | 2 / 6 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| kimi-k2.7-code | False | capabilities_missing | n/a | default | 0.95 / 4 | 2026-09-08T13:51:54.6105833Z | n/a |
-| kimi-k3 | False | capabilities_missing | n/a | default | 3 / 15 | 2026-09-08T13:51:54.6105833Z | n/a |
-| mai-code-1-flash-picker | False | vision_unknown | n/a | default | 0.75 / 4.5 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| mai-code-1.1-flash | False | vision_unknown | n/a | default | 0.2 / 1.2 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
+| claude-fable-5.1 | False | capabilities_missing | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 10 / 50 | 2026-09-08T14:28:18.8645529Z | n/a |
+| claude-haiku-4.5 | False | vision_unknown | n/a | default | 1 / 5 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| claude-opus-4.7 | False | vision_unknown | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 / 25 | 2026-09-08T14:28:18.8645529Z | 2026-07-30 |
+| claude-opus-4.8 | False | vision_unknown | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 / 25 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| claude-opus-4.8-fast | False | vision_unknown | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 10 / 50 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| claude-opus-5 | True | n/a | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 / 25 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| claude-sonnet-4.6 | True | n/a | n/a | default | 3 / 15 | 2026-09-08T14:28:18.8645529Z | 2026-07-30 |
+| claude-sonnet-5 | True | n/a | n/a | default | 2 / 10 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| gemini-3.5-flash | False | vision_unknown | n/a | default | 1.5 / 9 | 2026-09-08T14:28:18.8645529Z | 2026-07-30 |
+| gemini-3.6-flash | False | vision_unknown | n/a | default | 0.75 / 3.75 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| gemini-3.7-flash | False | vision_unknown | n/a | default | 0.75 / 3.75 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| gemini-3.8-flash | True | n/a | n/a | default | 0.75 / 3.75 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| gpt-5-mini | False | context_unsupported, effort_unsupported | n/a | default | 0.25 / 2 | 2026-09-08T14:28:18.8645529Z | 2026-07-30 |
+| gpt-5.3-codex | False | vision_unknown | n/a | default | 1.75 / 14 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| gpt-5.4 | False | vision_unknown | n/a | default | 2.5 / 15 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| gpt-5.4-mini | False | vision_unknown | n/a | default | 0.75 / 4.5 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| gpt-5.5 | False | vision_unknown | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 / 30 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| gpt-5.6-luna | False | vision_unknown | n/a | default | 0.2 / 1.2 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| gpt-5.6-sol | False | vision_unknown | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 4 / 20 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| gpt-5.6-terra | False | vision_unknown | n/a | default | 2 / 12 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| grok-4.5 | False | vision_unknown | n/a | default | 2 / 6 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| kimi-k2.7-code | False | capabilities_missing | n/a | default | 0.95 / 4 | 2026-09-08T14:28:18.8645529Z | n/a |
+| kimi-k3 | False | capabilities_missing | n/a | default | 3 / 15 | 2026-09-08T14:28:18.8645529Z | n/a |
+| mai-code-1-flash-picker | False | vision_unknown | n/a | default | 0.75 / 4.5 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| mai-code-1.1-flash | False | vision_unknown | n/a | default | 0.2 / 1.2 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
 
 | Model | Source | Exact alias | Effort | Metric | Score | Publication age unknown | Cached | Harness |
 |---|---|---|---|---|---|---|---|---|
@@ -633,38 +645,41 @@ Evidence gaps are grouped by affected profile in [Coverage and exclusions](#cove
 
 Budget: **hard**, input 2 / output 10 USD per million. Deciding source: artificialAnalysis.
 Quality leader before hard-budget exclusions: gemini-3.8-flash. Family fallback (informational, not a winner): claude-haiku-4.5.
-Pending distinct deciding-source observations: 1 / 2.
+Strategy: **value_balanced**.
+Eligible quality reference: gemini-3.8-flash (73.5). Candidate gap: **0 / 3** absolute codingIndex score points.
+Lowest reference cost within the band wins; an equally priced incumbent stays. Reference usage: candidate **112.5 AIC**; incumbent **150 AIC** (1 AIC = USD 0.01).
+Pending distinct deciding-source observations for gemini-3.8-flash (artificialAnalysis): 1 / 2.
 
 <details>
 <summary>Eligibility and exact benchmark evidence</summary>
 
 | Model | Eligible | Exclusions | Advisory warnings | Price tier | Input / output USD per M | Price verified | Capability as-of |
 |---|---|---|---|---|---|---|---|
-| claude-fable-5.1 | False | capabilities_missing, pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-09-08T13:51:54.6105833Z | n/a |
-| claude-haiku-4.5 | True | n/a | n/a | default | 1 / 5 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| claude-opus-4.7 | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-09-08T13:51:54.6105833Z | 2026-07-30 |
-| claude-opus-4.8 | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| claude-opus-4.8-fast | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| claude-opus-5 | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| claude-sonnet-4.6 | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 3 / 15 | 2026-09-08T13:51:54.6105833Z | 2026-07-30 |
-| claude-sonnet-5 | True | n/a | n/a | default | 2 / 10 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| gemini-3.5-flash | True | n/a | n/a | default | 1.5 / 9 | 2026-09-08T13:51:54.6105833Z | 2026-07-30 |
-| gemini-3.6-flash | True | n/a | n/a | default | 0.75 / 3.75 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| gemini-3.7-flash | True | n/a | n/a | default | 0.75 / 3.75 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| gemini-3.8-flash | True | n/a | n/a | default | 0.75 / 3.75 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| gpt-5-mini | False | context_unsupported, effort_unsupported | n/a | default | 0.25 / 2 | 2026-09-08T13:51:54.6105833Z | 2026-07-30 |
-| gpt-5.3-codex | False | pricing_output_exceeds_ceiling | n/a | default | 1.75 / 14 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| gpt-5.4 | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 2.5 / 15 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| gpt-5.4-mini | True | n/a | n/a | default | 0.75 / 4.5 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| gpt-5.5 | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 30 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| gpt-5.6-luna | True | n/a | n/a | default | 0.2 / 1.2 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| gpt-5.6-sol | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 4 / 20 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| gpt-5.6-terra | False | pricing_output_exceeds_ceiling | n/a | default | 2 / 12 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| grok-4.5 | True | n/a | n/a | default | 2 / 6 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| kimi-k2.7-code | False | capabilities_missing | n/a | default | 0.95 / 4 | 2026-09-08T13:51:54.6105833Z | n/a |
-| kimi-k3 | False | capabilities_missing, pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 3 / 15 | 2026-09-08T13:51:54.6105833Z | n/a |
-| mai-code-1-flash-picker | True | n/a | n/a | default | 0.75 / 4.5 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| mai-code-1.1-flash | True | n/a | n/a | default | 0.2 / 1.2 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
+| claude-fable-5.1 | False | capabilities_missing, pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-09-08T14:28:18.8645529Z | n/a |
+| claude-haiku-4.5 | True | n/a | n/a | default | 1 / 5 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| claude-opus-4.7 | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-09-08T14:28:18.8645529Z | 2026-07-30 |
+| claude-opus-4.8 | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| claude-opus-4.8-fast | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| claude-opus-5 | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| claude-sonnet-4.6 | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 3 / 15 | 2026-09-08T14:28:18.8645529Z | 2026-07-30 |
+| claude-sonnet-5 | True | n/a | n/a | default | 2 / 10 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| gemini-3.5-flash | True | n/a | n/a | default | 1.5 / 9 | 2026-09-08T14:28:18.8645529Z | 2026-07-30 |
+| gemini-3.6-flash | True | n/a | n/a | default | 0.75 / 3.75 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| gemini-3.7-flash | True | n/a | n/a | default | 0.75 / 3.75 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| gemini-3.8-flash | True | n/a | n/a | default | 0.75 / 3.75 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| gpt-5-mini | False | context_unsupported, effort_unsupported | n/a | default | 0.25 / 2 | 2026-09-08T14:28:18.8645529Z | 2026-07-30 |
+| gpt-5.3-codex | False | pricing_output_exceeds_ceiling | n/a | default | 1.75 / 14 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| gpt-5.4 | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 2.5 / 15 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| gpt-5.4-mini | True | n/a | n/a | default | 0.75 / 4.5 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| gpt-5.5 | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 30 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| gpt-5.6-luna | True | n/a | n/a | default | 0.2 / 1.2 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| gpt-5.6-sol | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 4 / 20 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| gpt-5.6-terra | False | pricing_output_exceeds_ceiling | n/a | default | 2 / 12 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| grok-4.5 | True | n/a | n/a | default | 2 / 6 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| kimi-k2.7-code | False | capabilities_missing | n/a | default | 0.95 / 4 | 2026-09-08T14:28:18.8645529Z | n/a |
+| kimi-k3 | False | capabilities_missing, pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 3 / 15 | 2026-09-08T14:28:18.8645529Z | n/a |
+| mai-code-1-flash-picker | True | n/a | n/a | default | 0.75 / 4.5 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| mai-code-1.1-flash | True | n/a | n/a | default | 0.2 / 1.2 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
 
 | Model | Source | Exact alias | Effort | Metric | Score | Publication age unknown | Cached | Harness |
 |---|---|---|---|---|---|---|---|---|
@@ -683,38 +698,41 @@ Evidence gaps are grouped by affected profile in [Coverage and exclusions](#cove
 
 Budget: **hard**, input 2 / output 10 USD per million. Deciding source: artificialAnalysis.
 Quality leader before hard-budget exclusions: claude-opus-5. Family fallback (informational, not a winner): claude-sonnet-5.
-Pending distinct deciding-source observations: 1 / 2.
+Strategy: **value_balanced**.
+Eligible quality reference: gemini-3.7-flash (41.1). Candidate gap: **0 / 3** absolute intelligenceIndex score points.
+Lowest reference cost within the band wins; an equally priced incumbent stays. Reference usage: candidate **112.5 AIC**; incumbent **300 AIC** (1 AIC = USD 0.01).
+Pending distinct deciding-source observations for gemini-3.7-flash (artificialAnalysis): 1 / 2.
 
 <details>
 <summary>Eligibility and exact benchmark evidence</summary>
 
 | Model | Eligible | Exclusions | Advisory warnings | Price tier | Input / output USD per M | Price verified | Capability as-of |
 |---|---|---|---|---|---|---|---|
-| claude-fable-5.1 | False | capabilities_missing, pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-09-08T13:51:54.6105833Z | n/a |
-| claude-haiku-4.5 | True | n/a | n/a | default | 1 / 5 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| claude-opus-4.7 | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-09-08T13:51:54.6105833Z | 2026-07-30 |
-| claude-opus-4.8 | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| claude-opus-4.8-fast | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| claude-opus-5 | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| claude-sonnet-4.6 | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 3 / 15 | 2026-09-08T13:51:54.6105833Z | 2026-07-30 |
-| claude-sonnet-5 | True | n/a | n/a | default | 2 / 10 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| gemini-3.5-flash | True | n/a | n/a | default | 1.5 / 9 | 2026-09-08T13:51:54.6105833Z | 2026-07-30 |
-| gemini-3.6-flash | True | n/a | n/a | default | 0.75 / 3.75 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| gemini-3.7-flash | True | n/a | n/a | default | 0.75 / 3.75 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| gemini-3.8-flash | True | n/a | n/a | default | 0.75 / 3.75 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| gpt-5-mini | False | context_unsupported, effort_unsupported | n/a | default | 0.25 / 2 | 2026-09-08T13:51:54.6105833Z | 2026-07-30 |
-| gpt-5.3-codex | False | pricing_output_exceeds_ceiling | n/a | default | 1.75 / 14 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| gpt-5.4 | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 2.5 / 15 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| gpt-5.4-mini | True | n/a | n/a | default | 0.75 / 4.5 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| gpt-5.5 | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 30 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| gpt-5.6-luna | True | n/a | n/a | default | 0.2 / 1.2 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| gpt-5.6-sol | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 4 / 20 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| gpt-5.6-terra | False | pricing_output_exceeds_ceiling | n/a | default | 2 / 12 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| grok-4.5 | True | n/a | n/a | default | 2 / 6 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| kimi-k2.7-code | False | capabilities_missing | n/a | default | 0.95 / 4 | 2026-09-08T13:51:54.6105833Z | n/a |
-| kimi-k3 | False | capabilities_missing, pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 3 / 15 | 2026-09-08T13:51:54.6105833Z | n/a |
-| mai-code-1-flash-picker | True | n/a | n/a | default | 0.75 / 4.5 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
-| mai-code-1.1-flash | True | n/a | n/a | default | 0.2 / 1.2 | 2026-09-08T13:51:54.6105833Z | 2026-09-08 |
+| claude-fable-5.1 | False | capabilities_missing, pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-09-08T14:28:18.8645529Z | n/a |
+| claude-haiku-4.5 | True | n/a | n/a | default | 1 / 5 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| claude-opus-4.7 | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-09-08T14:28:18.8645529Z | 2026-07-30 |
+| claude-opus-4.8 | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| claude-opus-4.8-fast | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| claude-opus-5 | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| claude-sonnet-4.6 | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 3 / 15 | 2026-09-08T14:28:18.8645529Z | 2026-07-30 |
+| claude-sonnet-5 | True | n/a | n/a | default | 2 / 10 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| gemini-3.5-flash | True | n/a | n/a | default | 1.5 / 9 | 2026-09-08T14:28:18.8645529Z | 2026-07-30 |
+| gemini-3.6-flash | True | n/a | n/a | default | 0.75 / 3.75 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| gemini-3.7-flash | True | n/a | n/a | default | 0.75 / 3.75 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| gemini-3.8-flash | True | n/a | n/a | default | 0.75 / 3.75 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| gpt-5-mini | False | context_unsupported, effort_unsupported | n/a | default | 0.25 / 2 | 2026-09-08T14:28:18.8645529Z | 2026-07-30 |
+| gpt-5.3-codex | False | pricing_output_exceeds_ceiling | n/a | default | 1.75 / 14 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| gpt-5.4 | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 2.5 / 15 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| gpt-5.4-mini | True | n/a | n/a | default | 0.75 / 4.5 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| gpt-5.5 | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 30 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| gpt-5.6-luna | True | n/a | n/a | default | 0.2 / 1.2 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| gpt-5.6-sol | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 4 / 20 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| gpt-5.6-terra | False | pricing_output_exceeds_ceiling | n/a | default | 2 / 12 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| grok-4.5 | True | n/a | n/a | default | 2 / 6 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| kimi-k2.7-code | False | capabilities_missing | n/a | default | 0.95 / 4 | 2026-09-08T14:28:18.8645529Z | n/a |
+| kimi-k3 | False | capabilities_missing, pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 3 / 15 | 2026-09-08T14:28:18.8645529Z | n/a |
+| mai-code-1-flash-picker | True | n/a | n/a | default | 0.75 / 4.5 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
+| mai-code-1.1-flash | True | n/a | n/a | default | 0.2 / 1.2 | 2026-09-08T14:28:18.8645529Z | 2026-09-08 |
 
 | Model | Source | Exact alias | Effort | Metric | Score | Publication age unknown | Cached | Harness |
 |---|---|---|---|---|---|---|---|---|
