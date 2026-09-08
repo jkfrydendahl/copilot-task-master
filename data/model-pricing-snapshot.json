@@ -2,7 +2,7 @@
   "models": {
     "mai-code-1-flash-picker": {
       "name": "MAI-Code-1-Flash",
-      "verifiedAtUtc": "2026-09-08T13:24:49.7627085Z",
+      "verifiedAtUtc": "2026-09-08T13:51:54.6105833Z",
       "sourceUrl": "https://docs.github.com/en/copilot/reference/copilot-billing/models-and-pricing",
       "tiers": {
         "default": {
@@ -16,7 +16,7 @@
     },
     "mai-code-1.1-flash": {
       "name": "MAI-Code-1.1-Flash",
-      "verifiedAtUtc": "2026-09-08T13:24:49.7627085Z",
+      "verifiedAtUtc": "2026-09-08T13:51:54.6105833Z",
       "sourceUrl": "https://docs.github.com/en/copilot/reference/copilot-billing/models-and-pricing",
       "tiers": {
         "default": {
@@ -30,20 +30,20 @@
     },
     "grok-4.5": {
       "name": "Grok 4.5",
-      "verifiedAtUtc": "2026-09-08T13:24:49.7627085Z",
+      "verifiedAtUtc": "2026-09-08T13:51:54.6105833Z",
       "sourceUrl": "https://docs.github.com/en/copilot/reference/copilot-billing/models-and-pricing",
       "tiers": {
-        "default": {
-          "inputPerMillion": 2.0,
-          "outputPerMillion": 6.0,
-          "cachedInputPerMillion": 0.5,
-          "cacheWritePerMillion": null,
-          "thresholdInputTokens": 200000.0
-        },
         "long_context": {
           "inputPerMillion": 4.0,
           "outputPerMillion": 12.0,
           "cachedInputPerMillion": 1.0,
+          "cacheWritePerMillion": null,
+          "thresholdInputTokens": 200000.0
+        },
+        "default": {
+          "inputPerMillion": 2.0,
+          "outputPerMillion": 6.0,
+          "cachedInputPerMillion": 0.5,
           "cacheWritePerMillion": null,
           "thresholdInputTokens": 200000.0
         }
@@ -51,7 +51,7 @@
     },
     "claude-opus-5": {
       "name": "Claude Opus 5",
-      "verifiedAtUtc": "2026-09-08T13:24:49.7627085Z",
+      "verifiedAtUtc": "2026-09-08T13:51:54.6105833Z",
       "sourceUrl": "https://docs.github.com/en/copilot/reference/copilot-billing/models-and-pricing",
       "tiers": {
         "default": {
@@ -65,20 +65,20 @@
     },
     "gpt-5.4": {
       "name": "GPT-5.4",
-      "verifiedAtUtc": "2026-09-08T13:24:49.7627085Z",
+      "verifiedAtUtc": "2026-09-08T13:51:54.6105833Z",
       "sourceUrl": "https://docs.github.com/en/copilot/reference/copilot-billing/models-and-pricing",
       "tiers": {
-        "default": {
-          "inputPerMillion": 2.5,
-          "outputPerMillion": 15.0,
-          "cachedInputPerMillion": 0.25,
-          "cacheWritePerMillion": null,
-          "thresholdInputTokens": 272000.0
-        },
         "long_context": {
           "inputPerMillion": 5.0,
           "outputPerMillion": 22.5,
           "cachedInputPerMillion": 0.5,
+          "cacheWritePerMillion": null,
+          "thresholdInputTokens": 272000.0
+        },
+        "default": {
+          "inputPerMillion": 2.5,
+          "outputPerMillion": 15.0,
+          "cachedInputPerMillion": 0.25,
           "cacheWritePerMillion": null,
           "thresholdInputTokens": 272000.0
         }
@@ -86,7 +86,7 @@
     },
     "claude-opus-4.7": {
       "name": "Claude Opus 4.7",
-      "verifiedAtUtc": "2026-09-08T13:24:49.7627085Z",
+      "verifiedAtUtc": "2026-09-08T13:51:54.6105833Z",
       "sourceUrl": "https://docs.github.com/en/copilot/reference/copilot-billing/models-and-pricing",
       "tiers": {
         "default": {
@@ -100,7 +100,7 @@
     },
     "claude-opus-4.8": {
       "name": "Claude Opus 4.8",
-      "verifiedAtUtc": "2026-09-08T13:24:49.7627085Z",
+      "verifiedAtUtc": "2026-09-08T13:51:54.6105833Z",
       "sourceUrl": "https://docs.github.com/en/copilot/reference/copilot-billing/models-and-pricing",
       "tiers": {
         "default": {
@@ -114,7 +114,7 @@
     },
     "gemini-3.5-flash": {
       "name": "Gemini 3.5 Flash",
-      "verifiedAtUtc": "2026-09-08T13:24:49.7627085Z",
+      "verifiedAtUtc": "2026-09-08T13:51:54.6105833Z",
       "sourceUrl": "https://docs.github.com/en/copilot/reference/copilot-billing/models-and-pricing",
       "tiers": {
         "default": {
@@ -128,7 +128,7 @@
     },
     "gemini-3.6-flash": {
       "name": "Gemini 3.6 Flash",
-      "verifiedAtUtc": "2026-09-08T13:24:49.7627085Z",
+      "verifiedAtUtc": "2026-09-08T13:51:54.6105833Z",
       "sourceUrl": "https://docs.github.com/en/copilot/reference/copilot-billing/models-and-pricing",
       "tiers": {
         "default": {
@@ -142,7 +142,7 @@
     },
     "claude-haiku-4.5": {
       "name": "Claude Haiku 4.5",
-      "verifiedAtUtc": "2026-09-08T13:24:49.7627085Z",
+      "verifiedAtUtc": "2026-09-08T13:51:54.6105833Z",
       "sourceUrl": "https://docs.github.com/en/copilot/reference/copilot-billing/models-and-pricing",
       "tiers": {
         "default": {
@@ -156,7 +156,7 @@
     },
     "gemini-3.7-flash": {
       "name": "Gemini 3.7 Flash",
-      "verifiedAtUtc": "2026-09-08T13:24:49.7627085Z",
+      "verifiedAtUtc": "2026-09-08T13:51:54.6105833Z",
       "sourceUrl": "https://docs.github.com/en/copilot/reference/copilot-billing/models-and-pricing",
       "tiers": {
         "default": {
@@ -170,20 +170,20 @@
     },
     "gpt-5.5": {
       "name": "GPT-5.5",
-      "verifiedAtUtc": "2026-09-08T13:24:49.7627085Z",
+      "verifiedAtUtc": "2026-09-08T13:51:54.6105833Z",
       "sourceUrl": "https://docs.github.com/en/copilot/reference/copilot-billing/models-and-pricing",
       "tiers": {
-        "default": {
-          "inputPerMillion": 5.0,
-          "outputPerMillion": 30.0,
-          "cachedInputPerMillion": 0.5,
-          "cacheWritePerMillion": null,
-          "thresholdInputTokens": 272000.0
-        },
         "long_context": {
           "inputPerMillion": 10.0,
           "outputPerMillion": 45.0,
           "cachedInputPerMillion": 1.0,
+          "cacheWritePerMillion": null,
+          "thresholdInputTokens": 272000.0
+        },
+        "default": {
+          "inputPerMillion": 5.0,
+          "outputPerMillion": 30.0,
+          "cachedInputPerMillion": 0.5,
           "cacheWritePerMillion": null,
           "thresholdInputTokens": 272000.0
         }
@@ -191,7 +191,7 @@
     },
     "gpt-5.4-mini": {
       "name": "GPT-5.4 mini",
-      "verifiedAtUtc": "2026-09-08T13:24:49.7627085Z",
+      "verifiedAtUtc": "2026-09-08T13:51:54.6105833Z",
       "sourceUrl": "https://docs.github.com/en/copilot/reference/copilot-billing/models-and-pricing",
       "tiers": {
         "default": {
@@ -205,7 +205,7 @@
     },
     "claude-sonnet-4.6": {
       "name": "Claude Sonnet 4.6",
-      "verifiedAtUtc": "2026-09-08T13:24:49.7627085Z",
+      "verifiedAtUtc": "2026-09-08T13:51:54.6105833Z",
       "sourceUrl": "https://docs.github.com/en/copilot/reference/copilot-billing/models-and-pricing",
       "tiers": {
         "default": {
@@ -219,7 +219,7 @@
     },
     "gpt-5-mini": {
       "name": "GPT-5 mini",
-      "verifiedAtUtc": "2026-09-08T13:24:49.7627085Z",
+      "verifiedAtUtc": "2026-09-08T13:51:54.6105833Z",
       "sourceUrl": "https://docs.github.com/en/copilot/reference/copilot-billing/models-and-pricing",
       "tiers": {
         "default": {
@@ -233,28 +233,28 @@
     },
     "gpt-6-astra": {
       "name": "GPT-6 Astra",
-      "verifiedAtUtc": "2026-09-08T13:24:49.7627085Z",
+      "verifiedAtUtc": "2026-09-08T13:51:54.6105833Z",
       "sourceUrl": "https://docs.github.com/en/copilot/reference/copilot-billing/models-and-pricing",
       "tiers": {
-        "default": {
-          "inputPerMillion": 10.0,
-          "outputPerMillion": 50.0,
-          "cachedInputPerMillion": 1.0,
-          "cacheWritePerMillion": 12.5,
-          "thresholdInputTokens": 272000.0
-        },
         "long_context": {
           "inputPerMillion": 20.0,
           "outputPerMillion": 75.0,
           "cachedInputPerMillion": 2.0,
           "cacheWritePerMillion": 25.0,
           "thresholdInputTokens": 272000.0
+        },
+        "default": {
+          "inputPerMillion": 10.0,
+          "outputPerMillion": 50.0,
+          "cachedInputPerMillion": 1.0,
+          "cacheWritePerMillion": 12.5,
+          "thresholdInputTokens": 272000.0
         }
       }
     },
     "gpt-5.3-codex": {
       "name": "GPT-5.3-Codex",
-      "verifiedAtUtc": "2026-09-08T13:24:49.7627085Z",
+      "verifiedAtUtc": "2026-09-08T13:51:54.6105833Z",
       "sourceUrl": "https://docs.github.com/en/copilot/reference/copilot-billing/models-and-pricing",
       "tiers": {
         "default": {
@@ -268,28 +268,28 @@
     },
     "gpt-5.6-terra": {
       "name": "GPT-5.6 Terra",
-      "verifiedAtUtc": "2026-09-08T13:24:49.7627085Z",
+      "verifiedAtUtc": "2026-09-08T13:51:54.6105833Z",
       "sourceUrl": "https://docs.github.com/en/copilot/reference/copilot-billing/models-and-pricing",
       "tiers": {
-        "default": {
-          "inputPerMillion": 2.0,
-          "outputPerMillion": 12.0,
-          "cachedInputPerMillion": 0.2,
-          "cacheWritePerMillion": 2.5,
-          "thresholdInputTokens": 272000.0
-        },
         "long_context": {
           "inputPerMillion": 4.0,
           "outputPerMillion": 18.0,
           "cachedInputPerMillion": 0.4,
           "cacheWritePerMillion": 5.0,
           "thresholdInputTokens": 272000.0
+        },
+        "default": {
+          "inputPerMillion": 2.0,
+          "outputPerMillion": 12.0,
+          "cachedInputPerMillion": 0.2,
+          "cacheWritePerMillion": 2.5,
+          "thresholdInputTokens": 272000.0
         }
       }
     },
     "claude-opus-4.8-fast": {
       "name": "Claude Opus 4.8 (fast mode) (preview)",
-      "verifiedAtUtc": "2026-09-08T13:24:49.7627085Z",
+      "verifiedAtUtc": "2026-09-08T13:51:54.6105833Z",
       "sourceUrl": "https://docs.github.com/en/copilot/reference/copilot-billing/models-and-pricing",
       "tiers": {
         "default": {
@@ -303,7 +303,7 @@
     },
     "claude-sonnet-5": {
       "name": "Claude Sonnet 5",
-      "verifiedAtUtc": "2026-09-08T13:24:49.7627085Z",
+      "verifiedAtUtc": "2026-09-08T13:51:54.6105833Z",
       "sourceUrl": "https://docs.github.com/en/copilot/reference/copilot-billing/models-and-pricing",
       "tiers": {
         "default": {
@@ -317,41 +317,41 @@
     },
     "gpt-5.6-luna": {
       "name": "GPT-5.6 Luna",
-      "verifiedAtUtc": "2026-09-08T13:24:49.7627085Z",
+      "verifiedAtUtc": "2026-09-08T13:51:54.6105833Z",
       "sourceUrl": "https://docs.github.com/en/copilot/reference/copilot-billing/models-and-pricing",
       "tiers": {
-        "default": {
-          "inputPerMillion": 0.2,
-          "outputPerMillion": 1.2,
-          "cachedInputPerMillion": 0.02,
-          "cacheWritePerMillion": 0.25,
-          "thresholdInputTokens": 200000.0
-        },
         "long_context": {
           "inputPerMillion": 0.4,
           "outputPerMillion": 1.8,
           "cachedInputPerMillion": 0.04,
           "cacheWritePerMillion": 0.5,
           "thresholdInputTokens": 200000.0
+        },
+        "default": {
+          "inputPerMillion": 0.2,
+          "outputPerMillion": 1.2,
+          "cachedInputPerMillion": 0.02,
+          "cacheWritePerMillion": 0.25,
+          "thresholdInputTokens": 200000.0
         }
       }
     },
     "grok-4.6": {
       "name": "Grok 4.6",
-      "verifiedAtUtc": "2026-09-08T13:24:49.7627085Z",
+      "verifiedAtUtc": "2026-09-08T13:51:54.6105833Z",
       "sourceUrl": "https://docs.github.com/en/copilot/reference/copilot-billing/models-and-pricing",
       "tiers": {
-        "default": {
-          "inputPerMillion": 2.0,
-          "outputPerMillion": 6.0,
-          "cachedInputPerMillion": 0.5,
-          "cacheWritePerMillion": null,
-          "thresholdInputTokens": 200000.0
-        },
         "long_context": {
           "inputPerMillion": 4.0,
           "outputPerMillion": 12.0,
           "cachedInputPerMillion": 1.0,
+          "cacheWritePerMillion": null,
+          "thresholdInputTokens": 200000.0
+        },
+        "default": {
+          "inputPerMillion": 2.0,
+          "outputPerMillion": 6.0,
+          "cachedInputPerMillion": 0.5,
           "cacheWritePerMillion": null,
           "thresholdInputTokens": 200000.0
         }
@@ -359,28 +359,28 @@
     },
     "gpt-5.6-sol": {
       "name": "GPT-5.6 Sol",
-      "verifiedAtUtc": "2026-09-08T13:24:49.7627085Z",
+      "verifiedAtUtc": "2026-09-08T13:51:54.6105833Z",
       "sourceUrl": "https://docs.github.com/en/copilot/reference/copilot-billing/models-and-pricing",
       "tiers": {
-        "default": {
-          "inputPerMillion": 4.0,
-          "outputPerMillion": 20.0,
-          "cachedInputPerMillion": 0.4,
-          "cacheWritePerMillion": 5.0,
-          "thresholdInputTokens": 272000.0
-        },
         "long_context": {
           "inputPerMillion": 8.0,
           "outputPerMillion": 30.0,
           "cachedInputPerMillion": 0.8,
           "cacheWritePerMillion": 10.0,
           "thresholdInputTokens": 272000.0
+        },
+        "default": {
+          "inputPerMillion": 4.0,
+          "outputPerMillion": 20.0,
+          "cachedInputPerMillion": 0.4,
+          "cacheWritePerMillion": 5.0,
+          "thresholdInputTokens": 272000.0
         }
       }
     },
     "claude-fable-5.1": {
       "name": "Claude Fable 5.1",
-      "verifiedAtUtc": "2026-09-08T13:24:49.7627085Z",
+      "verifiedAtUtc": "2026-09-08T13:51:54.6105833Z",
       "sourceUrl": "https://docs.github.com/en/copilot/reference/copilot-billing/models-and-pricing",
       "tiers": {
         "default": {
@@ -394,7 +394,7 @@
     },
     "gemini-3.8-flash": {
       "name": "Gemini 3.8 Flash",
-      "verifiedAtUtc": "2026-09-08T13:24:49.7627085Z",
+      "verifiedAtUtc": "2026-09-08T13:51:54.6105833Z",
       "sourceUrl": "https://docs.github.com/en/copilot/reference/copilot-billing/models-and-pricing",
       "tiers": {
         "default": {
@@ -408,7 +408,7 @@
     },
     "claude-fable-5": {
       "name": "Claude Fable 5",
-      "verifiedAtUtc": "2026-09-08T13:24:49.7627085Z",
+      "verifiedAtUtc": "2026-09-08T13:51:54.6105833Z",
       "sourceUrl": "https://docs.github.com/en/copilot/reference/copilot-billing/models-and-pricing",
       "tiers": {
         "default": {
@@ -422,7 +422,7 @@
     },
     "kimi-k2.7-code": {
       "name": "Kimi K2.7 Code",
-      "verifiedAtUtc": "2026-09-08T13:24:49.7627085Z",
+      "verifiedAtUtc": "2026-09-08T13:51:54.6105833Z",
       "sourceUrl": "https://docs.github.com/en/copilot/reference/copilot-billing/models-and-pricing",
       "tiers": {
         "default": {
@@ -436,7 +436,7 @@
     },
     "kimi-k3": {
       "name": "Kimi K3",
-      "verifiedAtUtc": "2026-09-08T13:24:49.7627085Z",
+      "verifiedAtUtc": "2026-09-08T13:51:54.6105833Z",
       "sourceUrl": "https://docs.github.com/en/copilot/reference/copilot-billing/models-and-pricing",
       "tiers": {
         "default": {
@@ -449,8 +449,8 @@
       }
     }
   },
-  "fetchedAtUtc": "2026-09-08T13:24:49.7627085Z",
-  "sourceFingerprint": "d165413f070274b41ad60ab5176fa5b23db5edb35b064770141ab2a3eb824297",
+  "fetchedAtUtc": "2026-09-08T13:51:54.6105833Z",
+  "sourceFingerprint": "c1ce507d927d142c8645c98b6f92d7510c3cbe57f5d00351359583a34f6d3adf",
   "sourceUrl": "https://docs.github.com/en/copilot/reference/copilot-billing/models-and-pricing",
   "schemaVersion": 1
 }
