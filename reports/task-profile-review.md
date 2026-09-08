@@ -1,10 +1,10 @@
-# Monthly task profile review (2026-09-02)
+# Monthly task profile review (2026-09-08)
 
 Reference: https://docs.github.com/en/copilot/reference/ai-models/model-comparison
 
 Model source: **copilot help config**
 
-Force benchmark consensus (manual first-run override): **False**
+Force benchmark consensus (manual first-run override): **True**
 
 ## Current profiles
 
@@ -50,15 +50,15 @@ _AA alias IS configured but Artificial Analysis returned no score this run. Live
 
 _No `artificialAnalysis` alias is configured in `config/model-ranking-aliases.json` for these models, so Artificial Analysis is never consulted for them. They are excluded from benchmark consensus entirely (no LiveBench-only promotion), and an active override on such a model is revoked. This section is config-derived and is reported on every run,     including partial/stale benchmark runs. Add an alias if a model deserves consideration._
 
-- "orchestrator": AA alias not configured -- excluded from consensus: claude-opus-4.5, claude-opus-4.6, claude-opus-4.7, claude-sonnet-4.6, gpt-5.4, gpt-5.4-mini, gpt-5.5
-- "quick": AA alias not configured -- excluded from consensus: claude-opus-4.5, claude-opus-4.6, claude-opus-4.7, claude-sonnet-4.6, gpt-5.4, gpt-5.4-mini, gpt-5.5
-- "default-development": AA alias not configured -- excluded from consensus: claude-opus-4.5, claude-opus-4.6, claude-opus-4.7, claude-sonnet-4.6, gpt-5.4, gpt-5.4-mini, gpt-5.5
-- "agentic-implementation": AA alias not configured -- excluded from consensus: claude-opus-4.5, claude-opus-4.6, claude-opus-4.7, claude-opus-4.8, claude-sonnet-4.6, claude-sonnet-5, gpt-5.4, gpt-5.4-mini, gpt-5.5, gpt-5.6-luna, gpt-5.6-terra
-- "deep-reasoning": AA alias not configured -- excluded from consensus: claude-opus-4.5, claude-opus-4.6, claude-opus-4.7, claude-sonnet-4.6, gpt-5.4, gpt-5.4-mini, gpt-5.5
-- "review": AA alias not configured -- excluded from consensus: claude-opus-4.5, claude-opus-4.6, claude-opus-4.7, claude-sonnet-4.6, gpt-5.4, gpt-5.4-mini, gpt-5.5
-- "visual-ui": AA alias not configured -- excluded from consensus: claude-opus-4.5, claude-opus-4.6, claude-opus-4.7, claude-sonnet-4.6, gpt-5.4, gpt-5.4-mini, gpt-5.5
-- "mechanical": AA alias not configured -- excluded from consensus: claude-opus-4.5, claude-opus-4.6, claude-opus-4.7, claude-sonnet-4.6, gpt-5.4, gpt-5.4-mini, gpt-5.5
-- "triage": AA alias not configured -- excluded from consensus: claude-opus-4.5, claude-opus-4.6, claude-opus-4.7, claude-sonnet-4.6, gpt-5.4, gpt-5.4-mini, gpt-5.5
+- "orchestrator": AA alias not configured -- excluded from consensus: claude-opus-4.7, claude-sonnet-4.6, gpt-5.4, gpt-5.4-mini, gpt-5.5
+- "quick": AA alias not configured -- excluded from consensus: claude-opus-4.7, claude-sonnet-4.6, gpt-5.4, gpt-5.4-mini, gpt-5.5
+- "default-development": AA alias not configured -- excluded from consensus: claude-opus-4.7, claude-sonnet-4.6, gpt-5.4, gpt-5.4-mini, gpt-5.5
+- "agentic-implementation": AA alias not configured -- excluded from consensus: claude-opus-4.7, claude-opus-4.8, claude-sonnet-4.6, claude-sonnet-5, gpt-5.4, gpt-5.4-mini, gpt-5.5, gpt-5.6-luna, gpt-5.6-terra
+- "deep-reasoning": AA alias not configured -- excluded from consensus: claude-opus-4.7, claude-sonnet-4.6, gpt-5.4, gpt-5.4-mini, gpt-5.5
+- "review": AA alias not configured -- excluded from consensus: claude-opus-4.7, claude-sonnet-4.6, gpt-5.4, gpt-5.4-mini, gpt-5.5
+- "visual-ui": AA alias not configured -- excluded from consensus: claude-opus-4.7, claude-sonnet-4.6, gpt-5.4, gpt-5.4-mini, gpt-5.5
+- "mechanical": AA alias not configured -- excluded from consensus: claude-opus-4.7, claude-sonnet-4.6, gpt-5.4, gpt-5.4-mini, gpt-5.5
+- "triage": AA alias not configured -- excluded from consensus: claude-opus-4.7, claude-sonnet-4.6, gpt-5.4, gpt-5.4-mini, gpt-5.5
 
 ## Active benchmark overrides
 - "review": "gpt-5.6-sol"
@@ -77,18 +77,17 @@ _No `artificialAnalysis` alias is configured in `config/model-ranking-aliases.js
 
 | Model | Reasons | Pricing tier | Input $/M | Output $/M | Capability as-of |
 |---|---|---|---|---|---|
+| claude-fable-5.1 | capabilities_missing | n/a | n/a | n/a | n/a |
 | claude-opus-5 | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 | 25 | 2026-07-30 |
 | claude-opus-4.8 | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 | 25 | 2026-07-30 |
 | claude-opus-4.8-fast | context_unsupported, effort_unsupported, pricing_missing | n/a | n/a | n/a | 2026-07-30 |
 | claude-opus-4.7 | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 | 25 | 2026-07-30 |
-| claude-opus-4.6 | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 | 25 | 2026-07-30 |
-| claude-sonnet-4.5 | context_unsupported, effort_unsupported | default | 3 | 15 | 2026-07-30 |
-| claude-opus-4.5 | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 | 25 | 2026-07-30 |
 | gpt-5.6-sol | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 | 30 | 2026-07-30 |
 | gpt-5.5 | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 | 30 | 2026-07-30 |
 | gpt-5-mini | context_unsupported, effort_unsupported | default | 0.25 | 2 | 2026-07-30 |
 | mai-code-1.1-flash | capabilities_missing | n/a | n/a | n/a | n/a |
 | mai-code-1-flash-picker | context_unsupported, effort_unsupported, pricing_missing | n/a | n/a | n/a | 2026-07-30 |
+| gemini-3.8-flash | capabilities_missing | n/a | n/a | n/a | n/a |
 | gemini-3.7-flash | capabilities_missing | n/a | n/a | n/a | n/a |
 
 ### quick
@@ -100,14 +99,12 @@ _No `artificialAnalysis` alias is configured in `config/model-ranking-aliases.js
 
 | Model | Reasons | Pricing tier | Input $/M | Output $/M | Capability as-of |
 |---|---|---|---|---|---|
+| claude-fable-5.1 | capabilities_missing | n/a | n/a | n/a | n/a |
 | claude-opus-5 | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 | 25 | 2026-07-30 |
 | claude-opus-4.8 | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 | 25 | 2026-07-30 |
 | claude-opus-4.8-fast | context_unsupported, effort_unsupported, pricing_missing | n/a | n/a | n/a | 2026-07-30 |
 | claude-opus-4.7 | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 | 25 | 2026-07-30 |
 | claude-sonnet-4.6 | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 3 | 15 | 2026-07-30 |
-| claude-opus-4.6 | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 | 25 | 2026-07-30 |
-| claude-sonnet-4.5 | context_unsupported, effort_unsupported, pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 3 | 15 | 2026-07-30 |
-| claude-opus-4.5 | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 | 25 | 2026-07-30 |
 | gpt-5.6-sol | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 | 30 | 2026-07-30 |
 | gpt-5.6-terra | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 2.5 | 15 | 2026-07-30 |
 | gpt-5.5 | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 | 30 | 2026-07-30 |
@@ -116,8 +113,8 @@ _No `artificialAnalysis` alias is configured in `config/model-ranking-aliases.js
 | gpt-5-mini | context_unsupported, effort_unsupported | default | 0.25 | 2 | 2026-07-30 |
 | mai-code-1.1-flash | capabilities_missing | n/a | n/a | n/a | n/a |
 | mai-code-1-flash-picker | context_unsupported, effort_unsupported, pricing_missing | n/a | n/a | n/a | 2026-07-30 |
+| gemini-3.8-flash | capabilities_missing | n/a | n/a | n/a | n/a |
 | gemini-3.7-flash | capabilities_missing | n/a | n/a | n/a | n/a |
-| gemini-3.1-pro-preview | pricing_output_exceeds_ceiling | default | 2 | 12 | 2026-07-30 |
 
 ### default-development
 
@@ -128,18 +125,17 @@ _No `artificialAnalysis` alias is configured in `config/model-ranking-aliases.js
 
 | Model | Reasons | Pricing tier | Input $/M | Output $/M | Capability as-of |
 |---|---|---|---|---|---|
+| claude-fable-5.1 | capabilities_missing | n/a | n/a | n/a | n/a |
 | claude-opus-5 | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 | 25 | 2026-07-30 |
 | claude-opus-4.8 | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 | 25 | 2026-07-30 |
 | claude-opus-4.8-fast | context_unsupported, effort_unsupported, pricing_missing | n/a | n/a | n/a | 2026-07-30 |
 | claude-opus-4.7 | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 | 25 | 2026-07-30 |
-| claude-opus-4.6 | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 | 25 | 2026-07-30 |
-| claude-sonnet-4.5 | context_unsupported, effort_unsupported | default | 3 | 15 | 2026-07-30 |
-| claude-opus-4.5 | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 | 25 | 2026-07-30 |
 | gpt-5.6-sol | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 | 30 | 2026-07-30 |
 | gpt-5.5 | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 | 30 | 2026-07-30 |
 | gpt-5-mini | context_unsupported, effort_unsupported | default | 0.25 | 2 | 2026-07-30 |
 | mai-code-1.1-flash | capabilities_missing | n/a | n/a | n/a | n/a |
 | mai-code-1-flash-picker | context_unsupported, effort_unsupported, pricing_missing | n/a | n/a | n/a | 2026-07-30 |
+| gemini-3.8-flash | capabilities_missing | n/a | n/a | n/a | n/a |
 | gemini-3.7-flash | capabilities_missing | n/a | n/a | n/a | n/a |
 
 ### agentic-implementation
@@ -151,11 +147,12 @@ _No `artificialAnalysis` alias is configured in `config/model-ranking-aliases.js
 
 | Model | Reasons | Pricing tier | Input $/M | Output $/M | Capability as-of |
 |---|---|---|---|---|---|
+| claude-fable-5.1 | capabilities_missing | n/a | n/a | n/a | n/a |
 | claude-opus-4.8-fast | context_unsupported, effort_unsupported, pricing_missing | n/a | n/a | n/a | 2026-07-30 |
-| claude-sonnet-4.5 | context_unsupported, effort_unsupported | default | 3 | 15 | 2026-07-30 |
 | gpt-5-mini | context_unsupported, effort_unsupported | default | 0.25 | 2 | 2026-07-30 |
 | mai-code-1.1-flash | capabilities_missing | n/a | n/a | n/a | n/a |
 | mai-code-1-flash-picker | context_unsupported, effort_unsupported, pricing_missing | n/a | n/a | n/a | 2026-07-30 |
+| gemini-3.8-flash | capabilities_missing | n/a | n/a | n/a | n/a |
 | gemini-3.7-flash | capabilities_missing | n/a | n/a | n/a | n/a |
 
 ### deep-reasoning
@@ -167,14 +164,15 @@ _No `artificialAnalysis` alias is configured in `config/model-ranking-aliases.js
 
 | Model | Reasons | Pricing tier | Input $/M | Output $/M | Capability as-of |
 |---|---|---|---|---|---|
+| claude-fable-5.1 | capabilities_missing | n/a | n/a | n/a | n/a |
 | claude-opus-4.8-fast | context_unsupported, effort_unsupported, pricing_missing | n/a | n/a | n/a | 2026-07-30 |
-| claude-sonnet-4.5 | context_unsupported, effort_unsupported | default | 3 | 15 | 2026-07-30 |
 | claude-haiku-4.5 | context_unsupported | default | 1 | 5 | 2026-07-30 |
 | gpt-5.4-mini | context_unsupported | default | 0.75 | 4.5 | 2026-07-30 |
 | gpt-5.3-codex | context_unsupported | default | 1.75 | 14 | 2026-07-30 |
 | gpt-5-mini | context_unsupported, effort_unsupported | default | 0.25 | 2 | 2026-07-30 |
 | mai-code-1.1-flash | capabilities_missing | n/a | n/a | n/a | n/a |
 | mai-code-1-flash-picker | context_unsupported, effort_unsupported, pricing_missing | n/a | n/a | n/a | 2026-07-30 |
+| gemini-3.8-flash | capabilities_missing | n/a | n/a | n/a | n/a |
 | gemini-3.7-flash | capabilities_missing | n/a | n/a | n/a | n/a |
 
 ### review
@@ -186,11 +184,12 @@ _No `artificialAnalysis` alias is configured in `config/model-ranking-aliases.js
 
 | Model | Reasons | Pricing tier | Input $/M | Output $/M | Capability as-of |
 |---|---|---|---|---|---|
+| claude-fable-5.1 | capabilities_missing | n/a | n/a | n/a | n/a |
 | claude-opus-4.8-fast | context_unsupported, effort_unsupported, pricing_missing | n/a | n/a | n/a | 2026-07-30 |
-| claude-sonnet-4.5 | context_unsupported, effort_unsupported | default | 3 | 15 | 2026-07-30 |
 | gpt-5-mini | context_unsupported, effort_unsupported | default | 0.25 | 2 | 2026-07-30 |
 | mai-code-1.1-flash | capabilities_missing | n/a | n/a | n/a | n/a |
 | mai-code-1-flash-picker | context_unsupported, effort_unsupported, pricing_missing | n/a | n/a | n/a | 2026-07-30 |
+| gemini-3.8-flash | capabilities_missing | n/a | n/a | n/a | n/a |
 | gemini-3.7-flash | capabilities_missing | n/a | n/a | n/a | n/a |
 
 ### visual-ui
@@ -202,13 +201,11 @@ _No `artificialAnalysis` alias is configured in `config/model-ranking-aliases.js
 
 | Model | Reasons | Pricing tier | Input $/M | Output $/M | Capability as-of |
 |---|---|---|---|---|---|
+| claude-fable-5.1 | capabilities_missing | n/a | n/a | n/a | n/a |
 | claude-opus-5 | vision_unknown, pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 | 25 | 2026-07-30 |
 | claude-opus-4.8 | vision_unknown, pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 | 25 | 2026-07-30 |
 | claude-opus-4.8-fast | vision_unknown, context_unsupported, effort_unsupported, pricing_missing | n/a | n/a | n/a | 2026-07-30 |
 | claude-opus-4.7 | vision_unknown, pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 | 25 | 2026-07-30 |
-| claude-opus-4.6 | vision_unknown, pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 | 25 | 2026-07-30 |
-| claude-sonnet-4.5 | vision_unknown, context_unsupported, effort_unsupported | default | 3 | 15 | 2026-07-30 |
-| claude-opus-4.5 | vision_unknown, pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 | 25 | 2026-07-30 |
 | claude-haiku-4.5 | vision_unknown | default | 1 | 5 | 2026-07-30 |
 | gpt-5.6-sol | vision_unknown, pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 | 30 | 2026-07-30 |
 | gpt-5.6-terra | vision_unknown | default | 2.5 | 15 | 2026-07-30 |
@@ -220,6 +217,7 @@ _No `artificialAnalysis` alias is configured in `config/model-ranking-aliases.js
 | gpt-5-mini | context_unsupported, effort_unsupported | default | 0.25 | 2 | 2026-07-30 |
 | mai-code-1.1-flash | capabilities_missing | n/a | n/a | n/a | n/a |
 | mai-code-1-flash-picker | vision_unknown, context_unsupported, effort_unsupported, pricing_missing | n/a | n/a | n/a | 2026-07-30 |
+| gemini-3.8-flash | capabilities_missing | n/a | n/a | n/a | n/a |
 | gemini-3.7-flash | capabilities_missing | n/a | n/a | n/a | n/a |
 | gemini-3.6-flash | vision_unknown | default | 1.5 | 7.5 | 2026-07-30 |
 | gemini-3.5-flash | vision_unknown | default | 1.5 | 9 | 2026-07-30 |
@@ -233,14 +231,12 @@ _No `artificialAnalysis` alias is configured in `config/model-ranking-aliases.js
 
 | Model | Reasons | Pricing tier | Input $/M | Output $/M | Capability as-of |
 |---|---|---|---|---|---|
+| claude-fable-5.1 | capabilities_missing | n/a | n/a | n/a | n/a |
 | claude-opus-5 | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 | 25 | 2026-07-30 |
 | claude-opus-4.8 | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 | 25 | 2026-07-30 |
 | claude-opus-4.8-fast | context_unsupported, effort_unsupported, pricing_missing | n/a | n/a | n/a | 2026-07-30 |
 | claude-opus-4.7 | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 | 25 | 2026-07-30 |
 | claude-sonnet-4.6 | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 3 | 15 | 2026-07-30 |
-| claude-opus-4.6 | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 | 25 | 2026-07-30 |
-| claude-sonnet-4.5 | context_unsupported, effort_unsupported, pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 3 | 15 | 2026-07-30 |
-| claude-opus-4.5 | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 | 25 | 2026-07-30 |
 | gpt-5.6-sol | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 | 30 | 2026-07-30 |
 | gpt-5.6-terra | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 2.5 | 15 | 2026-07-30 |
 | gpt-5.5 | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 | 30 | 2026-07-30 |
@@ -249,8 +245,8 @@ _No `artificialAnalysis` alias is configured in `config/model-ranking-aliases.js
 | gpt-5-mini | context_unsupported, effort_unsupported | default | 0.25 | 2 | 2026-07-30 |
 | mai-code-1.1-flash | capabilities_missing | n/a | n/a | n/a | n/a |
 | mai-code-1-flash-picker | context_unsupported, effort_unsupported, pricing_missing | n/a | n/a | n/a | 2026-07-30 |
+| gemini-3.8-flash | capabilities_missing | n/a | n/a | n/a | n/a |
 | gemini-3.7-flash | capabilities_missing | n/a | n/a | n/a | n/a |
-| gemini-3.1-pro-preview | pricing_output_exceeds_ceiling | default | 2 | 12 | 2026-07-30 |
 
 ### triage
 
@@ -261,14 +257,12 @@ _No `artificialAnalysis` alias is configured in `config/model-ranking-aliases.js
 
 | Model | Reasons | Pricing tier | Input $/M | Output $/M | Capability as-of |
 |---|---|---|---|---|---|
+| claude-fable-5.1 | capabilities_missing | n/a | n/a | n/a | n/a |
 | claude-opus-5 | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 | 25 | 2026-07-30 |
 | claude-opus-4.8 | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 | 25 | 2026-07-30 |
 | claude-opus-4.8-fast | context_unsupported, effort_unsupported, pricing_missing | n/a | n/a | n/a | 2026-07-30 |
 | claude-opus-4.7 | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 | 25 | 2026-07-30 |
 | claude-sonnet-4.6 | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 3 | 15 | 2026-07-30 |
-| claude-opus-4.6 | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 | 25 | 2026-07-30 |
-| claude-sonnet-4.5 | context_unsupported, effort_unsupported, pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 3 | 15 | 2026-07-30 |
-| claude-opus-4.5 | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 | 25 | 2026-07-30 |
 | gpt-5.6-sol | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 | 30 | 2026-07-30 |
 | gpt-5.6-terra | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 2.5 | 15 | 2026-07-30 |
 | gpt-5.5 | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 | 30 | 2026-07-30 |
@@ -277,8 +271,8 @@ _No `artificialAnalysis` alias is configured in `config/model-ranking-aliases.js
 | gpt-5-mini | context_unsupported, effort_unsupported | default | 0.25 | 2 | 2026-07-30 |
 | mai-code-1.1-flash | capabilities_missing | n/a | n/a | n/a | n/a |
 | mai-code-1-flash-picker | context_unsupported, effort_unsupported, pricing_missing | n/a | n/a | n/a | 2026-07-30 |
+| gemini-3.8-flash | capabilities_missing | n/a | n/a | n/a | n/a |
 | gemini-3.7-flash | capabilities_missing | n/a | n/a | n/a | n/a |
-| gemini-3.1-pro-preview | pricing_output_exceeds_ceiling | default | 2 | 12 | 2026-07-30 |
 
 ## External model ranking snapshot
 
@@ -293,35 +287,33 @@ _No `artificialAnalysis` alias is configured in `config/model-ranking-aliases.js
 - Artificial Analysis source date: 
 - Artificial Analysis Coding Agent source date: n/a
 - LiveBench source date: 2026-06-25
-- Artificial Analysis fetched at (UTC): 2026-09-02T06:15:16.3959081Z
-- Artificial Analysis Coding Agents fetched at (UTC): 2026-09-02T06:15:17.3861411Z
-- LiveBench fetched at (UTC): 2026-09-02T06:15:17.5379871Z
+- Artificial Analysis fetched at (UTC): 2026-09-08T07:18:32.0309252Z
+- Artificial Analysis Coding Agents fetched at (UTC): 2026-09-08T07:18:33.7965525Z
+- LiveBench fetched at (UTC): 2026-09-08T07:18:33.9294034Z
 
 > External rankings can auto-apply only after strict two-run consensus; verified availability, capabilities, pricing, and benchmark quality govern promotion, and family preferences are baseline-only.
 
 | Model | AA Intelligence | AA Coding | AA Coding Agent | LB Coding | LB Agentic Coding | LB Reasoning | LB Instruction Following | LB Cost | LB Cost Bucket |
 |---|---|---|---|---|---|---|---|---|---|
 | claude-sonnet-5 | competitive | competitive | n/a | competitive | top | competitive | competitive | 0.5134 | lagging |
-| claude-opus-5 | top | top | competitive | competitive | top | top | competitive | 0.7067 | lagging |
-| claude-opus-4.8 | top | competitive | n/a | top | competitive | top | top | 0.9858 | lagging |
+| claude-fable-5.1 | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a |
+| claude-opus-5 | top | top | competitive | competitive | top | top | lagging | 0.7067 | lagging |
+| claude-opus-4.8 | top | competitive | n/a | competitive | lagging | competitive | top | 0.9858 | lagging |
 | claude-opus-4.8-fast | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a |
-| claude-opus-4.7 | n/a | n/a | n/a | top | competitive | lagging | top | 0.5282 | lagging |
+| claude-opus-4.7 | n/a | n/a | n/a | top | competitive | lagging | competitive | 0.5282 | lagging |
 | claude-sonnet-4.6 | n/a | n/a | n/a | lagging | lagging | lagging | lagging | 0.3062 | top |
-| claude-opus-4.6 | n/a | n/a | n/a | lagging | lagging | competitive | lagging | 0.4035 | competitive |
-| claude-sonnet-4.5 | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a |
-| claude-opus-4.5 | n/a | n/a | n/a | competitive | lagging | lagging | lagging | 0.6104 | lagging |
 | claude-haiku-4.5 | lagging | lagging | n/a | n/a | n/a | n/a | n/a | n/a | n/a |
-| gpt-5.6-sol | top | top | competitive | top | top | top | top | 0.507 | competitive |
+| gpt-5.6-sol | top | top | n/a | top | top | top | top | 0.507 | competitive |
 | gpt-5.6-terra | competitive | top | n/a | lagging | top | top | competitive | 0.3437 | top |
 | gpt-5.6-luna | lagging | lagging | n/a | top | lagging | lagging | lagging | 0.1677 | top |
-| gpt-5.5 | n/a | n/a | n/a | top | top | top | top | 0.4356 | competitive |
-| gpt-5.4 | n/a | n/a | n/a | lagging | competitive | competitive | top | 0.3874 | top |
+| gpt-5.5 | n/a | n/a | n/a | top | competitive | top | top | 0.4356 | competitive |
+| gpt-5.4 | n/a | n/a | n/a | lagging | competitive | competitive | top | 0.3874 | competitive |
 | gpt-5.4-mini | n/a | n/a | n/a | lagging | lagging | lagging | lagging | 0.3343 | top |
 | gpt-5.3-codex | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a |
 | gpt-5-mini | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a |
 | mai-code-1.1-flash | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a |
 | mai-code-1-flash-picker | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a |
+| gemini-3.8-flash | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a |
 | gemini-3.7-flash | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a |
 | gemini-3.6-flash | lagging | lagging | n/a | n/a | n/a | n/a | n/a | n/a | n/a |
 | gemini-3.5-flash | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a |
-| gemini-3.1-pro-preview | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a |
