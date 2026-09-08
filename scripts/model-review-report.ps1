@@ -86,9 +86,14 @@ function Get-ProfileReviewReportLines {
         $incumbentAic = Format-ModelReportNumber $value.incumbentReferenceAic
         $lines.Add("Eligible quality reference: $referenceModel ($referenceScore). Candidate gap: **$gap / $maximum** absolute $($value.qualityReference.metric) score points.")
         $lines.Add("Lowest reference cost within the band wins; an equally priced incumbent stays. Reference usage: candidate **$candidateAic AIC**; incumbent **$incumbentAic AIC** (1 AIC = USD 0.01).")
+        $costChange = Format-ModelReportNumber $value.costIncreasePercent
+        $costLimit = Format-ModelReportNumber $value.maxAutomaticCostIncreasePercent
+        $lines.Add("Candidate cost change: **$costChange%**; automatic increase limit: **$costLimit%** relative to the incumbent. A percentage is n/a when incumbent cost is unknown or a free incumbent would become paid.")
         if ($value.promotionBlockReason) {
             $explanation = if ($value.promotionBlockReason -eq "retained_incumbent_cost_unknown") {
                 "Fresh, valid incumbent pricing is missing; savings or a premium cannot be established."
+            } elseif ($value.promotionBlockReason -eq "retained_cost_escalation_requires_approval") {
+                "The candidate exceeds the automatic cost-increase limit. Keep the incumbent unless a deliberate policy or profile change approves the extra spend; benchmark rank alone is not spending permission."
             } else {
                 "The candidate costs more, but the incumbent lacks fresh, configuration-matched evidence in the same deciding-source observation."
             }

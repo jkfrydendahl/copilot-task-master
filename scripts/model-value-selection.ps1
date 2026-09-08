@@ -30,6 +30,14 @@ function Get-ValueBalancedSelection {
     $referenceCost = Get-ModelReferenceCost $VerdictsByModel[$winner.model] $SelectionPolicy
     $incumbent = $VerdictsByModel[$Profile.model]
     $incumbentCost = Get-ModelReferenceCost $incumbent $SelectionPolicy
+    $maxCostIncrease = $SelectionPolicy.profiles[$Profile.key].maxAutomaticCostIncreasePercent
+    $costIncreasePercent = if ($null -ne $incumbentCost -and $incumbentCost -gt 0) {
+        ($referenceCost - $incumbentCost) / $incumbentCost * 100
+    } elseif ($incumbentCost -eq 0 -and $referenceCost -eq 0) {
+        0
+    } else {
+        $null
+    }
     $incumbentCapability = Get-ObjectMemberValue $incumbent "capabilities"
     $incumbentEffort = if ((Get-ObjectMemberValue $incumbentCapability "effortMode") -eq "unsupported") {
         "none"
@@ -47,6 +55,8 @@ function Get-ValueBalancedSelection {
             $promotionBlockReason = "retained_incumbent_cost_unknown"
         } elseif ($referenceCost -gt $incumbentCost -and -not $comparableIncumbent.Count) {
             $promotionBlockReason = "retained_unproven_cost_increase"
+        } elseif ($referenceCost -gt $incumbentCost * (1 + [decimal]$maxCostIncrease / 100)) {
+            $promotionBlockReason = "retained_cost_escalation_requires_approval"
         }
     }
     return [pscustomobject]@{
@@ -56,6 +66,8 @@ function Get-ValueBalancedSelection {
         scoreGap = $reference.score - $winner.score
         referenceAic = $referenceCost * 100
         incumbentReferenceAic = $(if ($null -ne $incumbentCost) { $incumbentCost * 100 } else { $null })
+        costIncreasePercent = $costIncreasePercent
+        maxAutomaticCostIncreasePercent = $maxCostIncrease
         promotionBlockReason = $promotionBlockReason
     }
 }

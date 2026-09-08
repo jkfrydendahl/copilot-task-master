@@ -23,6 +23,7 @@ Run-Test "Four lightweight profiles use explicit value bands; execution profiles
         $strategy = $p.selectionPolicy.profiles[$key]
         if ($key -in @("orchestrator", "quick", "mechanical", "triage")) {
             Assert-True ($strategy.strategy -eq "value_balanced") "Missing value strategy for $key"
+            Assert-True ($strategy.maxAutomaticCostIncreasePercent -eq 0) "Automatic premiums enabled for $key"
             $aaMetric = "artificialAnalysis.$($p.profileArtificialAnalysisMetrics[$key])Index"
             $lbMetric = "liveBench.$($p.profileLiveBenchCategories[$key])"
             Assert-True ($strategy.qualityBands[$aaMetric] -eq 3 -and $strategy.qualityBands[$lbMetric] -eq 3) "Explicit metric bands missing"
@@ -38,6 +39,9 @@ Run-Test "Invalid strategies and incomplete or nonnumeric bands fail validation"
             { param($p) $p.selectionPolicy.Remove("profiles") },
             { param($p) $p.selectionPolicy.profiles.Remove("review") },
             { param($p) $p.selectionPolicy.profiles.orchestrator.strategy = "cheapest" },
+            { param($p) $p.selectionPolicy.profiles.orchestrator.Remove("maxAutomaticCostIncreasePercent") },
+            { param($p) $p.selectionPolicy.profiles.orchestrator.maxAutomaticCostIncreasePercent = -1 },
+            { param($p) $p.selectionPolicy.profiles.orchestrator.maxAutomaticCostIncreasePercent = "25" },
             { param($p) $p.selectionPolicy.profiles.orchestrator.qualityBands.Remove("liveBench.instructionFollowing") },
             { param($p) $p.selectionPolicy.profiles.orchestrator.qualityBands["artificialAnalysis.intelligenceIndex"] = -1 },
             { param($p) $p.selectionPolicy.profiles.orchestrator.qualityBands["artificialAnalysis.intelligenceIndex"] = "3" },

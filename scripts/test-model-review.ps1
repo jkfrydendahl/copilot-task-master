@@ -100,4 +100,31 @@ Run-Test "Report rows preserve missing values and escape external table content"
     Assert-True ((Format-ModelReportNumber 2.700000000000003) -eq "2.7") "Floating-point noise obscures score gaps"
     Assert-True ((Format-ModelReportNumber $null) -eq "n/a" -and (Format-ModelReportNumber 0) -eq "0") "Unknown cost became zero"
 }
+Run-Test "Escalation report distinguishes quality recommendation from spending permission" {
+    $policy = Get-ModelPolicyConfig (Join-Path $repo "config\model-policy.json")
+    $profile = @{key="orchestrator";model="gemini";effort="medium";context="default"}
+    $verdicts = @(foreach ($model in @("gemini","opus","astra")) {
+        $rate = @{gemini=0.75;opus=5;astra=10}[$model]
+        [pscustomobject]@{modelId=$model;admissible=$true;reasonCodes=@();warningCodes=@();
+            pricing=@{inputPerMillion=$rate;outputPerMillion=$rate*5;tier="default";verifiedAtUtc="2026-09-08"};
+            capabilities=@{asOf="2026-09-08"}}
+    })
+    $records = @(foreach ($model in @("gemini","opus","astra")) {
+        [pscustomobject]@{model=$model;score=@{gemini=46.8;opus=49.5;astra=52.2}[$model];source="artificialAnalysis";
+            metric="intelligenceIndex";effort="medium";alias=$model;sourceVersion="v1";sourceDate=$null;
+            publicationAgeUnknown=$true;cached=$false;harness="fixture"}
+    })
+    $selection = Get-ProfileSelection -Profile $profile -Evidence $records -Verdicts $verdicts -Policy $policy -Aliases @{}
+    $resolution = Resolve-ProfileSelectionState -CurrentModel gemini -Selection $selection -ForceImmediateApply
+    $result = @{key="orchestrator";selection=$selection;resolution=$resolution;requirement=$policy.profileRequirements.orchestrator;
+        fallback=$null;verdicts=$verdicts;evidence=@{records=$records}}
+    $report = (Get-ProfileReviewReportLines $result) -join "`n"
+    foreach ($term in @("candidate **750 AIC**; incumbent **112.5 AIC**",
+        "Candidate cost change: **566.666666667%**", "automatic increase limit: **0%**",
+        "retained_cost_escalation_requires_approval", "deliberate policy or profile change",
+        "Confirmation override cannot bypass")) {
+        Assert-True ($report.Contains($term)) "Missing escalation explanation: $term"
+    }
+    Assert-True ($resolution.finalModel -eq "gemini" -and $selection.winner.model -eq "opus") "Report hid recommendation/retention distinction"
+}
 if ($script:Failed) { exit 1 }

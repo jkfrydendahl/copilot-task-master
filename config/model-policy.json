@@ -67,25 +67,29 @@
     "benchmarkMaxPublicationAgeDays": 90
   },
   "selectionPolicy": {
-    "version": 2,
+    "version": 3,
     "referenceInputTokens": 1000000,
     "referenceOutputTokens": 100000,
     "referenceUsageDescription": "Aggregate uncached usage across requests within the selected context tier, not a single 1M-token request or predicted task cost. Cache reads/writes are excluded.",
     "profiles": {
       "orchestrator": {
         "strategy": "value_balanced",
+        "maxAutomaticCostIncreasePercent": 0,
         "qualityBands": { "artificialAnalysis.intelligenceIndex": 3, "liveBench.instructionFollowing": 3 }
       },
       "quick": {
         "strategy": "value_balanced",
+        "maxAutomaticCostIncreasePercent": 0,
         "qualityBands": { "artificialAnalysis.codingIndex": 3, "liveBench.coding": 3 }
       },
       "mechanical": {
         "strategy": "value_balanced",
+        "maxAutomaticCostIncreasePercent": 0,
         "qualityBands": { "artificialAnalysis.codingIndex": 3, "liveBench.coding": 3 }
       },
       "triage": {
         "strategy": "value_balanced",
+        "maxAutomaticCostIncreasePercent": 0,
         "qualityBands": { "artificialAnalysis.intelligenceIndex": 3, "liveBench.instructionFollowing": 3 }
       },
       "default-development": { "strategy": "quality_first" },

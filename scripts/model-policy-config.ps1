@@ -46,6 +46,7 @@ function Get-ModelPolicyConfig {
             throw "Missing/invalid selection strategy for '$key'."
         }
         if ($strategy.strategy -eq "value_balanced") {
+            Assert-ModelConfigNumber $strategy["maxAutomaticCostIncreasePercent"] "$key.maxAutomaticCostIncreasePercent"
             $bands = $strategy["qualityBands"]
             if ($bands -isnot [System.Collections.IDictionary]) { throw "Missing qualityBands for '$key'." }
             $metrics = @("artificialAnalysis.$($p.profileArtificialAnalysisMetrics[$key])Index", "liveBench.$($p.profileLiveBenchCategories[$key])")

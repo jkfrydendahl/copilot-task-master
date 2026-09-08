@@ -310,6 +310,24 @@ A cheaper or equally priced qualified candidate may still proceed without an inc
 quality-first selection also retains its existing ability to replace an unscored incumbent.
 The report keeps blocked candidates visible and explains why promotion is withheld.
 
+Each value profile also requires `maxAutomaticCostIncreasePercent`, initially **0**. A candidate
+may qualify on quality without being authorized for automatic promotion: its reference cost must
+not exceed `incumbent cost * (1 + limit / 100)`. At zero, cheaper and equal-cost replacements can
+proceed; any premium requires a deliberate decision. Quality-first profiles are unaffected.
+
+For example, adding Astra at 52.2 to Opus at 49.5 and Gemini at 46.8 puts Gemini outside the
+3-point band. Opus remains the recommendation, but a Gemini incumbent is retained: moving from
+112.5 to 750 reference AIC is a 566.67% increase, not justified merely by the leaderboard.
+Retention does **not** claim that Gemini still meets the quality band.
+
+To approve extra spend, review task-specific needs and manually adjust the profile's cost limit
+in `config/model-policy.json`, or select the model in `task-profiles.json`. Raising the limit is
+a standing policy allowance, not one-time approval, and can permit successive increases relative
+to each new incumbent; zero avoids that ratchet. Existing evidence and eligibility requirements
+still apply to automatic changes. A free-to-paid transition is blocked at every finite percentage
+limit because its baseline cost is zero. These safeguards govern model replacements, not price
+increases for the same model or total session consumption.
+
 Retrieval age and publication age are distinct: retrieval must be within 45 days and a known
 publication date within 90 days. Unknown publication dates remain unknown and reduce confidence.
 Source fingerprints identify content observations, not methodology versions. AA API scores are
@@ -325,7 +343,8 @@ older publications, cached observations, or unrelated source failures do not adv
 Changing the deciding source resets pending confirmation. Policy, effort/context and alias
 fingerprints prevent old evidence from authorizing a new configuration.
 Strategy or band changes also invalidate pending confirmation. Force bypasses only the wait,
-not value qualification, unknown incumbent pricing or the unproven-premium guard. No threshold
+not value qualification, unknown incumbent pricing, the unproven-premium guard or the automatic
+cost-increase limit. Changing that limit invalidates pending confirmation too. No threshold
 change directly rewrites the current model.
 
 Schema migration invalidates legacy confirmation state but keeps current models. If evidence
@@ -335,8 +354,9 @@ model ID. Automatic changes remain frozen when availability cannot be verified.
 
 The report separates quality leader, recommended candidate, pending change, and model actually
 applied. Value profiles also show their eligible quality reference, score gap/band, candidate and
-incumbent reference AIC, and any promotion block. Repeated exclusions, advisory overruns and
-variant gaps are grouped with all affected profiles. Expandable sections retain the complete
+incumbent reference AIC, percentage cost change, automatic increase limit, and any promotion block.
+Repeated exclusions, advisory overruns and variant gaps are grouped with all affected profiles.
+Expandable sections retain the complete
 per-profile eligibility and benchmark evidence.
 Fresh capability metadata and valid mappings still require maintenance.
 

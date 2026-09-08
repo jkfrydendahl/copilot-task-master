@@ -53,10 +53,10 @@ function Record($Model, $Score, $Source="artificialAnalysis", $Version="v1") {
     [pscustomobject]@{model=$Model;score=$Score;source=$Source;metric="codingIndex";alias="$Model-medium";effort="medium";sourceVersion=$Version;sourceDate=$null;publicationAgeUnknown=$true;cached=$false}
 }
 function Select-Models($Records, $Verdicts=@((Verdict)), $Profile=$profile, $Strategy="quality_first",
-    $Bands=@{"artificialAnalysis.codingIndex"=3;"liveBench.codingIndex"=3}) {
+    $Bands=@{"artificialAnalysis.codingIndex"=3;"liveBench.codingIndex"=3}, $MaxIncrease=0) {
     $configuredPolicy = $policy.Clone()
     $configuredPolicy.selectionPolicy = $policy.selectionPolicy.Clone()
-    $configuredPolicy.selectionPolicy.profiles = @{test=@{strategy=$Strategy;qualityBands=$Bands}}
+    $configuredPolicy.selectionPolicy.profiles = @{test=@{strategy=$Strategy;qualityBands=$Bands;maxAutomaticCostIncreasePercent=$MaxIncrease}}
     Get-ProfileSelection -Profile $Profile -Evidence $Records -Verdicts $Verdicts -Policy $configuredPolicy -Aliases @{}
 }
 Run-Test "Scored pool can replace an unscored incumbent" {
@@ -251,7 +251,7 @@ Run-Test "A scored incumbent outside the band allows a justified premium; no-eff
         $old = Verdict; $old.capabilities = $cap.Clone(); $old.capabilities.effortMode = $effortMode
         $record = Record one 66.9
         if ($effortMode -eq "unsupported") { $record.effort = "none" }
-        $s = Select-Models @($record,(Record two 70)) @($old,$two) $current value_balanced
+        $s = Select-Models @($record,(Record two 70)) @($old,$two) $current value_balanced -MaxIncrease 25
         Assert-True (Resolve-ProfileSelectionState -CurrentModel one -Selection $s -ForceImmediateApply).applied "Justified premium was blocked"
     }
 }
@@ -314,5 +314,65 @@ Run-Test "Zero incumbent cost is known, not missing, and prevents an unproven pr
     $current = @{key="test";model="one";effort="medium";context="default"}
     $s = Select-Models @((Record two 70)) @($one,$two) $current value_balanced
     Assert-True ($s.valueDecision.incumbentReferenceAic -eq 0 -and $s.valueDecision.promotionBlockReason -eq "retained_unproven_cost_increase") "Free incumbent was treated as unpriced"
+}
+Run-Test "Adding Astra cannot automatically escalate a Gemini incumbent to Opus" {
+    $gemini = Verdict; $gemini.modelId="gemini"; $gemini.pricing.inputPerMillion=0.75; $gemini.pricing.outputPerMillion=3.75
+    $opus = Verdict; $opus.modelId="opus"; $opus.pricing.inputPerMillion=5; $opus.pricing.outputPerMillion=25
+    $astra = Verdict; $astra.modelId="astra"; $astra.pricing.inputPerMillion=10; $astra.pricing.outputPerMillion=50
+    $current = @{key="test";model="gemini";effort="medium";context="default"}
+    $records = @((Record gemini 46.8),(Record opus 49.5),(Record astra 52.2))
+    $s = Select-Models $records[0..1] @($gemini,$opus) $current value_balanced
+    Assert-True ($s.winner.model -eq "gemini") "Initial cheap qualified incumbent changed"
+    $state = $null
+    foreach ($version in @("v1","v2","v3")) {
+        foreach ($record in $records) { $record.sourceVersion=$version }
+        $s = Select-Models $records @($gemini,$opus,$astra) $current value_balanced
+        $r = Resolve-ProfileSelectionState -CurrentModel gemini -Selection $s -State $state -ForceImmediateApply
+        Assert-True ($s.winner.model -eq "opus" -and $r.finalModel -eq "gemini" -and -not $r.applied) "Leaderboard expansion forced a 6.67x upgrade"
+        Assert-True ($r.status -eq "retained_cost_escalation_requires_approval" -and $null -eq $r.state.pending) "Escalation counted as approved observation"
+        Assert-True ($s.valueDecision.costIncreasePercent -gt 566 -and $s.valueDecision.maxAutomaticCostIncreasePercent -eq 0) "Missing cost escalation provenance"
+        $state = $r.state
+    }
+}
+Run-Test "Explicit cost increase allowance has an inclusive exact boundary" {
+    $one = Verdict; $one.pricing.inputPerMillion=1; $one.pricing.outputPerMillion=0
+    $two = Verdict; $two.modelId="two"; $two.pricing.outputPerMillion=0
+    $current = @{key="test";model="one";effort="medium";context="default"}
+    foreach ($limit in @(0,25)) {
+        foreach ($cost in @(0.9,1,1.25,1.250001)) {
+            $two.pricing.inputPerMillion=$cost
+            $s = Select-Models @((Record one 60),(Record two 70)) @($one,$two) $current value_balanced -MaxIncrease $limit
+            $r = Resolve-ProfileSelectionState -CurrentModel one -Selection $s -ForceImmediateApply
+            Assert-True ($r.applied -eq ($cost -le 1 + $limit / 100)) "Wrong cost boundary: $cost at $limit%"
+        }
+    }
+}
+Run-Test "A scored free incumbent cannot auto-upgrade to paid under a percentage allowance" {
+    $one = Verdict; $one.pricing.inputPerMillion=0; $one.pricing.outputPerMillion=0
+    $two = Verdict; $two.modelId="two"
+    $current = @{key="test";model="one";effort="medium";context="default"}
+    $s = Select-Models @((Record one 60),(Record two 70)) @($one,$two) $current value_balanced -MaxIncrease 25
+    Assert-True ($s.valueDecision.promotionBlockReason -eq "retained_cost_escalation_requires_approval") "Free-to-paid transition bypassed guard"
+    Assert-True ($null -eq $s.valueDecision.costIncreasePercent) "Undefined percentage became finite"
+}
+Run-Test "Cost-policy changes reset confirmation and price jumps cannot bypass it" {
+    $one = Verdict; $one.pricing.inputPerMillion=1; $one.pricing.outputPerMillion=0
+    $two = Verdict; $two.modelId="two"; $two.pricing.inputPerMillion=1.25; $two.pricing.outputPerMillion=0
+    $current = @{key="test";model="one";effort="medium";context="default"}
+    $records = @((Record one 60),(Record two 70))
+    $s = Select-Models $records @($one,$two) $current value_balanced -MaxIncrease 25
+    $first = Resolve-ProfileSelectionState -CurrentModel one -Selection $s
+    Assert-True ($first.state.pending.count -eq 1) "Allowed premium did not start confirmation"
+    $s = Select-Models $records @($one,$two) $current value_balanced -MaxIncrease 0
+    $blocked = Resolve-ProfileSelectionState -CurrentModel one -Selection $s -State $first.state -ForceImmediateApply
+    Assert-True (-not $blocked.applied -and $null -eq $blocked.state.pending) "Tighter policy reused pending authorization"
+    $two.pricing.inputPerMillion=1.26
+    $s = Select-Models $records @($one,$two) $current value_balanced -MaxIncrease 25
+    $blocked = Resolve-ProfileSelectionState -CurrentModel one -Selection $s -State $first.state -ForceImmediateApply
+    Assert-True (-not $blocked.applied -and $blocked.state.pending.count -eq 1) "Price jump bypassed guard or advanced confirmation"
+    $two.pricing.inputPerMillion=1.25
+    $s = Select-Models $records @($one,$two) $current value_balanced -MaxIncrease 25
+    $restored = Resolve-ProfileSelectionState -CurrentModel one -Selection $s -State $blocked.state
+    Assert-True (-not $restored.applied -and $restored.state.pending.count -eq 1) "Price-only recovery confirmed unchanged source"
 }
 if ($script:Failed) { exit 1 }
