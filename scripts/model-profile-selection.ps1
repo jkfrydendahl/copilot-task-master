@@ -1,5 +1,5 @@
 Set-StrictMode -Version Latest
-. (Join-Path $PSScriptRoot "model-data-common.ps1")
+. (Join-Path $PSScriptRoot "model-value-selection.ps1")
 
 function Get-ProfileSelection {
     param(
@@ -9,6 +9,8 @@ function Get-ProfileSelection {
         [Parameter(Mandatory)][hashtable]$Policy,
         [Parameter(Mandatory)][hashtable]$Aliases
     )
+    $strategy = $Policy.selectionPolicy.profiles[$Profile.key].strategy
+    if ($strategy -notin @("quality_first", "value_balanced")) { throw "Unknown selection strategy for '$($Profile.key)'." }
     $byModel = @{}
     foreach ($verdict in $Verdicts) {
         $byModel[$verdict.modelId] = $verdict
@@ -44,6 +46,8 @@ function Get-ProfileSelection {
     if (-not $pool.Count) {
         return [pscustomobject]@{
             winner = $null
+            strategy = $strategy
+            valueDecision = $null
             qualityWinner = $null
             decidingSource = $null
             reason = "retained_insufficient_evidence"
@@ -59,9 +63,7 @@ function Get-ProfileSelection {
         @{ Expression = { $_.score }; Descending = $true }
         @{
             Expression = {
-                $price = $byModel[$_.model].pricing
-                [double]$price.inputPerMillion * $Policy.selectionPolicy.referenceInputTokens / 1000000 +
-                    [double]$price.outputPerMillion * $Policy.selectionPolicy.referenceOutputTokens / 1000000
+                Get-ModelReferenceCost $byModel[$_.model] $Policy.selectionPolicy
             }
         }
         @{ Expression = { if ($_.model -eq $Profile.model) { 0 } else { 1 } } }
@@ -69,6 +71,11 @@ function Get-ProfileSelection {
     )
     $ranked = @($pool | Sort-Object -Property $sortOrder)
     $winner = $ranked[0]
+    $valueDecision = $null
+    if ($strategy -eq "value_balanced") {
+        $valueDecision = Get-ValueBalancedSelection $Profile $ranked $byModel $Policy.selectionPolicy $Evidence
+        $winner = $valueDecision.winner
+    }
     $qualityPool = @($Evidence | Where-Object {
         $_.source -eq $decidingSource -and $byModel.ContainsKey($_.model) -and
         @($byModel[$_.model].reasonCodes | Where-Object {
@@ -80,15 +87,23 @@ function Get-ProfileSelection {
     $lbWinner = @($eligible | Where-Object { $_.source -eq "liveBench" -and $_.model -eq $winner.model })
     $poolModels = @($pool | ForEach-Object model)
     $lbComparable = @($eligible | Where-Object { $_.source -eq "liveBench" -and $poolModels -contains $_.model })
+    $lbTolerance = 0
+    if ($strategy -eq "value_balanced" -and $lbWinner.Count) {
+        $lbMetric = "liveBench.$($lbWinner[0].metric)"
+        $lbTolerance = Get-ObjectMemberValue $Policy.selectionPolicy.profiles[$Profile.key].qualityBands $lbMetric
+        if ($null -eq $lbTolerance) { throw "Missing quality band '$lbMetric' for '$($Profile.key)'." }
+    }
     $contested = $decidingSource -ne "liveBench" -and $lbWinner.Count -gt 0 -and
-        @($lbComparable | Where-Object { $_.score -gt $lbWinner[0].score }).Count -gt 0
+        @($lbComparable | Where-Object { $_.score -gt $lbWinner[0].score + $lbTolerance }).Count -gt 0
 
     if ($decidingSource -eq "liveBench") {
         $reason = "livebench_fallback"
-    } elseif ($winner.score -lt $qualityWinner.score) {
+    } elseif ($ranked[0].score -lt $qualityWinner.score) {
         $reason = "budget_constrained_choice"
     } elseif ($Profile.key -eq "agentic-implementation" -and $decidingSource -eq "artificialAnalysis") {
         $reason = "aa_coding_fallback"
+    } elseif ($strategy -eq "value_balanced") {
+        $reason = "value_balanced_choice"
     } else {
         $reason = "quality_winner"
     }
@@ -103,6 +118,8 @@ function Get-ProfileSelection {
     }
     return [pscustomobject]@{
         winner = $winner
+        strategy = $strategy
+        valueDecision = $valueDecision
         qualityWinner = $qualityWinner
         decidingSource = $decidingSource
         reason = $reason
@@ -151,6 +168,11 @@ function Resolve-ProfileSelectionState {
     }
     if (-not $Selection.freshObservation) {
         $result.status = "retained_cached_evidence"
+        return $result
+    }
+    $promotionBlockReason = Get-ObjectMemberValue $Selection.valueDecision "promotionBlockReason"
+    if ($promotionBlockReason) {
+        $result.status = $promotionBlockReason
         return $result
     }
     $source = $Selection.decidingSource

@@ -24,6 +24,11 @@ function Get-ModelPolicyConfig {
         if ($p[$field] -isnot [System.Collections.IDictionary]) { throw "Missing/invalid policy object: $field" }
     }
     if ($p.denylist -isnot [array]) { throw "Policy denylist must be an array." }
+    $strategies = $p.selectionPolicy["profiles"]
+    if ($strategies -isnot [System.Collections.IDictionary]) { throw "selectionPolicy.profiles must be an object." }
+    foreach ($key in $strategies.Keys) {
+        if ($key -notin $script:KnownTaskProfileKeys) { throw "Unknown selection profile '$key'." }
+    }
     foreach ($key in $script:KnownTaskProfileKeys) {
         foreach ($map in @("profileRequirements","classPreferences","profileLiveBenchCategories","profileArtificialAnalysisMetrics")) {
             if (-not $p[$map].Contains($key)) { throw "$map missing profile '$key'." }
@@ -36,6 +41,22 @@ function Get-ModelPolicyConfig {
         if ($req.costSensitive -ne ($key -in @("quick","mechanical","triage"))) { throw "Unexpected hard/advisory budget policy for $key." }
         if ($p.profileArtificialAnalysisMetrics[$key] -notin @("coding","intelligence")) { throw "Unknown AA metric for $key." }
         if ($p.profileLiveBenchCategories[$key] -notin @("coding","agenticCoding","reasoning","instructionFollowing")) { throw "Unknown LiveBench category for $key." }
+        $strategy = $strategies[$key]
+        if ($strategy -isnot [System.Collections.IDictionary] -or $strategy["strategy"] -notin @("quality_first", "value_balanced")) {
+            throw "Missing/invalid selection strategy for '$key'."
+        }
+        if ($strategy.strategy -eq "value_balanced") {
+            $bands = $strategy["qualityBands"]
+            if ($bands -isnot [System.Collections.IDictionary]) { throw "Missing qualityBands for '$key'." }
+            $metrics = @("artificialAnalysis.$($p.profileArtificialAnalysisMetrics[$key])Index", "liveBench.$($p.profileLiveBenchCategories[$key])")
+            if ($key -eq "agentic-implementation") { $metrics += "artificialAnalysisCodingAgents.codingAgentIndex" }
+            foreach ($metric in $metrics) {
+                Assert-ModelConfigNumber $bands[$metric] "$key.qualityBands.$metric"
+            }
+            foreach ($metric in $bands.Keys) {
+                if ($metric -notin $metrics) { throw "Unknown quality band '$metric' for '$key'." }
+            }
+        }
         if ($p.classPreferences[$key] -isnot [array]) { throw "classPreferences.$key must be an array." }
         foreach ($family in $p.classPreferences[$key]) {
             if (-not $p.familyPatterns.Contains($family)) { throw "Unknown family '$family'." }

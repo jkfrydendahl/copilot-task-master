@@ -52,8 +52,12 @@ $profile=@{key="test";model="unknown-incumbent";effort="medium";context="default
 function Record($Model, $Score, $Source="artificialAnalysis", $Version="v1") {
     [pscustomobject]@{model=$Model;score=$Score;source=$Source;metric="codingIndex";alias="$Model-medium";effort="medium";sourceVersion=$Version;sourceDate=$null;publicationAgeUnknown=$true;cached=$false}
 }
-function Select-Models($Records, $Verdicts=@((Verdict)), $Profile=$profile) {
-    Get-ProfileSelection -Profile $Profile -Evidence $Records -Verdicts $Verdicts -Policy $policy -Aliases @{}
+function Select-Models($Records, $Verdicts=@((Verdict)), $Profile=$profile, $Strategy="quality_first",
+    $Bands=@{"artificialAnalysis.codingIndex"=3;"liveBench.codingIndex"=3}) {
+    $configuredPolicy = $policy.Clone()
+    $configuredPolicy.selectionPolicy = $policy.selectionPolicy.Clone()
+    $configuredPolicy.selectionPolicy.profiles = @{test=@{strategy=$Strategy;qualityBands=$Bands}}
+    Get-ProfileSelection -Profile $Profile -Evidence $Records -Verdicts $Verdicts -Policy $configuredPolicy -Aliases @{}
 }
 Run-Test "Scored pool can replace an unscored incumbent" {
     $r=Select-Models @((Record one 50))
@@ -167,5 +171,148 @@ Run-Test "Fresh fallback can decide when primary evidence is cached" {
     $v2=Verdict; $v2.modelId="two"
     $s=Select-Models @($aa,$lb) @((Verdict),$v2)
     Assert-True ($s.winner.model -eq "two" -and $s.decidingSource -eq "liveBench" -and $s.freshObservation) "Cached primary froze fresh fallback"
+}
+Run-Test "Value ranking picks cheapest qualified model, including the exact band boundary" {
+    $two = Verdict; $two.modelId = "two"; $two.pricing.outputPerMillion = 1
+    $three = Verdict; $three.modelId = "three"; $three.pricing.inputPerMillion = 1; $three.pricing.outputPerMillion = 1
+    $current = @{key="test";model="one";effort="medium";context="default"}
+    $s = Select-Models @((Record one 70),(Record two 67),(Record three 66.999)) @((Verdict),$two,$three) $current value_balanced
+    Assert-True ($s.winner.model -eq "two") "Band boundary or cheapest-qualified selection failed"
+    Assert-True ($s.qualityWinner.model -eq "one" -and $s.reason -eq "value_balanced_choice") "Value sacrifice was mislabeled as a budget exclusion"
+    Assert-True ($s.valueDecision.scoreGap -eq 3 -and $s.valueDecision.maxScoreGap -eq 3) "Missing qualification provenance"
+}
+Run-Test "An equal-cost incumbent within the band stays despite a small score disadvantage" {
+    $two = Verdict; $two.modelId = "two"
+    $current = @{key="test";model="two";effort="medium";context="default"}
+    $s = Select-Models @((Record one 70),(Record two 67)) @((Verdict),$two) $current value_balanced
+    Assert-True ($s.winner.model -eq "two") "Equal-cost score noise caused churn"
+}
+Run-Test "Value fallback uses its own metric band rather than the primary source tolerance" {
+    $two = Verdict; $two.modelId = "two"; $two.pricing.outputPerMillion = 1
+    $current = @{key="test";model="one";effort="medium";context="default"}
+    $records = @((Record one 70 liveBench),(Record two 68 liveBench))
+    $s = Select-Models $records @((Verdict),$two) $current value_balanced @{"artificialAnalysis.codingIndex"=1;"liveBench.codingIndex"=3}
+    Assert-True ($s.winner.model -eq "two" -and $s.reason -eq "livebench_fallback") "Fallback source policy was not used"
+}
+Run-Test "An unscored incumbent cannot be replaced at a premium, even with force" {
+    $two = Verdict; $two.modelId = "two"; $two.pricing.inputPerMillion = 5; $two.pricing.outputPerMillion = 25
+    $current = @{key="test";model="one";effort="medium";context="default"}
+    $s = Select-Models @((Record two 70)) @((Verdict),$two) $current value_balanced
+    $r = Resolve-ProfileSelectionState -CurrentModel one -Selection $s -ForceImmediateApply
+    Assert-True (-not $r.applied -and $r.status -eq "retained_unproven_cost_increase") "Unscored incumbent authorized a premium"
+    Assert-True ($s.winner.model -eq "two" -and $null -eq $r.state.pending) "Candidate hidden or blocked observation counted"
+    Assert-True ($s.valueDecision.referenceAic -eq 750 -and $s.valueDecision.incumbentReferenceAic -eq 600) "Reference AIC comparison wrong"
+}
+Run-Test "A premium needs fresh incumbent evidence for the same source, metric, effort and observation" {
+    $two = Verdict; $two.modelId = "two"; $two.pricing.outputPerMillion = 25
+    $current = @{key="test";model="one";effort="medium";context="default"}
+    foreach ($mutate in @(
+        { param($r) $r.source = "liveBench" },
+        { param($r) $r.metric = "intelligenceIndex" },
+        { param($r) $r.effort = "high" },
+        { param($r) $r.cached = $true },
+        { param($r) $r.sourceVersion = "older" }
+    )) {
+        $old = Record one 60
+        & $mutate $old
+        $s = Select-Models @($old,(Record two 70)) @((Verdict),$two) $current value_balanced
+        $r = Resolve-ProfileSelectionState -CurrentModel one -Selection $s -ForceImmediateApply
+        Assert-True (-not $r.applied -and $r.status -eq "retained_unproven_cost_increase") "Incomparable incumbent authorized premium"
+    }
+}
+Run-Test "A cheaper qualified challenger can replace an unscored incumbent after two observations" {
+    $two = Verdict; $two.modelId = "two"; $two.pricing.outputPerMillion = 1
+    $current = @{key="test";model="one";effort="medium";context="default"}
+    $s = Select-Models @((Record two 70)) @((Verdict),$two) $current value_balanced
+    $a = Resolve-ProfileSelectionState -CurrentModel one -Selection $s
+    Assert-True ($a.state.pending.count -eq 1 -and -not $a.applied) "Cheaper candidate did not enter confirmation"
+    $s = Select-Models @((Record two 71 artificialAnalysis v2)) @((Verdict),$two) $current value_balanced
+    $b = Resolve-ProfileSelectionState -CurrentModel one -Selection $s -State $a.state
+    Assert-True ($b.applied -and $b.finalModel -eq "two") "Unscored incumbent froze a cheaper candidate"
+    Assert-True ($s.valueDecision.incumbentReferenceAic -gt $s.valueDecision.referenceAic) "Saving was not based on incumbent prices"
+}
+Run-Test "Missing, invalid or stale incumbent pricing blocks a value decision without inventing savings" {
+    $two = Verdict; $two.modelId = "two"
+    $current = @{key="test";model="one";effort="medium";context="default"}
+    $stale = $prices.Clone(); $stale.verifiedAtUtc = "2026-01-01"
+    $invalid = @{verifiedAtUtc="2026-09-01";tiers=@{default=@{inputPerMillion="4";outputPerMillion=20}}}
+    foreach ($old in @($null,(Verdict -Price $null),(Verdict -Price $stale),(Verdict -Price $invalid))) {
+        $verdicts = @(@($old) | Where-Object { $null -ne $_ }) + @($two)
+        $s = Select-Models @((Record two 70)) $verdicts $current value_balanced
+        $r = Resolve-ProfileSelectionState -CurrentModel one -Selection $s -ForceImmediateApply
+        Assert-True (-not $r.applied -and $r.status -eq "retained_incumbent_cost_unknown") "Unknown cost was treated as a saving"
+        Assert-True ($null -eq $s.valueDecision.incumbentReferenceAic) "Missing price became zero"
+    }
+}
+Run-Test "A scored incumbent outside the band allows a justified premium; no-effort models remain comparable" {
+    $two = Verdict; $two.modelId = "two"; $two.pricing.outputPerMillion = 25
+    $current = @{key="test";model="one";effort="medium";context="default"}
+    foreach ($effortMode in @("supported", "unsupported")) {
+        $old = Verdict; $old.capabilities = $cap.Clone(); $old.capabilities.effortMode = $effortMode
+        $record = Record one 66.9
+        if ($effortMode -eq "unsupported") { $record.effort = "none" }
+        $s = Select-Models @($record,(Record two 70)) @($old,$two) $current value_balanced
+        Assert-True (Resolve-ProfileSelectionState -CurrentModel one -Selection $s -ForceImmediateApply).applied "Justified premium was blocked"
+    }
+}
+Run-Test "Value bands use the eligible leader and never undo hard-budget exclusions" {
+    $hard = $req.Clone(); $hard.costSensitive = $true
+    $cheap = @{verifiedAtUtc="2026-09-01";tiers=@{default=@{inputPerMillion=1;outputPerMillion=5}}}
+    $one = Verdict -Requirement $hard -Price $cheap
+    $two = Verdict -Requirement $hard -Price $cheap; $two.modelId = "two"; $two.pricing.outputPerMillion = 1
+    $over = Verdict -Requirement $hard; $over.modelId = "over"
+    $current = @{key="test";model="one";effort="medium";context="default"}
+    $s = Select-Models @((Record one 70),(Record two 67),(Record over 99)) @($one,$two,$over) $current value_balanced
+    Assert-True ($s.winner.model -eq "two" -and $s.qualityWinner.model -eq "over") "Hard cap or pre-budget leader lost"
+    Assert-True ($s.valueDecision.qualityReference.model -eq "one" -and $s.reason -eq "budget_constrained_choice") "Ineligible leader made the value band unusable"
+}
+Run-Test "Zero-width bands preserve quality and missing value evidence cannot be forced" {
+    $two = Verdict; $two.modelId = "two"; $two.pricing.outputPerMillion = 1
+    $current = @{key="test";model="one";effort="medium";context="default"}
+    $s = Select-Models @((Record one 70),(Record two 69.999)) @((Verdict),$two) $current value_balanced @{"artificialAnalysis.codingIndex"=0}
+    Assert-True ($s.winner.model -eq "one") "Zero-width band lost quality"
+    $cached = Record two 80; $cached.cached = $true
+    foreach ($records in @(@($cached),@())) {
+        $s = Select-Models $records @((Verdict),$two) $current value_balanced
+        Assert-True (-not (Resolve-ProfileSelectionState -CurrentModel one -Selection $s -ForceImmediateApply).applied) "Force bypassed missing/fresh evidence"
+    }
+}
+Run-Test "Strategy and tolerance changes invalidate pending confirmations" {
+    $two = Verdict; $two.modelId = "two"; $two.pricing.outputPerMillion = 1
+    $current = @{key="test";model="one";effort="medium";context="default"}
+    $records = @((Record two 70))
+    $s = Select-Models $records @((Verdict),$two) $current
+    $state = (Resolve-ProfileSelectionState -CurrentModel one -Selection $s).state
+    foreach ($band in @(3,4)) {
+        $s = Select-Models $records @((Verdict),$two) $current value_balanced @{"artificialAnalysis.codingIndex"=$band}
+        $r = Resolve-ProfileSelectionState -CurrentModel one -Selection $s -State $state
+        Assert-True ($r.state.pending.count -eq 1 -and -not $r.applied) "Changed policy reused confirmation"
+        $state = $r.state
+    }
+}
+Run-Test "Value corroboration allows the LiveBench band, not just an exact quality leader" {
+    $two = Verdict; $two.modelId = "two"; $two.pricing.outputPerMillion = 1
+    $current = @{key="test";model="one";effort="medium";context="default"}
+    $records = @((Record one 70),(Record two 67),(Record one 80 liveBench),(Record two 77 liveBench))
+    foreach ($record in $records) { $record.publicationAgeUnknown = $false }
+    $s = Select-Models $records @((Verdict),$two) $current value_balanced
+    Assert-True ($s.winner.model -eq "two" -and -not $s.contested -and $s.confidence -eq "corroborated") "Agreed value qualification was mislabeled disagreement"
+    $records[3].score = 76.999
+    $s = Select-Models $records @((Verdict),$two) $current value_balanced
+    Assert-True ($s.contested -and $s.confidence -eq "reduced") "LiveBench qualification disagreement was hidden"
+}
+Run-Test "Equal monetary costs do not churn because of floating-point arithmetic" {
+    $one = Verdict; $one.pricing.inputPerMillion = 0.3; $one.pricing.outputPerMillion = 6
+    $two = Verdict; $two.modelId = "two"; $two.pricing.inputPerMillion = 0.8; $two.pricing.outputPerMillion = 1
+    $current = @{key="test";model="two";effort="medium";context="default"}
+    $s = Select-Models @((Record one 70),(Record two 67)) @($one,$two) $current value_balanced
+    Assert-True ($s.winner.model -eq "two") "Equal 90-AIC prices triggered a false saving"
+}
+Run-Test "Zero incumbent cost is known, not missing, and prevents an unproven premium" {
+    $one = Verdict; $one.pricing.inputPerMillion = 0; $one.pricing.outputPerMillion = 0
+    $two = Verdict; $two.modelId = "two"
+    $current = @{key="test";model="one";effort="medium";context="default"}
+    $s = Select-Models @((Record two 70)) @($one,$two) $current value_balanced
+    Assert-True ($s.valueDecision.incumbentReferenceAic -eq 0 -and $s.valueDecision.promotionBlockReason -eq "retained_unproven_cost_increase") "Free incumbent was treated as unpriced"
 }
 if ($script:Failed) { exit 1 }

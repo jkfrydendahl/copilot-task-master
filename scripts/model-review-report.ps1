@@ -55,6 +55,12 @@ function Get-ModelReviewCoverage {
     }
 }
 
+function Format-ModelReportNumber {
+    param($Value)
+    if ($null -eq $Value) { return "n/a" }
+    return ([double]$Value).ToString("G12", [Globalization.CultureInfo]::InvariantCulture)
+}
+
 function Get-ProfileReviewReportLines {
     param($Result)
     $r = $Result
@@ -69,11 +75,34 @@ function Get-ProfileReviewReportLines {
     $lines.Add("")
     $lines.Add("Budget: **$mode**, input $($r.requirement.inputCeilingPerMillion) / output $($r.requirement.outputCeilingPerMillion) USD per million. Deciding source: $source.")
     $lines.Add("Quality leader before hard-budget exclusions: $leader. Family fallback (informational, not a winner): $fallback.")
+    $lines.Add("Strategy: **$($r.selection.strategy)**.")
+    if ($null -ne $r.selection.valueDecision) {
+        $value = $r.selection.valueDecision
+        $referenceModel = Format-ModelReportValue $value.qualityReference.model
+        $referenceScore = Format-ModelReportNumber $value.qualityReference.score
+        $gap = Format-ModelReportNumber $value.scoreGap
+        $maximum = Format-ModelReportNumber $value.maxScoreGap
+        $candidateAic = Format-ModelReportNumber $value.referenceAic
+        $incumbentAic = Format-ModelReportNumber $value.incumbentReferenceAic
+        $lines.Add("Eligible quality reference: $referenceModel ($referenceScore). Candidate gap: **$gap / $maximum** absolute $($value.qualityReference.metric) score points.")
+        $lines.Add("Lowest reference cost within the band wins; an equally priced incumbent stays. Reference usage: candidate **$candidateAic AIC**; incumbent **$incumbentAic AIC** (1 AIC = USD 0.01).")
+        if ($value.promotionBlockReason) {
+            $explanation = if ($value.promotionBlockReason -eq "retained_incumbent_cost_unknown") {
+                "Fresh, valid incumbent pricing is missing; savings or a premium cannot be established."
+            } else {
+                "The candidate costs more, but the incumbent lacks fresh, configuration-matched evidence in the same deciding-source observation."
+            }
+            $lines.Add("**Promotion blocked:** $($value.promotionBlockReason). $explanation Confirmation override cannot bypass this guard.")
+        }
+    }
     if ($r.selection.contested) {
-        $lines.Add("**Warning: LiveBench ranks the recommendation below another comparable candidate; AA remains primary.**")
+        $lines.Add("**Warning: LiveBench does not support the recommendation under this profile's quality rule; AA remains primary.**")
     }
     if ($r.resolution.state.pending) {
-        $lines.Add("Pending distinct deciding-source observations: $($r.resolution.state.pending.count) / 2.")
+        $pending = $r.resolution.state.pending
+        $pendingModel = Format-ModelReportValue $pending.model
+        $pendingSource = Format-ModelReportValue $pending.decidingSource
+        $lines.Add("Pending distinct deciding-source observations for $pendingModel ($pendingSource): $($pending.count) / 2.")
     }
     $lines.Add("")
     $lines.Add("<details>")
@@ -129,24 +158,25 @@ function Get-TaskProfileReviewReport {
     $lines.Add("")
     $lines.Add("## Profile decisions")
     $lines.Add("")
-    $lines.Add("| Profile | Current | Recommended | Applied/current after run | Effort / context | Outcome | Confidence |")
-    $lines.Add("|---|---|---|---|---|---|---|")
+    $lines.Add("| Profile | Strategy | Current | Recommended | Applied/current after run | Effort / context | Outcome | Confidence |")
+    $lines.Add("|---|---|---|---|---|---|---|---|")
     foreach ($result in $Results) {
         $lines.Add((Format-ModelReportRow @(
-            $result.key, $result.currentModel, (Get-ObjectMemberValue $result.selection.winner "model"),
+            $result.key, $result.selection.strategy, $result.currentModel, (Get-ObjectMemberValue $result.selection.winner "model"),
             $result.finalModel, "$($result.effort) / $($result.context)",
             $result.resolution.status, $result.selection.confidence
         )))
     }
     $lines.Add("")
     $lines.Add("Recommendations rank eligible configurations, not all models globally. AA is primary; LiveBench is corroboration or a labelled fallback. Unknown publication age, cached evidence, single-source coverage and external agent harnesses reduce confidence. A context capability is not a benchmark measurement at that context length.")
+    $lines.Add("Value-balanced profiles minimize reference AIC within a configured gap of their best eligible score. Bands are source-specific policy tolerances, not capability percentages or proof of task success. Quality-first profiles still maximize score with cost breaking exact ties.")
     $lines.Add("")
     $lines.Add("## Pricing refresh")
     $lines.Add("")
     $lines.Add("- Status: **$($Pricing.status)**. Source: https://docs.github.com/en/copilot/reference/copilot-billing/models-and-pricing")
     $lines.Add("- Last successful page fetch: $(Format-ModelReportValue (Get-ObjectMemberValue $Pricing.snapshot 'fetchedAtUtc')). Per-model verification ages govern eligibility.")
     $lines.Add("- Freshness limit: $($Policy.consensusPolicy.pricingFreshnessDays) days. Missing rows retain their original timestamps. Capabilities are never refreshed by pricing.")
-    $lines.Add("- Tie-break illustration: $($Policy.selectionPolicy.referenceUsageDescription)")
+    $lines.Add("- Reference-cost comparison: $($Policy.selectionPolicy.referenceUsageDescription)")
     $lines.Add("- Reference tokens: input $($Policy.selectionPolicy.referenceInputTokens), output $($Policy.selectionPolicy.referenceOutputTokens).")
     $lines.Add("")
     $lines.Add("| Changed model | Tier | Previous input / output USD per M | Current input / output USD per M | Previous cached input / cache write | Current cached input / cache write |")

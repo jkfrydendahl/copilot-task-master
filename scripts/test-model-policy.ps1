@@ -17,6 +17,44 @@ Run-Test "Real policy is complete with exactly three hard-budget profiles" {
     Assert-True ($hard.Count -eq 3 -and $hard -contains "triage") "Budget modes"
     Assert-True ($p.profileArtificialAnalysisMetrics["agentic-implementation"] -eq "coding") "Explicit agentic AA coding fallback"
 }
+Run-Test "Four lightweight profiles use explicit value bands; execution profiles stay quality-first" {
+    $p = Get-ModelPolicyConfig (Join-Path $repo "config\model-policy.json")
+    foreach ($key in $p.profileRequirements.Keys) {
+        $strategy = $p.selectionPolicy.profiles[$key]
+        if ($key -in @("orchestrator", "quick", "mechanical", "triage")) {
+            Assert-True ($strategy.strategy -eq "value_balanced") "Missing value strategy for $key"
+            $aaMetric = "artificialAnalysis.$($p.profileArtificialAnalysisMetrics[$key])Index"
+            $lbMetric = "liveBench.$($p.profileLiveBenchCategories[$key])"
+            Assert-True ($strategy.qualityBands[$aaMetric] -eq 3 -and $strategy.qualityBands[$lbMetric] -eq 3) "Explicit metric bands missing"
+        } else {
+            Assert-True ($strategy.strategy -eq "quality_first") "Execution profile changed: $key"
+        }
+    }
+}
+Run-Test "Invalid strategies and incomplete or nonnumeric bands fail validation" {
+    $path = Join-Path ([IO.Path]::GetTempPath()) "$([guid]::NewGuid().ToString('N')).json"
+    try {
+        foreach ($mutate in @(
+            { param($p) $p.selectionPolicy.Remove("profiles") },
+            { param($p) $p.selectionPolicy.profiles.Remove("review") },
+            { param($p) $p.selectionPolicy.profiles.orchestrator.strategy = "cheapest" },
+            { param($p) $p.selectionPolicy.profiles.orchestrator.qualityBands.Remove("liveBench.instructionFollowing") },
+            { param($p) $p.selectionPolicy.profiles.orchestrator.qualityBands["artificialAnalysis.intelligenceIndex"] = -1 },
+            { param($p) $p.selectionPolicy.profiles.orchestrator.qualityBands["artificialAnalysis.intelligenceIndex"] = "3" },
+            { param($p) $p.selectionPolicy.profiles.orchestrator.qualityBands["liveBench.typo"] = 3 },
+            { param($p) $p.selectionPolicy.profiles["typo"] = @{strategy="quality_first"} }
+        )) {
+            $p = Get-ModelPolicyConfig (Join-Path $repo "config\model-policy.json")
+            & $mutate $p
+            $p | ConvertTo-Json -Depth 15 | Set-Content -LiteralPath $path
+            $threw = $false
+            try { Get-ModelPolicyConfig $path | Out-Null } catch { $threw = $true }
+            Assert-True $threw "Invalid selection policy accepted"
+        }
+    } finally {
+        if (Test-Path -LiteralPath $path) { Remove-Item -LiteralPath $path }
+    }
+}
 Run-Test "Legacy schema and malformed current capabilities fail loudly" {
     $path = Join-Path ([IO.Path]::GetTempPath()) "$([guid]::NewGuid().ToString('N')).json"
     try {

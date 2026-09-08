@@ -38,6 +38,14 @@ Run-Test "Offline review uses same-run pricing, preserves profiles and writes de
         Assert-True ([Convert]::ToBase64String([System.IO.File]::ReadAllBytes((Join-Path $root "config\model-capabilities.json"))) -ceq $capBefore) "Capability bytes changed"
         $report=Get-Content (Join-Path $root "reports\task-profile-review.md") -Raw
         foreach ($term in @("quality_winner","advisory","retained","Pricing","reduced","one-medium")) { Assert-True ($report -match $term) "Missing report evidence: $term" }
+        foreach ($term in @("Strategy: **value_balanced**", "Candidate gap: **0 / 3**", "candidate **600 AIC**; incumbent **n/a AIC**", "Promotion blocked:", "retained_incumbent_cost_unknown")) {
+            Assert-True ($report.Contains($term)) "Missing value decision explanation: $term"
+        }
+        Assert-True (($after | Where-Object key -eq "orchestrator").model -eq ($before | Where-Object key -eq "orchestrator").model) "Force bypassed unknown incumbent cost"
+        $blocked = $review.results | Where-Object key -eq "orchestrator"
+        $blocked.resolution.state.pending = @{model="previous-candidate";decidingSource="artificialAnalysis";count=1}
+        $details = (Get-ProfileReviewReportLines $blocked) -join "`n"
+        Assert-True ($details.Contains("observations for previous-candidate (artificialAnalysis): 1 / 2")) "Frozen pending count was attributed to the blocked recommendation"
         Assert-True ([regex]::Matches($report, '<details>').Count -eq $after.Count + 1) "Coverage/profile evidence is not expandable"
         Assert-True ($report.Contains("## Coverage and exclusions")) "Missing grouped coverage"
         $coverage=Get-ModelReviewCoverage -Results $review.results
@@ -89,5 +97,7 @@ Run-Test "Workflow persists price updates and runs all new suites" {
 Run-Test "Report rows preserve missing values and escape external table content" {
     $row = Format-ModelReportRow @($null, 0, $false, "pipe|value")
     Assert-True ($row -eq "| n/a | 0 | False | pipe&#124;value |") "Report column shape changed"
+    Assert-True ((Format-ModelReportNumber 2.700000000000003) -eq "2.7") "Floating-point noise obscures score gaps"
+    Assert-True ((Format-ModelReportNumber $null) -eq "n/a" -and (Format-ModelReportNumber 0) -eq "0") "Unknown cost became zero"
 }
 if ($script:Failed) { exit 1 }

@@ -252,10 +252,14 @@ are configured in `config/model-policy.json`. Missing/expired prices block autom
 even for quality-first profiles.
 
 Quick, Mechanical and Triage have hard input/output caps of $2/$10 per million tokens.
-Other profiles are quality-first: their existing caps are **advisory warnings**, not exclusions.
-Cost breaks quality ties using a configurable aggregate reference basket of 1M uncached input
-and 100K output tokens across requests within the selected context tier. It excludes caching
-and is **not** a predicted task cost or a single oversized prompt.
+Other profiles retain **advisory warnings**, not price exclusions. Budget gates and selection
+strategy are independent.
+
+Cost comparisons use a configurable aggregate reference basket of 1M uncached input and 100K
+output tokens across requests within the selected context tier. Reports express this as AI credits
+(AIC), using GitHub's conversion of **1 AIC = $0.01**. The basket excludes caching and is **not**
+a predicted task cost or a single oversized prompt. Actual consumption also depends on token use,
+reasoning, retries and cache reuse; a cheaper basket does not guarantee a cheaper completed task.
 
 Eligibility also requires verified live availability, no denylist match, fresh capability
 metadata, supported effort/context, and verified vision when required. `effortMode: unsupported`
@@ -275,7 +279,36 @@ when new variants appear; price refresh alone does not supply those facts.
 - Agentic implementation first uses matched [AA coding-agent harnesses](https://artificialanalysis.ai/agents/coding-agents), then the explicitly configured AA coding metric. Other agent harnesses are labelled, not presented as Copilot CLI measurements.
 - [LiveBench](https://github.com/LiveBench/new-livebench/tree/main/public) corroborates AA. If no eligible matched AA candidates exist, a matched LiveBench pool can select a labelled fallback. Cost-feed failure does not discard quality data.
 - Single-source evidence is allowed with reduced confidence. AA and LiveBench raw scores are never averaged; disagreement is disclosed, not a veto.
-- Candidates compete independently of the incumbent. Missing incumbent scores do not freeze selection. Family preferences from `config/model-policy.json` are informational fallback suggestions, never benchmark gates or automatic family upgrades.
+- All eligible models compete; there is no orchestration shortlist. Family preferences from `config/model-policy.json` are informational fallback suggestions, never benchmark gates or automatic family upgrades.
+
+`selectionPolicy.profiles` in `config/model-policy.json` sets the strategy for every profile:
+
+| Profiles | Strategy | Selection rule |
+|---|---|---|
+| Orchestrator, Quick, Mechanical, Triage | `value_balanced` | Lowest reference AIC within the configured score band below the best **eligible** candidate in the deciding source. |
+| Default Development, Agentic Implementation, Deep Reasoning, Review, Visual/UI | `quality_first` | Highest matched score; cost breaks exact quality ties only. |
+
+Each value profile has explicit `qualityBands` keyed by `source.metric`, for example
+`artificialAnalysis.intelligenceIndex` and `liveBench.instructionFollowing` for Orchestrator.
+The initial tolerances are **3 absolute score points** for each applicable AA and LiveBench
+metric. These are configurable starting policy choices, not percentages of capability, absolute
+competence floors, or empirically established task-success thresholds. Bands are not transferred
+between sources or averaged. Every possible deciding-source metric needs its own band; zero
+permits only the top score. If enabling value selection for Agentic Implementation, explicitly
+configure its differently scaled `artificialAnalysisCodingAgents.codingAgentIndex` too.
+
+For value profiles, equal-cost ties prefer a qualified incumbent to avoid score-noise churn,
+then the higher score, then model ID. Hard-budget exclusions apply before setting
+the band's reference score. LiveBench corroboration uses its own band for value profiles rather
+than requiring the cheaper candidate to be its exact quality leader.
+
+Value selection will not automatically replace an incumbent whose fresh, valid pricing is
+unknown. A **more-expensive** candidate additionally needs fresh incumbent evidence for the same
+metric and deciding-source observation, matched to the incumbent's actual configured effort
+(including explicit `none` mappings). Missing incumbent scores alone cannot justify a premium.
+A cheaper or equally priced qualified candidate may still proceed without an incumbent score;
+quality-first selection also retains its existing ability to replace an unscored incumbent.
+The report keeps blocked candidates visible and explains why promotion is withheld.
 
 Retrieval age and publication age are distinct: retrieval must be within 45 days and a known
 publication date within 90 days. Unknown publication dates remain unknown and reduce confidence.
@@ -291,6 +324,9 @@ Two distinct observations from the **deciding source** confirm a change. Repeate
 older publications, cached observations, or unrelated source failures do not advance confirmation.
 Changing the deciding source resets pending confirmation. Policy, effort/context and alias
 fingerprints prevent old evidence from authorizing a new configuration.
+Strategy or band changes also invalidate pending confirmation. Force bypasses only the wait,
+not value qualification, unknown incumbent pricing or the unproven-premium guard. No threshold
+change directly rewrites the current model.
 
 Schema migration invalidates legacy confirmation state but keeps current models. If evidence
 is insufficient, the report says **retained**, not **winner**. If no replacement qualifies,
@@ -298,8 +334,10 @@ even an over-budget incumbent is retained with an explicit warning rather than w
 model ID. Automatic changes remain frozen when availability cannot be verified.
 
 The report separates quality leader, recommended candidate, pending change, and model actually
-applied. Repeated exclusions, advisory overruns and variant gaps are grouped with all affected
-profiles. Expandable sections retain the complete per-profile eligibility and benchmark evidence.
+applied. Value profiles also show their eligible quality reference, score gap/band, candidate and
+incumbent reference AIC, and any promotion block. Repeated exclusions, advisory overruns and
+variant gaps are grouped with all affected profiles. Expandable sections retain the complete
+per-profile eligibility and benchmark evidence.
 Fresh capability metadata and valid mappings still require maintenance.
 
 The implementation uses focused modules under `scripts/`:
@@ -311,6 +349,7 @@ The implementation uses focused modules under `scripts/`:
 | `model-pricing-data.ps1` | GitHub pricing acquisition and last-known-good rates. |
 | `model-benchmark-evidence.ps1`, `model-admissibility.ps1` | Configuration-matched evidence and independent eligibility gates. |
 | `model-profile-selection.ps1` | Pure selection and confirmation-state transitions. |
+| `model-value-selection.ps1` | Reference costs, cheapest-qualified ranking and incumbent cost-increase guards. |
 | `model-review-report.ps1` | Decision summary, grouped coverage and expandable audit detail. |
 | `review-task-profiles.ps1` | End-to-end orchestration. |
 

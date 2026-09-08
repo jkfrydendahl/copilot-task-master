@@ -67,9 +67,32 @@
     "benchmarkMaxPublicationAgeDays": 90
   },
   "selectionPolicy": {
-    "version": 1,
+    "version": 2,
     "referenceInputTokens": 1000000,
     "referenceOutputTokens": 100000,
-    "referenceUsageDescription": "Aggregate uncached usage across requests within the selected context tier, not a single 1M-token request or predicted task cost. Cache reads/writes are excluded."
+    "referenceUsageDescription": "Aggregate uncached usage across requests within the selected context tier, not a single 1M-token request or predicted task cost. Cache reads/writes are excluded.",
+    "profiles": {
+      "orchestrator": {
+        "strategy": "value_balanced",
+        "qualityBands": { "artificialAnalysis.intelligenceIndex": 3, "liveBench.instructionFollowing": 3 }
+      },
+      "quick": {
+        "strategy": "value_balanced",
+        "qualityBands": { "artificialAnalysis.codingIndex": 3, "liveBench.coding": 3 }
+      },
+      "mechanical": {
+        "strategy": "value_balanced",
+        "qualityBands": { "artificialAnalysis.codingIndex": 3, "liveBench.coding": 3 }
+      },
+      "triage": {
+        "strategy": "value_balanced",
+        "qualityBands": { "artificialAnalysis.intelligenceIndex": 3, "liveBench.instructionFollowing": 3 }
+      },
+      "default-development": { "strategy": "quality_first" },
+      "agentic-implementation": { "strategy": "quality_first" },
+      "deep-reasoning": { "strategy": "quality_first" },
+      "review": { "strategy": "quality_first" },
+      "visual-ui": { "strategy": "quality_first" }
+    }
   }
 }
