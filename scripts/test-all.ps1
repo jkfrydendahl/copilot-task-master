@@ -7,8 +7,14 @@ $ErrorActionPreference = "Stop"
 # the review report).
 
 $testFiles = @(
+    (Join-Path $PSScriptRoot "test-module-boundaries.ps1"),
+    (Join-Path $PSScriptRoot "test-workbench-helpers.ps1"),
     (Join-Path $PSScriptRoot "test-model-ranking-data.ps1"),
     (Join-Path $PSScriptRoot "test-model-policy.ps1"),
+    (Join-Path $PSScriptRoot "test-model-pricing.ps1"),
+    (Join-Path $PSScriptRoot "test-model-evidence.ps1"),
+    (Join-Path $PSScriptRoot "test-model-selection.ps1"),
+    (Join-Path $PSScriptRoot "test-model-review.ps1"),
     (Join-Path $PSScriptRoot "test-model-launch-args.ps1")
 )
 

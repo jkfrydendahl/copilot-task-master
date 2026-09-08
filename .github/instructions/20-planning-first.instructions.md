@@ -9,20 +9,14 @@ Always use this structure:
 
 ## 1. Task classification
 
-Briefly classify the task:
-
-- quick
-- default development
-- agentic implementation
-- deep reasoning
-- review
-- mechanical
+Briefly classify the task using the shared vocabulary in
+[Model Selection Rules](10-model-selection.instructions.md).
 
 ## 2. Model check
 
-Model/effort/context were set at launch via the task class (see Model Selection Rules).
-Only flag the model if the work clearly belongs to a **different task class** than the one
-launched — then say so once and suggest relaunching or `/model`. Otherwise skip this step.
+Follow [Model Selection Rules](10-model-selection.instructions.md) for triage and drift
+detection, or [Orchestrator Mode](15-orchestrator-mode.instructions.md) for task routing.
+Those files own when and how to flag a mismatch; this workflow does not redefine that behavior.
 
 ## 3. Context check
 

@@ -1,130 +1,144 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
+  "verifiedAt": "2026-09-08",
+  "notes": "Explicit source identities by actual effort, verified against AA public leaderboard variants. No suffix inference at runtime. Empty/unlisted variants remain unresolved. AA API may lag public-page coverage or use a different evaluation release; never substitute public-page numbers. 'none' is for CLI models without an effort control. External agent harnesses are not Copilot CLI measurements.",
   "aliases": {
     "claude-sonnet-5": {
-      "artificialAnalysis": "claude-sonnet-5",
-      "liveBench": "claude-sonnet-5-xhigh-effort",
-      "artificialAnalysisCodingAgents": null
-    },
-    "claude-sonnet-4.6": {
-      "artificialAnalysis": null,
-      "liveBench": "claude-sonnet-4-6-thinking-auto-medium-effort",
-      "artificialAnalysisCodingAgents": null
-    },
-    "claude-sonnet-4.5": {
-      "artificialAnalysis": null,
-      "liveBench": null,
-      "artificialAnalysisCodingAgents": null
-    },
-    "claude-haiku-4.5": {
-      "artificialAnalysis": "claude-4-5-haiku-reasoning",
-      "liveBench": null,
-      "artificialAnalysisCodingAgents": null
+      "artificialAnalysis": {
+        "low": "claude-sonnet-5-low",
+        "medium": "claude-sonnet-5-medium",
+        "high": "claude-sonnet-5-high",
+        "xhigh": "claude-sonnet-5-xhigh",
+        "max": "claude-sonnet-5"
+      },
+      "liveBench": {
+        "xhigh": "claude-sonnet-5-xhigh-effort"
+      }
     },
     "claude-opus-5": {
-      "artificialAnalysis": "claude-opus-5",
-      "liveBench": "claude-opus-5-max-effort",
-      "artificialAnalysisCodingAgents": "Claude Code - Opus 5 (xhigh)"
+      "artificialAnalysis": {
+        "low": "claude-opus-5-low",
+        "medium": "claude-opus-5-medium",
+        "high": "claude-opus-5-high",
+        "xhigh": "claude-opus-5-xhigh",
+        "max": "claude-opus-5"
+      },
+      "liveBench": {
+        "max": "claude-opus-5-max-effort"
+      },
+      "artificialAnalysisCodingAgents": {
+        "xhigh": "Claude Code - Opus 5 (xhigh)"
+      }
     },
-    "claude-opus-4.8": {
-      "artificialAnalysis": "claude-opus-4-8",
-      "liveBench": "claude-opus-4-8-max-effort",
-      "artificialAnalysisCodingAgents": null
-    },
-    "claude-opus-4.7": {
-      "artificialAnalysis": null,
-      "liveBench": "claude-opus-4-7-xhigh-effort",
-      "artificialAnalysisCodingAgents": null
-    },
-    "claude-opus-4.6": {
-      "artificialAnalysis": null,
-      "liveBench": "claude-opus-4-6-thinking-auto-high-effort",
-      "artificialAnalysisCodingAgents": null
-    },
-    "claude-opus-4.8-fast": {
-      "artificialAnalysis": null,
-      "liveBench": null,
-      "artificialAnalysisCodingAgents": null
-    },
-    "claude-opus-4.5": {
-      "artificialAnalysis": null,
-      "liveBench": "claude-opus-4-5-20251101-thinking-64k-high-effort",
-      "artificialAnalysisCodingAgents": null
-    },
-    "claude-fable-5": {
-      "artificialAnalysis": "claude-fable-5",
-      "liveBench": "claude-fable-5-max-effort",
-      "artificialAnalysisCodingAgents": "Claude Code - Fable 5 (max) (with fallback)"
+    "gpt-6-astra": {
+      "artificialAnalysis": {
+        "low": "gpt-6-astra-low",
+        "medium": "gpt-6-astra-medium",
+        "high": "gpt-6-astra-high",
+        "xhigh": "gpt-6-astra-xhigh",
+        "max": "gpt-6-astra"
+      }
     },
     "gpt-5.6-sol": {
-      "artificialAnalysis": "gpt-5-6-sol",
-      "liveBench": "gpt-5.6-sol-max",
-      "artificialAnalysisCodingAgents": "Codex - GPT-5.6 Sol (max)"
+      "artificialAnalysis": {
+        "low": "gpt-5-6-sol-low",
+        "medium": "gpt-5-6-sol-medium",
+        "high": "gpt-5-6-sol-high",
+        "xhigh": "gpt-5-6-sol-xhigh",
+        "max": "gpt-5-6-sol"
+      },
+      "liveBench": {
+        "max": "gpt-5.6-sol-max"
+      },
+      "artificialAnalysisCodingAgents": {
+        "max": "Codex - GPT-5.6 Sol (max)"
+      }
     },
     "gpt-5.6-terra": {
-      "artificialAnalysis": "gpt-5-6-terra",
-      "liveBench": "gpt-5.6-terra-max",
-      "artificialAnalysisCodingAgents": null
+      "artificialAnalysis": {
+        "low": "gpt-5-6-terra-low",
+        "medium": "gpt-5-6-terra-medium",
+        "high": "gpt-5-6-terra-high",
+        "xhigh": "gpt-5-6-terra-xhigh",
+        "max": "gpt-5-6-terra"
+      },
+      "liveBench": {
+        "max": "gpt-5.6-terra-max"
+      }
     },
     "gpt-5.6-luna": {
-      "artificialAnalysis": "gpt-5-6-luna",
-      "liveBench": "gpt-5.6-luna-max",
-      "artificialAnalysisCodingAgents": null
+      "artificialAnalysis": {
+        "low": "gpt-5-6-luna-low",
+        "medium": "gpt-5-6-luna-medium",
+        "high": "gpt-5-6-luna-high",
+        "xhigh": "gpt-5-6-luna-xhigh",
+        "max": "gpt-5-6-luna"
+      },
+      "liveBench": {
+        "max": "gpt-5.6-luna-max"
+      }
+    },
+    "gemini-3.8-flash": {
+      "artificialAnalysis": {
+        "low": "gemini-3-8-flash-low",
+        "medium": "gemini-3-8-flash-medium",
+        "high": "gemini-3-8-flash"
+      }
+    },
+    "gemini-3.7-flash": {
+      "artificialAnalysis": {
+        "low": "gemini-3-7-flash-low",
+        "medium": "gemini-3-7-flash-medium",
+        "high": "gemini-3-7-flash"
+      }
+    },
+    "grok-4.6": {
+      "artificialAnalysis": {
+        "low": "grok-4-6-low",
+        "medium": "grok-4-6-medium",
+        "high": "grok-4-6",
+        "xhigh": "grok-4-6-xhigh"
+      }
+    },
+    "grok-4.5": {
+      "artificialAnalysis": {
+        "high": "grok-4-5"
+      }
+    },
+    "claude-haiku-4.5": {
+      "artificialAnalysis": {
+        "none": "claude-4-5-haiku"
+      }
+    },
+    "claude-opus-4.8": {
+      "liveBench": {
+        "max": "claude-opus-4-8-max-effort"
+      }
+    },
+    "claude-opus-4.7": {
+      "liveBench": {
+        "xhigh": "claude-opus-4-7-xhigh-effort"
+      }
+    },
+    "claude-sonnet-4.6": {
+      "liveBench": {
+        "medium": "claude-sonnet-4-6-thinking-auto-medium-effort"
+      }
     },
     "gpt-5.5": {
-      "artificialAnalysis": null,
-      "liveBench": "gpt-5.5-xhigh",
-      "artificialAnalysisCodingAgents": null
+      "liveBench": {
+        "xhigh": "gpt-5.5-xhigh"
+      }
     },
     "gpt-5.4": {
-      "artificialAnalysis": null,
-      "liveBench": "gpt-5.4-xhigh",
-      "artificialAnalysisCodingAgents": null
+      "liveBench": {
+        "xhigh": "gpt-5.4-xhigh"
+      }
     },
     "gpt-5.4-mini": {
-      "artificialAnalysis": null,
-      "liveBench": "gpt-5.4-mini-xhigh",
-      "artificialAnalysisCodingAgents": null
-    },
-    "gpt-5.3-codex": {
-      "artificialAnalysis": null,
-      "liveBench": null,
-      "artificialAnalysisCodingAgents": null
-    },
-    "gpt-5.2-codex": {
-      "artificialAnalysis": null,
-      "liveBench": "gpt-5.2-codex",
-      "artificialAnalysisCodingAgents": null
-    },
-    "gpt-5.2": {
-      "artificialAnalysis": null,
-      "liveBench": "gpt-5.2-2025-12-11-high",
-      "artificialAnalysisCodingAgents": null
-    },
-    "gpt-5-mini": {
-      "artificialAnalysis": null,
-      "liveBench": null,
-      "artificialAnalysisCodingAgents": null
-    },
-    "gemini-3.1-pro-preview": {
-      "artificialAnalysis": null,
-      "liveBench": null,
-      "artificialAnalysisCodingAgents": "Gemini CLI - Gemini 3.1 Pro (high)"
-    },
-    "gemini-3.6-flash": {
-      "artificialAnalysis": "gemini-3-6-flash",
-      "liveBench": null,
-      "artificialAnalysisCodingAgents": null
-    },
-    "gemini-3.5-flash": {
-      "artificialAnalysis": null,
-      "liveBench": null,
-      "artificialAnalysisCodingAgents": null
-    },
-    "mai-code-1-flash-picker": {
-      "artificialAnalysis": null,
-      "liveBench": null,
-      "artificialAnalysisCodingAgents": null
+      "liveBench": {
+        "xhigh": "gpt-5.4-mini-xhigh"
+      }
     }
   }
 }

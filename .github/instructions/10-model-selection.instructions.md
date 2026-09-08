@@ -49,20 +49,9 @@ enables task-aware model selection.
 
 ## Orchestrator mode (task-level routing)
 
-If the launched task class is `orchestrator`, this session is intentionally cross-class and should
-route work per request rather than rely on relaunches:
-
-1. Classify the user's request quickly.
-2. Handle truly trivial one-liners inline.
-3. Route non-trivial work to the best task-class custom agent using explicit `@agent-key` callouts:
-   `@quick`, `@default-development`, `@agentic-implementation`, `@deep-reasoning`, `@review`,
-   `@visual-ui`, `@mechanical`.
-4. If uncertain between classes, ask one high-value clarifying question before routing.
-5. Start your first substantive response with:
-   `Routing: [inline or @<agent-key>] — [one-sentence reason]`
-
-In orchestrator sessions, do **not** show the mismatch banner — the orchestrator route is already
-the intended drift-handling mechanism.
+For `orchestrator`, follow [Orchestrator Mode](15-orchestrator-mode.instructions.md).
+That file owns agent routing, the response prefix, and the exemption from drift banners.
+The triage and non-orchestrator drift rules below remain owned by this file.
 
 ## Triage mode (auto-estimate)
 

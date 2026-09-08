@@ -1,319 +1,615 @@
 # Monthly task profile review (2026-09-08)
 
-Reference: https://docs.github.com/en/copilot/reference/ai-models/model-comparison
+Availability: **True** (copilot help config); manual confirmation override: **False**.
 
-Model source: **copilot help config**
+## Profile decisions
 
-Force benchmark consensus (manual first-run override): **True**
+| Profile | Current | Recommended | Applied/current after run | Effort / context | Outcome | Confidence |
+|---|---|---|---|---|---|---|
+| orchestrator | claude-sonnet-5 | claude-sonnet-4.6 | claude-sonnet-5 | medium / default | pending_livebench_fallback | reduced |
+| quick | claude-haiku-4.5 | n/a | claude-haiku-4.5 | low / default | retained_insufficient_evidence | none |
+| default-development | claude-sonnet-5 | claude-sonnet-4.6 | claude-sonnet-5 | medium / default | pending_livebench_fallback | reduced |
+| agentic-implementation | gpt-5.3-codex | n/a | gpt-5.3-codex | high / default | retained_insufficient_evidence | none |
+| deep-reasoning | claude-opus-5 | n/a | claude-opus-5 | high / long_context | retained_insufficient_evidence | none |
+| review | gpt-5.6-sol | claude-sonnet-4.6 | gpt-5.6-sol | medium / default | pending_livebench_fallback | reduced |
+| visual-ui | claude-sonnet-5 | claude-sonnet-4.6 | claude-sonnet-5 | medium / default | pending_livebench_fallback | reduced |
+| mechanical | claude-haiku-4.5 | n/a | claude-haiku-4.5 | low / default | retained_insufficient_evidence | none |
+| triage | claude-sonnet-5 | n/a | claude-sonnet-5 | low / default | retained_insufficient_evidence | none |
 
-## Current profiles
+Recommendations rank eligible configurations, not all models globally. AA is primary; LiveBench is corroboration or a labelled fallback. Unknown publication age, cached evidence, single-source coverage and external agent harnesses reduce confidence. A context capability is not a benchmark measurement at that context length.
 
-| Key | Model | Effort | Context |
+## Pricing refresh
+
+- Status: **partial**. Source: https://docs.github.com/en/copilot/reference/copilot-billing/models-and-pricing
+- Last successful page fetch: 2026-09-08T13:24:49.7627085Z. Per-model verification ages govern eligibility.
+- Freshness limit: 45 days. Missing rows retain their original timestamps. Capabilities are never refreshed by pricing.
+- Tie-break illustration: Aggregate uncached usage across requests within the selected context tier, not a single 1M-token request or predicted task cost. Cache reads/writes are excluded.
+- Reference tokens: input 1000000, output 100000.
+
+| Changed model | Tier | Previous input / output USD per M | Current input / output USD per M | Previous cached input / cache write | Current cached input / cache write |
+|---|---|---|---|---|---|
+
+- Warning: Unmapped GitHub pricing model: Claude Sonnet 4
+- Warning: Unmapped GitHub pricing model: GPT-5.4 nano
+
+## Benchmark sources
+
+| Source | Status | Published | Retrieved | Observation identity |
+|---|---|---|---|---|
+| artificialAnalysis | error | n/a | 2026-09-08T13:24:51.3490303Z | n/a |
+| artificialAnalysisCodingAgents | ok | n/a | 2026-09-08T13:24:51.3796999Z | 7da45df0f719be322977d4c08e09c2d75c37fddeb5d5205f8d106ec66676fb54 |
+| liveBench | ok | 2026-06-25 | 2026-09-08T13:24:51.7677254Z | 6389c04aca01a1b8c020c9cf92df2731fc206ae6d73e4767fbf11732bb688360 |
+
+Source fingerprints identify observations, not benchmark methodology versions. Unknown publication dates are not replaced with fetch dates. AA API scores are not replaced by public-page scores. Data attribution: https://artificialanalysis.ai and https://github.com/LiveBench/new-livebench.
+
+- Source warning: artificialAnalysis: Fetch failed: Missing or empty environment variable 'ARTIFICIAL_ANALYSIS_API_KEY'.
+
+## Coverage and exclusions
+
+161 distinct exclusions, advisory warnings and evidence gaps. Repeated findings are listed once with every affected profile; full eligibility and scores remain available below.
+
+<details>
+<summary>Grouped coverage details</summary>
+
+| Kind | Model | Finding | Affected profiles |
 |---|---|---|---|
-| orchestrator | claude-sonnet-5 | medium | default |
-| quick | claude-haiku-4.5 | low | default |
-| default-development | claude-sonnet-5 | medium | default |
-| agentic-implementation | gpt-5.3-codex | high | default |
-| deep-reasoning | claude-opus-5 | high | long_context |
-| review | gpt-5.6-sol | medium | default |
-| visual-ui | claude-sonnet-5 | medium | default |
-| mechanical | claude-haiku-4.5 | low | default |
-| triage | claude-sonnet-5 | low | default |
+| advisory warning | claude-fable-5.1 | pricing_input_exceeds_ceiling | default-development, orchestrator, review, visual-ui |
+| advisory warning | claude-fable-5.1 | pricing_output_exceeds_ceiling | deep-reasoning, default-development, orchestrator, review, visual-ui |
+| advisory warning | claude-opus-4.7 | pricing_input_exceeds_ceiling | default-development, orchestrator, visual-ui |
+| advisory warning | claude-opus-4.7 | pricing_output_exceeds_ceiling | default-development, orchestrator, visual-ui |
+| advisory warning | claude-opus-4.8-fast | pricing_input_exceeds_ceiling | default-development, orchestrator, review, visual-ui |
+| advisory warning | claude-opus-4.8-fast | pricing_output_exceeds_ceiling | deep-reasoning, default-development, orchestrator, review, visual-ui |
+| advisory warning | claude-opus-4.8 | pricing_input_exceeds_ceiling | default-development, orchestrator, visual-ui |
+| advisory warning | claude-opus-4.8 | pricing_output_exceeds_ceiling | default-development, orchestrator, visual-ui |
+| advisory warning | claude-opus-5 | pricing_input_exceeds_ceiling | default-development, orchestrator, visual-ui |
+| advisory warning | claude-opus-5 | pricing_output_exceeds_ceiling | default-development, orchestrator, visual-ui |
+| advisory warning | gpt-5.5 | pricing_input_exceeds_ceiling | default-development, orchestrator, visual-ui |
+| advisory warning | gpt-5.5 | pricing_output_exceeds_ceiling | default-development, orchestrator, visual-ui |
+| advisory warning | gpt-5.6-sol | pricing_input_exceeds_ceiling | default-development, orchestrator, visual-ui |
+| advisory warning | gpt-5.6-sol | pricing_output_exceeds_ceiling | default-development, orchestrator, visual-ui |
+| evidence gap | n/a | artificialAnalysis: unavailable (Fetch failed: Missing or empty environment variable 'ARTIFICIAL_ANALYSIS_API_KEY'.) | agentic-implementation, deep-reasoning, default-development, mechanical, orchestrator, quick, review, triage, visual-ui |
+| evidence gap | n/a | claude-fable-5.1: artificialAnalysisCodingAgents effort 'high' alias_not_configured | agentic-implementation |
+| evidence gap | n/a | claude-fable-5.1: liveBench effort 'high' alias_not_configured | agentic-implementation, deep-reasoning |
+| evidence gap | n/a | claude-fable-5.1: liveBench effort 'low' alias_not_configured | mechanical, quick, triage |
+| evidence gap | n/a | claude-fable-5.1: liveBench effort 'medium' alias_not_configured | default-development, orchestrator, review, visual-ui |
+| evidence gap | n/a | claude-haiku-4.5: artificialAnalysisCodingAgents effort 'none' alias_not_configured | agentic-implementation |
+| evidence gap | n/a | claude-haiku-4.5: liveBench effort 'none' alias_not_configured | agentic-implementation, deep-reasoning, default-development, mechanical, orchestrator, quick, review, triage, visual-ui |
+| evidence gap | n/a | claude-opus-4.7: artificialAnalysisCodingAgents effort 'high' alias_not_configured | agentic-implementation |
+| evidence gap | n/a | claude-opus-4.7: liveBench effort 'high' alias_not_configured | agentic-implementation, deep-reasoning |
+| evidence gap | n/a | claude-opus-4.7: liveBench effort 'low' alias_not_configured | mechanical, quick, triage |
+| evidence gap | n/a | claude-opus-4.7: liveBench effort 'medium' alias_not_configured | default-development, orchestrator, review, visual-ui |
+| evidence gap | n/a | claude-opus-4.8-fast: artificialAnalysisCodingAgents effort 'high' alias_not_configured | agentic-implementation |
+| evidence gap | n/a | claude-opus-4.8-fast: liveBench effort 'high' alias_not_configured | agentic-implementation, deep-reasoning |
+| evidence gap | n/a | claude-opus-4.8-fast: liveBench effort 'low' alias_not_configured | mechanical, quick, triage |
+| evidence gap | n/a | claude-opus-4.8-fast: liveBench effort 'medium' alias_not_configured | default-development, orchestrator, review, visual-ui |
+| evidence gap | n/a | claude-opus-4.8: artificialAnalysisCodingAgents effort 'high' alias_not_configured | agentic-implementation |
+| evidence gap | n/a | claude-opus-4.8: liveBench effort 'high' alias_not_configured | agentic-implementation, deep-reasoning |
+| evidence gap | n/a | claude-opus-4.8: liveBench effort 'low' alias_not_configured | mechanical, quick, triage |
+| evidence gap | n/a | claude-opus-4.8: liveBench effort 'medium' alias_not_configured | default-development, orchestrator, review, visual-ui |
+| evidence gap | n/a | claude-opus-5: artificialAnalysisCodingAgents effort 'high' alias_not_configured | agentic-implementation |
+| evidence gap | n/a | claude-opus-5: liveBench effort 'high' alias_not_configured | agentic-implementation, deep-reasoning |
+| evidence gap | n/a | claude-opus-5: liveBench effort 'low' alias_not_configured | mechanical, quick, triage |
+| evidence gap | n/a | claude-opus-5: liveBench effort 'medium' alias_not_configured | default-development, orchestrator, review, visual-ui |
+| evidence gap | n/a | claude-sonnet-4.6: artificialAnalysisCodingAgents effort 'high' alias_not_configured | agentic-implementation |
+| evidence gap | n/a | claude-sonnet-4.6: liveBench effort 'high' alias_not_configured | agentic-implementation, deep-reasoning |
+| evidence gap | n/a | claude-sonnet-4.6: liveBench effort 'low' alias_not_configured | mechanical, quick, triage |
+| evidence gap | n/a | claude-sonnet-5: artificialAnalysisCodingAgents effort 'high' alias_not_configured | agentic-implementation |
+| evidence gap | n/a | claude-sonnet-5: liveBench effort 'high' alias_not_configured | agentic-implementation, deep-reasoning |
+| evidence gap | n/a | claude-sonnet-5: liveBench effort 'low' alias_not_configured | mechanical, quick, triage |
+| evidence gap | n/a | claude-sonnet-5: liveBench effort 'medium' alias_not_configured | default-development, orchestrator, review, visual-ui |
+| evidence gap | n/a | gemini-3.5-flash: artificialAnalysisCodingAgents effort 'high' alias_not_configured | agentic-implementation |
+| evidence gap | n/a | gemini-3.5-flash: liveBench effort 'high' alias_not_configured | agentic-implementation, deep-reasoning |
+| evidence gap | n/a | gemini-3.5-flash: liveBench effort 'low' alias_not_configured | mechanical, quick, triage |
+| evidence gap | n/a | gemini-3.5-flash: liveBench effort 'medium' alias_not_configured | default-development, orchestrator, review, visual-ui |
+| evidence gap | n/a | gemini-3.6-flash: artificialAnalysisCodingAgents effort 'high' alias_not_configured | agentic-implementation |
+| evidence gap | n/a | gemini-3.6-flash: liveBench effort 'high' alias_not_configured | agentic-implementation, deep-reasoning |
+| evidence gap | n/a | gemini-3.6-flash: liveBench effort 'low' alias_not_configured | mechanical, quick, triage |
+| evidence gap | n/a | gemini-3.6-flash: liveBench effort 'medium' alias_not_configured | default-development, orchestrator, review, visual-ui |
+| evidence gap | n/a | gemini-3.7-flash: artificialAnalysisCodingAgents effort 'high' alias_not_configured | agentic-implementation |
+| evidence gap | n/a | gemini-3.7-flash: liveBench effort 'high' alias_not_configured | agentic-implementation, deep-reasoning |
+| evidence gap | n/a | gemini-3.7-flash: liveBench effort 'low' alias_not_configured | mechanical, quick, triage |
+| evidence gap | n/a | gemini-3.7-flash: liveBench effort 'medium' alias_not_configured | default-development, orchestrator, review, visual-ui |
+| evidence gap | n/a | gemini-3.8-flash: artificialAnalysisCodingAgents effort 'high' alias_not_configured | agentic-implementation |
+| evidence gap | n/a | gemini-3.8-flash: liveBench effort 'high' alias_not_configured | agentic-implementation, deep-reasoning |
+| evidence gap | n/a | gemini-3.8-flash: liveBench effort 'low' alias_not_configured | mechanical, quick, triage |
+| evidence gap | n/a | gemini-3.8-flash: liveBench effort 'medium' alias_not_configured | default-development, orchestrator, review, visual-ui |
+| evidence gap | n/a | gpt-5-mini: artificialAnalysisCodingAgents effort 'high' alias_not_configured | agentic-implementation |
+| evidence gap | n/a | gpt-5-mini: liveBench effort 'high' alias_not_configured | agentic-implementation, deep-reasoning |
+| evidence gap | n/a | gpt-5-mini: liveBench effort 'low' alias_not_configured | mechanical, quick, triage |
+| evidence gap | n/a | gpt-5-mini: liveBench effort 'medium' alias_not_configured | default-development, orchestrator, review, visual-ui |
+| evidence gap | n/a | gpt-5.3-codex: artificialAnalysisCodingAgents effort 'high' alias_not_configured | agentic-implementation |
+| evidence gap | n/a | gpt-5.3-codex: liveBench effort 'high' alias_not_configured | agentic-implementation, deep-reasoning |
+| evidence gap | n/a | gpt-5.3-codex: liveBench effort 'low' alias_not_configured | mechanical, quick, triage |
+| evidence gap | n/a | gpt-5.3-codex: liveBench effort 'medium' alias_not_configured | default-development, orchestrator, review, visual-ui |
+| evidence gap | n/a | gpt-5.4-mini: artificialAnalysisCodingAgents effort 'high' alias_not_configured | agentic-implementation |
+| evidence gap | n/a | gpt-5.4-mini: liveBench effort 'high' alias_not_configured | agentic-implementation, deep-reasoning |
+| evidence gap | n/a | gpt-5.4-mini: liveBench effort 'low' alias_not_configured | mechanical, quick, triage |
+| evidence gap | n/a | gpt-5.4-mini: liveBench effort 'medium' alias_not_configured | default-development, orchestrator, review, visual-ui |
+| evidence gap | n/a | gpt-5.4: artificialAnalysisCodingAgents effort 'high' alias_not_configured | agentic-implementation |
+| evidence gap | n/a | gpt-5.4: liveBench effort 'high' alias_not_configured | agentic-implementation, deep-reasoning |
+| evidence gap | n/a | gpt-5.4: liveBench effort 'low' alias_not_configured | mechanical, quick, triage |
+| evidence gap | n/a | gpt-5.4: liveBench effort 'medium' alias_not_configured | default-development, orchestrator, review, visual-ui |
+| evidence gap | n/a | gpt-5.5: artificialAnalysisCodingAgents effort 'high' alias_not_configured | agentic-implementation |
+| evidence gap | n/a | gpt-5.5: liveBench effort 'high' alias_not_configured | agentic-implementation, deep-reasoning |
+| evidence gap | n/a | gpt-5.5: liveBench effort 'low' alias_not_configured | mechanical, quick, triage |
+| evidence gap | n/a | gpt-5.5: liveBench effort 'medium' alias_not_configured | default-development, orchestrator, review, visual-ui |
+| evidence gap | n/a | gpt-5.6-luna: artificialAnalysisCodingAgents effort 'high' alias_not_configured | agentic-implementation |
+| evidence gap | n/a | gpt-5.6-luna: liveBench effort 'high' alias_not_configured | agentic-implementation, deep-reasoning |
+| evidence gap | n/a | gpt-5.6-luna: liveBench effort 'low' alias_not_configured | mechanical, quick, triage |
+| evidence gap | n/a | gpt-5.6-luna: liveBench effort 'medium' alias_not_configured | default-development, orchestrator, review, visual-ui |
+| evidence gap | n/a | gpt-5.6-sol: artificialAnalysisCodingAgents effort 'high' alias_not_configured | agentic-implementation |
+| evidence gap | n/a | gpt-5.6-sol: liveBench effort 'high' alias_not_configured | agentic-implementation, deep-reasoning |
+| evidence gap | n/a | gpt-5.6-sol: liveBench effort 'low' alias_not_configured | mechanical, quick, triage |
+| evidence gap | n/a | gpt-5.6-sol: liveBench effort 'medium' alias_not_configured | default-development, orchestrator, review, visual-ui |
+| evidence gap | n/a | gpt-5.6-terra: artificialAnalysisCodingAgents effort 'high' alias_not_configured | agentic-implementation |
+| evidence gap | n/a | gpt-5.6-terra: liveBench effort 'high' alias_not_configured | agentic-implementation, deep-reasoning |
+| evidence gap | n/a | gpt-5.6-terra: liveBench effort 'low' alias_not_configured | mechanical, quick, triage |
+| evidence gap | n/a | gpt-5.6-terra: liveBench effort 'medium' alias_not_configured | default-development, orchestrator, review, visual-ui |
+| evidence gap | n/a | grok-4.5: artificialAnalysisCodingAgents effort 'high' alias_not_configured | agentic-implementation |
+| evidence gap | n/a | grok-4.5: liveBench effort 'high' alias_not_configured | agentic-implementation, deep-reasoning |
+| evidence gap | n/a | grok-4.5: liveBench effort 'low' alias_not_configured | mechanical, quick, triage |
+| evidence gap | n/a | grok-4.5: liveBench effort 'medium' alias_not_configured | default-development, orchestrator, review, visual-ui |
+| evidence gap | n/a | kimi-k2.7-code: artificialAnalysisCodingAgents effort 'high' alias_not_configured | agentic-implementation |
+| evidence gap | n/a | kimi-k2.7-code: liveBench effort 'high' alias_not_configured | agentic-implementation, deep-reasoning |
+| evidence gap | n/a | kimi-k2.7-code: liveBench effort 'low' alias_not_configured | mechanical, quick, triage |
+| evidence gap | n/a | kimi-k2.7-code: liveBench effort 'medium' alias_not_configured | default-development, orchestrator, review, visual-ui |
+| evidence gap | n/a | kimi-k3: artificialAnalysisCodingAgents effort 'high' alias_not_configured | agentic-implementation |
+| evidence gap | n/a | kimi-k3: liveBench effort 'high' alias_not_configured | agentic-implementation, deep-reasoning |
+| evidence gap | n/a | kimi-k3: liveBench effort 'low' alias_not_configured | mechanical, quick, triage |
+| evidence gap | n/a | kimi-k3: liveBench effort 'medium' alias_not_configured | default-development, orchestrator, review, visual-ui |
+| evidence gap | n/a | mai-code-1-flash-picker: artificialAnalysisCodingAgents effort 'high' alias_not_configured | agentic-implementation |
+| evidence gap | n/a | mai-code-1-flash-picker: liveBench effort 'high' alias_not_configured | agentic-implementation, deep-reasoning |
+| evidence gap | n/a | mai-code-1-flash-picker: liveBench effort 'low' alias_not_configured | mechanical, quick, triage |
+| evidence gap | n/a | mai-code-1-flash-picker: liveBench effort 'medium' alias_not_configured | default-development, orchestrator, review, visual-ui |
+| evidence gap | n/a | mai-code-1.1-flash: artificialAnalysisCodingAgents effort 'high' alias_not_configured | agentic-implementation |
+| evidence gap | n/a | mai-code-1.1-flash: liveBench effort 'high' alias_not_configured | agentic-implementation, deep-reasoning |
+| evidence gap | n/a | mai-code-1.1-flash: liveBench effort 'low' alias_not_configured | mechanical, quick, triage |
+| evidence gap | n/a | mai-code-1.1-flash: liveBench effort 'medium' alias_not_configured | default-development, orchestrator, review, visual-ui |
+| exclusion | claude-fable-5.1 | capabilities_missing | agentic-implementation, deep-reasoning, default-development, mechanical, orchestrator, quick, review, triage, visual-ui |
+| exclusion | claude-fable-5.1 | pricing_input_exceeds_ceiling | mechanical, quick, triage |
+| exclusion | claude-fable-5.1 | pricing_output_exceeds_ceiling | mechanical, quick, triage |
+| exclusion | claude-haiku-4.5 | context_unsupported | deep-reasoning |
+| exclusion | claude-haiku-4.5 | vision_unknown | visual-ui |
+| exclusion | claude-opus-4.7 | pricing_input_exceeds_ceiling | mechanical, quick, triage |
+| exclusion | claude-opus-4.7 | pricing_output_exceeds_ceiling | mechanical, quick, triage |
+| exclusion | claude-opus-4.7 | vision_unknown | visual-ui |
+| exclusion | claude-opus-4.8-fast | pricing_input_exceeds_ceiling | mechanical, quick, triage |
+| exclusion | claude-opus-4.8-fast | pricing_output_exceeds_ceiling | mechanical, quick, triage |
+| exclusion | claude-opus-4.8-fast | vision_unknown | visual-ui |
+| exclusion | claude-opus-4.8 | pricing_input_exceeds_ceiling | mechanical, quick, triage |
+| exclusion | claude-opus-4.8 | pricing_output_exceeds_ceiling | mechanical, quick, triage |
+| exclusion | claude-opus-4.8 | vision_unknown | visual-ui |
+| exclusion | claude-opus-5 | pricing_input_exceeds_ceiling | mechanical, quick, triage |
+| exclusion | claude-opus-5 | pricing_output_exceeds_ceiling | mechanical, quick, triage |
+| exclusion | claude-sonnet-4.6 | pricing_input_exceeds_ceiling | mechanical, quick, triage |
+| exclusion | claude-sonnet-4.6 | pricing_output_exceeds_ceiling | mechanical, quick, triage |
+| exclusion | gemini-3.5-flash | vision_unknown | visual-ui |
+| exclusion | gemini-3.6-flash | vision_unknown | visual-ui |
+| exclusion | gemini-3.7-flash | vision_unknown | visual-ui |
+| exclusion | gpt-5-mini | context_unsupported | agentic-implementation, deep-reasoning, default-development, mechanical, orchestrator, quick, review, triage, visual-ui |
+| exclusion | gpt-5-mini | effort_unsupported | agentic-implementation, deep-reasoning, default-development, mechanical, orchestrator, quick, review, triage, visual-ui |
+| exclusion | gpt-5.3-codex | context_unsupported | deep-reasoning |
+| exclusion | gpt-5.3-codex | pricing_output_exceeds_ceiling | mechanical, quick, triage |
+| exclusion | gpt-5.3-codex | vision_unknown | visual-ui |
+| exclusion | gpt-5.4-mini | context_unsupported | deep-reasoning |
+| exclusion | gpt-5.4-mini | vision_unknown | visual-ui |
+| exclusion | gpt-5.4 | pricing_input_exceeds_ceiling | mechanical, quick, triage |
+| exclusion | gpt-5.4 | pricing_output_exceeds_ceiling | mechanical, quick, triage |
+| exclusion | gpt-5.4 | vision_unknown | visual-ui |
+| exclusion | gpt-5.5 | pricing_input_exceeds_ceiling | mechanical, quick, triage |
+| exclusion | gpt-5.5 | pricing_output_exceeds_ceiling | mechanical, quick, triage |
+| exclusion | gpt-5.5 | vision_unknown | visual-ui |
+| exclusion | gpt-5.6-luna | vision_unknown | visual-ui |
+| exclusion | gpt-5.6-sol | pricing_input_exceeds_ceiling | mechanical, quick, triage |
+| exclusion | gpt-5.6-sol | pricing_output_exceeds_ceiling | mechanical, quick, triage |
+| exclusion | gpt-5.6-sol | vision_unknown | visual-ui |
+| exclusion | gpt-5.6-terra | pricing_output_exceeds_ceiling | mechanical, quick, triage |
+| exclusion | gpt-5.6-terra | vision_unknown | visual-ui |
+| exclusion | grok-4.5 | vision_unknown | visual-ui |
+| exclusion | kimi-k2.7-code | capabilities_missing | agentic-implementation, deep-reasoning, default-development, mechanical, orchestrator, quick, review, triage, visual-ui |
+| exclusion | kimi-k3 | capabilities_missing | agentic-implementation, deep-reasoning, default-development, mechanical, orchestrator, quick, review, triage, visual-ui |
+| exclusion | kimi-k3 | pricing_input_exceeds_ceiling | mechanical, quick, triage |
+| exclusion | kimi-k3 | pricing_output_exceeds_ceiling | mechanical, quick, triage |
+| exclusion | mai-code-1-flash-picker | context_unsupported | deep-reasoning |
+| exclusion | mai-code-1-flash-picker | vision_unknown | visual-ui |
+| exclusion | mai-code-1.1-flash | context_unsupported | deep-reasoning |
+| exclusion | mai-code-1.1-flash | vision_unknown | visual-ui |
 
-## Artificial Analysis metric routing
+</details>
 
-| Profile | AA metric used for consensus |
-|---|---|
-| orchestrator | intelligence |
-| quick | coding |
-| default-development | coding |
-| agentic-implementation | coding-agents (HTML leaderboard feed) |
-| deep-reasoning | intelligence |
-| review | intelligence |
-| visual-ui | coding |
-| mechanical | coding |
-| triage | intelligence |
-
-## Applied profile changes in this run
-- None.
-
-## Benchmark consensus pending
-- None.
-
-## Benchmark consensus AA-data-missing fallback
-
-_AA alias IS configured but Artificial Analysis returned no score this run. LiveBench-only comparison is allowed as a temporary bridge, provided the LiveBench source data is at most 90 days old._
-
-- None.
-
-## Benchmark consensus AA-alias-not-configured exclusions
-
-_No `artificialAnalysis` alias is configured in `config/model-ranking-aliases.json` for these models, so Artificial Analysis is never consulted for them. They are excluded from benchmark consensus entirely (no LiveBench-only promotion), and an active override on such a model is revoked. This section is config-derived and is reported on every run,     including partial/stale benchmark runs. Add an alias if a model deserves consideration._
-
-- "orchestrator": AA alias not configured -- excluded from consensus: claude-opus-4.7, claude-sonnet-4.6, gpt-5.4, gpt-5.4-mini, gpt-5.5
-- "quick": AA alias not configured -- excluded from consensus: claude-opus-4.7, claude-sonnet-4.6, gpt-5.4, gpt-5.4-mini, gpt-5.5
-- "default-development": AA alias not configured -- excluded from consensus: claude-opus-4.7, claude-sonnet-4.6, gpt-5.4, gpt-5.4-mini, gpt-5.5
-- "agentic-implementation": AA alias not configured -- excluded from consensus: claude-opus-4.7, claude-opus-4.8, claude-sonnet-4.6, claude-sonnet-5, gpt-5.4, gpt-5.4-mini, gpt-5.5, gpt-5.6-luna, gpt-5.6-terra
-- "deep-reasoning": AA alias not configured -- excluded from consensus: claude-opus-4.7, claude-sonnet-4.6, gpt-5.4, gpt-5.4-mini, gpt-5.5
-- "review": AA alias not configured -- excluded from consensus: claude-opus-4.7, claude-sonnet-4.6, gpt-5.4, gpt-5.4-mini, gpt-5.5
-- "visual-ui": AA alias not configured -- excluded from consensus: claude-opus-4.7, claude-sonnet-4.6, gpt-5.4, gpt-5.4-mini, gpt-5.5
-- "mechanical": AA alias not configured -- excluded from consensus: claude-opus-4.7, claude-sonnet-4.6, gpt-5.4, gpt-5.4-mini, gpt-5.5
-- "triage": AA alias not configured -- excluded from consensus: claude-opus-4.7, claude-sonnet-4.6, gpt-5.4, gpt-5.4-mini, gpt-5.5
-
-## Active benchmark overrides
-- "review": "gpt-5.6-sol"
-
-## Benchmark consensus auto-applied changes
-- None.
-
-## Model admissibility (rule 9: availability confidence, capability/pricing freshness, profile ceilings, exclusion reasons)
+## Profile evidence
 
 ### orchestrator
 
-- Availability confidence: **verified**
-- Pricing ceilings (per million tokens): input <= $3, output <= $15
-- Incumbent/current model: **claude-sonnet-5** — admissible: **True** (reasons: none)
-- Exclusions:
+Budget: **advisory**, input 3 / output 15 USD per million. Deciding source: liveBench.
+Quality leader before hard-budget exclusions: claude-sonnet-4.6. Family fallback (informational, not a winner): claude-sonnet-5.
+Pending distinct deciding-source observations: 1 / 2.
 
-| Model | Reasons | Pricing tier | Input $/M | Output $/M | Capability as-of |
-|---|---|---|---|---|---|
-| claude-fable-5.1 | capabilities_missing | n/a | n/a | n/a | n/a |
-| claude-opus-5 | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 | 25 | 2026-07-30 |
-| claude-opus-4.8 | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 | 25 | 2026-07-30 |
-| claude-opus-4.8-fast | context_unsupported, effort_unsupported, pricing_missing | n/a | n/a | n/a | 2026-07-30 |
-| claude-opus-4.7 | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 | 25 | 2026-07-30 |
-| gpt-5.6-sol | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 | 30 | 2026-07-30 |
-| gpt-5.5 | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 | 30 | 2026-07-30 |
-| gpt-5-mini | context_unsupported, effort_unsupported | default | 0.25 | 2 | 2026-07-30 |
-| mai-code-1.1-flash | capabilities_missing | n/a | n/a | n/a | n/a |
-| mai-code-1-flash-picker | context_unsupported, effort_unsupported, pricing_missing | n/a | n/a | n/a | 2026-07-30 |
-| gemini-3.8-flash | capabilities_missing | n/a | n/a | n/a | n/a |
-| gemini-3.7-flash | capabilities_missing | n/a | n/a | n/a | n/a |
+<details>
+<summary>Eligibility and exact benchmark evidence</summary>
+
+| Model | Eligible | Exclusions | Advisory warnings | Price tier | Input / output USD per M | Price verified | Capability as-of |
+|---|---|---|---|---|---|---|---|
+| claude-fable-5.1 | False | capabilities_missing | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 10 / 50 | 2026-09-08T13:24:49.7627085Z | n/a |
+| claude-haiku-4.5 | True | n/a | n/a | default | 1 / 5 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| claude-opus-4.7 | True | n/a | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 / 25 | 2026-09-08T13:24:49.7627085Z | 2026-07-30 |
+| claude-opus-4.8 | True | n/a | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 / 25 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| claude-opus-4.8-fast | True | n/a | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 10 / 50 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| claude-opus-5 | True | n/a | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 / 25 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| claude-sonnet-4.6 | True | n/a | n/a | default | 3 / 15 | 2026-09-08T13:24:49.7627085Z | 2026-07-30 |
+| claude-sonnet-5 | True | n/a | n/a | default | 2 / 10 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| gemini-3.5-flash | True | n/a | n/a | default | 1.5 / 9 | 2026-09-08T13:24:49.7627085Z | 2026-07-30 |
+| gemini-3.6-flash | True | n/a | n/a | default | 0.75 / 3.75 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| gemini-3.7-flash | True | n/a | n/a | default | 0.75 / 3.75 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| gemini-3.8-flash | True | n/a | n/a | default | 0.75 / 3.75 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| gpt-5-mini | False | context_unsupported, effort_unsupported | n/a | default | 0.25 / 2 | 2026-09-08T13:24:49.7627085Z | 2026-07-30 |
+| gpt-5.3-codex | True | n/a | n/a | default | 1.75 / 14 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| gpt-5.4 | True | n/a | n/a | default | 2.5 / 15 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| gpt-5.4-mini | True | n/a | n/a | default | 0.75 / 4.5 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| gpt-5.5 | True | n/a | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 / 30 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| gpt-5.6-luna | True | n/a | n/a | default | 0.2 / 1.2 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| gpt-5.6-sol | True | n/a | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 4 / 20 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| gpt-5.6-terra | True | n/a | n/a | default | 2 / 12 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| grok-4.5 | True | n/a | n/a | default | 2 / 6 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| kimi-k2.7-code | False | capabilities_missing | n/a | default | 0.95 / 4 | 2026-09-08T13:24:49.7627085Z | n/a |
+| kimi-k3 | False | capabilities_missing | n/a | default | 3 / 15 | 2026-09-08T13:24:49.7627085Z | n/a |
+| mai-code-1-flash-picker | True | n/a | n/a | default | 0.75 / 4.5 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| mai-code-1.1-flash | True | n/a | n/a | default | 0.2 / 1.2 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+
+| Model | Source | Exact alias | Effort | Metric | Score | Publication age unknown | Cached | Harness |
+|---|---|---|---|---|---|---|---|---|
+| claude-sonnet-4.6 | liveBench | claude-sonnet-4-6-thinking-auto-medium-effort | medium | instructionFollowing | 63.2208 | False | False | source benchmark harness, not Copilot CLI |
+
+Evidence gaps are grouped by affected profile in [Coverage and exclusions](#coverage-and-exclusions).
+
+</details>
 
 ### quick
 
-- Availability confidence: **verified**
-- Pricing ceilings (per million tokens): input <= $2, output <= $10
-- Incumbent/current model: **claude-haiku-4.5** — admissible: **True** (reasons: none)
-- Exclusions:
+Budget: **hard**, input 2 / output 10 USD per million. Deciding source: n/a.
+Quality leader before hard-budget exclusions: n/a. Family fallback (informational, not a winner): claude-haiku-4.5.
 
-| Model | Reasons | Pricing tier | Input $/M | Output $/M | Capability as-of |
-|---|---|---|---|---|---|
-| claude-fable-5.1 | capabilities_missing | n/a | n/a | n/a | n/a |
-| claude-opus-5 | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 | 25 | 2026-07-30 |
-| claude-opus-4.8 | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 | 25 | 2026-07-30 |
-| claude-opus-4.8-fast | context_unsupported, effort_unsupported, pricing_missing | n/a | n/a | n/a | 2026-07-30 |
-| claude-opus-4.7 | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 | 25 | 2026-07-30 |
-| claude-sonnet-4.6 | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 3 | 15 | 2026-07-30 |
-| gpt-5.6-sol | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 | 30 | 2026-07-30 |
-| gpt-5.6-terra | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 2.5 | 15 | 2026-07-30 |
-| gpt-5.5 | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 | 30 | 2026-07-30 |
-| gpt-5.4 | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 2.5 | 15 | 2026-07-30 |
-| gpt-5.3-codex | pricing_output_exceeds_ceiling | default | 1.75 | 14 | 2026-07-30 |
-| gpt-5-mini | context_unsupported, effort_unsupported | default | 0.25 | 2 | 2026-07-30 |
-| mai-code-1.1-flash | capabilities_missing | n/a | n/a | n/a | n/a |
-| mai-code-1-flash-picker | context_unsupported, effort_unsupported, pricing_missing | n/a | n/a | n/a | 2026-07-30 |
-| gemini-3.8-flash | capabilities_missing | n/a | n/a | n/a | n/a |
-| gemini-3.7-flash | capabilities_missing | n/a | n/a | n/a | n/a |
+<details>
+<summary>Eligibility and exact benchmark evidence</summary>
+
+| Model | Eligible | Exclusions | Advisory warnings | Price tier | Input / output USD per M | Price verified | Capability as-of |
+|---|---|---|---|---|---|---|---|
+| claude-fable-5.1 | False | capabilities_missing, pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-09-08T13:24:49.7627085Z | n/a |
+| claude-haiku-4.5 | True | n/a | n/a | default | 1 / 5 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| claude-opus-4.7 | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-09-08T13:24:49.7627085Z | 2026-07-30 |
+| claude-opus-4.8 | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| claude-opus-4.8-fast | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| claude-opus-5 | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| claude-sonnet-4.6 | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 3 / 15 | 2026-09-08T13:24:49.7627085Z | 2026-07-30 |
+| claude-sonnet-5 | True | n/a | n/a | default | 2 / 10 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| gemini-3.5-flash | True | n/a | n/a | default | 1.5 / 9 | 2026-09-08T13:24:49.7627085Z | 2026-07-30 |
+| gemini-3.6-flash | True | n/a | n/a | default | 0.75 / 3.75 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| gemini-3.7-flash | True | n/a | n/a | default | 0.75 / 3.75 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| gemini-3.8-flash | True | n/a | n/a | default | 0.75 / 3.75 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| gpt-5-mini | False | context_unsupported, effort_unsupported | n/a | default | 0.25 / 2 | 2026-09-08T13:24:49.7627085Z | 2026-07-30 |
+| gpt-5.3-codex | False | pricing_output_exceeds_ceiling | n/a | default | 1.75 / 14 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| gpt-5.4 | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 2.5 / 15 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| gpt-5.4-mini | True | n/a | n/a | default | 0.75 / 4.5 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| gpt-5.5 | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 30 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| gpt-5.6-luna | True | n/a | n/a | default | 0.2 / 1.2 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| gpt-5.6-sol | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 4 / 20 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| gpt-5.6-terra | False | pricing_output_exceeds_ceiling | n/a | default | 2 / 12 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| grok-4.5 | True | n/a | n/a | default | 2 / 6 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| kimi-k2.7-code | False | capabilities_missing | n/a | default | 0.95 / 4 | 2026-09-08T13:24:49.7627085Z | n/a |
+| kimi-k3 | False | capabilities_missing, pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 3 / 15 | 2026-09-08T13:24:49.7627085Z | n/a |
+| mai-code-1-flash-picker | True | n/a | n/a | default | 0.75 / 4.5 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| mai-code-1.1-flash | True | n/a | n/a | default | 0.2 / 1.2 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+
+| Model | Source | Exact alias | Effort | Metric | Score | Publication age unknown | Cached | Harness |
+|---|---|---|---|---|---|---|---|---|
+
+Evidence gaps are grouped by affected profile in [Coverage and exclusions](#coverage-and-exclusions).
+
+</details>
 
 ### default-development
 
-- Availability confidence: **verified**
-- Pricing ceilings (per million tokens): input <= $3, output <= $15
-- Incumbent/current model: **claude-sonnet-5** — admissible: **True** (reasons: none)
-- Exclusions:
+Budget: **advisory**, input 3 / output 15 USD per million. Deciding source: liveBench.
+Quality leader before hard-budget exclusions: claude-sonnet-4.6. Family fallback (informational, not a winner): claude-sonnet-5.
+Pending distinct deciding-source observations: 1 / 2.
 
-| Model | Reasons | Pricing tier | Input $/M | Output $/M | Capability as-of |
-|---|---|---|---|---|---|
-| claude-fable-5.1 | capabilities_missing | n/a | n/a | n/a | n/a |
-| claude-opus-5 | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 | 25 | 2026-07-30 |
-| claude-opus-4.8 | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 | 25 | 2026-07-30 |
-| claude-opus-4.8-fast | context_unsupported, effort_unsupported, pricing_missing | n/a | n/a | n/a | 2026-07-30 |
-| claude-opus-4.7 | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 | 25 | 2026-07-30 |
-| gpt-5.6-sol | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 | 30 | 2026-07-30 |
-| gpt-5.5 | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 | 30 | 2026-07-30 |
-| gpt-5-mini | context_unsupported, effort_unsupported | default | 0.25 | 2 | 2026-07-30 |
-| mai-code-1.1-flash | capabilities_missing | n/a | n/a | n/a | n/a |
-| mai-code-1-flash-picker | context_unsupported, effort_unsupported, pricing_missing | n/a | n/a | n/a | 2026-07-30 |
-| gemini-3.8-flash | capabilities_missing | n/a | n/a | n/a | n/a |
-| gemini-3.7-flash | capabilities_missing | n/a | n/a | n/a | n/a |
+<details>
+<summary>Eligibility and exact benchmark evidence</summary>
+
+| Model | Eligible | Exclusions | Advisory warnings | Price tier | Input / output USD per M | Price verified | Capability as-of |
+|---|---|---|---|---|---|---|---|
+| claude-fable-5.1 | False | capabilities_missing | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 10 / 50 | 2026-09-08T13:24:49.7627085Z | n/a |
+| claude-haiku-4.5 | True | n/a | n/a | default | 1 / 5 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| claude-opus-4.7 | True | n/a | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 / 25 | 2026-09-08T13:24:49.7627085Z | 2026-07-30 |
+| claude-opus-4.8 | True | n/a | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 / 25 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| claude-opus-4.8-fast | True | n/a | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 10 / 50 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| claude-opus-5 | True | n/a | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 / 25 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| claude-sonnet-4.6 | True | n/a | n/a | default | 3 / 15 | 2026-09-08T13:24:49.7627085Z | 2026-07-30 |
+| claude-sonnet-5 | True | n/a | n/a | default | 2 / 10 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| gemini-3.5-flash | True | n/a | n/a | default | 1.5 / 9 | 2026-09-08T13:24:49.7627085Z | 2026-07-30 |
+| gemini-3.6-flash | True | n/a | n/a | default | 0.75 / 3.75 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| gemini-3.7-flash | True | n/a | n/a | default | 0.75 / 3.75 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| gemini-3.8-flash | True | n/a | n/a | default | 0.75 / 3.75 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| gpt-5-mini | False | context_unsupported, effort_unsupported | n/a | default | 0.25 / 2 | 2026-09-08T13:24:49.7627085Z | 2026-07-30 |
+| gpt-5.3-codex | True | n/a | n/a | default | 1.75 / 14 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| gpt-5.4 | True | n/a | n/a | default | 2.5 / 15 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| gpt-5.4-mini | True | n/a | n/a | default | 0.75 / 4.5 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| gpt-5.5 | True | n/a | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 / 30 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| gpt-5.6-luna | True | n/a | n/a | default | 0.2 / 1.2 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| gpt-5.6-sol | True | n/a | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 4 / 20 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| gpt-5.6-terra | True | n/a | n/a | default | 2 / 12 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| grok-4.5 | True | n/a | n/a | default | 2 / 6 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| kimi-k2.7-code | False | capabilities_missing | n/a | default | 0.95 / 4 | 2026-09-08T13:24:49.7627085Z | n/a |
+| kimi-k3 | False | capabilities_missing | n/a | default | 3 / 15 | 2026-09-08T13:24:49.7627085Z | n/a |
+| mai-code-1-flash-picker | True | n/a | n/a | default | 0.75 / 4.5 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| mai-code-1.1-flash | True | n/a | n/a | default | 0.2 / 1.2 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+
+| Model | Source | Exact alias | Effort | Metric | Score | Publication age unknown | Cached | Harness |
+|---|---|---|---|---|---|---|---|---|
+| claude-sonnet-4.6 | liveBench | claude-sonnet-4-6-thinking-auto-medium-effort | medium | coding | 79.2715 | False | False | source benchmark harness, not Copilot CLI |
+
+Evidence gaps are grouped by affected profile in [Coverage and exclusions](#coverage-and-exclusions).
+
+</details>
 
 ### agentic-implementation
 
-- Availability confidence: **verified**
-- Pricing ceilings (per million tokens): input <= $10, output <= $50
-- Incumbent/current model: **gpt-5.3-codex** — admissible: **True** (reasons: none)
-- Exclusions:
+Budget: **advisory**, input 10 / output 50 USD per million. Deciding source: n/a.
+Quality leader before hard-budget exclusions: n/a. Family fallback (informational, not a winner): gpt-5.3-codex.
 
-| Model | Reasons | Pricing tier | Input $/M | Output $/M | Capability as-of |
-|---|---|---|---|---|---|
-| claude-fable-5.1 | capabilities_missing | n/a | n/a | n/a | n/a |
-| claude-opus-4.8-fast | context_unsupported, effort_unsupported, pricing_missing | n/a | n/a | n/a | 2026-07-30 |
-| gpt-5-mini | context_unsupported, effort_unsupported | default | 0.25 | 2 | 2026-07-30 |
-| mai-code-1.1-flash | capabilities_missing | n/a | n/a | n/a | n/a |
-| mai-code-1-flash-picker | context_unsupported, effort_unsupported, pricing_missing | n/a | n/a | n/a | 2026-07-30 |
-| gemini-3.8-flash | capabilities_missing | n/a | n/a | n/a | n/a |
-| gemini-3.7-flash | capabilities_missing | n/a | n/a | n/a | n/a |
+<details>
+<summary>Eligibility and exact benchmark evidence</summary>
+
+| Model | Eligible | Exclusions | Advisory warnings | Price tier | Input / output USD per M | Price verified | Capability as-of |
+|---|---|---|---|---|---|---|---|
+| claude-fable-5.1 | False | capabilities_missing | n/a | default | 10 / 50 | 2026-09-08T13:24:49.7627085Z | n/a |
+| claude-haiku-4.5 | True | n/a | n/a | default | 1 / 5 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| claude-opus-4.7 | True | n/a | n/a | default | 5 / 25 | 2026-09-08T13:24:49.7627085Z | 2026-07-30 |
+| claude-opus-4.8 | True | n/a | n/a | default | 5 / 25 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| claude-opus-4.8-fast | True | n/a | n/a | default | 10 / 50 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| claude-opus-5 | True | n/a | n/a | default | 5 / 25 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| claude-sonnet-4.6 | True | n/a | n/a | default | 3 / 15 | 2026-09-08T13:24:49.7627085Z | 2026-07-30 |
+| claude-sonnet-5 | True | n/a | n/a | default | 2 / 10 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| gemini-3.5-flash | True | n/a | n/a | default | 1.5 / 9 | 2026-09-08T13:24:49.7627085Z | 2026-07-30 |
+| gemini-3.6-flash | True | n/a | n/a | default | 0.75 / 3.75 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| gemini-3.7-flash | True | n/a | n/a | default | 0.75 / 3.75 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| gemini-3.8-flash | True | n/a | n/a | default | 0.75 / 3.75 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| gpt-5-mini | False | context_unsupported, effort_unsupported | n/a | default | 0.25 / 2 | 2026-09-08T13:24:49.7627085Z | 2026-07-30 |
+| gpt-5.3-codex | True | n/a | n/a | default | 1.75 / 14 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| gpt-5.4 | True | n/a | n/a | default | 2.5 / 15 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| gpt-5.4-mini | True | n/a | n/a | default | 0.75 / 4.5 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| gpt-5.5 | True | n/a | n/a | default | 5 / 30 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| gpt-5.6-luna | True | n/a | n/a | default | 0.2 / 1.2 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| gpt-5.6-sol | True | n/a | n/a | default | 4 / 20 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| gpt-5.6-terra | True | n/a | n/a | default | 2 / 12 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| grok-4.5 | True | n/a | n/a | default | 2 / 6 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| kimi-k2.7-code | False | capabilities_missing | n/a | default | 0.95 / 4 | 2026-09-08T13:24:49.7627085Z | n/a |
+| kimi-k3 | False | capabilities_missing | n/a | default | 3 / 15 | 2026-09-08T13:24:49.7627085Z | n/a |
+| mai-code-1-flash-picker | True | n/a | n/a | default | 0.75 / 4.5 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| mai-code-1.1-flash | True | n/a | n/a | default | 0.2 / 1.2 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+
+| Model | Source | Exact alias | Effort | Metric | Score | Publication age unknown | Cached | Harness |
+|---|---|---|---|---|---|---|---|---|
+
+Evidence gaps are grouped by affected profile in [Coverage and exclusions](#coverage-and-exclusions).
+
+</details>
 
 ### deep-reasoning
 
-- Availability confidence: **verified**
-- Pricing ceilings (per million tokens): input <= $10, output <= $45
-- Incumbent/current model: **claude-opus-5** — admissible: **True** (reasons: none)
-- Exclusions:
+Budget: **advisory**, input 10 / output 45 USD per million. Deciding source: n/a.
+Quality leader before hard-budget exclusions: n/a. Family fallback (informational, not a winner): claude-opus-5.
 
-| Model | Reasons | Pricing tier | Input $/M | Output $/M | Capability as-of |
-|---|---|---|---|---|---|
-| claude-fable-5.1 | capabilities_missing | n/a | n/a | n/a | n/a |
-| claude-opus-4.8-fast | context_unsupported, effort_unsupported, pricing_missing | n/a | n/a | n/a | 2026-07-30 |
-| claude-haiku-4.5 | context_unsupported | default | 1 | 5 | 2026-07-30 |
-| gpt-5.4-mini | context_unsupported | default | 0.75 | 4.5 | 2026-07-30 |
-| gpt-5.3-codex | context_unsupported | default | 1.75 | 14 | 2026-07-30 |
-| gpt-5-mini | context_unsupported, effort_unsupported | default | 0.25 | 2 | 2026-07-30 |
-| mai-code-1.1-flash | capabilities_missing | n/a | n/a | n/a | n/a |
-| mai-code-1-flash-picker | context_unsupported, effort_unsupported, pricing_missing | n/a | n/a | n/a | 2026-07-30 |
-| gemini-3.8-flash | capabilities_missing | n/a | n/a | n/a | n/a |
-| gemini-3.7-flash | capabilities_missing | n/a | n/a | n/a | n/a |
+<details>
+<summary>Eligibility and exact benchmark evidence</summary>
+
+| Model | Eligible | Exclusions | Advisory warnings | Price tier | Input / output USD per M | Price verified | Capability as-of |
+|---|---|---|---|---|---|---|---|
+| claude-fable-5.1 | False | capabilities_missing | pricing_output_exceeds_ceiling | default | 10 / 50 | 2026-09-08T13:24:49.7627085Z | n/a |
+| claude-haiku-4.5 | False | context_unsupported | n/a | default | 1 / 5 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| claude-opus-4.7 | True | n/a | n/a | default | 5 / 25 | 2026-09-08T13:24:49.7627085Z | 2026-07-30 |
+| claude-opus-4.8 | True | n/a | n/a | default | 5 / 25 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| claude-opus-4.8-fast | True | n/a | pricing_output_exceeds_ceiling | default | 10 / 50 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| claude-opus-5 | True | n/a | n/a | default | 5 / 25 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| claude-sonnet-4.6 | True | n/a | n/a | default | 3 / 15 | 2026-09-08T13:24:49.7627085Z | 2026-07-30 |
+| claude-sonnet-5 | True | n/a | n/a | default | 2 / 10 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| gemini-3.5-flash | True | n/a | n/a | default | 1.5 / 9 | 2026-09-08T13:24:49.7627085Z | 2026-07-30 |
+| gemini-3.6-flash | True | n/a | n/a | default | 0.75 / 3.75 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| gemini-3.7-flash | True | n/a | n/a | default | 0.75 / 3.75 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| gemini-3.8-flash | True | n/a | n/a | default | 0.75 / 3.75 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| gpt-5-mini | False | context_unsupported, effort_unsupported | n/a | default | 0.25 / 2 | 2026-09-08T13:24:49.7627085Z | 2026-07-30 |
+| gpt-5.3-codex | False | context_unsupported | n/a | default | 1.75 / 14 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| gpt-5.4 | True | n/a | n/a | long_context | 5 / 22.5 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| gpt-5.4-mini | False | context_unsupported | n/a | default | 0.75 / 4.5 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| gpt-5.5 | True | n/a | n/a | long_context | 10 / 45 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| gpt-5.6-luna | True | n/a | n/a | long_context | 0.4 / 1.8 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| gpt-5.6-sol | True | n/a | n/a | long_context | 8 / 30 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| gpt-5.6-terra | True | n/a | n/a | long_context | 4 / 18 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| grok-4.5 | True | n/a | n/a | long_context | 4 / 12 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| kimi-k2.7-code | False | capabilities_missing | n/a | default | 0.95 / 4 | 2026-09-08T13:24:49.7627085Z | n/a |
+| kimi-k3 | False | capabilities_missing | n/a | default | 3 / 15 | 2026-09-08T13:24:49.7627085Z | n/a |
+| mai-code-1-flash-picker | False | context_unsupported | n/a | default | 0.75 / 4.5 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| mai-code-1.1-flash | False | context_unsupported | n/a | default | 0.2 / 1.2 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+
+| Model | Source | Exact alias | Effort | Metric | Score | Publication age unknown | Cached | Harness |
+|---|---|---|---|---|---|---|---|---|
+
+Evidence gaps are grouped by affected profile in [Coverage and exclusions](#coverage-and-exclusions).
+
+</details>
 
 ### review
 
-- Availability confidence: **verified**
-- Pricing ceilings (per million tokens): input <= $5, output <= $30
-- Incumbent/current model: **gpt-5.6-sol** — admissible: **True** (reasons: none)
-- Exclusions:
+Budget: **advisory**, input 5 / output 30 USD per million. Deciding source: liveBench.
+Quality leader before hard-budget exclusions: claude-sonnet-4.6. Family fallback (informational, not a winner): claude-sonnet-5.
+Pending distinct deciding-source observations: 1 / 2.
 
-| Model | Reasons | Pricing tier | Input $/M | Output $/M | Capability as-of |
-|---|---|---|---|---|---|
-| claude-fable-5.1 | capabilities_missing | n/a | n/a | n/a | n/a |
-| claude-opus-4.8-fast | context_unsupported, effort_unsupported, pricing_missing | n/a | n/a | n/a | 2026-07-30 |
-| gpt-5-mini | context_unsupported, effort_unsupported | default | 0.25 | 2 | 2026-07-30 |
-| mai-code-1.1-flash | capabilities_missing | n/a | n/a | n/a | n/a |
-| mai-code-1-flash-picker | context_unsupported, effort_unsupported, pricing_missing | n/a | n/a | n/a | 2026-07-30 |
-| gemini-3.8-flash | capabilities_missing | n/a | n/a | n/a | n/a |
-| gemini-3.7-flash | capabilities_missing | n/a | n/a | n/a | n/a |
+<details>
+<summary>Eligibility and exact benchmark evidence</summary>
+
+| Model | Eligible | Exclusions | Advisory warnings | Price tier | Input / output USD per M | Price verified | Capability as-of |
+|---|---|---|---|---|---|---|---|
+| claude-fable-5.1 | False | capabilities_missing | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 10 / 50 | 2026-09-08T13:24:49.7627085Z | n/a |
+| claude-haiku-4.5 | True | n/a | n/a | default | 1 / 5 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| claude-opus-4.7 | True | n/a | n/a | default | 5 / 25 | 2026-09-08T13:24:49.7627085Z | 2026-07-30 |
+| claude-opus-4.8 | True | n/a | n/a | default | 5 / 25 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| claude-opus-4.8-fast | True | n/a | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 10 / 50 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| claude-opus-5 | True | n/a | n/a | default | 5 / 25 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| claude-sonnet-4.6 | True | n/a | n/a | default | 3 / 15 | 2026-09-08T13:24:49.7627085Z | 2026-07-30 |
+| claude-sonnet-5 | True | n/a | n/a | default | 2 / 10 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| gemini-3.5-flash | True | n/a | n/a | default | 1.5 / 9 | 2026-09-08T13:24:49.7627085Z | 2026-07-30 |
+| gemini-3.6-flash | True | n/a | n/a | default | 0.75 / 3.75 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| gemini-3.7-flash | True | n/a | n/a | default | 0.75 / 3.75 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| gemini-3.8-flash | True | n/a | n/a | default | 0.75 / 3.75 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| gpt-5-mini | False | context_unsupported, effort_unsupported | n/a | default | 0.25 / 2 | 2026-09-08T13:24:49.7627085Z | 2026-07-30 |
+| gpt-5.3-codex | True | n/a | n/a | default | 1.75 / 14 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| gpt-5.4 | True | n/a | n/a | default | 2.5 / 15 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| gpt-5.4-mini | True | n/a | n/a | default | 0.75 / 4.5 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| gpt-5.5 | True | n/a | n/a | default | 5 / 30 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| gpt-5.6-luna | True | n/a | n/a | default | 0.2 / 1.2 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| gpt-5.6-sol | True | n/a | n/a | default | 4 / 20 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| gpt-5.6-terra | True | n/a | n/a | default | 2 / 12 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| grok-4.5 | True | n/a | n/a | default | 2 / 6 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| kimi-k2.7-code | False | capabilities_missing | n/a | default | 0.95 / 4 | 2026-09-08T13:24:49.7627085Z | n/a |
+| kimi-k3 | False | capabilities_missing | n/a | default | 3 / 15 | 2026-09-08T13:24:49.7627085Z | n/a |
+| mai-code-1-flash-picker | True | n/a | n/a | default | 0.75 / 4.5 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| mai-code-1.1-flash | True | n/a | n/a | default | 0.2 / 1.2 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+
+| Model | Source | Exact alias | Effort | Metric | Score | Publication age unknown | Cached | Harness |
+|---|---|---|---|---|---|---|---|---|
+| claude-sonnet-4.6 | liveBench | claude-sonnet-4-6-thinking-auto-medium-effort | medium | reasoning | 84.7693 | False | False | source benchmark harness, not Copilot CLI |
+
+Evidence gaps are grouped by affected profile in [Coverage and exclusions](#coverage-and-exclusions).
+
+</details>
 
 ### visual-ui
 
-- Availability confidence: **verified**
-- Pricing ceilings (per million tokens): input <= $3, output <= $15
-- Incumbent/current model: **claude-sonnet-5** — admissible: **False** (reasons: vision_unknown)
-- Exclusions:
+Budget: **advisory**, input 3 / output 15 USD per million. Deciding source: liveBench.
+Quality leader before hard-budget exclusions: claude-sonnet-4.6. Family fallback (informational, not a winner): claude-sonnet-5.
+Pending distinct deciding-source observations: 1 / 2.
 
-| Model | Reasons | Pricing tier | Input $/M | Output $/M | Capability as-of |
-|---|---|---|---|---|---|
-| claude-fable-5.1 | capabilities_missing | n/a | n/a | n/a | n/a |
-| claude-opus-5 | vision_unknown, pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 | 25 | 2026-07-30 |
-| claude-opus-4.8 | vision_unknown, pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 | 25 | 2026-07-30 |
-| claude-opus-4.8-fast | vision_unknown, context_unsupported, effort_unsupported, pricing_missing | n/a | n/a | n/a | 2026-07-30 |
-| claude-opus-4.7 | vision_unknown, pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 | 25 | 2026-07-30 |
-| claude-haiku-4.5 | vision_unknown | default | 1 | 5 | 2026-07-30 |
-| gpt-5.6-sol | vision_unknown, pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 | 30 | 2026-07-30 |
-| gpt-5.6-terra | vision_unknown | default | 2.5 | 15 | 2026-07-30 |
-| gpt-5.6-luna | vision_unknown | default | 1 | 6 | 2026-07-30 |
-| gpt-5.5 | vision_unknown, pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 | 30 | 2026-07-30 |
-| gpt-5.4 | vision_unknown | default | 2.5 | 15 | 2026-07-30 |
-| gpt-5.4-mini | vision_unknown | default | 0.75 | 4.5 | 2026-07-30 |
-| gpt-5.3-codex | vision_unknown | default | 1.75 | 14 | 2026-07-30 |
-| gpt-5-mini | context_unsupported, effort_unsupported | default | 0.25 | 2 | 2026-07-30 |
-| mai-code-1.1-flash | capabilities_missing | n/a | n/a | n/a | n/a |
-| mai-code-1-flash-picker | vision_unknown, context_unsupported, effort_unsupported, pricing_missing | n/a | n/a | n/a | 2026-07-30 |
-| gemini-3.8-flash | capabilities_missing | n/a | n/a | n/a | n/a |
-| gemini-3.7-flash | capabilities_missing | n/a | n/a | n/a | n/a |
-| gemini-3.6-flash | vision_unknown | default | 1.5 | 7.5 | 2026-07-30 |
-| gemini-3.5-flash | vision_unknown | default | 1.5 | 9 | 2026-07-30 |
+<details>
+<summary>Eligibility and exact benchmark evidence</summary>
+
+| Model | Eligible | Exclusions | Advisory warnings | Price tier | Input / output USD per M | Price verified | Capability as-of |
+|---|---|---|---|---|---|---|---|
+| claude-fable-5.1 | False | capabilities_missing | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 10 / 50 | 2026-09-08T13:24:49.7627085Z | n/a |
+| claude-haiku-4.5 | False | vision_unknown | n/a | default | 1 / 5 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| claude-opus-4.7 | False | vision_unknown | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 / 25 | 2026-09-08T13:24:49.7627085Z | 2026-07-30 |
+| claude-opus-4.8 | False | vision_unknown | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 / 25 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| claude-opus-4.8-fast | False | vision_unknown | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 10 / 50 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| claude-opus-5 | True | n/a | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 / 25 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| claude-sonnet-4.6 | True | n/a | n/a | default | 3 / 15 | 2026-09-08T13:24:49.7627085Z | 2026-07-30 |
+| claude-sonnet-5 | True | n/a | n/a | default | 2 / 10 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| gemini-3.5-flash | False | vision_unknown | n/a | default | 1.5 / 9 | 2026-09-08T13:24:49.7627085Z | 2026-07-30 |
+| gemini-3.6-flash | False | vision_unknown | n/a | default | 0.75 / 3.75 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| gemini-3.7-flash | False | vision_unknown | n/a | default | 0.75 / 3.75 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| gemini-3.8-flash | True | n/a | n/a | default | 0.75 / 3.75 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| gpt-5-mini | False | context_unsupported, effort_unsupported | n/a | default | 0.25 / 2 | 2026-09-08T13:24:49.7627085Z | 2026-07-30 |
+| gpt-5.3-codex | False | vision_unknown | n/a | default | 1.75 / 14 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| gpt-5.4 | False | vision_unknown | n/a | default | 2.5 / 15 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| gpt-5.4-mini | False | vision_unknown | n/a | default | 0.75 / 4.5 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| gpt-5.5 | False | vision_unknown | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 / 30 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| gpt-5.6-luna | False | vision_unknown | n/a | default | 0.2 / 1.2 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| gpt-5.6-sol | False | vision_unknown | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 4 / 20 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| gpt-5.6-terra | False | vision_unknown | n/a | default | 2 / 12 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| grok-4.5 | False | vision_unknown | n/a | default | 2 / 6 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| kimi-k2.7-code | False | capabilities_missing | n/a | default | 0.95 / 4 | 2026-09-08T13:24:49.7627085Z | n/a |
+| kimi-k3 | False | capabilities_missing | n/a | default | 3 / 15 | 2026-09-08T13:24:49.7627085Z | n/a |
+| mai-code-1-flash-picker | False | vision_unknown | n/a | default | 0.75 / 4.5 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| mai-code-1.1-flash | False | vision_unknown | n/a | default | 0.2 / 1.2 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+
+| Model | Source | Exact alias | Effort | Metric | Score | Publication age unknown | Cached | Harness |
+|---|---|---|---|---|---|---|---|---|
+| claude-sonnet-4.6 | liveBench | claude-sonnet-4-6-thinking-auto-medium-effort | medium | coding | 79.2715 | False | False | source benchmark harness, not Copilot CLI |
+
+Evidence gaps are grouped by affected profile in [Coverage and exclusions](#coverage-and-exclusions).
+
+</details>
 
 ### mechanical
 
-- Availability confidence: **verified**
-- Pricing ceilings (per million tokens): input <= $2, output <= $10
-- Incumbent/current model: **claude-haiku-4.5** — admissible: **True** (reasons: none)
-- Exclusions:
+Budget: **hard**, input 2 / output 10 USD per million. Deciding source: n/a.
+Quality leader before hard-budget exclusions: n/a. Family fallback (informational, not a winner): claude-haiku-4.5.
 
-| Model | Reasons | Pricing tier | Input $/M | Output $/M | Capability as-of |
-|---|---|---|---|---|---|
-| claude-fable-5.1 | capabilities_missing | n/a | n/a | n/a | n/a |
-| claude-opus-5 | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 | 25 | 2026-07-30 |
-| claude-opus-4.8 | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 | 25 | 2026-07-30 |
-| claude-opus-4.8-fast | context_unsupported, effort_unsupported, pricing_missing | n/a | n/a | n/a | 2026-07-30 |
-| claude-opus-4.7 | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 | 25 | 2026-07-30 |
-| claude-sonnet-4.6 | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 3 | 15 | 2026-07-30 |
-| gpt-5.6-sol | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 | 30 | 2026-07-30 |
-| gpt-5.6-terra | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 2.5 | 15 | 2026-07-30 |
-| gpt-5.5 | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 | 30 | 2026-07-30 |
-| gpt-5.4 | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 2.5 | 15 | 2026-07-30 |
-| gpt-5.3-codex | pricing_output_exceeds_ceiling | default | 1.75 | 14 | 2026-07-30 |
-| gpt-5-mini | context_unsupported, effort_unsupported | default | 0.25 | 2 | 2026-07-30 |
-| mai-code-1.1-flash | capabilities_missing | n/a | n/a | n/a | n/a |
-| mai-code-1-flash-picker | context_unsupported, effort_unsupported, pricing_missing | n/a | n/a | n/a | 2026-07-30 |
-| gemini-3.8-flash | capabilities_missing | n/a | n/a | n/a | n/a |
-| gemini-3.7-flash | capabilities_missing | n/a | n/a | n/a | n/a |
+<details>
+<summary>Eligibility and exact benchmark evidence</summary>
+
+| Model | Eligible | Exclusions | Advisory warnings | Price tier | Input / output USD per M | Price verified | Capability as-of |
+|---|---|---|---|---|---|---|---|
+| claude-fable-5.1 | False | capabilities_missing, pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-09-08T13:24:49.7627085Z | n/a |
+| claude-haiku-4.5 | True | n/a | n/a | default | 1 / 5 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| claude-opus-4.7 | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-09-08T13:24:49.7627085Z | 2026-07-30 |
+| claude-opus-4.8 | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| claude-opus-4.8-fast | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| claude-opus-5 | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| claude-sonnet-4.6 | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 3 / 15 | 2026-09-08T13:24:49.7627085Z | 2026-07-30 |
+| claude-sonnet-5 | True | n/a | n/a | default | 2 / 10 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| gemini-3.5-flash | True | n/a | n/a | default | 1.5 / 9 | 2026-09-08T13:24:49.7627085Z | 2026-07-30 |
+| gemini-3.6-flash | True | n/a | n/a | default | 0.75 / 3.75 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| gemini-3.7-flash | True | n/a | n/a | default | 0.75 / 3.75 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| gemini-3.8-flash | True | n/a | n/a | default | 0.75 / 3.75 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| gpt-5-mini | False | context_unsupported, effort_unsupported | n/a | default | 0.25 / 2 | 2026-09-08T13:24:49.7627085Z | 2026-07-30 |
+| gpt-5.3-codex | False | pricing_output_exceeds_ceiling | n/a | default | 1.75 / 14 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| gpt-5.4 | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 2.5 / 15 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| gpt-5.4-mini | True | n/a | n/a | default | 0.75 / 4.5 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| gpt-5.5 | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 30 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| gpt-5.6-luna | True | n/a | n/a | default | 0.2 / 1.2 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| gpt-5.6-sol | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 4 / 20 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| gpt-5.6-terra | False | pricing_output_exceeds_ceiling | n/a | default | 2 / 12 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| grok-4.5 | True | n/a | n/a | default | 2 / 6 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| kimi-k2.7-code | False | capabilities_missing | n/a | default | 0.95 / 4 | 2026-09-08T13:24:49.7627085Z | n/a |
+| kimi-k3 | False | capabilities_missing, pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 3 / 15 | 2026-09-08T13:24:49.7627085Z | n/a |
+| mai-code-1-flash-picker | True | n/a | n/a | default | 0.75 / 4.5 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| mai-code-1.1-flash | True | n/a | n/a | default | 0.2 / 1.2 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+
+| Model | Source | Exact alias | Effort | Metric | Score | Publication age unknown | Cached | Harness |
+|---|---|---|---|---|---|---|---|---|
+
+Evidence gaps are grouped by affected profile in [Coverage and exclusions](#coverage-and-exclusions).
+
+</details>
 
 ### triage
 
-- Availability confidence: **verified**
-- Pricing ceilings (per million tokens): input <= $2, output <= $10
-- Incumbent/current model: **claude-sonnet-5** — admissible: **True** (reasons: none)
-- Exclusions:
+Budget: **hard**, input 2 / output 10 USD per million. Deciding source: n/a.
+Quality leader before hard-budget exclusions: n/a. Family fallback (informational, not a winner): claude-sonnet-5.
 
-| Model | Reasons | Pricing tier | Input $/M | Output $/M | Capability as-of |
-|---|---|---|---|---|---|
-| claude-fable-5.1 | capabilities_missing | n/a | n/a | n/a | n/a |
-| claude-opus-5 | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 | 25 | 2026-07-30 |
-| claude-opus-4.8 | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 | 25 | 2026-07-30 |
-| claude-opus-4.8-fast | context_unsupported, effort_unsupported, pricing_missing | n/a | n/a | n/a | 2026-07-30 |
-| claude-opus-4.7 | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 | 25 | 2026-07-30 |
-| claude-sonnet-4.6 | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 3 | 15 | 2026-07-30 |
-| gpt-5.6-sol | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 | 30 | 2026-07-30 |
-| gpt-5.6-terra | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 2.5 | 15 | 2026-07-30 |
-| gpt-5.5 | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 5 | 30 | 2026-07-30 |
-| gpt-5.4 | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | default | 2.5 | 15 | 2026-07-30 |
-| gpt-5.3-codex | pricing_output_exceeds_ceiling | default | 1.75 | 14 | 2026-07-30 |
-| gpt-5-mini | context_unsupported, effort_unsupported | default | 0.25 | 2 | 2026-07-30 |
-| mai-code-1.1-flash | capabilities_missing | n/a | n/a | n/a | n/a |
-| mai-code-1-flash-picker | context_unsupported, effort_unsupported, pricing_missing | n/a | n/a | n/a | 2026-07-30 |
-| gemini-3.8-flash | capabilities_missing | n/a | n/a | n/a | n/a |
-| gemini-3.7-flash | capabilities_missing | n/a | n/a | n/a | n/a |
+<details>
+<summary>Eligibility and exact benchmark evidence</summary>
 
-## External model ranking snapshot
+| Model | Eligible | Exclusions | Advisory warnings | Price tier | Input / output USD per M | Price verified | Capability as-of |
+|---|---|---|---|---|---|---|---|
+| claude-fable-5.1 | False | capabilities_missing, pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-09-08T13:24:49.7627085Z | n/a |
+| claude-haiku-4.5 | True | n/a | n/a | default | 1 / 5 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| claude-opus-4.7 | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-09-08T13:24:49.7627085Z | 2026-07-30 |
+| claude-opus-4.8 | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| claude-opus-4.8-fast | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| claude-opus-5 | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| claude-sonnet-4.6 | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 3 / 15 | 2026-09-08T13:24:49.7627085Z | 2026-07-30 |
+| claude-sonnet-5 | True | n/a | n/a | default | 2 / 10 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| gemini-3.5-flash | True | n/a | n/a | default | 1.5 / 9 | 2026-09-08T13:24:49.7627085Z | 2026-07-30 |
+| gemini-3.6-flash | True | n/a | n/a | default | 0.75 / 3.75 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| gemini-3.7-flash | True | n/a | n/a | default | 0.75 / 3.75 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| gemini-3.8-flash | True | n/a | n/a | default | 0.75 / 3.75 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| gpt-5-mini | False | context_unsupported, effort_unsupported | n/a | default | 0.25 / 2 | 2026-09-08T13:24:49.7627085Z | 2026-07-30 |
+| gpt-5.3-codex | False | pricing_output_exceeds_ceiling | n/a | default | 1.75 / 14 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| gpt-5.4 | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 2.5 / 15 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| gpt-5.4-mini | True | n/a | n/a | default | 0.75 / 4.5 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| gpt-5.5 | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 30 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| gpt-5.6-luna | True | n/a | n/a | default | 0.2 / 1.2 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| gpt-5.6-sol | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 4 / 20 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| gpt-5.6-terra | False | pricing_output_exceeds_ceiling | n/a | default | 2 / 12 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| grok-4.5 | True | n/a | n/a | default | 2 / 6 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| kimi-k2.7-code | False | capabilities_missing | n/a | default | 0.95 / 4 | 2026-09-08T13:24:49.7627085Z | n/a |
+| kimi-k3 | False | capabilities_missing, pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 3 / 15 | 2026-09-08T13:24:49.7627085Z | n/a |
+| mai-code-1-flash-picker | True | n/a | n/a | default | 0.75 / 4.5 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
+| mai-code-1.1-flash | True | n/a | n/a | default | 0.2 / 1.2 | 2026-09-08T13:24:49.7627085Z | 2026-09-08 |
 
-- Status: **ok**
-- Stale: **false**
-- Fallback used: **false**
-- Note: Ranking buckets generated from live source data.
-- Artificial Analysis URL: https://artificialanalysis.ai/api/v2/data/llms/models
-- Artificial Analysis Coding Agents URL: https://artificialanalysis.ai/agents/coding-agents
-- LiveBench URL: https://github.com/LiveBench/new-livebench/tree/main/public
-- Attribution: Artificial Analysis benchmark data from https://artificialanalysis.ai
-- Artificial Analysis source date: 
-- Artificial Analysis Coding Agent source date: n/a
-- LiveBench source date: 2026-06-25
-- Artificial Analysis fetched at (UTC): 2026-09-08T07:18:32.0309252Z
-- Artificial Analysis Coding Agents fetched at (UTC): 2026-09-08T07:18:33.7965525Z
-- LiveBench fetched at (UTC): 2026-09-08T07:18:33.9294034Z
+| Model | Source | Exact alias | Effort | Metric | Score | Publication age unknown | Cached | Harness |
+|---|---|---|---|---|---|---|---|---|
 
-> External rankings can auto-apply only after strict two-run consensus; verified availability, capabilities, pricing, and benchmark quality govern promotion, and family preferences are baseline-only.
+Evidence gaps are grouped by affected profile in [Coverage and exclusions](#coverage-and-exclusions).
 
-| Model | AA Intelligence | AA Coding | AA Coding Agent | LB Coding | LB Agentic Coding | LB Reasoning | LB Instruction Following | LB Cost | LB Cost Bucket |
-|---|---|---|---|---|---|---|---|---|---|
-| claude-sonnet-5 | competitive | competitive | n/a | competitive | top | competitive | competitive | 0.5134 | lagging |
-| claude-fable-5.1 | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a |
-| claude-opus-5 | top | top | competitive | competitive | top | top | lagging | 0.7067 | lagging |
-| claude-opus-4.8 | top | competitive | n/a | competitive | lagging | competitive | top | 0.9858 | lagging |
-| claude-opus-4.8-fast | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a |
-| claude-opus-4.7 | n/a | n/a | n/a | top | competitive | lagging | competitive | 0.5282 | lagging |
-| claude-sonnet-4.6 | n/a | n/a | n/a | lagging | lagging | lagging | lagging | 0.3062 | top |
-| claude-haiku-4.5 | lagging | lagging | n/a | n/a | n/a | n/a | n/a | n/a | n/a |
-| gpt-5.6-sol | top | top | n/a | top | top | top | top | 0.507 | competitive |
-| gpt-5.6-terra | competitive | top | n/a | lagging | top | top | competitive | 0.3437 | top |
-| gpt-5.6-luna | lagging | lagging | n/a | top | lagging | lagging | lagging | 0.1677 | top |
-| gpt-5.5 | n/a | n/a | n/a | top | competitive | top | top | 0.4356 | competitive |
-| gpt-5.4 | n/a | n/a | n/a | lagging | competitive | competitive | top | 0.3874 | competitive |
-| gpt-5.4-mini | n/a | n/a | n/a | lagging | lagging | lagging | lagging | 0.3343 | top |
-| gpt-5.3-codex | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a |
-| gpt-5-mini | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a |
-| mai-code-1.1-flash | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a |
-| mai-code-1-flash-picker | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a |
-| gemini-3.8-flash | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a |
-| gemini-3.7-flash | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a |
-| gemini-3.6-flash | lagging | lagging | n/a | n/a | n/a | n/a | n/a | n/a | n/a |
-| gemini-3.5-flash | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a |
+</details>

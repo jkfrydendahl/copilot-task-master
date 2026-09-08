@@ -1,4 +1,4 @@
-$script:CopilotModelIdPattern = '"(claude-[\w.\-]+|gpt-[\w.\-]+|gemini-[\w.\-]+|mai-[\w.\-]+)"'
+$script:CopilotModelIdPattern = '"(claude-[\w.\-]+|gpt-[\w.\-]+|gemini-[\w.\-]+|mai-[\w.\-]+|grok-[\w.\-]+|kimi-[\w.\-]+)"'
 
 function Get-CopilotModelIdsFromHelpText {
     [OutputType([string[]])]

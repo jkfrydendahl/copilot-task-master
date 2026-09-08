@@ -1,228 +1,100 @@
 Set-StrictMode -Version Latest
+. (Join-Path $PSScriptRoot "model-data-common.ps1")
 
-# Pure verdict engine: given a model id, a profile key, discovery/capability
-# facts, and profile requirements, decides whether a model is *admissible*
-# for benchmark promotion / active-override retention, and returns every
-# applicable reason code plus resolved pricing/capability details.
-#
-# No I/O, no environment reads, no globals — everything needed is passed in
-# by the caller so this can be unit tested in isolation and reused by both
-# the consensus candidate search and active-override revalidation.
 
-function Get-AdmissibilityMember {
-    param($InputObject, [Parameter(Mandatory = $true)][string]$Name)
-    if ($null -eq $InputObject) { return $null }
-    if ($InputObject -is [System.Collections.IDictionary]) {
-        if ($InputObject.Contains($Name)) { return $InputObject[$Name] }
-        return $null
-    }
-    $prop = $InputObject.PSObject.Properties[$Name]
-    if ($null -eq $prop) { return $null }
-    return $prop.Value
-}
 
-function Test-AdmissibilityHasMember {
-    param($InputObject, [Parameter(Mandatory = $true)][string]$Name)
-    if ($null -eq $InputObject) { return $false }
-    if ($InputObject -is [System.Collections.IDictionary]) { return $InputObject.Contains($Name) }
-    return $null -ne $InputObject.PSObject.Properties[$Name]
-}
+
 
 function Get-ModelAdmissibilityVerdict {
-    [OutputType([pscustomobject])]
     param(
-        [Parameter(Mandatory = $true)][string]$ModelId,
-        [Parameter(Mandatory = $true)][string]$ProfileKey,
-        [Parameter(Mandatory = $true)][bool]$AvailabilityVerified,
+        [Parameter(Mandatory)][string]$ModelId,
+        [Parameter(Mandatory)][string]$ProfileKey,
+        [Parameter(Mandatory)][bool]$AvailabilityVerified,
         [string[]]$Denylist = @(),
         [string[]]$AvailableModels = @(),
         $CapabilityRecord = $null,
-        [Parameter(Mandatory = $true)]$ProfileRequirement,
-        [Parameter(Mandatory = $true)][string]$ProfileContextTier,
-        [Parameter(Mandatory = $true)][string]$ProfileEffort,
+        $PricingRecord = $null,
+        [Parameter(Mandatory)]$ProfileRequirement,
+        [Parameter(Mandatory)][string]$ProfileContextTier,
+        [Parameter(Mandatory)][string]$ProfileEffort,
         [int]$CapabilityFreshnessDays = 60,
-        [datetime]$NowUtc = ((Get-Date).ToUniversalTime())
+        [int]$PricingFreshnessDays = 45,
+        [datetime]$NowUtc = [datetime]::UtcNow
     )
+    $reasons = [System.Collections.Generic.List[string]]::new()
+    $warnings = [System.Collections.Generic.List[string]]::new()
+    if ($Denylist -contains $ModelId) { $reasons.Add("denylisted") }
+    if ($AvailableModels -notcontains $ModelId) { $reasons.Add("not_available") }
+    if (-not $AvailabilityVerified) { $reasons.Add("unverified_availability_freezes_promotion") }
+    $cliCompatible = $AvailabilityVerified -and $AvailableModels -contains $ModelId
+    if ((Get-ObjectMemberValue $ProfileRequirement "requiresCliAgent") -and -not $cliCompatible) { $reasons.Add("cli_agent_incompatible") }
 
-    $reasonCodes = New-Object System.Collections.Generic.List[string]
-
-    if ($Denylist -contains $ModelId) {
-        $reasonCodes.Add("denylisted")
-    }
-    if ($AvailableModels -notcontains $ModelId) {
-        $reasonCodes.Add("not_available")
-    }
-    if (-not $AvailabilityVerified) {
-        $reasonCodes.Add("unverified_availability_freezes_promotion")
-    }
-
-    # Rule 2 (capability catalog must not assert guessed facts): CLI-agent
-    # compatibility is derived from this run's own verified live availability
-    # surface (AvailableModels + AvailabilityVerified), never from a static
-    # catalog claim -- a catalog can't independently verify what the CLI
-    # currently exposes, but this run's own discovery already can.
-    $requiresCliAgent = [bool](Get-AdmissibilityMember -InputObject $ProfileRequirement -Name "requiresCliAgent")
-    $verifiedCliAgentPresence = $AvailabilityVerified -and ($AvailableModels -contains $ModelId)
-    if ($requiresCliAgent -and -not $verifiedCliAgentPresence) {
-        $reasonCodes.Add("cli_agent_incompatible")
+    if ($null -eq $CapabilityRecord) { $reasons.Add("capabilities_missing") }
+    else {
+        if (-not (Test-ModelDataFresh (Get-ObjectMemberValue $CapabilityRecord "asOf") $CapabilityFreshnessDays $NowUtc)) { $reasons.Add("capabilities_stale") }
+        if (Get-ObjectMemberValue $ProfileRequirement "requiresVision") {
+            $vision = Get-ObjectMemberValue $CapabilityRecord "vision"
+            if ($null -eq $vision) { $reasons.Add("vision_unknown") }
+            elseif ($vision -ne $true) { $reasons.Add("vision_unsupported") }
+        }
+        if (@(Get-ObjectMemberValue $CapabilityRecord "supportedContexts") -notcontains $ProfileContextTier) { $reasons.Add("context_unsupported") }
+        if ((Get-ObjectMemberValue $CapabilityRecord "effortMode") -ne "unsupported" -and
+            @(Get-ObjectMemberValue $CapabilityRecord "supportedEfforts") -notcontains $ProfileEffort) { $reasons.Add("effort_unsupported") }
     }
 
-    $pricingResult = $null
-    $capabilitiesResult = $null
-
-    if ($null -eq $CapabilityRecord) {
-        $reasonCodes.Add("capabilities_missing")
-    } else {
-        $asOfRaw = Get-AdmissibilityMember -InputObject $CapabilityRecord -Name "asOf"
-        $isStale = $false
-        if (-not [string]::IsNullOrWhiteSpace([string]$asOfRaw)) {
-            try {
-                $asOf = [datetime]::Parse([string]$asOfRaw, [System.Globalization.CultureInfo]::InvariantCulture)
-                $isStale = ($NowUtc - $asOf.ToUniversalTime()).TotalDays -gt $CapabilityFreshnessDays
-            } catch {
-                $isStale = $true
-            }
-        } else {
-            $isStale = $true
-        }
-        if ($isStale) { $reasonCodes.Add("capabilities_stale") }
-
-        $pricingUnavailableFlag = [bool](Get-AdmissibilityMember -InputObject $CapabilityRecord -Name "pricingUnavailable")
-
-        $requiresVision = [bool](Get-AdmissibilityMember -InputObject $ProfileRequirement -Name "requiresVision")
-        if ($requiresVision) {
-            $vision = Get-AdmissibilityMember -InputObject $CapabilityRecord -Name "vision"
-            if ($null -eq $vision) {
-                $reasonCodes.Add("vision_unknown")
-            } elseif ($vision -ne $true) {
-                $reasonCodes.Add("vision_unsupported")
-            }
-        }
-
-        $supportedContexts = @(Get-AdmissibilityMember -InputObject $CapabilityRecord -Name "supportedContexts")
-        if ($supportedContexts -notcontains $ProfileContextTier) {
-            $reasonCodes.Add("context_unsupported")
-        }
-
-        # effortMode="unsupported" (e.g. claude-haiku-4.5) means the model's
-        # own CLI surface does not accept an --effort flag at all -- this is
-        # not the same fact as "doesn't support this particular effort
-        # level". It is admissible for any profile-configured effort value
-        # as long as the launcher safely omits the flag for such models (see
-        # scripts/model-launch-args.ps1 / Get-CopilotLaunchModelArgs, which
-        # is unit-tested against this exact convention). Models without this
-        # marker (or with effortMode="supported") are still gated by their
-        # supportedEfforts list as before.
-        $effortMode = [string](Get-AdmissibilityMember -InputObject $CapabilityRecord -Name "effortMode")
-        $supportedEfforts = @(Get-AdmissibilityMember -InputObject $CapabilityRecord -Name "supportedEfforts")
-        if ($effortMode -ne "unsupported") {
-            if ($supportedEfforts -notcontains $ProfileEffort) {
-                $reasonCodes.Add("effort_unsupported")
-            }
-        }
-
-        $capabilitiesResult = [pscustomobject]@{
-            asOf = $asOfRaw
-            vision = Get-AdmissibilityMember -InputObject $CapabilityRecord -Name "vision"
-            supportedContexts = $supportedContexts
-            supportedEfforts = $supportedEfforts
-            effortMode = if ([string]::IsNullOrWhiteSpace($effortMode)) { "supported" } else { $effortMode }
-            cliAgentCompatible = $verifiedCliAgentPresence
-        }
-
-        if ($pricingUnavailableFlag) {
-            $reasonCodes.Add("pricing_missing")
-        } else {
-            $pricing = Get-AdmissibilityMember -InputObject $CapabilityRecord -Name "pricing"
-            if ($null -eq $pricing) {
-                $reasonCodes.Add("pricing_missing")
-            } else {
-                $tierKey = "default"
-                if ($ProfileContextTier -eq "long_context" -and (Test-AdmissibilityHasMember -InputObject $pricing -Name "long_context")) {
-                    $tierKey = "long_context"
+    $pricing = $null
+    if ($null -eq $PricingRecord) { $reasons.Add("pricing_missing") }
+    else {
+        $verifiedAt = Get-ObjectMemberValue $PricingRecord "verifiedAtUtc"
+        if (-not (Test-ModelDataFresh $verifiedAt $PricingFreshnessDays $NowUtc)) { $reasons.Add("pricing_stale") }
+        $tiers = Get-ObjectMemberValue $PricingRecord "tiers"
+        $tier = "default"
+        if ($ProfileContextTier -eq "long_context" -and $null -ne (Get-ObjectMemberValue $tiers "long_context")) { $tier = "long_context" }
+        $price = Get-ObjectMemberValue $tiers $tier
+        if ($ProfileContextTier -eq "long_context" -and $tier -eq "default" -and
+            $null -ne (Get-ObjectMemberValue $price "thresholdInputTokens")) { $price = $null }
+        if ($null -eq $price) { $reasons.Add("pricing_missing") }
+        else {
+            $inputPrice = Get-ObjectMemberValue $price "inputPerMillion"
+            $outputPrice = Get-ObjectMemberValue $price "outputPerMillion"
+            $invalid = @($inputPrice, $outputPrice | Where-Object {
+                ($_ -isnot [double] -and $_ -isnot [int] -and $_ -isnot [long] -and $_ -isnot [decimal]) -or
+                -not [double]::IsFinite([double]$_) -or [double]$_ -lt 0
+            }).Count -gt 0
+            if ($invalid) { $reasons.Add("pricing_invalid") }
+            else {
+                $ceilingInput = [double](Get-ObjectMemberValue $ProfileRequirement "inputCeilingPerMillion")
+                $ceilingOutput = [double](Get-ObjectMemberValue $ProfileRequirement "outputCeilingPerMillion")
+                $budgetReasons = @(
+                    if ($inputPrice -gt $ceilingInput) { "pricing_input_exceeds_ceiling" }
+                    if ($outputPrice -gt $ceilingOutput) { "pricing_output_exceeds_ceiling" }
+                )
+                foreach ($reason in $budgetReasons) {
+                    if (Get-ObjectMemberValue $ProfileRequirement "costSensitive") { $reasons.Add($reason) }
+                    else { $warnings.Add($reason) }
                 }
-                $tierPrice = Get-AdmissibilityMember -InputObject $pricing -Name $tierKey
-                if ($null -eq $tierPrice -and $tierKey -ne "default") {
-                    $tierKey = "default"
-                    $tierPrice = Get-AdmissibilityMember -InputObject $pricing -Name $tierKey
-                }
-                if ($null -eq $tierPrice) {
-                    $reasonCodes.Add("pricing_missing")
-                } else {
-                    $inputPrice = [double](Get-AdmissibilityMember -InputObject $tierPrice -Name "inputPerMillion")
-                    $outputPrice = [double](Get-AdmissibilityMember -InputObject $tierPrice -Name "outputPerMillion")
-                    $ceilingInput = [double](Get-AdmissibilityMember -InputObject $ProfileRequirement -Name "inputCeilingPerMillion")
-                    $ceilingOutput = [double](Get-AdmissibilityMember -InputObject $ProfileRequirement -Name "outputCeilingPerMillion")
-
-                    if ($inputPrice -gt $ceilingInput) { $reasonCodes.Add("pricing_input_exceeds_ceiling") }
-                    if ($outputPrice -gt $ceilingOutput) { $reasonCodes.Add("pricing_output_exceeds_ceiling") }
-
-                    $pricingResult = [pscustomobject]@{
-                        tier = $tierKey
-                        inputPerMillion = $inputPrice
-                        outputPerMillion = $outputPrice
-                        cachedInputPerMillion = Get-AdmissibilityMember -InputObject $tierPrice -Name "cachedInputPerMillion"
-                        ceilingInput = $ceilingInput
-                        ceilingOutput = $ceilingOutput
-                    }
+                $pricing = [pscustomobject]@{
+                    tier = $tier
+                    inputPerMillion = $inputPrice
+                    outputPerMillion = $outputPrice
+                    cachedInputPerMillion = Get-ObjectMemberValue $price "cachedInputPerMillion"
+                    cacheWritePerMillion = Get-ObjectMemberValue $price "cacheWritePerMillion"
+                    thresholdInputTokens = Get-ObjectMemberValue $price "thresholdInputTokens"
+                    verifiedAtUtc = $verifiedAt
+                    ceilingInput = $ceilingInput
+                    ceilingOutput = $ceilingOutput
                 }
             }
         }
     }
-
     return [pscustomobject]@{
         modelId = $ModelId
         profileKey = $ProfileKey
-        admissible = ($reasonCodes.Count -eq 0)
-        reasonCodes = @($reasonCodes)
-        availabilityConfidence = if ($AvailabilityVerified) { "verified" } else { "unverified" }
-        pricing = $pricingResult
-        capabilities = $capabilitiesResult
+        admissible = $reasons.Count -eq 0
+        reasonCodes = @($reasons)
+        warningCodes = @($warnings)
+        pricing = $pricing
+        capabilities = $CapabilityRecord
+        availabilityConfidence = $(if ($AvailabilityVerified) { "verified" } else { "unverified" })
     }
-}
-
-function Test-ActiveOverrideAdmissible {
-    [OutputType([bool])]
-    param(
-        [Parameter(Mandatory = $true)][string]$ProfileKey,
-        [Parameter(Mandatory = $true)][string]$ModelId,
-        [Parameter(Mandatory = $true)][bool]$AvailabilityVerified,
-        [string[]]$Denylist = @(),
-        [string[]]$AvailableModels = @(),
-        $CapabilityRecord = $null,
-        [Parameter(Mandatory = $true)]$ProfileRequirement,
-        [Parameter(Mandatory = $true)][string]$ProfileContextTier,
-        [Parameter(Mandatory = $true)][string]$ProfileEffort,
-        [int]$CapabilityFreshnessDays = 60,
-        [datetime]$NowUtc = ((Get-Date).ToUniversalTime())
-    )
-
-    # Rule: active overrides are revalidated through this same admissibility
-    # engine only on verified discovery runs. On unverified availability
-    # (hardcoded fallback), retain the override unchanged instead of
-    # revoking it based on unverifiable data.
-    if (-not $AvailabilityVerified) { return $true }
-
-    $verdict = Get-ModelAdmissibilityVerdict -ModelId $ModelId -ProfileKey $ProfileKey -AvailabilityVerified $AvailabilityVerified `
-        -Denylist $Denylist -AvailableModels $AvailableModels -CapabilityRecord $CapabilityRecord `
-        -ProfileRequirement $ProfileRequirement -ProfileContextTier $ProfileContextTier -ProfileEffort $ProfileEffort `
-        -CapabilityFreshnessDays $CapabilityFreshnessDays -NowUtc $NowUtc
-    return $verdict.admissible -or (Test-ModelAdmissibilityGrandfatherable -Verdict $verdict)
-}
-
-function Test-ModelAdmissibilityGrandfatherable {
-    [OutputType([bool])]
-    param(
-        [Parameter(Mandatory = $true)]$Verdict
-    )
-
-    if ([bool]$Verdict.admissible) { return $false }
-    $uncertaintyReasons = @(
-        "capabilities_missing",
-        "capabilities_stale",
-        "vision_unknown",
-        "pricing_missing"
-    )
-    $reasons = @($Verdict.reasonCodes)
-    return $reasons.Count -gt 0 -and @($reasons | Where-Object { $uncertaintyReasons -notcontains $_ }).Count -eq 0
 }

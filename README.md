@@ -12,6 +12,8 @@ which get applied to whatever repo you launch into.
 | File | Purpose |
 | ---- | ------- |
 | `Start-CopilotWork.ps1` | Interactive picker: choose a repo **and a task class**, inject master instructions, sync shared skills + generated task-class agents, optionally open VS Code, then launch `copilot` with the right model/effort/context. |
+| `scripts/workbench-setup.ps1` | Personal skills/agent setup and the launch-baseline kickoff message. Importing it performs no setup. |
+| `scripts/workbench-session.ps1` | Session markers, shared usage-record formatting, completion logging and abandoned-session recovery. |
 | `repos.json` | Registry of your working repos (`name`, `type`, `path`). |
 | `task-profiles.json` | Maps each task class → `{ model, effort, context }`. The source of truth for model selection. |
 | `usage-log.csv` | Silent session log: start/end time, duration, repo name+type (created on first run, git-ignored). |
@@ -20,6 +22,12 @@ which get applied to whatever repo you launch into.
 | `.github/config/review-models.md` | Models + `/review` command used for multi-model code review. |
 | `skills/` | Reusable agent skills (slash commands) linked into `~/.copilot/skills` so they're available in every repo. |
 | `LICENSE` | MIT. |
+
+Workflow ownership is explicit: `AGENTS.md` provides the baseline workflow;
+`10-model-selection.instructions.md` owns triage and drift detection;
+`15-orchestrator-mode.instructions.md` owns task-level routing. The launcher supplies the
+selected profile's baseline and points to the applicable rules rather than maintaining another
+copy of those rules in its kickoff text.
 
 ## Usage
 
@@ -99,10 +107,9 @@ discovers the **current valid model list from the CLI itself** (`copilot help co
 if a profile references an unknown model, so the config can't silently go stale. To change models
 for a single session instead, use the in-session `/model` command.
 
-`task-profiles.json` is auto-updated by the monthly workflow (see below) — version bumps within
-a model family are applied automatically. What the workflow does **not** auto-update are the
-family-to-task-class assignments (e.g. "deep-reasoning uses opus-family") — those are deliberate,
-manual decisions that require human judgment against the model comparison page.
+`task-profiles.json` can be updated by the monthly workflow (see below), using quality evidence
+for the profile's actual effort setting. Effort and context remain fixed. Family preferences
+are informational fallbacks, not automatic upgrades or restrictions on benchmark winners.
 
 When tuning profiles, consult the
 [model comparison page](https://docs.github.com/en/copilot/reference/ai-models/model-comparison)
@@ -217,158 +224,107 @@ For token/cost details per session, use the in-session `/usage` command.
 
 ## Automated monthly task-profile review
 
-A scheduled GitHub Actions workflow (`.github/workflows/monthly-task-profile-review.yml`) runs on
-the 1st of each month, **runs the test suite first** (`scripts/test-all.ps1`; the report is never
-generated on a red test run), installs the official `@github/copilot` CLI package on Node.js 22
-for verified model discovery, and opens/updates a PR with:
+The monthly [workflow](.github/workflows/monthly-task-profile-review.yml) runs the existing
+PowerShell suites, discovers available CLI models, refreshes GitHub prices, and evaluates
+configuration-matched benchmarks. It opens/updates the existing review PR with:
 
-- `reports/task-profile-review.md` (summary + applied/suggested changes + admissibility ledger)
-- `task-profiles.json` updated directly in the PR (when suggestions apply)
-- `data/model-ranking-snapshot.json` ranking snapshot + benchmark-consensus state
+- `reports/task-profile-review.md`: current/recommended/applied models, confidence, exclusions, and price changes.
+- `task-profiles.json`: model changes only, after confirmation. Effort and context remain fixed.
+- `data/model-ranking-snapshot.json`: independent source observations and confirmation state.
+- `data/model-pricing-snapshot.json`: independently verified rates and timestamps.
 
-The workflow selects each profile's **baseline** model using family-pattern matching — each task
-class maps to an ordered list of model families (e.g. `deep-reasoning` → opus-family, then
-gpt-flagship-family). Within a family, the newest available version wins automatically. Family
-matching is a **deterministic baseline fallback only** — it is no longer a gate for benchmark
-challengers or active overrides (see "Model admissibility" below). A `$script:ModelDenylist`
-(derived from `config/model-policy.json`) lets you exclude models that appear in the CLI list but
-aren't yet usable (e.g. pulled-back previews); the denylist is always a hard gate.
+Review changes before merging. Run manually with `force_benchmark_consensus` to apply a qualified
+recommendation on its first observation; this bypasses only the confirmation wait, never
+availability, capability, pricing, or evidence requirements.
 
-Changes are applied directly in the PR branch. You still approve/reject at merge time.
+### Pricing and eligibility
 
-- Human review is expected before merge, using:
-  https://docs.github.com/en/copilot/reference/ai-models/model-comparison
-- To block a specific model, add it to `denylist` in `config/model-policy.json`.
-- To change which family a task class prefers as its baseline, edit `config/model-policy.json`
-  (`familyPatterns` / `classPreferences`) or `scripts/model-selection-policy.ps1`.
+Every run fetches [GitHub's Copilot pricing](https://docs.github.com/en/copilot/reference/copilot-billing/models-and-pricing),
+not provider API prices. `config/model-pricing-aliases.json` maps exact published names to CLI IDs.
+The parser stores default/long-context rates, thresholds, cached-input and cache-write rates.
+Missing optional cache prices stay null, not zero. Malformed or ambiguous tables cannot replace
+the last-known-good snapshot. Missing model rows retain their original verification dates;
+unmapped names and failures appear in the report. Configured mappings are never rewritten automatically.
 
-### Model admissibility (capabilities, pricing, and availability gating)
+Prices expire after 45 days, independently of the 60-day capability lifetime. A successful pricing
+refresh never changes `config/model-capabilities.json` or its timestamps. Both freshness limits
+are configured in `config/model-policy.json`. Missing/expired prices block automatic changes,
+even for quality-first profiles.
 
-Whether a model may be **benchmark-promoted or retained as an active override** is decided by a
-single pure verdict engine, `Get-ModelAdmissibilityVerdict` in `scripts/model-admissibility.ps1`,
-fed by two config files and one discovery module:
+Quick, Mechanical and Triage have hard input/output caps of $2/$10 per million tokens.
+Other profiles are quality-first: their existing caps are **advisory warnings**, not exclusions.
+Cost breaks quality ties using a configurable aggregate reference basket of 1M uncached input
+and 100K output tokens across requests within the selected context tier. It excludes caching
+and is **not** a predicted task cost or a single oversized prompt.
 
-- `config/model-policy.json` — denylist, family patterns/preferences (baseline only), per-profile
-  LiveBench category mapping, and per-profile requirements: hard pricing ceilings (input/output
-  per-million-token, using the profile's context tier), `requiresVision`, `requiresCliAgent`.
-- `config/model-capabilities.json` — per-model capability/pricing catalog: `vision`,
-  `supportedContexts`, `supportedEfforts`, an optional `effortMode` (`"unsupported"` means the
-  model's CLI surface does not accept an `--effort` flag at all, e.g. `claude-haiku-4.5` — a fact
-  independent of `supportedEfforts`, which is left empty for such models), per-context-tier pricing
-  (with an optional `long_context` tier), a required `capabilitySource` provenance field (e.g.
-  `copilot-cli-session-model-metadata` or `unknown`), and an `asOf` freshness date. Facts that
-  cannot be verified from GitHub's own docs or this session's authoritative model metadata are
-  marked `null`/empty/unknown rather than guessed — an unknown fact blocks promotion safely instead
-  of assuming it passes. There is deliberately **no** `cliAgentCompatible` field in this catalog —
-  see below.
-- `scripts/model-availability.ps1` — current model discovery (`copilot help config` / `gh copilot
-  help config`, with a hardcoded fallback list). Returns `verified: true` for live CLI/GHE
-  discovery or `verified: false` for the hardcoded fallback.
+Eligibility also requires verified live availability, no denylist match, fresh capability
+metadata, supported effort/context, and verified vision when required. `effortMode: unsupported`
+uses explicitly mapped `none` evidence and preserves the launcher's omission of `--effort`.
+Long-context pricing is used where published; otherwise an unbounded published default rate
+applies. A default rate capped by an input-token threshold cannot price undocumented long-context
+usage. Missing previously known tiers preserve the model's last-known-good rates and timestamp.
+New models with unknown capabilities remain visibly unresolved rather than being guessed.
 
-A model is **admissible** for a profile only if all of the following hold (every failing check is
-reported, not just the first):
+### Evidence and selection
 
-- Not denylisted, and present in the currently discovered model list.
-- Availability was **verified** this run — hardcoded fallback discovery **freezes all automatic
-  profile changes** (both benchmark-consensus and policy-baseline changes; it can still generate
-  baseline/report output) but never revokes an already-active override or the current model, and
-  the review report explicitly calls this freeze out per profile.
-- It has a capability record that is not missing or stale (default freshness threshold: 60 days,
-  configurable per catalog via `freshnessThresholdDays`).
-- If the profile requires vision (`visual-ui`), the model's `vision` fact is `true` — `null`
-  (unknown) or `false` both block, with distinct reason codes. Only the models GitHub's Copilot
-  visuals guidance positively confirms (GPT-5 mini, Claude Sonnet 4.6, Gemini 3.1 Pro) are marked
-  `true`; every other model is left `null` (unknown), never guessed `false`.
-- The model supports the profile's requested context tier (`default`/`long_context`) and effort
-  (or, for `effortMode="unsupported"` models, the profile's stored effort is ignored entirely since
-  the launcher never sends `--effort` for them — see `scripts/model-launch-args.ps1`). Context
-  capability and pricing tiers are separate facts: a model may support `long_context` even where
-  GitHub's pricing table documents no distinct `long_context` price row, in which case default-tier
-  pricing is used for that context request; a `long_context`-only claim is never invented for a
-  model whose catalog entry doesn't list it as a supported context.
-- If the profile requires CLI-agent compatibility (all profiles do), the model is present in
-  **this run's own verified live availability** (`AvailabilityVerified` and `AvailableModels`) —
-  this is computed per run by `scripts/model-admissibility.ps1`, never asserted as a static catalog
-  claim, since only live discovery can confirm what the CLI currently exposes.
-- The model has documented, non-cached pricing for the resolved tier, and both input and output
-  per-million-token prices are `<=` the profile's ceiling (equal to the ceiling passes; cached
-  prices are report-only and never gate).
+`config/model-ranking-aliases.json` maps each model and actual effort to explicit source IDs.
+Max/xhigh scores cannot stand in for medium/low. Update mappings and documented capabilities
+when new variants appear; price refresh alone does not supply those facts.
 
-Active overrides are **revalidated through this same engine** on every run where availability was
-verified. Confirmed incompatibility, unavailability, denylisting, or budget violations revoke an
-override; missing, stale, or unknown capability/pricing facts preserve it until the uncertainty is
-resolved. On an unverified (fallback) run, an active override is retained unchanged.
+- [Artificial Analysis API](https://artificialanalysis.ai/api/v2/data/llms/models) is primary: coding for development/UI/quick/mechanical, intelligence for orchestration/triage/review/reasoning.
+- Agentic implementation first uses matched [AA coding-agent harnesses](https://artificialanalysis.ai/agents/coding-agents), then the explicitly configured AA coding metric. Other agent harnesses are labelled, not presented as Copilot CLI measurements.
+- [LiveBench](https://github.com/LiveBench/new-livebench/tree/main/public) corroborates AA. If no eligible matched AA candidates exist, a matched LiveBench pool can select a labelled fallback. Cost-feed failure does not discard quality data.
+- Single-source evidence is allowed with reduced confidence. AA and LiveBench raw scores are never averaged; disagreement is disclosed, not a veto.
+- Candidates compete independently of the incumbent. Missing incumbent scores do not freeze selection. Family preferences from `config/model-policy.json` are informational fallback suggestions, never benchmark gates or automatic family upgrades.
 
-Automatic family-baseline selection (`Get-PreferredModelForProfilePolicy`) is filtered through this
-same admissibility engine: a family match is never selected as the new baseline unless it is also
-admissible for that profile, and if no admissible baseline candidate exists, the existing current
-model is grandfathered (kept unchanged) rather than silently replaced. Challengers from external
-benchmark consensus still compare against this effective incumbent and may only replace an
-inadmissible incumbent if they pass every quality/consensus rule.
+Retrieval age and publication age are distinct: retrieval must be within 45 days and a known
+publication date within 90 days. Unknown publication dates remain unknown and reduce confidence.
+Source fingerprints identify content observations, not methodology versions. AA API scores are
+not substituted with numbers from its public pages. Benchmarks do not prove performance at the
+profile's requested context length or in the Copilot CLI harness. LLM Stats is not currently an input.
+Fresh sources take priority over cached sources; cached AA cannot block a fresh LiveBench fallback.
+If only cached evidence remains, it may inform the recommendation but cannot authorize a change.
 
-The review report includes a **"Model admissibility"** section per profile with availability
-confidence (and an explicit freeze notice when unverified), the profile's pricing ceilings, the
-**incumbent/current model's own admissibility verdict** (always rendered, even when the incumbent
-is otherwise excluded from the challenger table — e.g. a current model with unknown vision is
-visible here rather than silently omitted), and a table of every excluded model with its full set
-of reason codes (`denylisted`, `not_available`, `unverified_availability_freezes_promotion`,
-`capabilities_missing`, `capabilities_stale`, `cli_agent_incompatible`, `vision_unknown`,
-`vision_unsupported`, `context_unsupported`, `effort_unsupported`, `pricing_missing`,
-`pricing_input_exceeds_ceiling`, `pricing_output_exceeds_ceiling`).
+### Confirmation, retention and reporting
 
-### External benchmark consensus auto-selection
+Two distinct observations from the **deciding source** confirm a change. Repeated content,
+older publications, cached observations, or unrelated source failures do not advance confirmation.
+Changing the deciding source resets pending confirmation. Policy, effort/context and alias
+fingerprints prevent old evidence from authorizing a new configuration.
 
-External benchmarks can auto-select models, but only under strict guardrails:
+Schema migration invalidates legacy confirmation state but keeps current models. If evidence
+is insufficient, the report says **retained**, not **winner**. If no replacement qualifies,
+even an over-budget incumbent is retained with an explicit warning rather than writing an empty
+model ID. Automatic changes remain frozen when availability cannot be verified.
 
-- **Two-run consensus required**: first full fresh qualifying run records pending candidate (`count=1`), second consecutive run with same candidate applies.
-- **Admissibility gates challengers and overrides, not family matching**: a challenger only needs
-  to pass the model-admissibility engine above (denylist, verified availability, capability/pricing
-  facts). It does **not** need to match the task class's baseline family — e.g. a family-mismatched
-  Claude Opus or GPT Sol model can still compete for the `review` profile if it is otherwise
-  admissible. Family/task-family guidance remains the deterministic **baseline** fallback only.
-- **No fuzzy mapping**: source matching is explicit through `config/model-ranking-aliases.json`.
-- **Active override behavior**:
-  - Once applied, benchmark override stays active across later runs unless it becomes inadmissible
-    due to a confirmed hard failure (denylisted, unavailable, unsupported, or over budget) on a
-    verified-availability run. Missing/stale/unknown facts and unverified runs retain it unchanged.
-  - On a full fresh benchmark run, the override is also rechecked against the current policy
-    baseline using the current comparison rules. A legacy override that no longer has comparative
-    evidence—such as Opus against an unscored Codex baseline—is cleared back to that baseline.
-  - Lack of consensus does not auto-revert a still-valid active override.
-  - If policy-preferred model becomes persistent benchmark winner (two runs), override clears and
-    policy ownership resumes.
+The report separates quality leader, recommended candidate, pending change, and model actually
+applied. Repeated exclusions, advisory overruns and variant gaps are grouped with all affected
+profiles. Expandable sections retain the complete per-profile eligibility and benchmark evidence.
+Fresh capability metadata and valid mappings still require maintenance.
 
-Sources:
-- Artificial Analysis Intelligence Index (Data API, free tier):
-  https://artificialanalysis.ai/api/v2/data/llms/models
-- Artificial Analysis Coding Agent Index page (used only for `agentic-implementation`):
-  https://artificialanalysis.ai/agents/coding-agents
-- LiveBench public release files from:
-  https://github.com/LiveBench/new-livebench/tree/main/public
-- GitHub Copilot per-model pricing (hard billing gate, see "Model admissibility" above):
-  https://docs.github.com/en/copilot/reference/copilot-billing/models-and-pricing
+The implementation uses focused modules under `scripts/`:
 
-Guardrails:
-- Quality requirements per profile:
-  - `agentic-implementation`: AA Coding Agent Index + LiveBench `agenticCoding`
-  - `default-development` / `visual-ui` / `quick` / `mechanical`: AA Coding Index + LiveBench `coding`
-  - `orchestrator` / `triage` / `deep-reasoning` / `review`: AA Intelligence Index + LiveBench `instructionFollowing`/`reasoning` (by profile)
-- Challenger must be **top bucket in both required signals**, the incumbent must have comparable
-  raw scores in both signals, and the challenger must score strictly higher in both. Missing
-  incumbent coverage preserves the current model rather than treating absence of evidence as a
-  benchmark loss. The challenger must also pass the model-admissibility engine (capabilities/
-  pricing/context/effort/CLI-agent/vision, per profile requirement).
-- LiveBench `cost_per_successful_task` **no longer blocks** a qualifying challenger — GitHub
-  per-million-token pricing (via model admissibility) is the hard billing gate instead. LiveBench
-  cost is retained only as a **tie-break** after combined quality rank when multiple challengers
-  qualify in the same run.
-- If any required source is partial/fallback/stale, consensus counter does not advance.
+| Module | Responsibility |
+|---|---|
+| `model-data-common.ps1` | Fetch results, JSON/member access, content fingerprints, freshness and atomic JSON writes; no provider imports. |
+| `model-artificial-analysis.ps1`, `model-livebench.ps1` | Provider-specific acquisition and parsing. |
+| `model-pricing-data.ps1` | GitHub pricing acquisition and last-known-good rates. |
+| `model-benchmark-evidence.ps1`, `model-admissibility.ps1` | Configuration-matched evidence and independent eligibility gates. |
+| `model-profile-selection.ps1` | Pure selection and confirmation-state transitions. |
+| `model-review-report.ps1` | Decision summary, grouped coverage and expandable audit detail. |
+| `review-task-profiles.ps1` | End-to-end orchestration. |
 
-Maintenance notes:
-- Artificial Analysis extraction can break if embedded schema/layout changes; failures are reported as unavailable instead of guessed.
-- Keep alias mappings current when new Copilot model IDs appear.
-- Keep `config/model-capabilities.json` current when new Copilot model IDs appear — a model with no
-  catalog entry is safely excluded (`capabilities_missing`) rather than silently guessed at.
+The former combined ranking module and its legacy snapshot/bucket pipeline have been removed.
+Configuration and pricing can load without importing benchmark providers. Run:
+
+```powershell
+.\scripts\test-all.ps1
+.\scripts\review-task-profiles.ps1
+```
+
+The live review needs `ARTIFICIAL_ANALYSIS_API_KEY` (configured as an action secret) for AA's API;
+without it the failure is reported and independently usable sources remain available. The local
+review writes snapshots/report and can update profiles after confirmation; it performs no Git operations.
 
 ## Notes / limitations
 

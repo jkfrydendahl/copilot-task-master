@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "denylist": [
     "claude-fable-5"
   ],
@@ -39,6 +39,7 @@
     "mechanical": "coding"
   },
   "profileArtificialAnalysisMetrics": {
+    "agentic-implementation": "coding",
     "default-development": "coding",
     "visual-ui": "coding",
     "quick": "coding",
@@ -62,6 +63,13 @@
   "consensusPolicy": {
     "staleAfterDays": 45,
     "capabilityFreshnessDays": 60,
-    "liveBenchOnlyFallbackMaxSourceAgeDays": 90
+    "pricingFreshnessDays": 45,
+    "benchmarkMaxPublicationAgeDays": 90
+  },
+  "selectionPolicy": {
+    "version": 1,
+    "referenceInputTokens": 1000000,
+    "referenceOutputTokens": 100000,
+    "referenceUsageDescription": "Aggregate uncached usage across requests within the selected context tier, not a single 1M-token request or predicted task cost. Cache reads/writes are excluded."
   }
 }
