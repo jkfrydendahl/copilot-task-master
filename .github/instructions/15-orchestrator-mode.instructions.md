@@ -21,6 +21,24 @@ instead of forcing manual relaunches.
 
 These agents are generated from `task-profiles.json` into `~/.copilot/agents/*.agent.md`.
 
+## Configuration fidelity
+
+Before each non-trivial delegation, resolve the selected agent's current entry in
+`task-profiles.json` under `COPILOT_CUSTOM_INSTRUCTIONS_DIRS`, and its model's effort support
+from `config/model-capabilities.json`. Use the approved profile, not a recommendation from
+the review report. Pass the task tool's `model`, `reasoning_effort`, and `context_tier`
+arguments explicitly alongside the selected agent key. Omit `reasoning_effort` when the
+capability record says `effortMode: unsupported`.
+
+The generated agent's description includes the expected arguments, but its Markdown body
+does not set execution effort or context. Do not rely on inherited orchestrator settings,
+and do not assume selecting `@agent-key` alone applies the whole profile.
+
+If the profile/capability record is missing or the task tool cannot express its required
+settings, explain the limitation and use a direct launch of that profile instead of silently
+delegating with defaults. Inspect the actual invocation arguments when reporting whether
+the configured model/effort/context was used; prompt text alone is not evidence of execution.
+
 ## Routing behavior
 
 1. Classify the request quickly.

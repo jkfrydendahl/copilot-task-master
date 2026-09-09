@@ -108,8 +108,10 @@ if a profile references an unknown model, so the config can't silently go stale.
 for a single session instead, use the in-session `/model` command.
 
 `task-profiles.json` can be updated by the monthly workflow (see below), using quality evidence
-for the profile's actual effort setting. Effort and context remain fixed. Family preferences
-are informational fallbacks, not automatic upgrades or restrictions on benchmark winners.
+for each candidate's actual configuration. All nine profiles automatically select the cheapest
+qualified model-effort pair within fixed hard price ceilings and preauthorized effort ranges.
+Context remains fixed. Family preferences are informational fallbacks, not restrictions on
+benchmark winners.
 
 When tuning profiles, consult the
 [model comparison page](https://docs.github.com/en/copilot/reference/ai-models/model-comparison)
@@ -130,7 +132,11 @@ agents in `~/.copilot/agents` from `task-profiles.json`:
 - `mechanical.agent.md`
 
 These agent profiles pin the class model in frontmatter (`model: ...`), so the orchestrator can
-route non-trivial work to the best `@agent-key` without restarting the session. This is additive:
+route non-trivial work to the best `@agent-key` without restarting the session. The caller must
+also pass `model`, `reasoning_effort` (when supported) and `context_tier` explicitly from the current
+approved profile. Generated descriptions include those arguments, but Markdown does not enforce
+execution effort/context, and inherited orchestrator settings are not a substitute. If the task
+tool cannot express the required configuration, use the direct profile launcher instead. This is additive:
 for long, interactive single-class work, the normal per-process launch class still gives the
 cleanest workflow.
 
@@ -213,12 +219,17 @@ For triage sessions, the full UUID is also printed in cyan so you can copy it in
 At the start of every launch, the launcher asks `Resume a previous session?` — paste the ID to
 continue with full conversation context in the new profile. This is especially useful after triage:
 relaunch with the recommended class and resume the triage session to keep all the analysis.
+Resumed launches log and display the existing session ID; each launch still records its own duration.
 
 ### Abandoned session recovery
 
 If you close the terminal window mid-session the log row is never written. The launcher writes a
-`usage-pending-*.json` marker before starting the CLI and removes it on clean exit. On the **next
-launch**, any leftover markers are detected and logged automatically with `abandoned = True`.
+unique `usage-pending-*.json` marker before starting the CLI and removes it on clean exit. On the
+**next launch**, leftover markers whose owning launcher process has ended are logged automatically
+with `abandoned = True`. The owner is identified by both PID and process start time: parallel
+live sessions are left alone, and PID reuse does not prevent recovery of an older session. Legacy markers without ownership
+metadata, or markers whose ownership cannot be determined, are preserved with a warning for manual
+recovery rather than guessed abandoned.
 
 For token/cost details per session, use the in-session `/usage` command.
 
@@ -228,14 +239,14 @@ The monthly [workflow](.github/workflows/monthly-task-profile-review.yml) runs t
 PowerShell suites, discovers available CLI models, refreshes GitHub prices, and evaluates
 configuration-matched benchmarks. It opens/updates the existing review PR with:
 
-- `reports/task-profile-review.md`: current/recommended/applied models, confidence, exclusions, and price changes.
-- `task-profiles.json`: model changes only, after confirmation. Effort and context remain fixed.
+- `reports/task-profile-review.md`: current/recommended/applied configurations, confidence, exclusions, and price changes.
+- `task-profiles.json`: model and effort changes applied together after confirmation, within approved ranges. Context remains fixed.
 - `data/model-ranking-snapshot.json`: independent source observations and confirmation state.
 - `data/model-pricing-snapshot.json`: independently verified rates and timestamps.
 
 Review changes before merging. Run manually with `force_benchmark_consensus` to apply a qualified
 recommendation on its first observation; this bypasses only the confirmation wait, never
-availability, capability, pricing, or evidence requirements.
+availability, capability, pricing, hard spending ceilings, allowed effort ranges, or evidence requirements.
 
 ### Pricing and eligibility
 
@@ -248,12 +259,23 @@ unmapped names and failures appear in the report. Configured mappings are never 
 
 Prices expire after 45 days, independently of the 60-day capability lifetime. A successful pricing
 refresh never changes `config/model-capabilities.json` or its timestamps. Both freshness limits
-are configured in `config/model-policy.json`. Missing/expired prices block automatic changes,
-even for quality-first profiles.
+are configured in `config/model-policy.json`. Missing/expired candidate prices block automatic changes.
 
-Quick, Mechanical and Triage have hard input/output caps of $2/$10 per million tokens.
-Other profiles retain **advisory warnings**, not price exclusions. Budget gates and selection
-strategy are independent.
+Every profile has **hard input/output price ceilings**, configured in `profileRequirements`
+with `costSensitive: true`. Both limits must be met in the applicable pricing tier:
+
+| Profiles | Input / output USD per million tokens |
+|---|---|
+| Quick, Mechanical, Triage | $2 / $10 |
+| Orchestrator | $3 / $15 |
+| Default Development | $4 / $20 |
+| Visual/UI | $5 / $25 |
+| Review | $5 / $30 |
+| Agentic Implementation | $10 / $50 |
+| Deep Reasoning | $10 / $45 |
+
+These are fixed standing authorization limits, not spending targets. They do not grow with the
+incumbent's price or benchmark rank, and only an explicit policy edit changes them.
 
 Cost comparisons use a configurable aggregate reference basket of 1M uncached input and 100K
 output tokens across requests within the selected context tier. Reports express this as AI credits
@@ -272,7 +294,7 @@ New models with unknown capabilities remain visibly unresolved rather than being
 ### Evidence and selection
 
 `config/model-ranking-aliases.json` maps each model and actual effort to explicit source IDs.
-Max/xhigh scores cannot stand in for medium/low. Update mappings and documented capabilities
+Max/xhigh scores cannot stand in for high/medium/low. Update mappings and documented capabilities
 when new variants appear; price refresh alone does not supply those facts.
 
 - [Artificial Analysis API](https://artificialanalysis.ai/api/v2/data/llms/models) is primary: coding for development/UI/quick/mechanical, intelligence for orchestration/triage/review/reasoning.
@@ -285,48 +307,72 @@ when new variants appear; price refresh alone does not supply those facts.
 
 | Profiles | Strategy | Selection rule |
 |---|---|---|
-| Orchestrator, Quick, Mechanical, Triage | `value_balanced` | Lowest reference AIC within the configured score band below the best **eligible** candidate in the deciding source. |
-| Default Development, Agentic Implementation, Deep Reasoning, Review, Visual/UI | `quality_first` | Highest matched score; cost breaks exact quality ties only. |
+| All nine profiles | `value_balanced` | Lowest reference AIC within the configured score band below the best **eligible** configuration in the deciding source. |
+
+#### Automatic configuration selection
+
+Every profile uses `configurationSelection.mode: bounded_effort` and
+`effortChangePolicy: automatic`. Its allowed effort range is standing authorization:
+
+| Profiles | Allowed efforts |
+|---|---|
+| Quick, Mechanical, Triage | low |
+| Orchestrator | low, medium |
+| Default Development, Review, Visual/UI | medium, high |
+| Agentic Implementation, Deep Reasoning | high, xhigh, max |
+
+Candidates are the intersection of that range and each model's supported efforts, at the
+profile's fixed context.
+Models without effort controls keep their one native configuration and exact `none` aliases.
+Missing capability records and unmatched variants are reported, not guessed.
+
+The framework compares **measured configurations**, not the maximum setting by definition:
+an `xhigh` result can win even if the model supports an unmeasured `max` setting. Each configuration
+passes its own eligibility gates, and corroboration must match the same model, effort and context.
+Multiple efforts of one model do not count as independent model coverage.
+[AA's methodology](https://artificialanalysis.ai/methodology/coding-agents-benchmarking#agent-settings)
+describes agent variants and normally uses agent-default reasoning settings; it is not a universal
+maximum-effort comparison. Scores remain external-harness evidence, not Copilot CLI measurements.
+
+An effort change inside the allowed range requires no separate approval. The same confirmation
+rules apply to model replacements, effort-only changes, and changes to both: the complete
+configuration must qualify twice on distinct deciding-source observations, or once on a forced run.
+The model and effective effort are applied together; confirmation cannot be borrowed from a
+different effort of the same model. Native no-effort models retain the stored launcher effort
+preference, but it is not passed to the model or used as its benchmark identity.
+
+An effort change can alter token consumption and latency without changing the per-token rate.
+Reference AIC therefore remains a fixed-basket comparison, never an estimate that two effort
+settings cost the same per task. Effort-related task cost and latency are reported as unknown.
+Token-price ceilings and reference AIC do not impose a total task or session spending cap.
 
 Each value profile has explicit `qualityBands` keyed by `source.metric`, for example
 `artificialAnalysis.intelligenceIndex` and `liveBench.instructionFollowing` for Orchestrator.
-The initial tolerances are **3 absolute score points** for each applicable AA and LiveBench
-metric. These are configurable starting policy choices, not percentages of capability, absolute
-competence floors, or empirically established task-success thresholds. Bands are not transferred
+The initial tolerances are **0.03** for the 0-1 AA coding-agent index and **3 absolute score points**
+for each applicable AA general-model and LiveBench metric. These are configurable starting policy
+choices, not percentages of capability, absolute competence floors, or empirically established
+task-success thresholds. Bands are not transferred
 between sources or averaged. Every possible deciding-source metric needs its own band; zero
-permits only the top score. If enabling value selection for Agentic Implementation, explicitly
-configure its differently scaled `artificialAnalysisCodingAgents.codingAgentIndex` too.
+permits only the top score.
 
 For value profiles, equal-cost ties prefer a qualified incumbent to avoid score-noise churn,
-then the higher score, then model ID. Hard-budget exclusions apply before setting
+then the higher score, then model ID, effort and context. The incumbent must match the complete
+configuration, not just the model. Hard-budget exclusions apply before setting
 the band's reference score. LiveBench corroboration uses its own band for value profiles rather
 than requiring the cheaper candidate to be its exact quality leader.
 
-Value selection will not automatically replace an incumbent whose fresh, valid pricing is
-unknown. A **more-expensive** candidate additionally needs fresh incumbent evidence for the same
-metric and deciding-source observation, matched to the incumbent's actual configured effort
-(including explicit `none` mappings). Missing incumbent scores alone cannot justify a premium.
-A cheaper or equally priced qualified candidate may still proceed without an incumbent score;
-quality-first selection also retains its existing ability to replace an unscored incumbent.
-The report keeps blocked candidates visible and explains why promotion is withheld.
+The fixed ceilings replace the former incumbent-relative `maxAutomaticCostIncreasePercent`
+limit. A more-expensive qualified configuration, including a free-to-paid transition, can apply
+inside those ceilings. There is no separate premium veto and no automatic increase of the ceilings.
+An over-budget model is excluded before establishing the eligible quality reference, so adding it
+cannot raise the quality bar for affordable candidates.
 
-Each value profile also requires `maxAutomaticCostIncreasePercent`, initially **0**. A candidate
-may qualify on quality without being authorized for automatic promotion: its reference cost must
-not exceed `incumbent cost * (1 + limit / 100)`. At zero, cheaper and equal-cost replacements can
-proceed; any premium requires a deliberate decision. Quality-first profiles are unaffected.
-
-For example, adding Astra at 52.2 to Opus at 49.5 and Gemini at 46.8 puts Gemini outside the
-3-point band. Opus remains the recommendation, but a Gemini incumbent is retained: moving from
-112.5 to 750 reference AIC is a 566.67% increase, not justified merely by the leaderboard.
-Retention does **not** claim that Gemini still meets the quality band.
-
-To approve extra spend, review task-specific needs and manually adjust the profile's cost limit
-in `config/model-policy.json`, or select the model in `task-profiles.json`. Raising the limit is
-a standing policy allowance, not one-time approval, and can permit successive increases relative
-to each new incumbent; zero avoids that ratchet. Existing evidence and eligibility requirements
-still apply to automatic changes. A free-to-paid transition is blocked at every finite percentage
-limit because its baseline cost is zero. These safeguards govern model replacements, not price
-increases for the same model or total session consumption.
+An incumbent without a matched score or fresh, valid price does not freeze an otherwise
+authorized candidate. The candidate still needs its own eligible configuration, fresh pricing,
+matched evidence and confirmation. Reports disclose missing incumbent evidence rather than
+claiming a measured quality improvement. Missing incumbent prices leave savings and percentage
+cost changes unknown; a free-to-paid percentage is also undefined. Matched comparisons use the
+same source, metric, observation and complete configuration, including native `none` mappings.
 
 Retrieval age and publication age are distinct: retrieval must be within 45 days and a known
 publication date within 90 days. Unknown publication dates remain unknown and reduce confidence.
@@ -338,24 +384,29 @@ If only cached evidence remains, it may inform the recommendation but cannot aut
 
 ### Confirmation, retention and reporting
 
-Two distinct observations from the **deciding source** confirm a change. Repeated content,
+Two distinct observations from the **deciding source** confirm a change to the same model,
+effective effort and context. Repeated content,
 older publications, cached observations, or unrelated source failures do not advance confirmation.
 Changing the deciding source resets pending confirmation. Policy, effort/context and alias
 fingerprints prevent old evidence from authorizing a new configuration.
-Strategy or band changes also invalidate pending confirmation. Force bypasses only the wait,
-not value qualification, unknown incumbent pricing, the unproven-premium guard or the automatic
-cost-increase limit. Changing that limit invalidates pending confirmation too. No threshold
-change directly rewrites the current model.
+Strategy, band, ceiling or allowed-range changes also invalidate pending confirmation. Force
+bypasses only the wait, not value qualification, hard budgets, allowed ranges or the candidate's
+availability, capabilities, pricing and evidence requirements. No threshold change directly
+rewrites the current model.
 
-Schema migration invalidates legacy confirmation state but keeps current models. If evidence
-is insufficient, the report says **retained**, not **winner**. If no replacement qualifies,
+Confirmation state schema 2 includes the complete configuration in pending and active records.
+Migration invalidates model-only confirmation counts but keeps current profile settings.
+The broad policy fingerprint can also reset other profiles' pending counts when policy changes.
+If evidence is insufficient, the report says **retained**, not **winner**. If no replacement qualifies,
 even an over-budget incumbent is retained with an explicit warning rather than writing an empty
 model ID. Automatic changes remain frozen when availability cannot be verified.
 
-The report separates quality leader, recommended candidate, pending change, and model actually
-applied. Value profiles also show their eligible quality reference, score gap/band, candidate and
-incumbent reference AIC, percentage cost change, automatic increase limit, and any promotion block.
-Repeated exclusions, advisory overruns and variant gaps are grouped with all affected profiles.
+The report separates quality leader, recommended candidate, pending change, and configuration actually
+applied, showing model / effective effort / context. Value profiles also show their eligible
+quality reference, score gap/band, candidate and
+incumbent reference AIC, informational percentage cost change, fixed authorization limits, allowed
+efforts and any incumbent evidence or pricing gaps.
+Repeated exclusions and variant gaps are grouped by configuration with all affected profiles.
 Expandable sections retain the complete
 per-profile eligibility and benchmark evidence.
 Fresh capability metadata and valid mappings still require maintenance.
@@ -367,6 +418,7 @@ The implementation uses focused modules under `scripts/`:
 | `model-data-common.ps1` | Fetch results, JSON/member access, content fingerprints, freshness and atomic JSON writes; no provider imports. |
 | `model-artificial-analysis.ps1`, `model-livebench.ps1` | Provider-specific acquisition and parsing. |
 | `model-pricing-data.ps1` | GitHub pricing acquisition and last-known-good rates. |
+| `model-configuration.ps1` | Shared candidate generation, effective-effort normalization and model/effort/context identities. |
 | `model-benchmark-evidence.ps1`, `model-admissibility.ps1` | Configuration-matched evidence and independent eligibility gates. |
 | `model-profile-selection.ps1` | Pure selection and confirmation-state transitions. |
 | `model-value-selection.ps1` | Reference costs, cheapest-qualified ranking and incumbent cost-increase guards. |

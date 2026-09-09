@@ -53,12 +53,12 @@
     "quick": { "inputCeilingPerMillion": 2, "outputCeilingPerMillion": 10, "requiresVision": false, "requiresCliAgent": true, "costSensitive": true },
     "mechanical": { "inputCeilingPerMillion": 2, "outputCeilingPerMillion": 10, "requiresVision": false, "requiresCliAgent": true, "costSensitive": true },
     "triage": { "inputCeilingPerMillion": 2, "outputCeilingPerMillion": 10, "requiresVision": false, "requiresCliAgent": true, "costSensitive": true },
-    "default-development": { "inputCeilingPerMillion": 3, "outputCeilingPerMillion": 15, "requiresVision": false, "requiresCliAgent": true, "costSensitive": false },
-    "orchestrator": { "inputCeilingPerMillion": 3, "outputCeilingPerMillion": 15, "requiresVision": false, "requiresCliAgent": true, "costSensitive": false },
-    "visual-ui": { "inputCeilingPerMillion": 3, "outputCeilingPerMillion": 15, "requiresVision": true, "requiresCliAgent": true, "costSensitive": false },
-    "review": { "inputCeilingPerMillion": 5, "outputCeilingPerMillion": 30, "requiresVision": false, "requiresCliAgent": true, "costSensitive": false },
-    "agentic-implementation": { "inputCeilingPerMillion": 10, "outputCeilingPerMillion": 50, "requiresVision": false, "requiresCliAgent": true, "costSensitive": false },
-    "deep-reasoning": { "inputCeilingPerMillion": 10, "outputCeilingPerMillion": 45, "requiresVision": false, "requiresCliAgent": true, "costSensitive": false }
+    "default-development": { "inputCeilingPerMillion": 4, "outputCeilingPerMillion": 20, "requiresVision": false, "requiresCliAgent": true, "costSensitive": true },
+    "orchestrator": { "inputCeilingPerMillion": 3, "outputCeilingPerMillion": 15, "requiresVision": false, "requiresCliAgent": true, "costSensitive": true },
+    "visual-ui": { "inputCeilingPerMillion": 5, "outputCeilingPerMillion": 25, "requiresVision": true, "requiresCliAgent": true, "costSensitive": true },
+    "review": { "inputCeilingPerMillion": 5, "outputCeilingPerMillion": 30, "requiresVision": false, "requiresCliAgent": true, "costSensitive": true },
+    "agentic-implementation": { "inputCeilingPerMillion": 10, "outputCeilingPerMillion": 50, "requiresVision": false, "requiresCliAgent": true, "costSensitive": true },
+    "deep-reasoning": { "inputCeilingPerMillion": 10, "outputCeilingPerMillion": 45, "requiresVision": false, "requiresCliAgent": true, "costSensitive": true }
   },
   "consensusPolicy": {
     "staleAfterDays": 45,
@@ -67,36 +67,60 @@
     "benchmarkMaxPublicationAgeDays": 90
   },
   "selectionPolicy": {
-    "version": 3,
+    "version": 5,
     "referenceInputTokens": 1000000,
     "referenceOutputTokens": 100000,
     "referenceUsageDescription": "Aggregate uncached usage across requests within the selected context tier, not a single 1M-token request or predicted task cost. Cache reads/writes are excluded.",
     "profiles": {
       "orchestrator": {
         "strategy": "value_balanced",
-        "maxAutomaticCostIncreasePercent": 0,
+        "configurationSelection": { "mode": "bounded_effort", "allowedEfforts": ["low", "medium"], "effortChangePolicy": "automatic" },
         "qualityBands": { "artificialAnalysis.intelligenceIndex": 3, "liveBench.instructionFollowing": 3 }
       },
       "quick": {
         "strategy": "value_balanced",
-        "maxAutomaticCostIncreasePercent": 0,
+        "configurationSelection": { "mode": "bounded_effort", "allowedEfforts": ["low"], "effortChangePolicy": "automatic" },
         "qualityBands": { "artificialAnalysis.codingIndex": 3, "liveBench.coding": 3 }
       },
       "mechanical": {
         "strategy": "value_balanced",
-        "maxAutomaticCostIncreasePercent": 0,
+        "configurationSelection": { "mode": "bounded_effort", "allowedEfforts": ["low"], "effortChangePolicy": "automatic" },
         "qualityBands": { "artificialAnalysis.codingIndex": 3, "liveBench.coding": 3 }
       },
       "triage": {
         "strategy": "value_balanced",
-        "maxAutomaticCostIncreasePercent": 0,
+        "configurationSelection": { "mode": "bounded_effort", "allowedEfforts": ["low"], "effortChangePolicy": "automatic" },
         "qualityBands": { "artificialAnalysis.intelligenceIndex": 3, "liveBench.instructionFollowing": 3 }
       },
-      "default-development": { "strategy": "quality_first" },
-      "agentic-implementation": { "strategy": "quality_first" },
-      "deep-reasoning": { "strategy": "quality_first" },
-      "review": { "strategy": "quality_first" },
-      "visual-ui": { "strategy": "quality_first" }
+      "default-development": {
+        "strategy": "value_balanced",
+        "configurationSelection": { "mode": "bounded_effort", "allowedEfforts": ["medium", "high"], "effortChangePolicy": "automatic" },
+        "qualityBands": { "artificialAnalysis.codingIndex": 3, "liveBench.coding": 3 }
+      },
+      "agentic-implementation": {
+        "strategy": "value_balanced",
+        "configurationSelection": {
+          "mode": "bounded_effort",
+          "allowedEfforts": ["high", "xhigh", "max"],
+          "effortChangePolicy": "automatic"
+        },
+        "qualityBands": { "artificialAnalysisCodingAgents.codingAgentIndex": 0.03, "artificialAnalysis.codingIndex": 3, "liveBench.agenticCoding": 3 }
+      },
+      "deep-reasoning": {
+        "strategy": "value_balanced",
+        "configurationSelection": { "mode": "bounded_effort", "allowedEfforts": ["high", "xhigh", "max"], "effortChangePolicy": "automatic" },
+        "qualityBands": { "artificialAnalysis.intelligenceIndex": 3, "liveBench.reasoning": 3 }
+      },
+      "review": {
+        "strategy": "value_balanced",
+        "configurationSelection": { "mode": "bounded_effort", "allowedEfforts": ["medium", "high"], "effortChangePolicy": "automatic" },
+        "qualityBands": { "artificialAnalysis.intelligenceIndex": 3, "liveBench.reasoning": 3 }
+      },
+      "visual-ui": {
+        "strategy": "value_balanced",
+        "configurationSelection": { "mode": "bounded_effort", "allowedEfforts": ["medium", "high"], "effortChangePolicy": "automatic" },
+        "qualityBands": { "artificialAnalysis.codingIndex": 3, "liveBench.coding": 3 }
+      }
     }
   }
 }

@@ -1,7 +1,7 @@
 {
   "schemaVersion": 2,
   "verifiedAt": "2026-09-08",
-  "notes": "Explicit source identities by actual effort, verified against AA public leaderboard variants. No suffix inference at runtime. Empty/unlisted variants remain unresolved. AA API may lag public-page coverage or use a different evaluation release; never substitute public-page numbers. 'none' is for CLI models without an effort control. External agent harnesses are not Copilot CLI measurements.",
+  "notes": "Explicit source identities by actual effort, verified against AA public leaderboard variants. No suffix inference at runtime. Empty/unlisted variants remain unresolved. AA API may lag public-page coverage or use a different evaluation release; never substitute public-page numbers. 'none' is for CLI models without an effort control. External agent harnesses are not Copilot CLI measurements. Gemini 3.8 Flash high, Grok 4.5 high and GPT-6 Astra max coding-agent labels verified on 2026-09-09 at https://artificialanalysis.ai/agents/coding-agents; earlier alias verification dates are unchanged.",
   "aliases": {
     "claude-sonnet-5": {
       "artificialAnalysis": {
@@ -37,6 +37,9 @@
         "high": "gpt-6-astra-high",
         "xhigh": "gpt-6-astra-xhigh",
         "max": "gpt-6-astra"
+      },
+      "artificialAnalysisCodingAgents": {
+        "max": "Codex - GPT-6 Astra (max)"
       }
     },
     "gpt-5.6-sol": {
@@ -83,6 +86,9 @@
         "low": "gemini-3-8-flash-low",
         "medium": "gemini-3-8-flash-medium",
         "high": "gemini-3-8-flash"
+      },
+      "artificialAnalysisCodingAgents": {
+        "high": "Opencode - Gemini 3.8 Flash (high)"
       }
     },
     "gemini-3.7-flash": {
@@ -103,6 +109,9 @@
     "grok-4.5": {
       "artificialAnalysis": {
         "high": "grok-4-5"
+      },
+      "artificialAnalysisCodingAgents": {
+        "high": "Grok Build - Grok 4.5 (high)"
       }
     },
     "claude-haiku-4.5": {

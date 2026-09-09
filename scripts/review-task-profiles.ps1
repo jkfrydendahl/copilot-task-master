@@ -101,7 +101,11 @@ function Invoke-TaskProfileReview {
     $changed = $false
     foreach ($profile in $profiles) {
         $requirement = $policy.profileRequirements[$profile.key]
-        $verdicts = @(foreach ($model in @(@($models) + @($profile.model) | Sort-Object -Unique)) {
+        $candidates = Get-ProfileModelConfigurations -Profile $profile -Models $models -Capabilities $capabilities -Policy $policy
+        $currentConfiguration = New-ModelConfiguration -Model $profile.model -Effort $profile.effort -Context $profile.context -CapabilityRecord $capabilities[$profile.model]
+        $verdictConfigurations = @(@($candidates.configurations) + @($currentConfiguration) | Sort-Object -Property model,effort,context -Unique)
+        $verdicts = @(foreach ($configuration in $verdictConfigurations) {
+            $model = $configuration.model
             $priceRecord = $pricing.snapshot.models[$model]
             if (-not $pricingAliases.Contains($model) -or
                 (Get-ObjectMemberValue $priceRecord "name") -ne $pricingAliases[$model]) {
@@ -116,32 +120,37 @@ function Invoke-TaskProfileReview {
                 CapabilityRecord = $capabilities[$model]
                 PricingRecord = $priceRecord
                 ProfileRequirement = $requirement
-                ProfileContextTier = $profile.context
-                ProfileEffort = $profile.effort
+                ProfileContextTier = $configuration.context
+                ProfileEffort = $configuration.effort
                 CapabilityFreshnessDays = $policy.consensusPolicy.capabilityFreshnessDays
                 PricingFreshnessDays = $policy.consensusPolicy.pricingFreshnessDays
                 NowUtc = $NowUtc
             }
             Get-ModelAdmissibilityVerdict @admissibilityOptions
         })
-        $evidence = Get-ProfileBenchmarkEvidence -Profile $profile -Models $models -Sources $resolvedSources `
+        $evidence = Get-ProfileBenchmarkEvidence -Profile $profile -Configurations $candidates.configurations -Sources $resolvedSources `
             -Aliases $aliases -Capabilities $capabilities -Policy $policy -NowUtc $NowUtc
+        $evidence.diagnostics = @($candidates.diagnostics) + @($evidence.diagnostics)
         $selection = Get-ProfileSelection -Profile $profile -Evidence $evidence.records -Verdicts $verdicts -Policy $policy -Aliases $aliases
         $oldProfiles = Get-ObjectMemberValue (Get-ObjectMemberValue $previous "consensus") "profiles"
         $oldState = Get-ObjectMemberValue $oldProfiles $profile.key
         $resolved = Resolve-ProfileSelectionState -CurrentModel $profile.model -Selection $selection `
             -State $oldState -ForceImmediateApply:$ForceImmediateApply -NowUtc $NowUtc
-        $currentVerdict = @($verdicts | Where-Object modelId -eq $profile.model)[0]
+        $currentVerdict = @($verdicts | Where-Object {
+            $_.modelId -eq $profile.model -and $_.effort -eq $currentConfiguration.effort -and $_.context -eq $currentConfiguration.context
+        })[0]
         if (-not $resolved.applied -and @($currentVerdict.reasonCodes | Where-Object {$_ -in @("pricing_input_exceeds_ceiling","pricing_output_exceeds_ceiling")}).Count) {
             $resolved.status = "over_budget_retention; $($resolved.status)"
         }
         if (-not $Availability.verified) { $resolved.status = "retained_unverified_availability" }
         $fallback = Get-PreferredModelForProfilePolicy -ProfileKey $profile.key -ValidModels $models `
-            -Policy $policy -AdmissibleModels @($verdicts | Where-Object admissible | ForEach-Object modelId)
+            -Policy $policy -AdmissibleModels @($verdicts | Where-Object admissible | ForEach-Object modelId | Sort-Object -Unique)
         $results.Add([pscustomobject]@{
             key = $profile.key
             currentModel = $profile.model
             finalModel = $resolved.finalModel
+            currentConfiguration = $currentConfiguration
+            finalConfiguration = $resolved.finalConfiguration
             effort = $profile.effort
             context = $profile.context
             selection = $selection
@@ -151,8 +160,10 @@ function Invoke-TaskProfileReview {
             requirement = $requirement
             fallback = $fallback
         })
-        if ($profile.model -ne $resolved.finalModel) {
-            $profile.model = $resolved.finalModel
+        if ($resolved.applied) {
+            $profile.model = $resolved.finalConfiguration.model
+            if ($resolved.finalConfiguration.effort -ne "none") { $profile.effort = $resolved.finalConfiguration.effort }
+            $profile.context = $resolved.finalConfiguration.context
             $changed = $true
         }
         $snapshot.consensus.profiles[$profile.key] = $resolved.state

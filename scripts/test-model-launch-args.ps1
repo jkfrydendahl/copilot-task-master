@@ -67,6 +67,17 @@ Run-Test "L6 Launch catalog loader works with normal ConvertFrom-Json objects" {
     Assert-True ($catalog["claude-haiku-4.5"].effortMode -eq "unsupported") "Expected effort metadata to survive conversion."
 }
 
+Run-Test "Delegation settings preserve the approved pair and share direct-launch effort semantics" {
+    $profile=@{model="claude-opus-5";effort="xhigh";context="default"}
+    $settings=Get-CopilotTaskInvocationSettings -Profile $profile
+    Assert-True ($settings.model -eq $profile.model -and $settings.reasoning_effort -eq "xhigh" -and $settings.context_tier -eq "default") "Delegation lost approved configuration"
+    $direct=Get-CopilotLaunchModelArgs -Profile $profile
+    Assert-True (($direct -join " ") -eq "--model claude-opus-5 --effort xhigh --context default") "Direct launch disagrees with delegation"
+    $catalog=@{"claude-opus-5"=@{effortMode="unsupported"}}
+    $settings=Get-CopilotTaskInvocationSettings -Profile $profile -CapabilitiesCatalog $catalog
+    Assert-True (-not $settings.Contains("reasoning_effort") -and $settings.context_tier -eq "default") "Native effort model received an effort override"
+}
+
 Write-Host ""
 Write-Host "Tests passed: $script:Passed"
 Write-Host "Tests failed: $script:Failed"

@@ -71,3 +71,17 @@ function Get-CopilotLaunchModelArgs {
 
     return $args
 }
+
+function Get-CopilotTaskInvocationSettings {
+    param(
+        [Parameter(Mandatory)]$Profile,
+        [hashtable]$CapabilitiesCatalog = @{}
+    )
+    $launchArgs = @(Get-CopilotLaunchModelArgs -Profile $Profile -CapabilitiesCatalog $CapabilitiesCatalog)
+    $parameterNames = @{"--model"="model";"--effort"="reasoning_effort";"--context"="context_tier"}
+    $settings = [ordered]@{}
+    for ($index = 0; $index -lt $launchArgs.Count; $index += 2) {
+        $settings[$parameterNames[$launchArgs[$index]]] = $launchArgs[$index + 1]
+    }
+    return $settings
+}

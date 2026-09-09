@@ -53,10 +53,11 @@ function Record($Model, $Score, $Source="artificialAnalysis", $Version="v1") {
     [pscustomobject]@{model=$Model;score=$Score;source=$Source;metric="codingIndex";alias="$Model-medium";effort="medium";sourceVersion=$Version;sourceDate=$null;publicationAgeUnknown=$true;cached=$false}
 }
 function Select-Models($Records, $Verdicts=@((Verdict)), $Profile=$profile, $Strategy="quality_first",
-    $Bands=@{"artificialAnalysis.codingIndex"=3;"liveBench.codingIndex"=3}, $MaxIncrease=0) {
+    $Bands=@{"artificialAnalysis.codingIndex"=3;"liveBench.codingIndex"=3}, $Budget=$req) {
     $configuredPolicy = $policy.Clone()
+    $configuredPolicy.profileRequirements = @{test=$Budget}
     $configuredPolicy.selectionPolicy = $policy.selectionPolicy.Clone()
-    $configuredPolicy.selectionPolicy.profiles = @{test=@{strategy=$Strategy;qualityBands=$Bands;maxAutomaticCostIncreasePercent=$MaxIncrease}}
+    $configuredPolicy.selectionPolicy.profiles = @{test=@{strategy=$Strategy;qualityBands=$Bands}}
     Get-ProfileSelection -Profile $Profile -Evidence $Records -Verdicts $Verdicts -Policy $configuredPolicy -Aliases @{}
 }
 Run-Test "Scored pool can replace an unscored incumbent" {
@@ -133,6 +134,41 @@ Run-Test "Older publication cannot confirm even with a new content fingerprint" 
     $b=Resolve-ProfileSelectionState -CurrentModel "old" -Selection $s2 -State $a.state
     Assert-True (-not $b.applied -and $b.finalModel -eq "old") "Source rollback confirmed"
 }
+Run-Test "Incumbent-winning observations still protect against publication rollback" {
+    $s=Select-Models @((Record one 50));$s.winner.sourceDate="2026-09-01"
+    $first=Resolve-ProfileSelectionState -CurrentModel "old" -Selection $s
+    $latest=Select-Models @((Record one 60 artificialAnalysis v5))
+    $latest.winner.model="old";$latest.winner.sourceDate="2026-09-05"
+    $retained=Resolve-ProfileSelectionState -CurrentModel "old" -Selection $latest -State $first.state
+    Assert-True ($null -eq $retained.state.pending -and $retained.state.latestSourceDates.artificialAnalysis -eq "2026-09-05") "Incumbent win lost latest publication"
+    foreach ($day in @(2,3)) {
+        $rollback=Select-Models @((Record one 55 artificialAnalysis "v$day"));$rollback.winner.sourceDate="2026-09-0$day"
+        $retained=Resolve-ProfileSelectionState -CurrentModel "old" -Selection $rollback -State $retained.state -ForceImmediateApply
+        Assert-True (-not $retained.applied -and $retained.status -eq "retained_source_regression") "Older publication applied after incumbent win"
+    }
+}
+Run-Test "Preauthorized promotions retain publication rollback protection" {
+    $s=Select-Models @((Record one 50));$s.winner.sourceDate="2026-09-01"
+    $first=Resolve-ProfileSelectionState -CurrentModel "old" -Selection $s
+    $latest=Select-Models @((Record one 60 artificialAnalysis v5))
+    $latest.winner.sourceDate="2026-09-05"
+    $applied=Resolve-ProfileSelectionState -CurrentModel "old" -Selection $latest -State $first.state -ForceImmediateApply
+    Assert-True ($applied.applied -and $null -eq $applied.state.pending) "Authorized observation did not apply"
+    Assert-True ($applied.state.latestSourceDates.artificialAnalysis -eq "2026-09-05") "Promotion lost publication date"
+    $rollback=Select-Models @((Record one 55 artificialAnalysis v2));$rollback.winner.sourceDate="2026-09-02"
+    $rejected=Resolve-ProfileSelectionState -CurrentModel "one" -Selection $rollback -State $applied.state
+    Assert-True ($rejected.status -eq "retained_source_regression" -and -not $rejected.applied) "Rollback bypassed the latest promotion"
+}
+Run-Test "Cached or regressed incumbent wins cannot erase pending confirmation" {
+    $s=Select-Models @((Record one 50));$s.winner.sourceDate="2026-09-05"
+    $first=Resolve-ProfileSelectionState -CurrentModel "old" -Selection $s
+    foreach ($cached in @($true,$false)) {
+        $older=Select-Models @((Record one 40 artificialAnalysis older))
+        $older.winner.model="old";$older.winner.sourceDate="2026-09-01";$older.freshObservation=-not $cached
+        $retained=Resolve-ProfileSelectionState -CurrentModel "old" -Selection $older -State $first.state
+        Assert-True ($retained.state.pending.count -eq 1 -and $retained.state.latestSourceDates.artificialAnalysis -eq "2026-09-05") "Unusable incumbent observation mutated confirmation"
+    }
+}
 Run-Test "Price or eligibility changes do not create a new source observation" {
     $v2=Verdict;$v2.modelId="two"
     $a=Select-Models @((Record one 70),(Record two 60)) @((Verdict),$v2)
@@ -194,16 +230,16 @@ Run-Test "Value fallback uses its own metric band rather than the primary source
     $s = Select-Models $records @((Verdict),$two) $current value_balanced @{"artificialAnalysis.codingIndex"=1;"liveBench.codingIndex"=3}
     Assert-True ($s.winner.model -eq "two" -and $s.reason -eq "livebench_fallback") "Fallback source policy was not used"
 }
-Run-Test "An unscored incumbent cannot be replaced at a premium, even with force" {
+Run-Test "An unscored incumbent does not veto an authorized premium" {
     $two = Verdict; $two.modelId = "two"; $two.pricing.inputPerMillion = 5; $two.pricing.outputPerMillion = 25
     $current = @{key="test";model="one";effort="medium";context="default"}
     $s = Select-Models @((Record two 70)) @((Verdict),$two) $current value_balanced
     $r = Resolve-ProfileSelectionState -CurrentModel one -Selection $s -ForceImmediateApply
-    Assert-True (-not $r.applied -and $r.status -eq "retained_unproven_cost_increase") "Unscored incumbent authorized a premium"
-    Assert-True ($s.winner.model -eq "two" -and $null -eq $r.state.pending) "Candidate hidden or blocked observation counted"
+    Assert-True ($r.applied -and $r.finalModel -eq "two") "Unscored incumbent blocked an authorized candidate"
+    Assert-True (-not $s.valueDecision.incumbentEvidenceAvailable -and $null -eq $s.valueDecision.incumbentScore) "Missing incumbent evidence was hidden"
     Assert-True ($s.valueDecision.referenceAic -eq 750 -and $s.valueDecision.incumbentReferenceAic -eq 600) "Reference AIC comparison wrong"
 }
-Run-Test "A premium needs fresh incumbent evidence for the same source, metric, effort and observation" {
+Run-Test "Incomparable incumbent evidence is disclosed without vetoing a qualified candidate" {
     $two = Verdict; $two.modelId = "two"; $two.pricing.outputPerMillion = 25
     $current = @{key="test";model="one";effort="medium";context="default"}
     foreach ($mutate in @(
@@ -217,7 +253,7 @@ Run-Test "A premium needs fresh incumbent evidence for the same source, metric, 
         & $mutate $old
         $s = Select-Models @($old,(Record two 70)) @((Verdict),$two) $current value_balanced
         $r = Resolve-ProfileSelectionState -CurrentModel one -Selection $s -ForceImmediateApply
-        Assert-True (-not $r.applied -and $r.status -eq "retained_unproven_cost_increase") "Incomparable incumbent authorized premium"
+        Assert-True ($r.applied -and -not $s.valueDecision.incumbentEvidenceAvailable) "Incomparable incumbent blocked or falsely corroborated the candidate"
     }
 }
 Run-Test "A cheaper qualified challenger can replace an unscored incumbent after two observations" {
@@ -231,7 +267,7 @@ Run-Test "A cheaper qualified challenger can replace an unscored incumbent after
     Assert-True ($b.applied -and $b.finalModel -eq "two") "Unscored incumbent froze a cheaper candidate"
     Assert-True ($s.valueDecision.incumbentReferenceAic -gt $s.valueDecision.referenceAic) "Saving was not based on incumbent prices"
 }
-Run-Test "Missing, invalid or stale incumbent pricing blocks a value decision without inventing savings" {
+Run-Test "Unknown incumbent prices do not block known-price candidates or invent savings" {
     $two = Verdict; $two.modelId = "two"
     $current = @{key="test";model="one";effort="medium";context="default"}
     $stale = $prices.Clone(); $stale.verifiedAtUtc = "2026-01-01"
@@ -240,8 +276,8 @@ Run-Test "Missing, invalid or stale incumbent pricing blocks a value decision wi
         $verdicts = @(@($old) | Where-Object { $null -ne $_ }) + @($two)
         $s = Select-Models @((Record two 70)) $verdicts $current value_balanced
         $r = Resolve-ProfileSelectionState -CurrentModel one -Selection $s -ForceImmediateApply
-        Assert-True (-not $r.applied -and $r.status -eq "retained_incumbent_cost_unknown") "Unknown cost was treated as a saving"
-        Assert-True ($null -eq $s.valueDecision.incumbentReferenceAic) "Missing price became zero"
+        Assert-True $r.applied "Unknown incumbent pricing blocked an authorized candidate"
+        Assert-True ($null -eq $s.valueDecision.incumbentReferenceAic -and $null -eq $s.valueDecision.costIncreasePercent) "Missing price became zero or implied savings"
     }
 }
 Run-Test "A scored incumbent outside the band allows a justified premium; no-effort models remain comparable" {
@@ -251,8 +287,9 @@ Run-Test "A scored incumbent outside the band allows a justified premium; no-eff
         $old = Verdict; $old.capabilities = $cap.Clone(); $old.capabilities.effortMode = $effortMode
         $record = Record one 66.9
         if ($effortMode -eq "unsupported") { $record.effort = "none" }
-        $s = Select-Models @($record,(Record two 70)) @($old,$two) $current value_balanced -MaxIncrease 25
+        $s = Select-Models @($record,(Record two 70)) @($old,$two) $current value_balanced
         Assert-True (Resolve-ProfileSelectionState -CurrentModel one -Selection $s -ForceImmediateApply).applied "Justified premium was blocked"
+        Assert-True ($s.valueDecision.incumbentEvidenceAvailable -and $s.valueDecision.incumbentScore -eq 66.9) "Matched incumbent evidence lost"
     }
 }
 Run-Test "Value bands use the eligible leader and never undo hard-budget exclusions" {
@@ -308,71 +345,234 @@ Run-Test "Equal monetary costs do not churn because of floating-point arithmetic
     $s = Select-Models @((Record one 70),(Record two 67)) @($one,$two) $current value_balanced
     Assert-True ($s.winner.model -eq "two") "Equal 90-AIC prices triggered a false saving"
 }
-Run-Test "Zero incumbent cost is known, not missing, and prevents an unproven premium" {
+Run-Test "Zero incumbent cost is known but does not veto a preauthorized paid candidate" {
     $one = Verdict; $one.pricing.inputPerMillion = 0; $one.pricing.outputPerMillion = 0
     $two = Verdict; $two.modelId = "two"
     $current = @{key="test";model="one";effort="medium";context="default"}
     $s = Select-Models @((Record two 70)) @($one,$two) $current value_balanced
-    Assert-True ($s.valueDecision.incumbentReferenceAic -eq 0 -and $s.valueDecision.promotionBlockReason -eq "retained_unproven_cost_increase") "Free incumbent was treated as unpriced"
+    Assert-True ($s.valueDecision.incumbentReferenceAic -eq 0 -and $null -eq $s.valueDecision.costIncreasePercent) "Free incumbent was treated as unpriced or given a defined percentage"
+    Assert-True (Resolve-ProfileSelectionState -CurrentModel one -Selection $s -ForceImmediateApply).applied "Free incumbent froze an authorized candidate"
 }
-Run-Test "Adding Astra cannot automatically escalate a Gemini incumbent to Opus" {
+Run-Test "An over-budget leader cannot inflate the eligible quality bar or force spending" {
+    $gemini = Verdict; $gemini.modelId="gemini"; $gemini.pricing.inputPerMillion=0.75; $gemini.pricing.outputPerMillion=3.75
+    $opus = Verdict; $opus.modelId="opus"; $opus.pricing.inputPerMillion=5; $opus.pricing.outputPerMillion=25
+    $astra = Verdict; $astra.modelId="astra"; $astra.pricing.inputPerMillion=10; $astra.pricing.outputPerMillion=50
+    $astra.admissible=$false; $astra.reasonCodes=@("pricing_input_exceeds_ceiling","pricing_output_exceeds_ceiling")
+    $current = @{key="test";model="gemini";effort="medium";context="default"}
+    $records = @((Record gemini 46.8),(Record opus 49.5),(Record astra 52.2))
+    $s = Select-Models $records[0..1] @($gemini,$opus) $current value_balanced
+    Assert-True ($s.winner.model -eq "gemini") "Initial cheap qualified incumbent changed"
+    $s = Select-Models $records @($gemini,$opus,$astra) $current value_balanced
+    $r = Resolve-ProfileSelectionState -CurrentModel gemini -Selection $s -ForceImmediateApply
+    Assert-True ($s.winner.model -eq "gemini" -and -not $r.applied) "Ineligible Astra inflated the quality bar"
+    Assert-True ($s.qualityWinner.model -eq "astra" -and $s.valueDecision.qualityReference.model -eq "opus") "Excluded global leader and eligible reference were conflated"
+}
+Run-Test "A large price increase inside the authorized budget still requires distinct observations" {
     $gemini = Verdict; $gemini.modelId="gemini"; $gemini.pricing.inputPerMillion=0.75; $gemini.pricing.outputPerMillion=3.75
     $opus = Verdict; $opus.modelId="opus"; $opus.pricing.inputPerMillion=5; $opus.pricing.outputPerMillion=25
     $astra = Verdict; $astra.modelId="astra"; $astra.pricing.inputPerMillion=10; $astra.pricing.outputPerMillion=50
     $current = @{key="test";model="gemini";effort="medium";context="default"}
     $records = @((Record gemini 46.8),(Record opus 49.5),(Record astra 52.2))
-    $s = Select-Models $records[0..1] @($gemini,$opus) $current value_balanced
-    Assert-True ($s.winner.model -eq "gemini") "Initial cheap qualified incumbent changed"
-    $state = $null
-    foreach ($version in @("v1","v2","v3")) {
+    $state=$null
+    foreach ($version in @("v1","v1","v2")) {
         foreach ($record in $records) { $record.sourceVersion=$version }
         $s = Select-Models $records @($gemini,$opus,$astra) $current value_balanced
-        $r = Resolve-ProfileSelectionState -CurrentModel gemini -Selection $s -State $state -ForceImmediateApply
-        Assert-True ($s.winner.model -eq "opus" -and $r.finalModel -eq "gemini" -and -not $r.applied) "Leaderboard expansion forced a 6.67x upgrade"
-        Assert-True ($r.status -eq "retained_cost_escalation_requires_approval" -and $null -eq $r.state.pending) "Escalation counted as approved observation"
-        Assert-True ($s.valueDecision.costIncreasePercent -gt 566 -and $s.valueDecision.maxAutomaticCostIncreasePercent -eq 0) "Missing cost escalation provenance"
+        $r = Resolve-ProfileSelectionState -CurrentModel gemini -Selection $s -State $state
+        Assert-True ($s.winner.model -eq "opus" -and $r.applied -eq ($version -eq "v2")) "Authorized increase bypassed or was blocked by confirmation"
+        Assert-True ($s.valueDecision.costIncreasePercent -gt 566) "Missing informational cost change"
         $state = $r.state
     }
 }
-Run-Test "Explicit cost increase allowance has an inclusive exact boundary" {
-    $one = Verdict; $one.pricing.inputPerMillion=1; $one.pricing.outputPerMillion=0
-    $two = Verdict; $two.modelId="two"; $two.pricing.outputPerMillion=0
+Run-Test "Absolute cost ceilings have inclusive boundaries and cannot be forced" {
+    $hard=$req.Clone(); $hard.costSensitive=$true; $hard.inputCeilingPerMillion=1.25; $hard.outputCeilingPerMillion=0
+    $price=@{verifiedAtUtc="2026-09-01";tiers=@{default=@{inputPerMillion=1;outputPerMillion=0}}}
+    $one=Verdict -Requirement $hard -Price $price
     $current = @{key="test";model="one";effort="medium";context="default"}
-    foreach ($limit in @(0,25)) {
-        foreach ($cost in @(0.9,1,1.25,1.250001)) {
-            $two.pricing.inputPerMillion=$cost
-            $s = Select-Models @((Record one 60),(Record two 70)) @($one,$two) $current value_balanced -MaxIncrease $limit
-            $r = Resolve-ProfileSelectionState -CurrentModel one -Selection $s -ForceImmediateApply
-            Assert-True ($r.applied -eq ($cost -le 1 + $limit / 100)) "Wrong cost boundary: $cost at $limit%"
-        }
+    foreach ($cost in @(0.9,1,1.25,1.250001)) {
+        $price.tiers.default.inputPerMillion=$cost
+        $two=Verdict -Requirement $hard -Price $price; $two.modelId="two"
+        $s = Select-Models @((Record one 60),(Record two 70)) @($one,$two) $current value_balanced -Budget $hard
+        $r = Resolve-ProfileSelectionState -CurrentModel one -Selection $s -ForceImmediateApply
+        Assert-True ($r.applied -eq ($cost -le 1.25)) "Wrong absolute cost boundary: $cost"
     }
 }
-Run-Test "A scored free incumbent cannot auto-upgrade to paid under a percentage allowance" {
+Run-Test "A scored free incumbent can upgrade without inventing a percentage cost change" {
     $one = Verdict; $one.pricing.inputPerMillion=0; $one.pricing.outputPerMillion=0
     $two = Verdict; $two.modelId="two"
     $current = @{key="test";model="one";effort="medium";context="default"}
-    $s = Select-Models @((Record one 60),(Record two 70)) @($one,$two) $current value_balanced -MaxIncrease 25
-    Assert-True ($s.valueDecision.promotionBlockReason -eq "retained_cost_escalation_requires_approval") "Free-to-paid transition bypassed guard"
+    $s = Select-Models @((Record one 60),(Record two 70)) @($one,$two) $current value_balanced
+    Assert-True (Resolve-ProfileSelectionState -CurrentModel one -Selection $s -ForceImmediateApply).applied "Free-to-paid authorization was blocked"
     Assert-True ($null -eq $s.valueDecision.costIncreasePercent) "Undefined percentage became finite"
 }
 Run-Test "Cost-policy changes reset confirmation and price jumps cannot bypass it" {
-    $one = Verdict; $one.pricing.inputPerMillion=1; $one.pricing.outputPerMillion=0
-    $two = Verdict; $two.modelId="two"; $two.pricing.inputPerMillion=1.25; $two.pricing.outputPerMillion=0
+    $hard=$req.Clone(); $hard.costSensitive=$true; $hard.inputCeilingPerMillion=1.25; $hard.outputCeilingPerMillion=0
+    $price=@{verifiedAtUtc="2026-09-01";tiers=@{default=@{inputPerMillion=1.25;outputPerMillion=0}}}
+    $two=Verdict -Requirement $hard -Price $price; $two.modelId="two"
     $current = @{key="test";model="one";effort="medium";context="default"}
-    $records = @((Record one 60),(Record two 70))
-    $s = Select-Models $records @($one,$two) $current value_balanced -MaxIncrease 25
+    $records = @((Record two 70))
+    $s = Select-Models $records @($two) $current value_balanced -Budget $hard
     $first = Resolve-ProfileSelectionState -CurrentModel one -Selection $s
     Assert-True ($first.state.pending.count -eq 1) "Allowed premium did not start confirmation"
-    $s = Select-Models $records @($one,$two) $current value_balanced -MaxIncrease 0
+    $tighter=$hard.Clone(); $tighter.inputCeilingPerMillion=1.2
+    $two=Verdict -Requirement $tighter -Price $price; $two.modelId="two"
+    $s = Select-Models $records @($two) $current value_balanced -Budget $tighter
     $blocked = Resolve-ProfileSelectionState -CurrentModel one -Selection $s -State $first.state -ForceImmediateApply
     Assert-True (-not $blocked.applied -and $null -eq $blocked.state.pending) "Tighter policy reused pending authorization"
-    $two.pricing.inputPerMillion=1.26
-    $s = Select-Models $records @($one,$two) $current value_balanced -MaxIncrease 25
+    $price.tiers.default.inputPerMillion=1.26
+    $two=Verdict -Requirement $hard -Price $price; $two.modelId="two"
+    $s = Select-Models $records @($two) $current value_balanced -Budget $hard
     $blocked = Resolve-ProfileSelectionState -CurrentModel one -Selection $s -State $first.state -ForceImmediateApply
     Assert-True (-not $blocked.applied -and $blocked.state.pending.count -eq 1) "Price jump bypassed guard or advanced confirmation"
-    $two.pricing.inputPerMillion=1.25
-    $s = Select-Models $records @($one,$two) $current value_balanced -MaxIncrease 25
+    $price.tiers.default.inputPerMillion=1.25
+    $two=Verdict -Requirement $hard -Price $price; $two.modelId="two"
+    $s = Select-Models $records @($two) $current value_balanced -Budget $hard
     $restored = Resolve-ProfileSelectionState -CurrentModel one -Selection $s -State $blocked.state
     Assert-True (-not $restored.applied -and $restored.state.pending.count -eq 1) "Price-only recovery confirmed unchanged source"
+}
+Run-Test "Eligibility and quality ranking distinguish efforts of the same model" {
+    $high=Verdict; $high | Add-Member -NotePropertyName effort -NotePropertyValue high -Force
+    $high.admissible=$false; $high.reasonCodes=@("effort_unsupported")
+    $xhigh=Verdict; $xhigh | Add-Member -NotePropertyName effort -NotePropertyValue xhigh -Force
+    $max=Verdict; $max | Add-Member -NotePropertyName effort -NotePropertyValue max -Force
+    $a=Record one 99; $a.effort="high"
+    $b=Record one 70; $b.effort="xhigh"
+    $c=Record one 69; $c.effort="max"
+    $current=@{key="test";model="one";effort="high";context="default"}
+    $s=Select-Models @($a,$b,$c) @($high,$xhigh,$max) $current
+    Assert-True ($s.winner.effort -eq "xhigh" -and $s.winner.score -eq 70) "Model-only eligibility admitted a blocked effort or max was preferred blindly"
+    Assert-True ($s.winner.configurationId -ne $s.currentConfiguration.configurationId) "Incumbent effort conflated with winner"
+}
+Run-Test "Exact configuration wins ties and LiveBench cannot corroborate another effort" {
+    $high=Verdict; $high | Add-Member -NotePropertyName effort -NotePropertyValue high -Force
+    $xhigh=Verdict; $xhigh | Add-Member -NotePropertyName effort -NotePropertyValue xhigh -Force
+    $two=Verdict; $two.modelId="two"; $two | Add-Member -NotePropertyName effort -NotePropertyValue high -Force
+    $a=Record one 70; $a.effort="high"; $a.publicationAgeUnknown=$false
+    $b=Record one 70; $b.effort="xhigh"; $b.publicationAgeUnknown=$false
+    $lb=Record one 80 liveBench; $lb.effort="xhigh"; $lb.publicationAgeUnknown=$false
+    $other=Record two 60; $other.effort="high"; $other.publicationAgeUnknown=$false
+    $lbOther=Record two 60 liveBench; $lbOther.effort="high"; $lbOther.publicationAgeUnknown=$false
+    $current=@{key="test";model="one";effort="high";context="default"}
+    $s=Select-Models @($b,$a,$other,$lb,$lbOther) @($high,$xhigh,$two) $current
+    Assert-True ($s.winner.effort -eq "high") "Equal-score different effort displaced incumbent"
+    Assert-True ($s.confidence -eq "reduced" -and -not $s.contested) "Different effort counted as corroboration"
+}
+. (Join-Path $PSScriptRoot "model-policy-config.ps1")
+Run-Test "Multiple effort variants of one model do not inflate independent corroboration" {
+    $verdicts=@();$records=@()
+    foreach ($effort in @("high","xhigh")) {
+        $verdict=Verdict; $verdict | Add-Member -NotePropertyName effort -NotePropertyValue $effort -Force
+        $verdicts+=@($verdict)
+        foreach ($source in @("artificialAnalysis","liveBench")) {
+            $record=Record one 70 $source; $record.effort=$effort; $record.publicationAgeUnknown=$false
+            $records+=@($record)
+        }
+    }
+    $s=Select-Models $records $verdicts @{key="test";model="one";effort="high";context="default"}
+    Assert-True ($s.confidence -eq "reduced" -and -not $s.contested) "Two efforts of one model were treated as independent coverage"
+}
+function Agentic-Selection($CurrentModel="one", $CurrentEffort="high", $WinnerModel="two", $WinnerEffort="xhigh", $Version="v1") {
+    $p=Get-ModelPolicyConfig (Join-Path $PSScriptRoot "..\config\model-policy.json")
+    $current=@{key="agentic-implementation";model=$CurrentModel;effort=$CurrentEffort;context="default"}
+    $old=Verdict; $old.modelId=$CurrentModel; $old | Add-Member -NotePropertyName effort -NotePropertyValue $CurrentEffort -Force
+    $candidate=Verdict; $candidate.modelId=$WinnerModel; $candidate | Add-Member -NotePropertyName effort -NotePropertyValue $WinnerEffort -Force
+    $a=Record $CurrentModel 60 artificialAnalysis $Version; $a.effort=$CurrentEffort
+    $b=Record $WinnerModel 70 artificialAnalysis $Version; $b.effort=$WinnerEffort
+    Get-ProfileSelection -Profile $current -Verdicts @($old,$candidate) -Evidence @($a,$b) -Policy $p -Aliases @{}
+}
+Run-Test "Preauthorized effort changes apply after confirmation or force, including within one model" {
+    foreach ($model in @("one","two")) {
+        foreach ($force in @($false,$true)) {
+            $state=$null
+            $versions=if ($force) { @("v1") } else { @("v1","v2") }
+            foreach ($version in $versions) {
+                $s=Agentic-Selection -WinnerModel $model -Version $version
+                $r=Resolve-ProfileSelectionState -CurrentModel one -Selection $s -State $state -ForceImmediateApply:$force
+                Assert-True ($r.applied -eq ($force -or $version -eq "v2")) "Effort authorization or confirmation failed"
+                if ($r.applied) {
+                    Assert-True ($r.finalModel -eq $model -and $r.finalConfiguration.effort -eq "xhigh") "Model-effort pair was not applied together"
+                } else {
+                    Assert-True ($r.finalConfiguration.effort -eq "high" -and $r.state.pending.count -eq 1) "Pending effort was applied prematurely"
+                }
+                Assert-True ($s.winner.model -eq $model -and $s.winner.effort -eq "xhigh") "Best recommendation hidden behind same-effort fallback"
+                $state=$r.state
+            }
+        }
+    }
+}
+Run-Test "Configuration state migrates model-only counts and records complete pending and active pairs" {
+    $s=Agentic-Selection -WinnerEffort high
+    $first=Resolve-ProfileSelectionState -CurrentModel one -Selection $s
+    Assert-True ($first.state.schemaVersion -eq 2 -and $first.state.pending.effort -eq "high" -and $first.state.pending.context -eq "default") "Pending pair absent"
+    $legacy=ConvertTo-CanonicalModelData $first.state
+    $legacy.schemaVersion=1; $legacy.pending.count=99
+    $secondSelection=Agentic-Selection -WinnerEffort high -Version v2
+    $migrated=Resolve-ProfileSelectionState -CurrentModel one -Selection $secondSelection -State $legacy
+    Assert-True (-not $migrated.applied -and $migrated.state.pending.count -eq 1) "Legacy model-only counts promoted a pair"
+    $applied=Resolve-ProfileSelectionState -CurrentModel one -Selection $secondSelection -State $first.state
+    Assert-True ($applied.applied -and $applied.finalConfiguration.model -eq "two" -and $applied.finalConfiguration.effort -eq "high") "Same-effort replacement no longer confirms"
+    Assert-True ($applied.state.activeOverride.configurationId -eq $secondSelection.winner.configurationId) "Active override lost configuration identity"
+}
+Run-Test "Changing the candidate effort starts a new confirmation count" {
+    $first=Resolve-ProfileSelectionState -CurrentModel one -Selection (Agentic-Selection -WinnerEffort high)
+    $changed=Resolve-ProfileSelectionState -CurrentModel one -Selection (Agentic-Selection -Version v2) -State $first.state
+    Assert-True (-not $changed.applied -and $changed.state.pending.count -eq 1 -and $changed.state.pending.effort -eq "xhigh") "Different effort reused a pending count"
+    $confirmed=Resolve-ProfileSelectionState -CurrentModel one -Selection (Agentic-Selection -Version v3) -State $changed.state
+    Assert-True ($confirmed.applied -and $confirmed.finalConfiguration.model -eq "two" -and $confirmed.finalConfiguration.effort -eq "xhigh") "New pair did not confirm"
+}
+Run-Test "Bounded selection rejects unlabelled effort rather than assuming the profile baseline" {
+    $p=Get-ModelPolicyConfig (Join-Path $PSScriptRoot "..\config\model-policy.json")
+    $profile=@{key="agentic-implementation";model="one";effort="high";context="default"}
+    $verdict=Verdict; $verdict.effort="high"
+    $record=Record one 70; $record.PSObject.Properties.Remove("effort")
+    $threw=$false
+    try { Get-ProfileSelection -Profile $profile -Verdicts @($verdict) -Evidence @($record) -Policy $p -Aliases @{} | Out-Null }
+    catch { $threw=$_.Exception.Message -match "explicit effort" }
+    Assert-True $threw "Unlabelled benchmark was silently treated as high"
+}
+Run-Test "All profiles reject out-of-range efforts and contexts even with force" {
+    $p=Get-ModelPolicyConfig (Join-Path $PSScriptRoot "..\config\model-policy.json")
+    foreach ($key in $p.selectionPolicy.profiles.Keys) {
+        $range=$p.selectionPolicy.profiles[$key].configurationSelection.allowedEfforts
+        $outside=@(@("max","low","high") | Where-Object {$_ -notin $range})[0]
+        $current=@{key=$key;model="one";effort=$range[0];context="default"}
+        $verdicts=@(); $records=@()
+        foreach ($configuration in @(@("one",$range[0],"default",60),@("two",$range[-1],"default",70),
+            @("outside",$outside,"default",99),@("context",$range[-1],"long_context",100))) {
+            $v=Verdict; $v.modelId=$configuration[0]; $v.effort=$configuration[1]; $v.context=$configuration[2]
+            $r=Record $configuration[0] $configuration[3]; $r.effort=$configuration[1]
+            $r.metric="$($p.profileArtificialAnalysisMetrics[$key])Index"
+            $r | Add-Member -NotePropertyName context -NotePropertyValue $configuration[2]
+            $verdicts+=@($v); $records+=@($r)
+        }
+        $s=Get-ProfileSelection -Profile $current -Verdicts $verdicts -Evidence $records -Policy $p -Aliases @{}
+        $result=Resolve-ProfileSelectionState -CurrentModel one -Selection $s -ForceImmediateApply
+        Assert-True ($result.applied -and $result.finalModel -eq "two" -and $result.finalConfiguration.effort -eq $range[-1]) "Unauthorized effort/context selected for $key"
+        Assert-True ($s.qualityWinner.model -eq "two") "Unauthorized configuration set the quality reference for $key"
+        $native=Verdict; $native.modelId="native"; $native.effort="none"
+        $native.capabilities=$cap.Clone(); $native.capabilities.effortMode="unsupported"
+        $nativeRecord=Record native 98; $nativeRecord.effort="none"
+        $nativeRecord.metric="$($p.profileArtificialAnalysisMetrics[$key])Index"
+        $s=Get-ProfileSelection -Profile $current -Verdicts (@($verdicts)+@($native)) -Evidence (@($records)+@($nativeRecord)) -Policy $p -Aliases @{}
+        Assert-True ($s.winner.model -eq "native" -and $s.winner.effort -eq "none") "Native effort configuration was excluded for $key"
+    }
+}
+Run-Test "Agentic bands use the 0-1 index and include the exact 0.03 boundary" {
+    $p=Get-ModelPolicyConfig (Join-Path $PSScriptRoot "..\config\model-policy.json")
+    $current=@{key="agentic-implementation";model="one";effort="high";context="default"}
+    $records=@();$verdicts=@()
+    foreach ($configuration in @(@("one",0.68,5),@("two",0.65,2),@("outside",0.649999,1))) {
+        $r=Record $configuration[0] $configuration[1] artificialAnalysisCodingAgents
+        $r.effort="high";$r.metric="codingAgentIndex";$records+=@($r)
+        $v=Verdict;$v.modelId=$configuration[0];$v.effort="high";$v.pricing.inputPerMillion=$configuration[2]
+        $verdicts+=@($v)
+    }
+    $s=Get-ProfileSelection -Profile $current -Verdicts $verdicts -Evidence $records -Policy $p -Aliases @{}
+    Assert-True ($s.winner.model -eq "two" -and $s.valueDecision.maxScoreGap -eq 0.03) "Agentic tolerance used the wrong scale or boundary"
+}
+Run-Test "Cached evidence cannot inflate the reported fresh quality leader" {
+    $old=Record one 99; $old.cached=$true
+    $two=Verdict;$two.modelId="two"
+    $s=Select-Models @($old,(Record two 70)) @((Verdict),$two)
+    Assert-True ($s.winner.model -eq "two" -and $s.qualityWinner.model -eq "two") "Cached score was treated as the fresh quality leader"
 }
 if ($script:Failed) { exit 1 }

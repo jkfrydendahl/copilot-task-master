@@ -1,10 +1,11 @@
 Set-StrictMode -Version Latest
-. (Join-Path $PSScriptRoot "model-data-common.ps1")
+. (Join-Path $PSScriptRoot "model-configuration.ps1")
 
 function Get-ProfileBenchmarkEvidence {
     param(
         [Parameter(Mandatory)]$Profile,
         [AllowEmptyCollection()][string[]]$Models,
+        [AllowEmptyCollection()][object[]]$Configurations,
         [Parameter(Mandatory)][hashtable]$Sources,
         [Parameter(Mandatory)][hashtable]$Aliases,
         [hashtable]$Capabilities = @{},
@@ -13,6 +14,11 @@ function Get-ProfileBenchmarkEvidence {
     )
     $records = [System.Collections.Generic.List[object]]::new()
     $diagnostics = [System.Collections.Generic.List[string]]::new()
+    if (-not $PSBoundParameters.ContainsKey("Configurations")) {
+        $Configurations = @(foreach ($model in $Models) {
+            New-ModelConfiguration -Model $model -Effort $Profile.effort -Context $Profile.context -CapabilityRecord $Capabilities[$model]
+        })
+    }
     $sourceNames = @("artificialAnalysis", "liveBench")
     if ($Profile.key -eq "agentic-implementation") { $sourceNames = @("artificialAnalysisCodingAgents") + $sourceNames }
     foreach ($sourceName in $sourceNames) {
@@ -33,13 +39,9 @@ function Get-ProfileBenchmarkEvidence {
             $diagnostics.Add("${sourceName}: publication_stale_or_invalid")
             continue
         }
-        foreach ($model in $Models) {
-            $capability = $Capabilities[$model]
-            $effort = if ((Get-ObjectMemberValue $capability "effortMode") -eq "unsupported") {
-                "none"
-            } else {
-                [string]$Profile.effort
-            }
+        foreach ($configuration in $Configurations) {
+            $model = $configuration.model
+            $effort = $configuration.effort
             $mapping = Get-ObjectMemberValue (Get-ObjectMemberValue $Aliases $model) $sourceName
             $alias = if ($mapping -is [System.Collections.IDictionary]) { Get-ObjectMemberValue $mapping $effort } else { $null }
             if ([string]::IsNullOrWhiteSpace([string]$alias)) {
@@ -65,6 +67,8 @@ function Get-ProfileBenchmarkEvidence {
             $records.Add([pscustomobject]@{
                 model = $model
                 effort = $effort
+                context = $configuration.context
+                configurationId = $configuration.configurationId
                 alias = [string]$alias
                 source = $sourceName
                 metric = $metric

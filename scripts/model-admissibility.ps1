@@ -90,6 +90,8 @@ function Get-ModelAdmissibilityVerdict {
     return [pscustomobject]@{
         modelId = $ModelId
         profileKey = $ProfileKey
+        effort = $(if ((Get-ObjectMemberValue $CapabilityRecord "effortMode") -eq "unsupported") { "none" } else { $ProfileEffort })
+        context = $ProfileContextTier
         admissible = $reasons.Count -eq 0
         reasonCodes = @($reasons)
         warningCodes = @($warnings)

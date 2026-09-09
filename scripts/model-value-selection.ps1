@@ -13,7 +13,7 @@ function Get-ModelReferenceCost {
 }
 
 function Get-ValueBalancedSelection {
-    param($Profile, $RankedEvidence, $VerdictsByModel, $SelectionPolicy, $Evidence)
+    param($Profile, $RankedEvidence, $VerdictsByConfiguration, $SelectionPolicy, $Evidence, $CurrentConfiguration)
     $reference = $RankedEvidence[0]
     $metricKey = "$($reference.source).$($reference.metric)"
     $bands = $SelectionPolicy.profiles[$Profile.key].qualityBands
@@ -21,16 +21,17 @@ function Get-ValueBalancedSelection {
     if ($null -eq $maxGap) { throw "Missing quality band '$metricKey' for '$($Profile.key)'." }
     $qualified = @($RankedEvidence | Where-Object { $_.score -ge $reference.score - $maxGap })
     $sortOrder = @(
-        @{ Expression = { Get-ModelReferenceCost $VerdictsByModel[$_.model] $SelectionPolicy } }
-        @{ Expression = { if ($_.model -eq $Profile.model) { 0 } else { 1 } } }
+        @{ Expression = { Get-ModelReferenceCost $VerdictsByConfiguration[$_.configurationId] $SelectionPolicy } }
+        @{ Expression = { if ($_.configurationId -eq $CurrentConfiguration.configurationId) { 0 } else { 1 } } }
         @{ Expression = { $_.score }; Descending = $true }
         "model"
+        "effort"
+        "context"
     )
     $winner = @($qualified | Sort-Object -Property $sortOrder)[0]
-    $referenceCost = Get-ModelReferenceCost $VerdictsByModel[$winner.model] $SelectionPolicy
-    $incumbent = $VerdictsByModel[$Profile.model]
+    $referenceCost = Get-ModelReferenceCost $VerdictsByConfiguration[$winner.configurationId] $SelectionPolicy
+    $incumbent = $VerdictsByConfiguration[$CurrentConfiguration.configurationId]
     $incumbentCost = Get-ModelReferenceCost $incumbent $SelectionPolicy
-    $maxCostIncrease = $SelectionPolicy.profiles[$Profile.key].maxAutomaticCostIncreasePercent
     $costIncreasePercent = if ($null -ne $incumbentCost -and $incumbentCost -gt 0) {
         ($referenceCost - $incumbentCost) / $incumbentCost * 100
     } elseif ($incumbentCost -eq 0 -and $referenceCost -eq 0) {
@@ -38,27 +39,11 @@ function Get-ValueBalancedSelection {
     } else {
         $null
     }
-    $incumbentCapability = Get-ObjectMemberValue $incumbent "capabilities"
-    $incumbentEffort = if ((Get-ObjectMemberValue $incumbentCapability "effortMode") -eq "unsupported") {
-        "none"
-    } else {
-        $Profile.effort
-    }
     $comparableIncumbent = @($Evidence | Where-Object {
-        $_.model -eq $Profile.model -and $_.source -eq $winner.source -and
-        $_.metric -eq $winner.metric -and $_.effort -eq $incumbentEffort -and
-        -not $_.cached -and $_.sourceVersion -eq $winner.sourceVersion
+        $_.configurationId -eq $CurrentConfiguration.configurationId -and $_.source -eq $winner.source -and
+        $_.metric -eq $winner.metric -and
+        $_.cached -eq $winner.cached -and $_.sourceVersion -eq $winner.sourceVersion
     })
-    $promotionBlockReason = $null
-    if ($winner.model -ne $Profile.model) {
-        if ($null -eq $incumbentCost) {
-            $promotionBlockReason = "retained_incumbent_cost_unknown"
-        } elseif ($referenceCost -gt $incumbentCost -and -not $comparableIncumbent.Count) {
-            $promotionBlockReason = "retained_unproven_cost_increase"
-        } elseif ($referenceCost -gt $incumbentCost * (1 + [decimal]$maxCostIncrease / 100)) {
-            $promotionBlockReason = "retained_cost_escalation_requires_approval"
-        }
-    }
     return [pscustomobject]@{
         winner = $winner
         qualityReference = $reference
@@ -67,7 +52,7 @@ function Get-ValueBalancedSelection {
         referenceAic = $referenceCost * 100
         incumbentReferenceAic = $(if ($null -ne $incumbentCost) { $incumbentCost * 100 } else { $null })
         costIncreasePercent = $costIncreasePercent
-        maxAutomaticCostIncreasePercent = $maxCostIncrease
-        promotionBlockReason = $promotionBlockReason
+        incumbentEvidenceAvailable = $comparableIncumbent.Count -gt 0
+        incumbentScore = $(if ($comparableIncumbent.Count) { $comparableIncumbent[0].score } else { $null })
     }
 }

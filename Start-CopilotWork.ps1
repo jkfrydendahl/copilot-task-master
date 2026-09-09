@@ -233,9 +233,6 @@ if (-not (Get-Command copilot -ErrorAction SilentlyContinue)) {
     exit 1
 }
 
-# Generate a session UUID upfront so it can be logged and displayed.
-$sessionId = [System.Guid]::NewGuid().ToString()
-
 # Offer to resume a previous session (e.g. continuing after a triage relaunch).
 Write-Host ""
 $resumeInput = Read-Host "Resume a previous session? (paste session ID or Enter to skip)"
@@ -259,8 +256,10 @@ $copilotArgs = & {
 }
 
 if (-not [string]::IsNullOrWhiteSpace($resumeInput)) {
-    $copilotArgs += @("--resume", $resumeInput)
+    $sessionId = $resumeInput.Trim()
+    $copilotArgs += @("--resume", $sessionId)
 } else {
+    $sessionId = [System.Guid]::NewGuid().ToString()
     $copilotArgs += @("--session-id", $sessionId)
 }
 
@@ -279,7 +278,7 @@ if ($selectedProfile.key -eq "triage") {
 }
 
 $sessionStart = Get-Date
-$PendingFile = Join-Path $MasterPath "usage-pending-$($sessionStart.ToString(`"yyyyMMddTHHmmss`")).json"
+$PendingFile = Join-Path $MasterPath "usage-pending-$([guid]::NewGuid().ToString('N')).json"
 $sessionInfo = [pscustomobject]@{
     session_id = $sessionId
     timestamp_start = $sessionStart.ToString("s")

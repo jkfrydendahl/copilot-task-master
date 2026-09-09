@@ -74,6 +74,12 @@ function Update-TaskClassAgents {
     if ($routeProfiles.Count -eq 0) { return }
 
     try {
+        . (Join-Path $PSScriptRoot "model-launch-args.ps1")
+        $capabilities = @{}
+        $catalogPath = Join-Path $MasterPath "config\model-capabilities.json"
+        if (Test-Path -LiteralPath $catalogPath) {
+            $capabilities = Get-LaunchCapabilitiesCatalog -CatalogPath $catalogPath
+        }
         New-Item -ItemType Directory -Path $personalAgents -Force | Out-Null
 
         $previousKeys = @()
@@ -93,7 +99,8 @@ function Update-TaskClassAgents {
             $currentKeys += $key
 
             $nameYaml = Convert-ToYamlSingleQuoted $key
-            $descYaml = Convert-ToYamlSingleQuoted ("Task-class specialist for {0}. Use when work matches: {1}" -f $label, $description)
+            $invocationJson = Get-CopilotTaskInvocationSettings -Profile $profile -CapabilitiesCatalog $capabilities | ConvertTo-Json -Compress
+            $descYaml = Convert-ToYamlSingleQuoted ("Task-class specialist for {0}. Use when work matches: {1} Required task arguments: {2}" -f $label, $description, $invocationJson)
             $modelYaml = Convert-ToYamlSingleQuoted $model
             $toolsLine = if ($key -eq "review") { "tools: ['read', 'search']`n" } else { "" }
 
@@ -107,6 +114,12 @@ You are the **$label** specialist for my Copilot task-class workflow.
 
 Primary fit:
 - $description
+
+Required task tool arguments (caller responsibility): $invocationJson
+These settings are not enforced by this Markdown or inherited from the orchestrator.
+The caller must resolve the current approved profile and pass its model, effort (when supported),
+and context explicitly. If the task tool cannot express that configuration, do not silently
+substitute defaults; report the limitation and use the direct profile launcher instead.
 
 Operating rules:
 - Focus on requests that clearly match this class.

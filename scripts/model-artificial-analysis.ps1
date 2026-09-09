@@ -111,7 +111,7 @@ function Get-ArtificialAnalysisSourceDateFromApiResponse {
     foreach ($field in @("source_date", "sourceDate", "updated_at", "updatedAt", "last_updated", "lastUpdated", "generated_at", "generatedAt", "as_of_date", "asOfDate")) {
         $value = Get-ObjectMemberValue -InputObject $ApiResponse -Name $field
         if ([string]::IsNullOrWhiteSpace([string]$value)) { continue }
-        $parsed = $null
+        $parsed = [datetime]::MinValue
         $styles = [System.Globalization.DateTimeStyles]::AssumeUniversal -bor [System.Globalization.DateTimeStyles]::AdjustToUniversal
         if ([datetime]::TryParse([string]$value, [System.Globalization.CultureInfo]::InvariantCulture, $styles, [ref]$parsed)) {
             return $parsed.ToString("yyyy-MM-dd")

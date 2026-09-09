@@ -16,6 +16,15 @@ function Format-ModelReportRow {
     return "| $($cells -join ' | ') |"
 }
 
+function Format-ModelReportConfiguration {
+    param($Configuration)
+    if ($null -eq $Configuration) { return "n/a" }
+    $model = Get-ObjectMemberValue $Configuration "model"
+    if ($null -eq $model) { $model = Get-ObjectMemberValue $Configuration "modelId" }
+    return @($model, (Get-ObjectMemberValue $Configuration "effort"), (Get-ObjectMemberValue $Configuration "context") |
+        ForEach-Object { Format-ModelReportValue $_ }) -join " / "
+}
+
 function Format-ModelReportPrices {
     param($Price, [switch]$Cache)
     $fields = if ($Cache) {
@@ -36,19 +45,22 @@ function Get-ModelReviewCoverage {
             foreach ($kind in @("exclusion", "advisory warning")) {
                 $codes = if ($kind -eq "exclusion") { $verdict.reasonCodes } else { $verdict.warningCodes }
                 foreach ($code in $codes) {
-                    [pscustomobject]@{kind=$kind; model=$verdict.modelId; message=$code; profile=$result.key}
+                    [pscustomobject]@{kind=$kind;model=$verdict.modelId;effort=(Get-ObjectMemberValue $verdict "effort");
+                        context=(Get-ObjectMemberValue $verdict "context");message=$code;profile=$result.key}
                 }
             }
         }
         foreach ($diagnostic in $result.evidence.diagnostics) {
-            [pscustomobject]@{kind="evidence gap"; model=""; message=$diagnostic; profile=$result.key}
+            [pscustomobject]@{kind="evidence gap";model="";effort="";context="";message=$diagnostic;profile=$result.key}
         }
     })
-    foreach ($group in @($entries | Group-Object kind, model, message | Sort-Object Name)) {
+    foreach ($group in @($entries | Group-Object kind, model, effort, context, message | Sort-Object Name)) {
         $entry = $group.Group[0]
         [pscustomobject]@{
             kind = $entry.kind
             model = $entry.model
+            effort = $entry.effort
+            context = $entry.context
             message = $entry.message
             profiles = @($group.Group.profile | Sort-Object -Unique)
         }
@@ -66,7 +78,7 @@ function Get-ProfileReviewReportLines {
     $r = $Result
     $lines = [System.Collections.Generic.List[string]]::new()
     $mode = if ($r.requirement.costSensitive) { "hard" } else { "advisory" }
-    $leader = Format-ModelReportValue (Get-ObjectMemberValue $r.selection.qualityWinner "model")
+    $leader = Format-ModelReportConfiguration $r.selection.qualityWinner
     $source = Format-ModelReportValue $r.selection.decidingSource
     $fallback = Format-ModelReportValue $r.fallback
 
@@ -76,28 +88,34 @@ function Get-ProfileReviewReportLines {
     $lines.Add("Budget: **$mode**, input $($r.requirement.inputCeilingPerMillion) / output $($r.requirement.outputCeilingPerMillion) USD per million. Deciding source: $source.")
     $lines.Add("Quality leader before hard-budget exclusions: $leader. Family fallback (informational, not a winner): $fallback.")
     $lines.Add("Strategy: **$($r.selection.strategy)**.")
+    if ($r.selection.configurationMode -eq "bounded_effort") {
+        $candidateAic = Format-ModelReportNumber $r.selection.candidateReferenceAic
+        $incumbentAic = Format-ModelReportNumber $r.selection.incumbentReferenceAic
+        $efforts = $r.selection.allowedEfforts -join ", "
+        $lines.Add("Configuration selection: **automatic bounded effort**; authorized efforts: $efforts. Models without effort controls use their native configuration; context remains fixed.")
+        $lines.Add("Reference usage: candidate **$candidateAic AIC**; incumbent **$incumbentAic AIC**.")
+        $lines.Add("Reference AIC uses a fixed token basket, not measured consumption. Effort-related changes in token usage, task cost and latency are unknown; equal reference AIC does not establish equal task cost.")
+    }
     if ($null -ne $r.selection.valueDecision) {
         $value = $r.selection.valueDecision
-        $referenceModel = Format-ModelReportValue $value.qualityReference.model
+        $referenceModel = Format-ModelReportConfiguration $value.qualityReference
         $referenceScore = Format-ModelReportNumber $value.qualityReference.score
         $gap = Format-ModelReportNumber $value.scoreGap
         $maximum = Format-ModelReportNumber $value.maxScoreGap
         $candidateAic = Format-ModelReportNumber $value.referenceAic
         $incumbentAic = Format-ModelReportNumber $value.incumbentReferenceAic
         $lines.Add("Eligible quality reference: $referenceModel ($referenceScore). Candidate gap: **$gap / $maximum** absolute $($value.qualityReference.metric) score points.")
-        $lines.Add("Lowest reference cost within the band wins; an equally priced incumbent stays. Reference usage: candidate **$candidateAic AIC**; incumbent **$incumbentAic AIC** (1 AIC = USD 0.01).")
+        $lines.Add("Lowest reference cost within the band wins; an equally priced, qualified incumbent configuration stays. Reference usage: candidate **$candidateAic AIC**; incumbent **$incumbentAic AIC** (1 AIC = USD 0.01).")
         $costChange = Format-ModelReportNumber $value.costIncreasePercent
-        $costLimit = Format-ModelReportNumber $value.maxAutomaticCostIncreasePercent
-        $lines.Add("Candidate cost change: **$costChange%**; automatic increase limit: **$costLimit%** relative to the incumbent. A percentage is n/a when incumbent cost is unknown or a free incumbent would become paid.")
-        if ($value.promotionBlockReason) {
-            $explanation = if ($value.promotionBlockReason -eq "retained_incumbent_cost_unknown") {
-                "Fresh, valid incumbent pricing is missing; savings or a premium cannot be established."
-            } elseif ($value.promotionBlockReason -eq "retained_cost_escalation_requires_approval") {
-                "The candidate exceeds the automatic cost-increase limit. Keep the incumbent unless a deliberate policy or profile change approves the extra spend; benchmark rank alone is not spending permission."
-            } else {
-                "The candidate costs more, but the incumbent lacks fresh, configuration-matched evidence in the same deciding-source observation."
-            }
-            $lines.Add("**Promotion blocked:** $($value.promotionBlockReason). $explanation Confirmation override cannot bypass this guard.")
+        $lines.Add("Candidate cost change: **$costChange%** (informational, not an incumbent-relative limit). Fixed hard ceilings authorize spending; they never rise automatically. A percentage is n/a when incumbent cost is unknown or a free incumbent would become paid.")
+        if ($null -eq $value.incumbentReferenceAic) {
+            $lines.Add("**Cost comparison unavailable:** fresh, valid incumbent pricing is missing; savings or a premium cannot be established. The candidate's own fresh pricing and hard-budget eligibility still govern promotion.")
+        }
+        if (-not $value.incumbentEvidenceAvailable) {
+            $lines.Add("**Incumbent evidence gap:** no configuration-matched score in this deciding-source observation. An authorized candidate may proceed, but no measured quality improvement over the incumbent is claimed.")
+        } else {
+            $incumbentScore = Format-ModelReportNumber $value.incumbentScore
+            $lines.Add("Matched incumbent score in this deciding-source observation: **$incumbentScore**.")
         }
     }
     if ($r.selection.contested) {
@@ -105,7 +123,7 @@ function Get-ProfileReviewReportLines {
     }
     if ($r.resolution.state.pending) {
         $pending = $r.resolution.state.pending
-        $pendingModel = Format-ModelReportValue $pending.model
+        $pendingModel = Format-ModelReportConfiguration $pending
         $pendingSource = Format-ModelReportValue $pending.decidingSource
         $lines.Add("Pending distinct deciding-source observations for $pendingModel ($pendingSource): $($pending.count) / 2.")
     }
@@ -113,12 +131,12 @@ function Get-ProfileReviewReportLines {
     $lines.Add("<details>")
     $lines.Add("<summary>Eligibility and exact benchmark evidence</summary>")
     $lines.Add("")
-    $lines.Add("| Model | Eligible | Exclusions | Advisory warnings | Price tier | Input / output USD per M | Price verified | Capability as-of |")
+    $lines.Add("| Configuration (model / effort / context) | Eligible | Exclusions | Advisory warnings | Price tier | Input / output USD per M | Price verified | Capability as-of |")
     $lines.Add("|---|---|---|---|---|---|---|---|")
     foreach ($verdict in $r.verdicts) {
         $price = $verdict.pricing
         $lines.Add((Format-ModelReportRow @(
-            $verdict.modelId
+            (Format-ModelReportConfiguration $verdict)
             $verdict.admissible
             ($verdict.reasonCodes -join ", ")
             ($verdict.warningCodes -join ", ")
@@ -163,18 +181,19 @@ function Get-TaskProfileReviewReport {
     $lines.Add("")
     $lines.Add("## Profile decisions")
     $lines.Add("")
-    $lines.Add("| Profile | Strategy | Current | Recommended | Applied/current after run | Effort / context | Outcome | Confidence |")
-    $lines.Add("|---|---|---|---|---|---|---|---|")
+    $lines.Add("| Profile | Strategy | Current configuration | Recommended configuration | Applied/current after run | Outcome | Confidence |")
+    $lines.Add("|---|---|---|---|---|---|---|")
     foreach ($result in $Results) {
         $lines.Add((Format-ModelReportRow @(
-            $result.key, $result.selection.strategy, $result.currentModel, (Get-ObjectMemberValue $result.selection.winner "model"),
-            $result.finalModel, "$($result.effort) / $($result.context)",
+            $result.key, $result.selection.strategy, (Format-ModelReportConfiguration $result.currentConfiguration),
+            (Format-ModelReportConfiguration $result.selection.winner), (Format-ModelReportConfiguration $result.finalConfiguration),
             $result.resolution.status, $result.selection.confidence
         )))
     }
     $lines.Add("")
     $lines.Add("Recommendations rank eligible configurations, not all models globally. AA is primary; LiveBench is corroboration or a labelled fallback. Unknown publication age, cached evidence, single-source coverage and external agent harnesses reduce confidence. A context capability is not a benchmark measurement at that context length.")
-    $lines.Add("Value-balanced profiles minimize reference AIC within a configured gap of their best eligible score. Bands are source-specific policy tolerances, not capability percentages or proof of task success. Quality-first profiles still maximize score with cost breaking exact ties.")
+    $lines.Add("Value-balanced profiles minimize reference AIC within a source-specific gap of their best eligible score, under fixed hard input/output price ceilings. Bands are policy tolerances, not capability percentages or proof of task success. Token-price ceilings are not total session-spend limits.")
+    $lines.Add("Configuration cells show model / effective effort / context; 'none' means the model exposes no effort control. Allowed effort ranges are standing authorization: model and effort changes apply together after confirmation. Force bypasses only the confirmation wait, never hard budgets, allowed ranges, availability, capabilities or evidence requirements.")
     $lines.Add("")
     $lines.Add("## Pricing refresh")
     $lines.Add("")
@@ -230,10 +249,10 @@ function Get-TaskProfileReviewReport {
     $lines.Add("<details>")
     $lines.Add("<summary>Grouped coverage details</summary>")
     $lines.Add("")
-    $lines.Add("| Kind | Model | Finding | Affected profiles |")
+    $lines.Add("| Kind | Configuration (model / effort / context) | Finding | Affected profiles |")
     $lines.Add("|---|---|---|---|")
     foreach ($entry in $coverage) {
-        $lines.Add((Format-ModelReportRow @($entry.kind, $entry.model, $entry.message, ($entry.profiles -join ", "))))
+        $lines.Add((Format-ModelReportRow @($entry.kind, (Format-ModelReportConfiguration $entry), $entry.message, ($entry.profiles -join ", "))))
     }
     $lines.Add("")
     $lines.Add("</details>")

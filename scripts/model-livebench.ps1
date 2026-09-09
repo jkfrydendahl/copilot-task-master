@@ -107,16 +107,16 @@ function Parse-LiveBenchData {
         }
     }
 
-    $codingColumns = Get-LiveBenchCategoryColumns -CategoryMap $categoryMap -PreferredNames @("Coding")
+    $codingColumns = @(Get-LiveBenchCategoryColumns -CategoryMap $categoryMap -PreferredNames @("Coding"))
     if ($codingColumns.Count -eq 0) { $codingColumns = @("code_generation", "code_completion") }
 
-    $agenticCodingColumns = Get-LiveBenchCategoryColumns -CategoryMap $categoryMap -PreferredNames @("Agentic Coding")
+    $agenticCodingColumns = @(Get-LiveBenchCategoryColumns -CategoryMap $categoryMap -PreferredNames @("Agentic Coding"))
     if ($agenticCodingColumns.Count -eq 0) { $agenticCodingColumns = @("javascript", "typescript", "python") }
 
-    $reasoningColumns = Get-LiveBenchCategoryColumns -CategoryMap $categoryMap -PreferredNames @("Reasoning")
+    $reasoningColumns = @(Get-LiveBenchCategoryColumns -CategoryMap $categoryMap -PreferredNames @("Reasoning"))
     if ($reasoningColumns.Count -eq 0) { $reasoningColumns = @("theory_of_mind", "zebra_puzzle", "spatial", "logic_with_navigation") }
 
-    $instructionFollowingColumns = Get-LiveBenchCategoryColumns -CategoryMap $categoryMap -PreferredNames @("IF", "Instruction Following")
+    $instructionFollowingColumns = @(Get-LiveBenchCategoryColumns -CategoryMap $categoryMap -PreferredNames @("IF", "Instruction Following"))
     if ($instructionFollowingColumns.Count -eq 0) { $instructionFollowingColumns = @("paraphrase", "simplify", "story_generation", "summarize") }
 
     $costByModel = @{}

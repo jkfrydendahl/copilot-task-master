@@ -38,15 +38,28 @@ function Get-ModelPolicyConfig {
         foreach ($field in @("requiresVision","requiresCliAgent","costSensitive")) {
             if ($req[$field] -isnot [bool]) { throw "$key.$field must be boolean." }
         }
-        if ($req.costSensitive -ne ($key -in @("quick","mechanical","triage"))) { throw "Unexpected hard/advisory budget policy for $key." }
+        if (-not $req.costSensitive) { throw "A hard budget is required for $key." }
         if ($p.profileArtificialAnalysisMetrics[$key] -notin @("coding","intelligence")) { throw "Unknown AA metric for $key." }
         if ($p.profileLiveBenchCategories[$key] -notin @("coding","agenticCoding","reasoning","instructionFollowing")) { throw "Unknown LiveBench category for $key." }
         $strategy = $strategies[$key]
         if ($strategy -isnot [System.Collections.IDictionary] -or $strategy["strategy"] -notin @("quality_first", "value_balanced")) {
             throw "Missing/invalid selection strategy for '$key'."
         }
+        $configuration = Get-ObjectMemberValue $strategy "configurationSelection"
+        if ($configuration -isnot [System.Collections.IDictionary] -or
+            $configuration["mode"] -ne "bounded_effort" -or $configuration["effortChangePolicy"] -ne "automatic") {
+            throw "Invalid configuration selection for '$key'; automatic bounded effort is required."
+        }
+        $efforts = $configuration["allowedEfforts"]
+        if ($efforts -isnot [array] -or -not $efforts.Count -or
+            @($efforts | Where-Object { $_ -isnot [string] -or $_ -notin @("minimal","low","medium","high","xhigh","max") }).Count -or
+            @($efforts | Select-Object -Unique).Count -ne $efforts.Count) {
+            throw "Invalid allowedEfforts for '$key'; specify unique supported effort names."
+        }
+        if ($strategy.Contains("maxAutomaticCostIncreasePercent")) {
+            throw "Incumbent-relative cost limits are obsolete for '$key'; use the fixed hard budget."
+        }
         if ($strategy.strategy -eq "value_balanced") {
-            Assert-ModelConfigNumber $strategy["maxAutomaticCostIncreasePercent"] "$key.maxAutomaticCostIncreasePercent"
             $bands = $strategy["qualityBands"]
             if ($bands -isnot [System.Collections.IDictionary]) { throw "Missing qualityBands for '$key'." }
             $metrics = @("artificialAnalysis.$($p.profileArtificialAnalysisMetrics[$key])Index", "liveBench.$($p.profileLiveBenchCategories[$key])")

@@ -100,7 +100,9 @@
     "gpt-5.6-sol": {
       "asOf": "2026-09-08",
       "capabilitySource": "copilot-cli-session-model-metadata",
-      "vision": null,
+      "vision": true,
+      "visionSource": "https://artificialanalysis.ai/models/gpt-5-6-sol-medium",
+      "visionVerifiedAt": "2026-09-09",
       "supportedContexts": [
         "default",
         "long_context"

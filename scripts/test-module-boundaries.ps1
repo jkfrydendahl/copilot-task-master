@@ -20,9 +20,11 @@ Run-Test "Policy and shared data load without benchmark provider dependencies" {
     . (Join-Path $PSScriptRoot "model-data-common.ps1")
     . (Join-Path $PSScriptRoot "model-policy-config.ps1")
     . (Join-Path $PSScriptRoot "model-admissibility.ps1")
+    . (Join-Path $PSScriptRoot "model-configuration.ps1")
 
     $policy = Get-ModelPolicyConfig (Join-Path $PSScriptRoot "..\config\model-policy.json")
     Assert-True ($policy.schemaVersion -eq 2) "Policy failed to load"
+    Assert-True ([bool](Get-Command Get-ProfileModelConfigurations)) "Configuration helper did not load"
     Assert-True (-not (Get-Command Get-LiveBenchData -ErrorAction SilentlyContinue)) "Policy imported LiveBench"
     Assert-True (-not (Get-Command Get-ArtificialAnalysisIntelligenceIndexData -ErrorAction SilentlyContinue)) "Policy imported AA"
     Assert-True (-not (Get-Command Resolve-ModelRankingSnapshot -ErrorAction SilentlyContinue)) "Legacy ranking API remains"

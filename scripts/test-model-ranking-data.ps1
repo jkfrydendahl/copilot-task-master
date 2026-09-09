@@ -24,6 +24,17 @@ Run-Test "Malformed AA and unrelated null evaluations are handled safely" {
     $valid=ConvertFrom-JsonAsHashtableCompat (Fixture "aa-api-llms-models-valid.json")
     Assert-True ((Parse-ArtificialAnalysisLlmModelsFromApiResponse $valid).status -eq "ok") "Unrelated nulls"
 }
+Run-Test "AA publication dates parse independently of absent or malformed dates" {
+    foreach ($field in @("source_date", "sourceDate", "updated_at", "updatedAt", "last_updated", "lastUpdated", "generated_at", "generatedAt", "as_of_date", "asOfDate")) {
+        $data=ConvertFrom-JsonAsHashtableCompat (Fixture "aa-api-llms-models-valid.json")
+        $data[$field]="2026-09-09T01:30:00+02:00"
+        $result=Get-ArtificialAnalysisIntelligenceIndexData -FetchJson {param($u,$envVar) @{status="ok";value=$data}}
+        Assert-True ($result.status -eq "ok" -and $result.sourceDate -eq "2026-09-08") "Failed UTC date from $field"
+    }
+    Assert-True ($null -eq (Get-ArtificialAnalysisSourceDateFromApiResponse @{})) "Invented publication date"
+    Assert-True ($null -eq (Get-ArtificialAnalysisSourceDateFromApiResponse @{updated_at="invalid"})) "Invalid publication accepted"
+    Assert-True ((Get-ArtificialAnalysisSourceDateFromApiResponse @{source_date="invalid";updated_at="2026-09-09"}) -eq "2026-09-09") "Invalid field blocked valid alternate"
+}
 Run-Test "Missing AA key and rate limiting produce explicit errors" {
     $name="ARTIFICIAL_ANALYSIS_API_KEY_TEST_ONLY"
     $old=[Environment]::GetEnvironmentVariable($name,"Process")
@@ -70,5 +81,18 @@ Run-Test "LiveBench missing or failed cost fetch does not discard benchmark data
         if ($includeCost) { Assert-True ($p.sourceVersion -eq $withoutCostVersion) "Cost-feed change became a quality observation" }
         else { $withoutCostVersion=$p.sourceVersion }
     }
+}
+Run-Test "LiveBench handles missing, empty and single-column category mappings" {
+    $csv="model,code_generation,code_completion,python,zebra_puzzle,paraphrase`none,80,60,70,50,60"
+    foreach ($categories in @("", "{}", '{"Coding":[]}', '{"Coding":["code_generation"],"Agentic Coding":["python"],"Reasoning":["zebra_puzzle"],"IF":["paraphrase"]}')) {
+        $result=Parse-LiveBenchData -CsvText $csv -CategoriesJsonText $categories
+        $expectedCoding=if ($categories.Contains('["code_generation"]')) {80} else {70}
+        Assert-True ($result.status -eq "ok" -and $result.models.one.coding -eq $expectedCoding) "Coding category failed for '$categories'"
+        Assert-True ($result.models.one.agenticCoding -eq 70 -and $result.models.one.reasoning -eq 50 -and $result.models.one.instructionFollowing -eq 60) "Other category mappings failed"
+    }
+    $result=Get-LiveBenchData -FetchJson {param($u) @{
+        status="ok";value=@(@{name="table_2026_09_09.csv";download_url="table";html_url="https://example.test/lb"})
+    }} -FetchText {param($u) @{status="ok";content=$csv}}
+    Assert-True ($result.status -eq "ok" -and $result.sourceVersion -and $result.models.one.coding -eq 70) "Missing categories file blocked the adapter"
 }
 if ($script:Failed) { exit 1 }

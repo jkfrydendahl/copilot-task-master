@@ -44,4 +44,62 @@ Run-Test "Unsupported effort models use explicitly declared no-effort variant" {
     $r=Evidence -Mapping @{one=@{artificialAnalysis=@{none="one-medium"}}} -Caps @{one=@{effortMode="unsupported"}}
     Assert-True ($r.records.Count -eq 1 -and $r.records[0].effort -eq "none") "Unsupported effort semantics"
 }
+. (Join-Path $PSScriptRoot "model-policy-config.ps1")
+. (Join-Path $PSScriptRoot "model-profile-selection.ps1")
+Run-Test "Configured coding-agent aliases preserve exact efforts and external harness identity" {
+    $root = Split-Path $PSScriptRoot -Parent
+    $configuredPolicy = Get-ModelPolicyConfig (Join-Path $root "config\model-policy.json")
+    $configuredAliases = (Read-ModelConfig (Join-Path $root "config\model-ranking-aliases.json") 2).aliases
+    $caps = (Get-ModelCapabilitiesCatalog (Join-Path $root "config\model-capabilities.json")).models
+    $agents = @{
+        status="ok";sourceDate=$null;fetchedAtUtc="2026-09-09Z";sourceUrl="https://artificialanalysis.ai/agents/coding-agents"
+        sourceVersion="fixture-agents";models=@{
+            "Opencode - Gemini 3.8 Flash (high)"=@{codingAgentIndex=0.61}
+            "Grok Build - Grok 4.5 (high)"=@{codingAgentIndex=0.64}
+            "Codex - GPT-6 Astra (max)"=@{codingAgentIndex=0.67}
+        }
+    }
+    $agentProfile = @{key="agentic-implementation";model="gpt-5.6-sol";effort="high";context="default"}
+    $models = @("gemini-3.8-flash","grok-4.5","gpt-6-astra")
+    $sources = @{artificialAnalysisCodingAgents=$agents}
+    $r = Get-ProfileBenchmarkEvidence -Profile $agentProfile -Models $models -Sources $sources `
+        -Aliases $configuredAliases -Capabilities $caps -Policy $configuredPolicy -NowUtc ([datetime]"2026-09-09Z")
+    Assert-True ($r.records.Count -eq 2) "Missing high-effort agent aliases or max substituted for high"
+    foreach ($record in $r.records) {
+        Assert-True ($record.source -eq "artificialAnalysisCodingAgents" -and $record.harness -eq "external agent harness, not Copilot CLI") "Harness provenance lost"
+        Assert-True ($record.alias -match '\(high\)$' -and $record.effort -eq "high") "Effort mismatch"
+    }
+    $verdicts = @(foreach ($model in $models) {
+        @{modelId=$model;effort="high";context="default";admissible=$true;reasonCodes=@();pricing=@{inputPerMillion=1;outputPerMillion=5}}
+    })
+    $fallback = [pscustomobject]@{model="gemini-3.8-flash";score=99;source="artificialAnalysis";metric="codingIndex";
+        effort="high";context="default";sourceVersion="fixture-aa";cached=$false;publicationAgeUnknown=$true}
+    $selection = Get-ProfileSelection -Profile $agentProfile -Evidence (@($r.records) + @($fallback)) `
+        -Verdicts $verdicts -Policy $configuredPolicy -Aliases $configuredAliases
+    Assert-True ($selection.winner.model -eq "grok-4.5" -and $selection.decidingSource -eq "artificialAnalysisCodingAgents") "Harness source did not outrank LLM coding fallback"
+
+    foreach ($effort in @("medium","max")) {
+        $agentProfile.effort = $effort
+        $r = Get-ProfileBenchmarkEvidence -Profile $agentProfile -Models $models -Sources $sources `
+            -Aliases $configuredAliases -Capabilities $caps -Policy $configuredPolicy -NowUtc ([datetime]"2026-09-09Z")
+        if ($effort -eq "medium") {
+            Assert-True ($r.records.Count -eq 0 -and $r.diagnostics.Count -gt 0) "High/max harness scores substituted for medium"
+        } else {
+            Assert-True ($r.records.Count -eq 1 -and $r.records[0].model -eq "gpt-6-astra") "Missing exact Astra max harness"
+        }
+    }
+}
+Run-Test "Explicit configurations retain exact aliases and identities for every effort" {
+    . (Join-Path $PSScriptRoot "model-configuration.ps1")
+    $configurations=@(
+        New-ModelConfiguration -Model one -Effort medium -Context default
+        New-ModelConfiguration -Model one -Effort max -Context default
+    )
+    $r=Get-ProfileBenchmarkEvidence -Profile $profile -Models @("one") -Configurations $configurations `
+        -Sources @{artificialAnalysis=$aa;liveBench=$lb} -Aliases $aliases -Policy $policy -NowUtc $now
+    $records=@($r.records | Where-Object source -eq artificialAnalysis)
+    Assert-True ($records.Count -eq 2 -and $records[0].score -eq 50 -and $records[1].score -eq 90) "Effort-specific evidence conflated"
+    Assert-True ($records[0].configurationId -ne $records[1].configurationId -and $records[1].effort -eq "max") "Configuration provenance missing"
+    Assert-True (@($r.records | Where-Object source -eq liveBench).Count -eq 1 -and $r.diagnostics -match "effort 'max'") "Missing max evidence borrowed medium"
+}
 if ($script:Failed) { exit 1 }

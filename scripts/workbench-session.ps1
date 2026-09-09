@@ -1,6 +1,5 @@
 function Resolve-AbandonedSession {
-    # If previous sessions ended by closing the window (not graceful exit), their pending
-    # marker files are left behind. Log each one as abandoned on the next launch.
+    # PID and process start time distinguish an abandoned launcher from another live session.
     param([string]$MasterPath, [string]$LogPath)
 
     $pendingFiles = @(Get-ChildItem -Path $MasterPath -Filter "usage-pending-*.json" -ErrorAction SilentlyContinue)
@@ -12,14 +11,36 @@ function Resolve-AbandonedSession {
     foreach ($file in $pendingFiles) {
         try {
             $pending = Get-Content $file.FullName -Raw | ConvertFrom-Json
+            $ownerId = $pending.PSObject.Properties["owner_process_id"]
+            $ownerStarted = $pending.PSObject.Properties["owner_process_started_at_utc"]
+            if ($null -eq $ownerId -or $null -eq $ownerStarted -or
+                [int]$ownerId.Value -le 0 -or [string]::IsNullOrWhiteSpace([string]$ownerStarted.Value)) {
+                Write-Host "Pending session '$($file.Name)' has no reliable process owner; leaving it for manual recovery." -ForegroundColor Yellow
+                continue
+            }
+            $ownerStartTime = ([datetime]$ownerStarted.Value).ToUniversalTime()
+            $owner = $null
+            try {
+                $owner = [System.Diagnostics.Process]::GetProcessById([int]$ownerId.Value)
+            } catch [System.ArgumentException] {
+                # No process with that ID exists anymore.
+            }
+            if ($null -ne $owner) {
+                try {
+                    if (-not $owner.HasExited -and $owner.StartTime.ToUniversalTime() -eq $ownerStartTime) {
+                        continue
+                    }
+                } finally {
+                    $owner.Dispose()
+                }
+            }
             Get-WorkbenchUsageRecord -SessionInfo $pending -EndedAt $endTime -Abandoned $true |
-                Export-Csv -Path $LogPath -Append -NoTypeInformation
+                Export-Csv -Path $LogPath -Append -NoTypeInformation -ErrorAction Stop
 
-            Remove-Item $file.FullName -Force
+            Remove-Item -LiteralPath $file.FullName -Force -ErrorAction Stop
             $recovered++
         } catch {
             Write-Host "Could not resolve pending session '$($file.Name)' (non-fatal): $($_.Exception.Message)" -ForegroundColor Yellow
-            try { Remove-Item $file.FullName -Force } catch { }
         }
     }
 
@@ -36,7 +57,17 @@ function Write-WorkbenchSessionMarker {
         [Parameter(Mandatory)]$SessionInfo
     )
 
-    $SessionInfo | ConvertTo-Json | Set-Content -LiteralPath $Path -ErrorAction Stop
+    $marker = [pscustomobject]$SessionInfo | Select-Object -Property *
+    $owner = [System.Diagnostics.Process]::GetCurrentProcess()
+    try {
+        $marker | Add-Member -NotePropertyMembers @{
+            owner_process_id = $owner.Id
+            owner_process_started_at_utc = $owner.StartTime.ToUniversalTime().ToString("o")
+        } -Force
+    } finally {
+        $owner.Dispose()
+    }
+    $marker | ConvertTo-Json | Set-Content -LiteralPath $Path -ErrorAction Stop
 }
 
 function Get-WorkbenchUsageRecord {
@@ -77,7 +108,7 @@ function Complete-WorkbenchSession {
         $usage | Export-Csv -LiteralPath $LogPath -Append -NoTypeInformation -ErrorAction Stop
 
         Write-Host ""
-        $shortId = $SessionInfo.session_id.Substring(0, 8)
+        $shortId = $SessionInfo.session_id.Substring(0, [math]::Min(8, $SessionInfo.session_id.Length))
         Write-Host "Session ended. Duration: $($usage.duration_min) min in $($SessionInfo.repo_name). (ID: $shortId)" -ForegroundColor DarkGray
         if ($SessionInfo.task_class -eq "triage") {
             Write-Host "  To continue with full context: relaunch and paste session ID: $($SessionInfo.session_id)" -ForegroundColor Cyan
