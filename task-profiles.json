@@ -22,8 +22,8 @@
     "label": "Default development",
     "description": "Ordinary bug fixes, normal feature work, straightforward refactors, small D365 changes.",
     "hint": "When you open the chat, describe what you want to fix or build. The agent will plan before coding.",
-    "model": "gpt-5.6-sol",
-    "effort": "medium",
+    "model": "gemini-3.8-flash",
+    "effort": "high",
     "context": "default"
   },
   {
@@ -31,8 +31,8 @@
     "label": "Agentic implementation",
     "description": "Multi-file implementation, edit/test loops, repo exploration, coordinated layered changes.",
     "hint": "When you open the chat, describe the feature or change. The agent will explore, plan, and implement across files.",
-    "model": "gpt-5.6-sol",
-    "effort": "high",
+    "model": "claude-opus-5",
+    "effort": "xhigh",
     "context": "default"
   },
   {
@@ -50,7 +50,7 @@
     "description": "Ordinary diff review. For risky/large/business-critical diffs, use Deep reasoning instead.",
     "hint": "When you open the chat, run /review (or /code-review-synthesis for multi-model). Stage your changes first.",
     "model": "claude-opus-5",
-    "effort": "medium",
+    "effort": "high",
     "context": "default"
   },
   {
@@ -58,8 +58,8 @@
     "label": "Visual / UI",
     "description": "UI/layout-oriented work where visual reasoning matters.",
     "hint": "When you open the chat, describe the UI goal. Attach screenshots or mockups if you have them.",
-    "model": "claude-opus-5",
-    "effort": "medium",
+    "model": "gemini-3.8-flash",
+    "effort": "high",
     "context": "default"
   },
   {
