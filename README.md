@@ -1,6 +1,6 @@
 # copilot-task-master
 
-A small Windows/PowerShell launcher that starts the **GitHub Copilot CLI** inside one of
+A Windows/PowerShell launcher that starts the **GitHub Copilot CLI** inside one of
 your project repositories with a consistent, shared set of workflow instructions injected.
 
 It is a personal workflow harness — not application code. The "payload" is the shared rule set
