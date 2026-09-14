@@ -67,7 +67,7 @@
     "benchmarkMaxPublicationAgeDays": 90
   },
   "selectionPolicy": {
-    "version": 6,
+    "version": 7,
     "referenceInputTokens": 1000000,
     "referenceOutputTokens": 100000,
     "referenceUsageDescription": "Aggregate uncached usage across requests within the selected context tier, not a single 1M-token request or predicted task cost. Cache reads/writes are excluded.",
@@ -99,12 +99,14 @@
       },
       "agentic-implementation": {
         "strategy": "value_balanced",
+        "decidingSources": ["artificialAnalysisCodingAgents", "liveBench"],
+        "requireMatchedIncumbentOnFallback": true,
         "configurationSelection": {
           "mode": "bounded_effort",
           "allowedEfforts": ["high", "xhigh", "max"],
           "effortChangePolicy": "automatic"
         },
-        "qualityBands": { "artificialAnalysisCodingAgents.codingAgentIndex": 0.03, "artificialAnalysis.codingIndex": 3, "liveBench.agenticCoding": 3 }
+        "qualityBands": { "artificialAnalysisCodingAgents.codingAgentIndex": 0.03, "liveBench.agenticCoding": 3 }
       },
       "deep-reasoning": {
         "strategy": "value_balanced",

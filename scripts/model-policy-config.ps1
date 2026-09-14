@@ -59,11 +59,22 @@ function Get-ModelPolicyConfig {
         if ($strategy.Contains("maxAutomaticCostIncreasePercent")) {
             throw "Incumbent-relative cost limits are obsolete for '$key'; use the fixed hard budget."
         }
+        if ($key -eq "agentic-implementation") {
+            if ($strategy["decidingSources"] -isnot [array] -or
+                ($strategy.decidingSources -join ",") -ne "artificialAnalysisCodingAgents,liveBench" -or
+                $strategy["requireMatchedIncumbentOnFallback"] -isnot [bool] -or
+                -not $strategy.requireMatchedIncumbentOnFallback -or
+                $p.profileLiveBenchCategories[$key] -ne "agenticCoding") {
+                throw "Agentic selection requires AA agent evidence, agentic LiveBench fallback and a matched incumbent on fallback."
+            }
+        } elseif ($strategy.Contains("decidingSources") -or $strategy.Contains("requireMatchedIncumbentOnFallback")) {
+            throw "Agentic source authorization is not configured for '$key'."
+        }
         if ($strategy.strategy -eq "value_balanced") {
             $bands = $strategy["qualityBands"]
             if ($bands -isnot [System.Collections.IDictionary]) { throw "Missing qualityBands for '$key'." }
             $metrics = @("artificialAnalysis.$($p.profileArtificialAnalysisMetrics[$key])Index", "liveBench.$($p.profileLiveBenchCategories[$key])")
-            if ($key -eq "agentic-implementation") { $metrics += "artificialAnalysisCodingAgents.codingAgentIndex" }
+            if ($key -eq "agentic-implementation") { $metrics = @("artificialAnalysisCodingAgents.codingAgentIndex", "liveBench.agenticCoding") }
             foreach ($metric in $metrics) {
                 Assert-ModelConfigNumber $bands[$metric] "$key.qualityBands.$metric"
             }

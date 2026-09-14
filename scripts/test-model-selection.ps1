@@ -503,8 +503,8 @@ function Agentic-Selection($CurrentModel="one", $CurrentEffort="high", $WinnerMo
     $current=@{key="agentic-implementation";model=$CurrentModel;effort=$CurrentEffort;context="default"}
     $old=Verdict; $old.modelId=$CurrentModel; $old | Add-Member -NotePropertyName effort -NotePropertyValue $CurrentEffort -Force
     $candidate=Verdict; $candidate.modelId=$WinnerModel; $candidate | Add-Member -NotePropertyName effort -NotePropertyValue $WinnerEffort -Force
-    $a=Record $CurrentModel 60 artificialAnalysis $Version; $a.effort=$CurrentEffort
-    $b=Record $WinnerModel 70 artificialAnalysis $Version; $b.effort=$WinnerEffort
+    $a=Record $CurrentModel 0.60 artificialAnalysisCodingAgents $Version; $a.effort=$CurrentEffort; $a.metric="codingAgentIndex"
+    $b=Record $WinnerModel 0.70 artificialAnalysisCodingAgents $Version; $b.effort=$WinnerEffort; $b.metric="codingAgentIndex"
     Get-ProfileSelection -Profile $current -Verdicts @($old,$candidate) -Evidence @($a,$b) -Policy $p -Aliases @{}
 }
 Run-Test "Preauthorized effort changes apply after confirmation or force, including within one model" {
@@ -569,6 +569,7 @@ Run-Test "All profiles reject out-of-range efforts and contexts even with force"
             $v=Verdict; $v.modelId=$configuration[0]; $v.effort=$configuration[1]; $v.context=$configuration[2]
             $r=Record $configuration[0] $configuration[3]; $r.effort=$configuration[1]
             $r.metric="$($p.profileArtificialAnalysisMetrics[$key])Index"
+            if ($key -eq "agentic-implementation") { $r.source="artificialAnalysisCodingAgents"; $r.metric="codingAgentIndex"; $r.score/=100 }
             $r | Add-Member -NotePropertyName context -NotePropertyValue $configuration[2]
             $verdicts+=@($v); $records+=@($r)
         }
@@ -580,6 +581,7 @@ Run-Test "All profiles reject out-of-range efforts and contexts even with force"
         $native.capabilities=$cap.Clone(); $native.capabilities.effortMode="unsupported"
         $nativeRecord=Record native 98; $nativeRecord.effort="none"
         $nativeRecord.metric="$($p.profileArtificialAnalysisMetrics[$key])Index"
+        if ($key -eq "agentic-implementation") { $nativeRecord.source="artificialAnalysisCodingAgents"; $nativeRecord.metric="codingAgentIndex"; $nativeRecord.score/=100 }
         $s=Get-ProfileSelection -Profile $current -Verdicts (@($verdicts)+@($native)) -Evidence (@($records)+@($nativeRecord)) -Policy $p -Aliases @{}
         Assert-True ($s.winner.model -eq "native" -and $s.winner.effort -eq "none") "Native effort configuration was excluded for $key"
     }
@@ -602,5 +604,71 @@ Run-Test "Cached evidence cannot inflate the reported fresh quality leader" {
     $two=Verdict;$two.modelId="two"
     $s=Select-Models @($old,(Record two 70)) @((Verdict),$two)
     Assert-True ($s.winner.model -eq "two" -and $s.qualityWinner.model -eq "two") "Cached score was treated as the fresh quality leader"
+}
+Run-Test "Agentic fallback requires the incumbent in the same exact LiveBench observation" {
+    $p=Get-ModelPolicyConfig (Join-Path $PSScriptRoot "..\config\model-policy.json")
+    $current=@{key="agentic-implementation";model="one";effort="high";context="default"}
+    $one=Verdict;$one.modelId="one";$one.effort="high"
+    $two=Verdict;$two.modelId="two";$two.effort="high"
+    $candidate=Record two 70 liveBench;$candidate.effort="high";$candidate.metric="agenticCoding"
+    $general=Record one 99;$general.effort="high"
+    foreach ($mode in @("matched","missing","effort","context","version","cached")) {
+        $incumbent=Record one 60 liveBench;$incumbent.effort="high";$incumbent.metric="agenticCoding"
+        switch ($mode) {
+            "effort" {$incumbent.effort="xhigh"}
+            "context" {$incumbent | Add-Member -NotePropertyName context -NotePropertyValue long_context}
+            "version" {$incumbent.sourceVersion="different"}
+            "cached" {$incumbent.cached=$true}
+        }
+        $records=@($general,$candidate)
+        if ($mode -ne "missing") { $records+=@($incumbent) }
+        $s=Get-ProfileSelection -Profile $current -Evidence $records -Verdicts @($one,$two) -Policy $p -Aliases @{}
+        $r=Resolve-ProfileSelectionState -CurrentModel one -Selection $s -ForceImmediateApply
+        Assert-True ($s.decidingSource -eq "liveBench" -and $s.winner.model -eq "two") "General coding authorized fallback"
+        Assert-True ($r.applied -eq ($mode -eq "matched")) "Wrong fallback permission for $mode"
+        if ($mode -ne "matched") { Assert-True ($r.status -eq "retained_fallback_incumbent_evidence_missing") "Missing fallback explanation" }
+        else {
+            $first=Resolve-ProfileSelectionState -CurrentModel one -Selection $s
+            $candidate.sourceVersion="v2";$incumbent.sourceVersion="v2"
+            $next=Get-ProfileSelection -Profile $current -Evidence @($candidate,$incumbent) -Verdicts @($one,$two) -Policy $p -Aliases @{}
+            Assert-True ((Resolve-ProfileSelectionState -CurrentModel one -Selection $next -State $first.state).applied) "Valid fallback failed normal confirmation"
+            $candidate.sourceVersion="v1"
+        }
+    }
+    $s=Get-ProfileSelection -Profile $current -Evidence @($general) -Verdicts @($one,$two) -Policy $p -Aliases @{}
+    Assert-True ($null -eq $s.winner -and -not (Resolve-ProfileSelectionState -CurrentModel one -Selection $s -ForceImmediateApply).applied) "General coding-only evidence authorized a switch"
+    $candidate.metric="coding"
+    $s=Get-ProfileSelection -Profile $current -Evidence @($candidate) -Verdicts @($one,$two) -Policy $p -Aliases @{}
+    Assert-True ($null -eq $s.winner) "Ordinary LB coding substituted for agentic coding"
+    $candidate.metric="agenticCoding";$candidate.cached=$true
+    $s=Get-ProfileSelection -Profile $current -Evidence @($candidate) -Verdicts @($one,$two) -Policy $p -Aliases @{}
+    Assert-True (-not (Resolve-ProfileSelectionState -CurrentModel one -Selection $s -ForceImmediateApply).applied) "Cached fallback forced promotion"
+}
+Run-Test "Agentic primary can replace an unscored incumbent but new harness identity resets confirmation" {
+    $s=Agentic-Selection
+    $first=Resolve-ProfileSelectionState -CurrentModel unknown -Selection $s
+    Assert-True ($first.state.pending.count -eq 1) "Unscored incumbent blocked primary"
+    $s=Agentic-Selection -Version v2
+    $s.evidenceIdentity="changed-harness"
+    $second=Resolve-ProfileSelectionState -CurrentModel unknown -Selection $s -State $first.state
+    Assert-True (-not $second.applied -and $second.state.pending.count -eq 1) "Different harness reused confirmation"
+    $s=Agentic-Selection -Version v3
+    $s.evidenceIdentity="changed-harness"
+    Assert-True ((Resolve-ProfileSelectionState -CurrentModel unknown -Selection $s -State $second.state).applied) "Same new harness could not confirm"
+}
+Run-Test "Blocked fallback observations still protect against publication rollback" {
+    $p=Get-ModelPolicyConfig (Join-Path $PSScriptRoot "..\config\model-policy.json")
+    $current=@{key="agentic-implementation";model="one";effort="high";context="default"}
+    $one=Verdict;$one.effort="high"
+    $two=Verdict;$two.modelId="two";$two.effort="high"
+    $candidate=Record two 70 liveBench;$candidate.effort="high";$candidate.metric="agenticCoding";$candidate.sourceDate="2026-09-14"
+    $s=Get-ProfileSelection -Profile $current -Evidence @($candidate) -Verdicts @($one,$two) -Policy $p -Aliases @{}
+    $blocked=Resolve-ProfileSelectionState -CurrentModel one -Selection $s -ForceImmediateApply
+    Assert-True ($blocked.status -eq "retained_fallback_incumbent_evidence_missing" -and $blocked.state.latestSourceDates.liveBench -eq "2026-09-14") "Blocked source date not tracked"
+    $incumbent=Record one 60 liveBench;$incumbent.effort="high";$incumbent.metric="agenticCoding"
+    $candidate.sourceDate="2026-09-01";$candidate.sourceVersion="v2";$incumbent.sourceVersion="v2"
+    $s=Get-ProfileSelection -Profile $current -Evidence @($candidate,$incumbent) -Verdicts @($one,$two) -Policy $p -Aliases @{}
+    $rollback=Resolve-ProfileSelectionState -CurrentModel one -Selection $s -State $blocked.state -ForceImmediateApply
+    Assert-True ($rollback.status -eq "retained_source_regression" -and -not $rollback.applied) "Matched old fallback bypassed rollback guard"
 }
 if ($script:Failed) { exit 1 }

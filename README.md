@@ -293,12 +293,12 @@ New models with unknown capabilities remain visibly unresolved rather than being
 
 ### Evidence and selection
 
-`config/model-ranking-aliases.json` maps each model and actual effort to explicit source IDs.
+`config/model-ranking-aliases.json` maps AA general-model and LiveBench model/effort pairs to explicit source IDs.
 Max/xhigh scores cannot stand in for high/medium/low. Update mappings and documented capabilities
 when new variants appear; price refresh alone does not supply those facts.
 
 - [Artificial Analysis API](https://artificialanalysis.ai/api/v2/data/llms/models) is primary: coding for development/UI/quick/mechanical, intelligence for orchestration/triage/review/reasoning.
-- Agentic implementation first uses matched [AA coding-agent harnesses](https://artificialanalysis.ai/agents/coding-agents), then the explicitly configured AA coding metric. Other agent harnesses are labelled, not presented as Copilot CLI measurements.
+- Agentic implementation first uses matched [AA coding-agent harnesses](https://artificialanalysis.ai/agents/coding-agents), then LiveBench **Agentic Coding**. General AA coding is informational only and cannot authorize an Agentic replacement.
 - [LiveBench](https://github.com/LiveBench/new-livebench/tree/main/public) corroborates AA. If no eligible matched AA candidates exist, a matched LiveBench pool can select a labelled fallback. Cost-feed failure does not discard quality data.
 - Single-source evidence is allowed with reduced confidence. AA and LiveBench raw scores are never averaged; disagreement is disclosed, not a veto.
 - All eligible models compete; there is no orchestration shortlist. Family preferences from `config/model-policy.json` are informational fallback suggestions, never benchmark gates or automatic family upgrades.
@@ -325,6 +325,23 @@ Candidates are the intersection of that range and each model's supported efforts
 profile's fixed context.
 Models without effort controls keep their one native configuration and exact `none` aliases.
 Missing capability records and unmatched variants are reported, not guessed.
+
+AA coding-agent variants are resolved automatically from structured page data rather than a
+hand-maintained list of full leaderboard labels. The adapter retains source variant IDs, provider,
+published model, harness/version and complete benchmark-component identities. Conservative
+name-format rules match known CLI models; effort must be explicit unless the model has no effort
+control. New labels or harness names do not require new aliases, but unknown models still need
+verified availability, capabilities and pricing. Ambiguous identities or multiple variants for the
+same model/effort, composite systems, incomplete coverage and incompatible benchmark suites are
+reported rather than guessed. Legacy cached label-only agent records are not silently upgraded.
+
+An Agentic replacement decided by LiveBench requires a score for the incumbent's exact configuration
+in the same usable LiveBench observation. Without that comparison, the candidate is reported but the
+current profile stays, even with force. AA-primary selection retains its existing ability to replace
+an unscored incumbent. If neither specialized source provides eligible evidence, the profile stays;
+general coding scores cannot rescue the selection. Existing hard budgets, value bands and two
+distinct-observation confirmation still apply. Changing an agent variant, harness/version or benchmark
+suite starts a new confirmation count; changing scores within that identity can confirm a candidate.
 
 Orchestrator uses high effort for controllable models as a deliberate experiment for routing,
 constraint retention and supervision, not a benchmark-proven fix for those behaviors. Its
@@ -378,8 +395,9 @@ inside those ceilings. There is no separate premium veto and no automatic increa
 An over-budget model is excluded before establishing the eligible quality reference, so adding it
 cannot raise the quality bar for affordable candidates.
 
-An incumbent without a matched score or fresh, valid price does not freeze an otherwise
-authorized candidate. The candidate still needs its own eligible configuration, fresh pricing,
+Except for the Agentic LiveBench fallback guard above, an incumbent without a matched score
+does not freeze an otherwise authorized candidate. Missing incumbent pricing is still not a veto.
+The candidate still needs its own eligible configuration, fresh pricing,
 matched evidence and confirmation. Reports disclose missing incumbent evidence rather than
 claiming a measured quality improvement. Missing incumbent prices leave savings and percentage
 cost changes unknown; a free-to-paid percentage is also undefined. Matched comparisons use the
@@ -387,7 +405,8 @@ same source, metric, observation and complete configuration, including native `n
 
 Retrieval age and publication age are distinct: retrieval must be within 45 days and a known
 publication date within 90 days. Unknown publication dates remain unknown and reduce confidence.
-Source fingerprints identify content observations, not methodology versions. AA API scores are
+Source fingerprints identify content observations, not publisher methodology-version IDs;
+agent fingerprints also include variant, harness/version and benchmark-component identities. AA API scores are
 not substituted with numbers from its public pages. Benchmarks do not prove performance at the
 profile's requested context length or in the Copilot CLI harness. LLM Stats is not currently an input.
 Fresh sources take priority over cached sources; cached AA cannot block a fresh LiveBench fallback.

@@ -130,6 +130,14 @@ function Get-ProfileReviewReportLines {
     $lines.Add("Budget: **$mode**, input $($r.requirement.inputCeilingPerMillion) / output $($r.requirement.outputCeilingPerMillion) USD per million. Deciding source: $source.")
     $lines.Add("Quality leader before hard-budget exclusions: $leader. Family fallback (informational, not a winner): $fallback.")
     $lines.Add("Strategy: **$($r.selection.strategy)**.")
+    $promotionBlockReason = Get-ObjectMemberValue $r.selection "promotionBlockReason"
+    if ($r.key -eq "agentic-implementation") {
+        $lines.Add("Agentic selection uses AA Coding Agent Index, then LiveBench Agentic Coding. General AA coding is informational only and cannot authorize a replacement.")
+        $lines.Add("AA agent identities are resolved from structured records. Harness/variant and benchmark components are preserved; ambiguous, composite, incomplete or legacy label-only records cannot authorize selection.")
+        if ($null -ne $promotionBlockReason) {
+            $lines.Add("**Fallback replacement blocked:** the incumbent has no exact-configuration score in the deciding LiveBench observation. The candidate remains informational; force cannot bypass this requirement.")
+        }
+    }
     if ($r.selection.configurationMode -eq "bounded_effort") {
         $candidateAic = Format-ModelReportNumber $r.selection.candidateReferenceAic
         $incumbentAic = Format-ModelReportNumber $r.selection.incumbentReferenceAic
@@ -154,7 +162,8 @@ function Get-ProfileReviewReportLines {
             $lines.Add("**Cost comparison unavailable:** fresh, valid incumbent pricing is missing; savings or a premium cannot be established. The candidate's own fresh pricing and hard-budget eligibility still govern promotion.")
         }
         if (-not $value.incumbentEvidenceAvailable) {
-            $lines.Add("**Incumbent evidence gap:** no configuration-matched score in this deciding-source observation. An authorized candidate may proceed, but no measured quality improvement over the incumbent is claimed.")
+            $action = if ($null -ne $promotionBlockReason) { "The fallback replacement is blocked." } else { "An authorized candidate may proceed." }
+            $lines.Add("**Incumbent evidence gap:** no configuration-matched score in this deciding-source observation. $action No measured quality improvement over the incumbent is claimed.")
         } else {
             $incumbentScore = Format-ModelReportNumber $value.incumbentScore
             $lines.Add("Matched incumbent score in this deciding-source observation: **$incumbentScore**.")
@@ -192,13 +201,14 @@ function Get-ProfileReviewReportLines {
         )))
     }
     $lines.Add("")
-    $lines.Add("| Model | Source | Exact alias | Effort | Metric | Score | Publication age unknown | Cached | Harness |")
-    $lines.Add("|---|---|---|---|---|---|---|---|---|")
+    $lines.Add("| Model | Source | Exact alias / source label | Effort | Metric | Score | Publication age unknown | Cached | Harness | Role |")
+    $lines.Add("|---|---|---|---|---|---|---|---|---|---|")
     foreach ($evidence in $r.evidence.records) {
         $lines.Add((Format-ModelReportRow @(
             $evidence.model, $evidence.source, $evidence.alias, $evidence.effort,
             $evidence.metric, $evidence.score, $evidence.publicationAgeUnknown,
-            $evidence.cached, $evidence.harness
+            $evidence.cached, $evidence.harness,
+            $(if ($r.key -eq "agentic-implementation" -and $evidence.source -eq "artificialAnalysis") { "informational only" } else { "selection / corroboration" })
         )))
     }
     $lines.Add("")

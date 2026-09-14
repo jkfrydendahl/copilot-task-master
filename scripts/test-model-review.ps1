@@ -1,6 +1,7 @@
 Set-StrictMode -Version Latest
 $ErrorActionPreference = "Stop"
 . (Join-Path $PSScriptRoot "review-task-profiles.ps1")
+. (Join-Path $PSScriptRoot "fixtures\model-ranking\agent-fixture.ps1")
 $script:Failed=0
 function Assert-True($Condition,$Message) { if (-not $Condition) { throw $Message } }
 function Run-Test($Name,[scriptblock]$Action) {
@@ -137,32 +138,34 @@ Run-Test "Agentic review confirms and applies the complete authorized pair, incl
     try {
         Copy-Item (Join-Path $repo "config\model-policy.json") (Join-Path $root "config")
         $profiles=@(
-            @{key="agentic-implementation";model="one";effort="high";context="default";label="Preserve me"}
-            @{key="review";model="one";effort="medium";context="default"}
-            @{key="quick";model="one";effort="low";context="default"}
+            @{key="agentic-implementation";model="gpt-one";effort="high";context="default";label="Preserve me"}
+            @{key="review";model="gpt-one";effort="medium";context="default"}
+            @{key="quick";model="gpt-one";effort="low";context="default"}
         )
         $profilePath=Join-Path $root "task-profiles.json"
         Write-ModelJsonAtomic $profilePath $profiles
         $caps=@{}
-        foreach ($model in @("one","two","hidden")) {
+        foreach ($model in @("gpt-one","gpt-two","gpt-hidden")) {
             $caps[$model]=@{asOf="2026-09-09";capabilitySource="fixture";vision=$null;supportedContexts=@("default");supportedEfforts=@("low","medium","high","xhigh","max")}
         }
         Write-ModelJsonAtomic (Join-Path $root "config\model-capabilities.json") @{schemaVersion=2;models=$caps}
         $aliases=@{
-            one=@{artificialAnalysisCodingAgents=@{high="One high"};artificialAnalysis=@{low="one-low";medium="one-medium"}}
-            two=@{artificialAnalysisCodingAgents=@{high="Two high";xhigh="Two xhigh";max="Two max"}}
-            hidden=@{artificialAnalysisCodingAgents=@{max="Hidden max"}}
+            "gpt-one"=@{artificialAnalysis=@{low="one-low";medium="one-medium";high="one-high"};
+                liveBench=@{high="one-high"}}
+            "gpt-two"=@{liveBench=@{xhigh="two-xhigh"}}
         }
         Write-ModelJsonAtomic (Join-Path $root "config\model-ranking-aliases.json") @{schemaVersion=2;aliases=$aliases}
-        Write-ModelJsonAtomic (Join-Path $root "config\model-pricing-aliases.json") @{schemaVersion=1;aliases=@{one="One";two="Two";hidden="Hidden"}}
+        Write-ModelJsonAtomic (Join-Path $root "config\model-pricing-aliases.json") @{schemaVersion=1;aliases=@{"gpt-one"="One";"gpt-two"="Two";"gpt-hidden"="Hidden"}}
         $sources=@{
             artificialAnalysisCodingAgents=@{status="ok";sourceVersion="agents-v1";sourceDate="2026-09-09";fetchedAtUtc="2026-09-09Z";sourceUrl="https://example.test/agents";models=@{
-                "One high"=@{codingAgentIndex=0.64};"Two high"=@{codingAgentIndex=0.65}
-                "Two xhigh"=@{codingAgentIndex=0.68};"Two max"=@{codingAgentIndex=0.67}
-                "Hidden max"=@{codingAgentIndex=0.99}
+                "one-high"=(New-NormalizedAgentFixture one-high "GPT-one (high)" 0.64)
+                "two-high"=(New-NormalizedAgentFixture two-high "GPT-two (high)" 0.65)
+                "two-xhigh"=(New-NormalizedAgentFixture two-xhigh "GPT-two (xhigh)" 0.68)
+                "two-max"=(New-NormalizedAgentFixture two-max "GPT-two (max)" 0.67)
+                "hidden-max"=(New-NormalizedAgentFixture hidden-max "GPT-hidden (max)" 0.99)
             }}
             artificialAnalysis=@{status="ok";sourceVersion="aa-v1";sourceDate="2026-09-09";fetchedAtUtc="2026-09-09Z";sourceUrl="https://example.test/aa";models=@{
-                "one-low"=@{codingIndex=80};"one-medium"=@{intelligenceIndex=80}
+                "one-low"=@{codingIndex=80};"one-medium"=@{intelligenceIndex=80};"one-high"=@{codingIndex=99}
             }}
         }
         $fetch={param($u) @{status="ok";content='<table><tr><th>Model</th><th>Input</th><th>Output</th></tr><tr><td>One</td><td>$1</td><td>$5</td></tr><tr><td>Two</td><td>$1</td><td>$5</td></tr><tr><td>Hidden</td><td>$1</td><td>$5</td></tr></table>'}}
@@ -171,31 +174,49 @@ Run-Test "Agentic review confirms and applies the complete authorized pair, incl
             @{force=$false;version="agents-v2";apply=$true},@{force=$true;version="agents-v3";apply=$true})) {
             if ($run.force) { Write-ModelJsonAtomic $profilePath $profiles }
             $sources.artificialAnalysisCodingAgents.sourceVersion=$run.version
-            $review=Invoke-TaskProfileReview -RepoRoot $root -Availability @{models=@("one","two");verified=$true;source="fixture"} `
+            $review=Invoke-TaskProfileReview -RepoRoot $root -Availability @{models=@("gpt-one","gpt-two");verified=$true;source="fixture"} `
                 -Sources $sources -FetchPricing $fetch -ForceImmediateApply:$run.force -NowUtc ([datetime]"2026-09-09Z")
             $agentic=$review.results | Where-Object key -eq "agentic-implementation"
-            Assert-True ($agentic.selection.winner.model -eq "two" -and $agentic.selection.winner.effort -eq "xhigh") "Best measured supported pair not selected"
+            Assert-True ($agentic.selection.winner.model -eq "gpt-two" -and $agentic.selection.winner.effort -eq "xhigh") "Best measured supported pair not selected"
             Assert-True ($agentic.resolution.applied -eq $run.apply) "Authorized effort change ignored confirmation or force"
             if ($run.apply) {
                 $saved=Get-Content -LiteralPath $profilePath -Raw | ConvertFrom-Json
-                Assert-True ($saved[0].model -eq "two" -and $saved[0].effort -eq "xhigh" -and $saved[0].context -eq "default") "Model and effort did not persist together"
+                Assert-True ($saved[0].model -eq "gpt-two" -and $saved[0].effort -eq "xhigh" -and $saved[0].context -eq "default") "Model and effort did not persist together"
                 Assert-True ($agentic.resolution.state.activeOverride.effort -eq "xhigh") "Active state lost effort"
             } else {
                 Assert-True ((Get-Content -LiteralPath $profilePath -Raw) -ceq $before -and $agentic.resolution.state.pending.count -eq 1) "Unconfirmed configuration was applied or counted twice"
             }
-            Assert-True (@($agentic.verdicts | Where-Object modelId -eq "two").Count -eq 3) "Configuration eligibility was flattened"
+            Assert-True (@($agentic.verdicts | Where-Object modelId -eq "gpt-two").Count -eq 3) "Configuration eligibility was flattened"
             $report=Get-Content (Join-Path $root "reports\task-profile-review.md") -Raw
-            foreach ($term in @("one / high / default","two / xhigh / default","automatic bounded effort","task cost and latency are unknown","candidate **150 AIC**; incumbent **150 AIC**","0.03")) {
+            foreach ($term in @("gpt-one / high / default","gpt-two / xhigh / default","automatic bounded effort","task cost and latency are unknown","candidate **150 AIC**; incumbent **150 AIC**","0.03","informational only","variant two-xhigh")) {
                 Assert-True ($report.Contains($term)) "Report omitted configuration or cost uncertainty: $term"
             }
         }
-        $adopted=Invoke-TaskProfileReview -RepoRoot $root -Availability @{models=@("one","two");verified=$true;source="fixture"} `
+        $adopted=Invoke-TaskProfileReview -RepoRoot $root -Availability @{models=@("gpt-one","gpt-two");verified=$true;source="fixture"} `
             -Sources $sources -FetchPricing $fetch -ForceImmediateApply -NowUtc ([datetime]"2026-09-09Z")
         $agentic=$adopted.results | Where-Object key -eq "agentic-implementation"
-        Assert-True ($agentic.finalConfiguration.model -eq "two" -and $agentic.finalConfiguration.effort -eq "xhigh" -and -not $agentic.resolution.applied) "Applied configuration churned on the next review"
+        Assert-True ($agentic.finalConfiguration.model -eq "gpt-two" -and $agentic.finalConfiguration.effort -eq "xhigh" -and -not $agentic.resolution.applied) "Applied configuration churned on the next review"
         $after=Get-Content -LiteralPath $profilePath -Raw | ConvertFrom-Json
         Assert-True ($after[0].label -eq "Preserve me" -and $after[1].effort -eq "medium" -and $after[2].effort -eq "low") "Unrelated profile fields changed"
-        $profiles[0].model="one";$profiles[0].effort="high"
+        $originalAgents=$sources.artificialAnalysisCodingAgents
+        $sources.artificialAnalysisCodingAgents=@{status="ok";sourceVersion="legacy";sourceDate="2026-09-09";fetchedAtUtc="2026-09-09Z";
+            models=@{old=@{label="Fixture - GPT-two (xhigh)";codingAgentIndex=0.99}}}
+        $sources.liveBench=@{status="ok";sourceVersion="lb-v1";sourceDate="2026-09-09";fetchedAtUtc="2026-09-09Z";
+            models=@{"two-xhigh"=@{agenticCoding=70}}}
+        foreach ($matched in @($false,$true)) {
+            Write-ModelJsonAtomic $profilePath $profiles
+            if ($matched) { $sources.liveBench.models["one-high"]=@{agenticCoding=60} }
+            $fallbackRun=Invoke-TaskProfileReview -RepoRoot $root -Availability @{models=@("gpt-one","gpt-two");verified=$true;source="fixture"} `
+                -Sources $sources -FetchPricing $fetch -ForceImmediateApply -NowUtc ([datetime]"2026-09-09Z")
+            $agentic=$fallbackRun.results | Where-Object key -eq "agentic-implementation"
+            Assert-True ($agentic.selection.decidingSource -eq "liveBench" -and $agentic.resolution.applied -eq $matched) "Legacy/general coding or unmatched incumbent authorized fallback"
+            Assert-True ($agentic.evidence.diagnostics -match "identity_metadata_missing") "Legacy cache explanation lost"
+            $text=Get-Content (Join-Path $root "reports\task-profile-review.md") -Raw
+            if (-not $matched) { Assert-True ($text.Contains("Fallback replacement blocked") -and $text.Contains("informational only")) "Blocked fallback not explained" }
+        }
+        $sources.artificialAnalysisCodingAgents=$originalAgents
+        $sources.Remove("liveBench")
+        $profiles[0].model="gpt-one";$profiles[0].effort="high"
         Write-ModelJsonAtomic $profilePath $profiles
         $beforeFailure=Get-Content -LiteralPath $profilePath -Raw
         $writer=(Get-Command Write-ModelJsonAtomic).ScriptBlock
@@ -206,7 +227,7 @@ Run-Test "Agentic review confirms and applies the complete authorized pair, incl
         }
         $threw=$false
         try {
-            Invoke-TaskProfileReview -RepoRoot $root -Availability @{models=@("one","two");verified=$true;source="fixture"} `
+            Invoke-TaskProfileReview -RepoRoot $root -Availability @{models=@("gpt-one","gpt-two");verified=$true;source="fixture"} `
                 -Sources $sources -FetchPricing $fetch -ForceImmediateApply -NowUtc ([datetime]"2026-09-09Z") | Out-Null
         } catch [IO.IOException] { $threw=$_.Exception.Message -eq "Fixture profile write failure" }
         Assert-True ($threw -and (Get-Content -LiteralPath $profilePath -Raw) -ceq $beforeFailure) "Profile write failure was swallowed or left a partial pair"

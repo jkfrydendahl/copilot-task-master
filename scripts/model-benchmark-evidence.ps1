@@ -1,5 +1,6 @@
 Set-StrictMode -Version Latest
 . (Join-Path $PSScriptRoot "model-configuration.ps1")
+. (Join-Path $PSScriptRoot "model-agent-identity.ps1")
 
 function Get-ProfileBenchmarkEvidence {
     param(
@@ -23,6 +24,9 @@ function Get-ProfileBenchmarkEvidence {
     if ($Profile.key -eq "agentic-implementation") { $sourceNames = @("artificialAnalysisCodingAgents") + $sourceNames }
     foreach ($sourceName in $sourceNames) {
         $source = $Sources[$sourceName]
+        foreach ($diagnostic in @(Get-ObjectMemberValue $source "diagnostics" | Where-Object { $null -ne $_ })) {
+            $diagnostics.Add("${sourceName}: $diagnostic")
+        }
         $status = Get-ObjectMemberValue $source "status"
         if ($status -notin @("ok", "cached")) {
             $diagnostics.Add("${sourceName}: unavailable ($((Get-ObjectMemberValue $source 'message')))")
@@ -39,16 +43,42 @@ function Get-ProfileBenchmarkEvidence {
             $diagnostics.Add("${sourceName}: publication_stale_or_invalid")
             continue
         }
+        $agentRecords = @{}
+        if ($sourceName -eq "artificialAnalysisCodingAgents") {
+            $sourceModels = Get-ObjectMemberValue $source "models"
+            if ($sourceModels -isnot [System.Collections.IDictionary]) {
+                $diagnostics.Add("${sourceName}: structured_models_missing")
+                continue
+            }
+            $knownModels = @(@($Capabilities.Keys) + @($Configurations | ForEach-Object model) | Sort-Object -Unique)
+            $resolved = Resolve-AgentModelIdentities -Records $sourceModels -KnownModels $knownModels -Capabilities $Capabilities
+            foreach ($diagnostic in $resolved.diagnostics) { $diagnostics.Add("${sourceName}: $diagnostic") }
+            foreach ($identity in $resolved.records) {
+                $agentRecords["$($identity.model)/$($identity.effort)"] = $identity.record
+                if (-not @($Configurations | Where-Object { $_.model -eq $identity.model -and $_.effort -eq $identity.effort }).Count) {
+                    $diagnostics.Add("$($identity.model): ${sourceName} effort '$($identity.effort)' not_in_requested_configurations")
+                }
+            }
+        }
         foreach ($configuration in $Configurations) {
             $model = $configuration.model
             $effort = $configuration.effort
-            $mapping = Get-ObjectMemberValue (Get-ObjectMemberValue $Aliases $model) $sourceName
-            $alias = if ($mapping -is [System.Collections.IDictionary]) { Get-ObjectMemberValue $mapping $effort } else { $null }
-            if ([string]::IsNullOrWhiteSpace([string]$alias)) {
-                $diagnostics.Add("${model}: ${sourceName} effort '$effort' alias_not_configured")
-                continue
+            if ($sourceName -eq "artificialAnalysisCodingAgents") {
+                $record = $agentRecords["$model/$effort"]
+                if ($null -eq $record) {
+                    $diagnostics.Add("${model}: ${sourceName} effort '$effort' structured_variant_not_matched")
+                    continue
+                }
+                $alias = $record.label
+            } else {
+                $mapping = Get-ObjectMemberValue (Get-ObjectMemberValue $Aliases $model) $sourceName
+                $alias = if ($mapping -is [System.Collections.IDictionary]) { Get-ObjectMemberValue $mapping $effort } else { $null }
+                if ([string]::IsNullOrWhiteSpace([string]$alias)) {
+                    $diagnostics.Add("${model}: ${sourceName} effort '$effort' alias_not_configured")
+                    continue
+                }
+                $record = Get-ObjectMemberValue (Get-ObjectMemberValue $source "models") $alias
             }
-            $record = Get-ObjectMemberValue (Get-ObjectMemberValue $source "models") $alias
             if ($sourceName -eq "liveBench") {
                 $metric = $Policy.profileLiveBenchCategories[$Profile.key]
             } elseif ($sourceName -eq "artificialAnalysisCodingAgents") {
@@ -81,7 +111,7 @@ function Get-ProfileBenchmarkEvidence {
                 publicationAgeUnknown = $unknownDate
                 cached = $status -eq "cached"
                 harness = $(if ($sourceName -eq "artificialAnalysisCodingAgents") {
-                    "external agent harness, not Copilot CLI"
+                    "$($record.harness); variant $($record.variantId); external agent harness, not Copilot CLI"
                 } else {
                     "source benchmark harness, not Copilot CLI"
                 })

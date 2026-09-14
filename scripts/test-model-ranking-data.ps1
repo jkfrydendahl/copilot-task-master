@@ -3,6 +3,7 @@ $ErrorActionPreference="Stop"
 . (Join-Path $PSScriptRoot "model-data-common.ps1")
 . (Join-Path $PSScriptRoot "model-artificial-analysis.ps1")
 . (Join-Path $PSScriptRoot "model-livebench.ps1")
+. (Join-Path $PSScriptRoot "fixtures\model-ranking\agent-fixture.ps1")
 $fixtureRoot=Join-Path $PSScriptRoot "fixtures\model-ranking"
 $script:Failed=0
 function Assert-True($Condition,$Message) { if (-not $Condition) { throw $Message } }
@@ -46,10 +47,71 @@ Run-Test "Missing AA key and rate limiting produce explicit errors" {
     $result=Get-ArtificialAnalysisIntelligenceIndexData -FetchJson {param($u,$envVar) @{status="error";error="rate limited";statusCode=429;retryAfterSeconds="120"}}
     Assert-True ($result.status -eq "error" -and $result.message.Contains("429")) "Rate limit"
 }
-Run-Test "Coding agent harness labels parse exactly and reject malformed HTML" {
+Run-Test "Structured coding agent records preserve identity and reject malformed HTML" {
     $valid=Parse-ArtificialAnalysisCodingAgentIndexFromHtml (Fixture "aa-coding-agents-valid.html")
-    Assert-True ($valid.status -eq "ok" -and $valid.models.ContainsKey("Claude Code - Opus 5 (xhigh)")) "Harness identity"
+    Assert-True ($valid.status -eq "ok" -and $valid.models["opus-xhigh"].label -eq "Claude Code - Opus 5 (xhigh)") "Harness identity"
     Assert-True ((Parse-ArtificialAnalysisCodingAgentIndexFromHtml (Fixture "aa-coding-agents-malformed.html")).status -eq "unavailable") "Bad harness accepted"
+}
+Run-Test "Agent parser includes non-highlighted variants, deduplicates rows and fingerprints identity" {
+    $one=New-AgentFixtureRow one "GPT-one (high)" 0.6
+    $two=New-AgentFixtureRow two "GPT-two (max)" 0.7
+    $html=ConvertTo-AgentFixtureHtml @($one) @($one,$two)
+    $result=Get-ArtificialAnalysisCodingAgentIndexData -FetchText {param($u) @{status="ok";content=$html}}
+    Assert-True ($result.status -eq "ok" -and $result.models.Count -eq 2) "Full benchmark rows omitted or duplicate counted"
+    $original=$result.sourceVersion
+    $payload="x:" + (@{rows=@($one);benchmarkRows=@($two)} | ConvertTo-Json -Depth 15 -Compress)
+    $cut=[int]($payload.Length / 2)
+    $splitHtml='<script>self.__next_f.push([1,' + (ConvertTo-Json -InputObject $payload.Substring(0,$cut) -Compress) +
+        ']);self.__next_f.push([1,' + (ConvertTo-Json -InputObject $payload.Substring($cut) -Compress) + '])</script>'
+    Assert-True ((Parse-ArtificialAnalysisCodingAgentIndexFromHtml $splitHtml).models.Count -eq 2) "Split stream payload lost rows"
+    $html=ConvertTo-AgentFixtureHtml @($two,$one)
+    $reordered=Get-ArtificialAnalysisCodingAgentIndexData -FetchText {param($u) @{status="ok";content=$html}}
+    Assert-True ($reordered.sourceVersion -eq $original) "Row order became an observation"
+    foreach ($change in @(
+        {param($r) $r.agentName='New harness'},
+        {param($r) $r.versions.agent='2.0'},
+        {param($r) $r.display.model='GPT-two (xhigh)'},
+        {param($r) $r.id='new-variant'},
+        {param($r) $r.indexScore=0.71}
+    )) {
+        $row=New-AgentFixtureRow two "GPT-two (max)" 0.7
+        & $change $row
+        $html=ConvertTo-AgentFixtureHtml @($one,$row)
+        $changed=Get-ArtificialAnalysisCodingAgentIndexData -FetchText {param($u) @{status="ok";content=$html}}
+        Assert-True ($changed.sourceVersion -ne $original) "Identity or score change ignored"
+    }
+}
+Run-Test "Agent parser rejects incomplete, ambiguous and legacy evidence without inventing scores" {
+    $valid=New-AgentFixtureRow one "GPT-one (high)" 0.6
+    foreach ($change in @(
+        {param($r) $r.evalCount=1},
+        {param($r) $r.evals=$r.evals[0..0]},
+        {param($r) $r.indexScore=$null},
+        {param($r) $r.indexScore=-1},
+        {param($r) $r.indexScore=1.1},
+        {param($r) $r.indexScore="0.7"},
+        {param($r) $r.isUnavailable=$true},
+        {param($r) $r.display.Remove("model")},
+        {param($r) $r.Remove("agentName")},
+        {param($r) $r.evals[1].datasetIndexName="repository"},
+        {param($r) $r.evals[1].weight=0},
+        {param($r) $r.evals[1].mean.reward=$null}
+    )) {
+        $bad=New-AgentFixtureRow bad "GPT-bad (max)" 0.7
+        & $change $bad
+        $result=Parse-ArtificialAnalysisCodingAgentIndexFromHtml (ConvertTo-AgentFixtureHtml @($valid,$bad))
+        Assert-True ($result.status -eq "ok" -and $result.models.Count -eq 1 -and $result.diagnostics.Count) "Invalid row admitted or valid evidence lost"
+    }
+    $duplicate=New-AgentFixtureRow one "GPT-one (high)" 0.9
+    Assert-True ((Parse-ArtificialAnalysisCodingAgentIndexFromHtml (ConvertTo-AgentFixtureHtml @($valid,$duplicate))).status -eq "unavailable") "Conflicting IDs accepted"
+    $other=New-AgentFixtureRow other "GPT-other (max)" 0.7
+    $other.evals[0].refDatasetName="repo-v2"
+    Assert-True ((Parse-ArtificialAnalysisCodingAgentIndexFromHtml (ConvertTo-AgentFixtureHtml @($valid,$other))).status -eq "unavailable") "Incompatible suites mixed"
+    foreach ($html in @('', '<script>{"label":"one","codingAgentsIndex":0.9}</script>',
+        '<script>self.__next_f.push([1,"x:{\"rows\":[{"]) </script>',
+        '<script>self.__next_f.push([1,"x:{\"rows\":[invalid]}"])</script>')) {
+        Assert-True ((Parse-ArtificialAnalysisCodingAgentIndexFromHtml $html).status -eq "unavailable") "Malformed/legacy data accepted"
+    }
 }
 Run-Test "LiveBench categories and cost data remain separately usable" {
     $invalid = Parse-LiveBenchData -CsvText (Fixture "livebench-malformed.csv")

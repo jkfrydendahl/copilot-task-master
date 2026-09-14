@@ -28,7 +28,7 @@ function Invoke-TaskProfileReview {
     if ($aliases -isnot [System.Collections.IDictionary]) { throw "Invalid benchmark aliases." }
     foreach ($id in $aliases.Keys) {
         foreach ($source in $aliases[$id].Keys) {
-            if ($source -notin @("artificialAnalysis", "artificialAnalysisCodingAgents", "liveBench") -or
+            if ($source -notin @("artificialAnalysis", "liveBench") -or
                 $aliases[$id][$source] -isnot [System.Collections.IDictionary]) {
                 throw "Invalid variant mapping: $id.$source"
             }
@@ -128,7 +128,11 @@ function Invoke-TaskProfileReview {
             }
             Get-ModelAdmissibilityVerdict @admissibilityOptions
         })
-        $evidence = Get-ProfileBenchmarkEvidence -Profile $profile -Configurations $candidates.configurations -Sources $resolvedSources `
+        $evidenceConfigurations = @($candidates.configurations)
+        if ($profile.key -eq "agentic-implementation") {
+            $evidenceConfigurations = $verdictConfigurations
+        }
+        $evidence = Get-ProfileBenchmarkEvidence -Profile $profile -Configurations $evidenceConfigurations -Sources $resolvedSources `
             -Aliases $aliases -Capabilities $capabilities -Policy $policy -NowUtc $NowUtc
         $evidence.diagnostics = @($candidates.diagnostics) + @($evidence.diagnostics)
         $selection = Get-ProfileSelection -Profile $profile -Evidence $evidence.records -Verdicts $verdicts -Policy $policy -Aliases $aliases

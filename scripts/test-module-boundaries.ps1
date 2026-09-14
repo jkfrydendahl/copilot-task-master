@@ -51,5 +51,11 @@ Run-Test "Provider modules expose adapters without the retired ranking pipeline"
     Assert-True (-not (Get-Command Get-AdvisoryModelRankingSnapshot -ErrorAction SilentlyContinue)) "Legacy entry point remains"
     Assert-True (-not (Test-Path (Join-Path $PSScriptRoot "model-ranking-data.ps1"))) "Obsolete monolith remains"
 }
+Run-Test "Agent identity resolution is isolated from fetching and selection" {
+    . (Join-Path $PSScriptRoot "model-agent-identity.ps1")
+    Assert-True ([bool](Get-Command Resolve-AgentModelIdentities)) "Identity module missing"
+    Assert-True (-not (Get-Command Get-ArtificialAnalysisCodingAgentIndexData -ErrorAction SilentlyContinue)) "Identity module imports provider fetching"
+    Assert-True (-not (Get-Command Get-ProfileSelection -ErrorAction SilentlyContinue)) "Identity module imports selection"
+}
 
 if ($script:Failed) { exit 1 }

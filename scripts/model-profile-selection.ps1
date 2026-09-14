@@ -31,6 +31,7 @@ function Get-ProfileSelection {
         } -Force
         $normalized
     })
+    $comparisonEvidence = @($Evidence)
     $Evidence = @($Evidence | Where-Object {
         $configurationMode -ne "bounded_effort" -or (
             $_.context -eq $Profile.context -and (
@@ -45,7 +46,15 @@ function Get-ProfileSelection {
     })
     $sources = @("artificialAnalysis", "liveBench")
     if ($Profile.key -eq "agentic-implementation") {
-        $sources = @("artificialAnalysisCodingAgents") + $sources
+        $sources = @(Get-ObjectMemberValue $Policy.selectionPolicy.profiles[$Profile.key] "decidingSources")
+        if (($sources -join ",") -ne "artificialAnalysisCodingAgents,liveBench" -or
+            (Get-ObjectMemberValue $Policy.selectionPolicy.profiles[$Profile.key] "requireMatchedIncumbentOnFallback") -ne $true) {
+            throw "Agentic source policy is missing or invalid."
+        }
+        $eligible = @($eligible | Where-Object {
+            ($_.source -eq "artificialAnalysisCodingAgents" -and $_.metric -eq "codingAgentIndex") -or
+            ($_.source -eq "liveBench" -and $_.metric -eq "agenticCoding")
+        })
     }
 
     $decidingSource = $null
@@ -105,11 +114,12 @@ function Get-ProfileSelection {
     $winner = $ranked[0]
     $valueDecision = $null
     if ($strategy -eq "value_balanced") {
-        $valueDecision = Get-ValueBalancedSelection $Profile $ranked $byConfiguration $Policy.selectionPolicy $Evidence $currentConfiguration
+        $valueDecision = Get-ValueBalancedSelection $Profile $ranked $byConfiguration $Policy.selectionPolicy $comparisonEvidence $currentConfiguration
         $winner = $valueDecision.winner
     }
     $qualityPool = @($Evidence | Where-Object {
         $_.source -eq $decidingSource -and $_.cached -eq $winner.cached -and
+        $_.metric -eq $winner.metric -and
         $byConfiguration.ContainsKey($_.configurationId) -and
         @($byConfiguration[$_.configurationId].reasonCodes | Where-Object {
             $_ -notin @("pricing_input_exceeds_ceiling", "pricing_output_exceeds_ceiling")
@@ -133,8 +143,6 @@ function Get-ProfileSelection {
         $reason = "livebench_fallback"
     } elseif ($ranked[0].score -lt $qualityWinner.score) {
         $reason = "budget_constrained_choice"
-    } elseif ($Profile.key -eq "agentic-implementation" -and $decidingSource -eq "artificialAnalysis") {
-        $reason = "aa_coding_fallback"
     } elseif ($strategy -eq "value_balanced") {
         $reason = "value_balanced_choice"
     } else {
@@ -145,9 +153,30 @@ function Get-ProfileSelection {
         $decidingSource -ne "artificialAnalysis" -or $contested -or
         $lbWinner[0].cached -or $lbWinner[0].publicationAgeUnknown
     $hasVersion = -not [string]::IsNullOrWhiteSpace([string]$winner.sourceVersion)
+    $promotionBlockReason = $null
+    if ($Profile.key -eq "agentic-implementation" -and $decidingSource -eq "liveBench" -and
+        $winner.configurationId -ne $currentConfiguration.configurationId) {
+        $matchedIncumbent = @($comparisonEvidence | Where-Object {
+            $_.configurationId -eq $currentConfiguration.configurationId -and $_.source -eq "liveBench" -and
+            $_.metric -eq "agenticCoding" -and $_.sourceVersion -eq $winner.sourceVersion -and $_.cached -eq $winner.cached
+        })
+        if (-not $hasVersion -or -not $matchedIncumbent.Count) {
+            $promotionBlockReason = "retained_fallback_incumbent_evidence_missing"
+        }
+    }
     $observation = Get-ModelDataFingerprint @{
         source = $decidingSource
         sourceVersion = $winner.sourceVersion
+    }
+    $evidenceIdentity = $null
+    if ($decidingSource -eq "artificialAnalysisCodingAgents") {
+        $metadata = Get-ObjectMemberValue $winner "sourceMetadata"
+        $evidenceIdentity = Get-ModelDataFingerprint @{
+            variantId=(Get-ObjectMemberValue $metadata "variantId")
+            harness=(Get-ObjectMemberValue $metadata "harness")
+            versions=(Get-ObjectMemberValue $metadata "versions")
+            suite=(Get-ObjectMemberValue $metadata "suiteFingerprint")
+        }
     }
     $candidateCost = Get-ModelReferenceCost $byConfiguration[$winner.configurationId] $Policy.selectionPolicy
     return [pscustomobject]@{
@@ -167,6 +196,8 @@ function Get-ProfileSelection {
         policyFingerprint = $fingerprint
         observation = $observation
         freshObservation = -not $winner.cached -and $hasVersion
+        promotionBlockReason = $promotionBlockReason
+        evidenceIdentity = $evidenceIdentity
     }
 }
 
@@ -220,6 +251,11 @@ function Resolve-ProfileSelectionState {
     if (-not [string]::IsNullOrWhiteSpace([string]$sourceDate)) {
         $next.latestSourceDates[$source] = $sourceDate
     }
+    $promotionBlockReason = Get-ObjectMemberValue $Selection "promotionBlockReason"
+    if ($null -ne $promotionBlockReason) {
+        $result.status = $promotionBlockReason
+        return $result
+    }
     if ($winnerConfiguration.configurationId -eq $currentConfiguration.configurationId) {
         $next.pending = $null
         return $result
@@ -227,7 +263,9 @@ function Resolve-ProfileSelectionState {
     $history = @(Get-ObjectMemberValue $next.observations $source | Where-Object { $null -ne $_ })
     $seen = $history -contains $Selection.observation
     $pending = $next.pending
-    $sameCandidate = $null -ne $pending -and (Get-ObjectMemberValue $pending "configurationId") -eq $winnerConfiguration.configurationId -and $pending.decidingSource -eq $source
+    $evidenceIdentity = Get-ObjectMemberValue $Selection "evidenceIdentity"
+    $sameCandidate = $null -ne $pending -and (Get-ObjectMemberValue $pending "configurationId") -eq $winnerConfiguration.configurationId -and
+        $pending.decidingSource -eq $source -and (Get-ObjectMemberValue $pending "evidenceIdentity") -eq $evidenceIdentity
     $count = if ($sameCandidate) { [int]$pending.count } else { 0 }
     if (-not $seen) {
         $count++
@@ -241,6 +279,7 @@ function Resolve-ProfileSelectionState {
         decidingSource = $source
         count = $count
         observation = $Selection.observation
+        evidenceIdentity = $evidenceIdentity
         updatedAtUtc = $NowUtc.ToUniversalTime().ToString("o")
     }
     if ($ForceImmediateApply -or $count -ge 2) {
@@ -252,6 +291,7 @@ function Resolve-ProfileSelectionState {
             policyFingerprint = $Selection.policyFingerprint
             decidingSource = $source
             observation = $Selection.observation
+            evidenceIdentity = $evidenceIdentity
             activatedAtUtc = $NowUtc.ToUniversalTime().ToString("o")
             forced = [bool]$ForceImmediateApply
         }

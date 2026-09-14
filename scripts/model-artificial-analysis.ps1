@@ -1,5 +1,6 @@
 Set-StrictMode -Version Latest
 . (Join-Path $PSScriptRoot "model-data-common.ps1")
+. (Join-Path $PSScriptRoot "model-agent-data.ps1")
 
 $script:ArtificialAnalysisLlmModelsApiUrl = "https://artificialanalysis.ai/api/v2/data/llms/models"
 $script:ArtificialAnalysisCodingAgentsUrl = "https://artificialanalysis.ai/agents/coding-agents"
@@ -281,75 +282,7 @@ function Parse-ArtificialAnalysisCodingAgentIndexFromHtml {
         [Parameter(Mandatory = $true)][AllowEmptyString()][string]$Html
     )
 
-    # As of 2026-09: AA does not document a Data API endpoint for the harness-
-    # specific Coding Agents leaderboard variants, so this parser remains the
-    # authoritative source for coding-agent benchmark data.
-    if ([string]::IsNullOrWhiteSpace($Html)) {
-        return [pscustomobject]@{
-            status = "unavailable"
-            message = "Artificial Analysis Coding Agents HTML was empty."
-            models = @{}
-            sourceDate = $null
-        }
-    }
-
-    $normalizedHtml = $Html -replace '\\+"', '"'
-    $pattern = '"label":"(?<label>[^"]+)","codingAgentsIndex":(?<codingAgentIndex>-?\d+(?:\.\d+)?)'
-    $matches = [regex]::Matches($normalizedHtml, $pattern, [System.Text.RegularExpressions.RegexOptions]::Singleline)
-
-    if ($matches.Count -eq 0) {
-        return [pscustomobject]@{
-            status = "unavailable"
-            message = "Artificial Analysis embedded coding-agent records with codingAgentsIndex were not found."
-            models = @{}
-            sourceDate = $null
-        }
-    }
-
-    $models = @{}
-    foreach ($match in $matches) {
-        $label = [string]$match.Groups["label"].Value
-        $scoreText = [string]$match.Groups["codingAgentIndex"].Value
-
-        $score = 0.0
-        if (-not [double]::TryParse($scoreText, [System.Globalization.NumberStyles]::Float, [System.Globalization.CultureInfo]::InvariantCulture, [ref]$score)) {
-            continue
-        }
-
-        if ($models.ContainsKey($label)) {
-            if ([math]::Abs([double]$models[$label].codingAgentIndex - $score) -gt 0.000001) {
-                return [pscustomobject]@{
-                    status = "unavailable"
-                    message = "Artificial Analysis coding-agent data was ambiguous for label '$label'."
-                    models = @{}
-                    sourceDate = $null
-                }
-            }
-            continue
-        }
-
-        $models[$label] = [pscustomobject]@{
-            label = $label
-            name = $label
-            codingAgentIndex = $score
-        }
-    }
-
-    if ($models.Count -eq 0) {
-        return [pscustomobject]@{
-            status = "unavailable"
-            message = "Artificial Analysis coding-agent parsing found no numeric records."
-            models = @{}
-            sourceDate = $null
-        }
-    }
-
-    return [pscustomobject]@{
-        status = "ok"
-        message = "Parsed embedded coding-agent records."
-        models = $models
-        sourceDate = $null
-    }
+    return [pscustomobject](ConvertFrom-AgentPageData -Html $Html)
 }
 
 function Get-ArtificialAnalysisCodingAgentIndexData {
@@ -381,8 +314,9 @@ function Get-ArtificialAnalysisCodingAgentIndexData {
         status = $parsed.status
         message = $parsed.message
         models = $parsed.models
+        diagnostics = $parsed.diagnostics
         sourceDate = $parsed.sourceDate
-        sourceVersion = if ($parsed.status -eq "ok") { Get-ModelScoreFingerprint -Models $parsed.models -ScoreProperty "codingAgentIndex" } else { $null }
+        sourceVersion = if ($parsed.status -eq "ok") { Get-ModelDataFingerprint $parsed.models } else { $null }
         fetchedAtUtc = $fetchedAtUtc
         sourceUrl = $Url
     }

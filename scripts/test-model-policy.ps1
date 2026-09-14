@@ -35,7 +35,7 @@ Run-Test "All profiles enforce the approved fixed hard budgets" {
             }
         }
     }
-    Assert-True ($p.profileArtificialAnalysisMetrics["agentic-implementation"] -eq "coding") "Explicit agentic AA coding fallback"
+    Assert-True ($p.profileArtificialAnalysisMetrics["agentic-implementation"] -eq "coding") "Informational AA coding metric"
 }
 Run-Test "All profiles use explicit source-specific value bands without incumbent-relative limits" {
     $p = Get-ModelPolicyConfig (Join-Path $repo "config\model-policy.json")
@@ -44,8 +44,10 @@ Run-Test "All profiles use explicit source-specific value bands without incumben
         Assert-True ($strategy.strategy -eq "value_balanced") "Missing value strategy for $key"
         Assert-True (-not $strategy.Contains("maxAutomaticCostIncreasePercent")) "Obsolete incumbent-relative limit for $key"
         $aaMetric = "artificialAnalysis.$($p.profileArtificialAnalysisMetrics[$key])Index"
+        if ($key -eq "agentic-implementation") { $aaMetric = "artificialAnalysisCodingAgents.codingAgentIndex" }
         $lbMetric = "liveBench.$($p.profileLiveBenchCategories[$key])"
-        Assert-True ($strategy.qualityBands[$aaMetric] -eq 3 -and $strategy.qualityBands[$lbMetric] -eq 3) "Explicit metric bands missing"
+        $aaBand = if ($key -eq "agentic-implementation") { 0.03 } else { 3 }
+        Assert-True ($strategy.qualityBands[$aaMetric] -eq $aaBand -and $strategy.qualityBands[$lbMetric] -eq 3) "Explicit metric bands missing"
     }
     Assert-True ($p.selectionPolicy.profiles["agentic-implementation"].qualityBands["artificialAnalysisCodingAgents.codingAgentIndex"] -eq 0.03) "Agent index band used the wrong scale"
 }
@@ -60,6 +62,11 @@ Run-Test "Invalid strategies and incomplete or nonnumeric bands fail validation"
             { param($p) $p.profileRequirements.review.costSensitive = $false },
             { param($p) $p.selectionPolicy.profiles.review.Remove("configurationSelection") },
             { param($p) $p.selectionPolicy.profiles["agentic-implementation"].qualityBands.Remove("artificialAnalysisCodingAgents.codingAgentIndex") },
+            { param($p) $p.selectionPolicy.profiles["agentic-implementation"].decidingSources=@("artificialAnalysis","liveBench") },
+            { param($p) $p.selectionPolicy.profiles["agentic-implementation"].requireMatchedIncumbentOnFallback=$false },
+            { param($p) $p.selectionPolicy.profiles["agentic-implementation"].Remove("decidingSources") },
+            { param($p) $p.selectionPolicy.profiles["agentic-implementation"].qualityBands["artificialAnalysis.codingIndex"]=3 },
+            { param($p) $p.profileLiveBenchCategories["agentic-implementation"]="coding" },
             { param($p) $p.selectionPolicy.profiles.orchestrator.qualityBands.Remove("liveBench.instructionFollowing") },
             { param($p) $p.selectionPolicy.profiles.orchestrator.qualityBands["artificialAnalysis.intelligenceIndex"] = -1 },
             { param($p) $p.selectionPolicy.profiles.orchestrator.qualityBands["artificialAnalysis.intelligenceIndex"] = "3" },
@@ -168,7 +175,7 @@ Run-Test "Sol vision has explicit provenance and admits the configured Visual/UI
 }
 Run-Test "Every profile preauthorizes its task-appropriate effort range" {
     $p=Get-ModelPolicyConfig (Join-Path $repo "config\model-policy.json")
-    Assert-True ($p.selectionPolicy.version -eq 6) "Configuration policy version not advanced"
+    Assert-True ($p.selectionPolicy.version -eq 7) "Configuration policy version not advanced"
     $ranges=@{
         quick="low";mechanical="low";triage="low";orchestrator="high"
         "default-development"="medium,high";review="medium,high";"visual-ui"="medium,high"

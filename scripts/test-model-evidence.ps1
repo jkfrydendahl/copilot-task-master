@@ -46,48 +46,70 @@ Run-Test "Unsupported effort models use explicitly declared no-effort variant" {
 }
 . (Join-Path $PSScriptRoot "model-policy-config.ps1")
 . (Join-Path $PSScriptRoot "model-profile-selection.ps1")
-Run-Test "Configured coding-agent aliases preserve exact efforts and external harness identity" {
+. (Join-Path $PSScriptRoot "model-artificial-analysis.ps1")
+. (Join-Path $PSScriptRoot "fixtures\model-ranking\agent-fixture.ps1")
+Run-Test "Structured agent evidence resolves new efforts and harnesses without aliases" {
     $root = Split-Path $PSScriptRoot -Parent
     $configuredPolicy = Get-ModelPolicyConfig (Join-Path $root "config\model-policy.json")
-    $configuredAliases = (Read-ModelConfig (Join-Path $root "config\model-ranking-aliases.json") 2).aliases
     $caps = (Get-ModelCapabilitiesCatalog (Join-Path $root "config\model-capabilities.json")).models
     $agents = @{
         status="ok";sourceDate=$null;fetchedAtUtc="2026-09-09Z";sourceUrl="https://artificialanalysis.ai/agents/coding-agents"
         sourceVersion="fixture-agents";models=@{
-            "Opencode - Gemini 3.8 Flash (high)"=@{codingAgentIndex=0.61}
-            "Grok Build - Grok 4.5 (high)"=@{codingAgentIndex=0.64}
-            "Codex - GPT-6 Astra (max)"=@{codingAgentIndex=0.67}
+            gemini=(New-NormalizedAgentFixture gemini "Gemini 3.8 Flash (high)" 0.4186 google)
+            opus=(New-NormalizedAgentFixture opus "Opus 5 (max)" 0.5973 anthropic)
+            grok=(New-NormalizedAgentFixture grok "Grok 4.6 (xhigh)" 0.4697 xai)
         }
     }
-    $agentProfile = @{key="agentic-implementation";model="gpt-5.6-sol";effort="high";context="default"}
-    $models = @("gemini-3.8-flash","grok-4.5","gpt-6-astra")
+    $agentProfile = @{key="agentic-implementation";model="gemini-3.8-flash";effort="high";context="default"}
+    $models = @("gemini-3.8-flash","claude-opus-5","grok-4.6")
+    $configs = Get-ProfileModelConfigurations -Profile $agentProfile -Models $models -Capabilities $caps -Policy $configuredPolicy
     $sources = @{artificialAnalysisCodingAgents=$agents}
-    $r = Get-ProfileBenchmarkEvidence -Profile $agentProfile -Models $models -Sources $sources `
-        -Aliases $configuredAliases -Capabilities $caps -Policy $configuredPolicy -NowUtc ([datetime]"2026-09-09Z")
-    Assert-True ($r.records.Count -eq 2) "Missing high-effort agent aliases or max substituted for high"
+    $r = Get-ProfileBenchmarkEvidence -Profile $agentProfile -Configurations $configs.configurations -Sources $sources `
+        -Aliases @{} -Capabilities $caps -Policy $configuredPolicy -NowUtc ([datetime]"2026-09-09Z")
+    Assert-True ($r.records.Count -eq 3) "Structured variants did not resolve without aliases"
     foreach ($record in $r.records) {
-        Assert-True ($record.source -eq "artificialAnalysisCodingAgents" -and $record.harness -eq "external agent harness, not Copilot CLI") "Harness provenance lost"
-        Assert-True ($record.alias -match '\(high\)$' -and $record.effort -eq "high") "Effort mismatch"
+        Assert-True ($record.source -eq "artificialAnalysisCodingAgents" -and $record.harness -match "variant .*external agent harness, not Copilot CLI") "Harness provenance lost"
+        Assert-True ($record.sourceMetadata.components.Count -eq 2) "Component coverage lost"
     }
-    $verdicts = @(foreach ($model in $models) {
-        @{modelId=$model;effort="high";context="default";admissible=$true;reasonCodes=@();pricing=@{inputPerMillion=1;outputPerMillion=5}}
+    $verdicts = @(foreach ($config in $configs.configurations) {
+        @{modelId=$config.model;effort=$config.effort;context="default";admissible=$true;reasonCodes=@();pricing=@{inputPerMillion=1;outputPerMillion=5}}
     })
     $fallback = [pscustomobject]@{model="gemini-3.8-flash";score=99;source="artificialAnalysis";metric="codingIndex";
         effort="high";context="default";sourceVersion="fixture-aa";cached=$false;publicationAgeUnknown=$true}
     $selection = Get-ProfileSelection -Profile $agentProfile -Evidence (@($r.records) + @($fallback)) `
-        -Verdicts $verdicts -Policy $configuredPolicy -Aliases $configuredAliases
-    Assert-True ($selection.winner.model -eq "grok-4.5" -and $selection.decidingSource -eq "artificialAnalysisCodingAgents") "Harness source did not outrank LLM coding fallback"
-
-    foreach ($effort in @("medium","max")) {
-        $agentProfile.effort = $effort
-        $r = Get-ProfileBenchmarkEvidence -Profile $agentProfile -Models $models -Sources $sources `
-            -Aliases $configuredAliases -Capabilities $caps -Policy $configuredPolicy -NowUtc ([datetime]"2026-09-09Z")
-        if ($effort -eq "medium") {
-            Assert-True ($r.records.Count -eq 0 -and $r.diagnostics.Count -gt 0) "High/max harness scores substituted for medium"
-        } else {
-            Assert-True ($r.records.Count -eq 1 -and $r.records[0].model -eq "gpt-6-astra") "Missing exact Astra max harness"
-        }
+        -Verdicts $verdicts -Policy $configuredPolicy -Aliases @{}
+    Assert-True ($selection.winner.model -eq "claude-opus-5" -and $selection.winner.effort -eq "max" -and
+        $selection.decidingSource -eq "artificialAnalysisCodingAgents") "Specialized source/configuration lost"
+    $agentProfile.effort="medium"
+    $r = Get-ProfileBenchmarkEvidence -Profile $agentProfile -Models $models -Sources $sources `
+        -Aliases @{} -Capabilities $caps -Policy $configuredPolicy -NowUtc ([datetime]"2026-09-09Z")
+    Assert-True ($r.records.Count -eq 0 -and $r.diagnostics.Count) "Another effort supplied medium evidence"
+}
+Run-Test "Agent resolution rejects composites, unknown efforts, providers and ambiguous identities" {
+    $known=@("gpt-one","claude-opus-5","gemini-3.8-flash")
+    foreach ($entry in @(
+        @("GPT-one (max) (with fallback)","openai"),
+        @("GPT-one + GPT-two (max)","openai"),
+        @("GPT-one","openai"),
+        @("GPT-one (automatic)","openai"),
+        @("GPT-one (high)","google"),
+        @("GPT-unknown (high)","openai")
+    )) {
+        $r=Resolve-AgentModelIdentities -Records @{one=(New-NormalizedAgentFixture one $entry[0] 0.7 $entry[1])} -KnownModels $known
+        Assert-True ($r.records.Count -eq 0 -and $r.diagnostics.Count) "Ambiguous identity accepted: $($entry[0])"
     }
+    $row=New-NormalizedAgentFixture one "Gemini 3.8 Flash (high)" 0.7 google
+    $r=Resolve-AgentModelIdentities -Records @{one=$row} -KnownModels @("gemini-3.8-flash","gemini-3-8-flash")
+    Assert-True ($r.records.Count -eq 0) "Normalization collision picked a model"
+    $copy=$row.Clone();$copy.variantId="second";$copy.harness="Another harness"
+    $r=Resolve-AgentModelIdentities -Records @{one=$row;two=$copy} -KnownModels $known
+    Assert-True ($r.records.Count -eq 0 -and $r.diagnostics -match "ambiguous_agent_variants") "Highest-scoring/default harness chosen implicitly"
+    $r=Resolve-AgentModelIdentities -Records @{old=@{label="Gemini 3.8 Flash (high)";codingAgentIndex=0.9}} -KnownModels $known
+    Assert-True ($r.records.Count -eq 0 -and $r.diagnostics -match "identity_metadata_missing") "Legacy labels silently upgraded"
+    $native=New-NormalizedAgentFixture native "Claude Haiku 4.5" 0.6 anthropic
+    $r=Resolve-AgentModelIdentities -Records @{native=$native} -KnownModels @("claude-haiku-4.5") `
+        -Capabilities @{"claude-haiku-4.5"=@{effortMode="unsupported"}}
+    Assert-True ($r.records.Count -eq 1 -and $r.records[0].effort -eq "none") "Native effort semantics lost"
 }
 Run-Test "Explicit configurations retain exact aliases and identities for every effort" {
     . (Join-Path $PSScriptRoot "model-configuration.ps1")
