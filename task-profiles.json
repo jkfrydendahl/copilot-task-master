@@ -31,8 +31,8 @@
     "label": "Agentic implementation",
     "description": "Multi-file implementation, edit/test loops, repo exploration, coordinated layered changes.",
     "hint": "When you open the chat, describe the feature or change. The agent will explore, plan, and implement across files.",
-    "model": "gemini-3.8-flash",
-    "effort": "high",
+    "model": "claude-opus-5",
+    "effort": "max",
     "context": "default"
   },
   {
