@@ -73,6 +73,48 @@ function Format-ModelReportNumber {
     return ([double]$Value).ToString("G12", [Globalization.CultureInfo]::InvariantCulture)
 }
 
+function Get-OrchestratorSupportingEvidenceReportLines {
+    param($Result)
+    $lines = [System.Collections.Generic.List[string]]::new()
+    $winner = $Result.selection.winner
+    $lines.Add("")
+    $lines.Add("**Orchestrator LiveBench supporting evidence** (for the recommended configuration, not necessarily the applied configuration):")
+    if ($null -eq $winner) {
+        $lines.Add("Unavailable: no eligible recommendation to match.")
+        return @($lines)
+    }
+    $matched = @($Result.evidence.records | Where-Object {
+        $_.source -eq "liveBench" -and $_.model -eq $winner.model -and $_.effort -eq $winner.effort -and
+        (Get-ObjectMemberValue $_ "context") -eq $winner.context
+    })
+    if (-not $matched.Count) {
+        $lines.Add("Unavailable: no usable, exact-configuration LiveBench evidence for $(Format-ModelReportConfiguration $winner). Missing, expired or unmatched evidence is not a zero score; other efforts are not substituted.")
+        return @($lines)
+    }
+    $lines.Add("")
+    $lines.Add("| Configuration (model / effort / context) | Exact LB alias | LB reasoning (0-100) | LB instruction following (0-100) | Published | Retrieved | Cached |")
+    $lines.Add("|---|---|---|---|---|---|---|")
+    foreach ($record in $matched) {
+        $scores = @(foreach ($metric in @("reasoning", "instructionFollowing")) {
+            $score = Get-ObjectMemberValue $record.sourceMetadata $metric
+            if (($score -is [double] -or $score -is [int] -or $score -is [long] -or $score -is [decimal]) -and
+                [double]::IsFinite([double]$score) -and $score -ge 0 -and $score -le 100) {
+                Format-ModelReportValue $score
+            } else {
+                "n/a (missing or invalid)"
+            }
+        })
+        $lines.Add((Format-ModelReportRow @(
+            (Format-ModelReportConfiguration $record), $record.alias, $scores[0], $scores[1],
+            $record.sourceDate, $record.fetchedAtUtc, $record.cached
+        )))
+    }
+    $lines.Add("")
+    $lines.Add("These are separate LiveBench metrics, not AA Intelligence Index scores or a blended ranking. Reasoning is informational; instruction following retains its existing corroboration/fallback role. AA remains primary when eligible matched AA evidence exists. Cached evidence cannot authorize a switch; an n/a publication date means publication age is unknown.")
+    $lines.Add("External benchmark results do not establish reliable Copilot CLI delegation, constraint retention or subagent-result review, or improvement over an unmeasured effort setting.")
+    return @($lines)
+}
+
 function Get-ProfileReviewReportLines {
     param($Result)
     $r = $Result
@@ -120,6 +162,9 @@ function Get-ProfileReviewReportLines {
     }
     if ($r.selection.contested) {
         $lines.Add("**Warning: LiveBench does not support the recommendation under this profile's quality rule; AA remains primary.**")
+    }
+    if ($r.key -eq "orchestrator") {
+        $lines.AddRange([string[]](Get-OrchestratorSupportingEvidenceReportLines -Result $r))
     }
     if ($r.resolution.state.pending) {
         $pending = $r.resolution.state.pending

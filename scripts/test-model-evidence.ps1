@@ -102,4 +102,31 @@ Run-Test "Explicit configurations retain exact aliases and identities for every 
     Assert-True ($records[0].configurationId -ne $records[1].configurationId -and $records[1].effort -eq "max") "Configuration provenance missing"
     Assert-True (@($r.records | Where-Object source -eq liveBench).Count -eq 1 -and $r.diagnostics -match "effort 'max'") "Missing max evidence borrowed medium"
 }
+Run-Test "Gemini LiveBench high alias never supplies medium evidence and preserves supporting metrics" {
+    $root = Split-Path $PSScriptRoot -Parent
+    $p = Get-ModelPolicyConfig (Join-Path $root "config\model-policy.json")
+    $mapping = (Read-ModelConfig (Join-Path $root "config\model-ranking-aliases.json") 2).aliases
+    $source = @{
+        status="ok";sourceDate="2026-09-01";fetchedAtUtc="2026-09-14Z";sourceVersion="lb-high";models=@{
+            "gemini-3.8-flash-high"=@{reasoning=89.29325;instructionFollowing=81.4125}
+        }
+    }
+    $current = @{key="orchestrator";model="gemini-3.8-flash";effort="high";context="default"}
+    $configurations = @(foreach ($effort in @("medium","high")) {
+        New-ModelConfiguration -Model "gemini-3.8-flash" -Effort $effort -Context default
+    })
+    foreach ($status in @("ok","cached")) {
+        $source.status = $status
+        $r = Get-ProfileBenchmarkEvidence -Profile $current -Configurations $configurations -Sources @{liveBench=$source} `
+            -Aliases $mapping -Policy $p -NowUtc ([datetime]"2026-09-14Z")
+        Assert-True ($r.records.Count -eq 1 -and $r.records[0].effort -eq "high") "High score borrowed for medium"
+        Assert-True ($r.records[0].metric -eq "instructionFollowing" -and $r.records[0].score -eq 81.4125 -and
+            $r.records[0].sourceMetadata.reasoning -eq 89.29325) "Supporting metrics lost or substituted"
+        Assert-True ($r.records[0].cached -eq ($status -eq "cached")) "Cached status lost"
+    }
+    $source.sourceDate = "2026-01-01"
+    $r = Get-ProfileBenchmarkEvidence -Profile $current -Configurations $configurations -Sources @{liveBench=$source} `
+        -Aliases $mapping -Policy $p -NowUtc ([datetime]"2026-09-14Z")
+    Assert-True ($r.records.Count -eq 0 -and $r.diagnostics -match "publication_stale") "Expired supporting evidence admitted"
+}
 if ($script:Failed) { exit 1 }

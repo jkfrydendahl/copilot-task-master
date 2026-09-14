@@ -67,14 +67,14 @@
     "benchmarkMaxPublicationAgeDays": 90
   },
   "selectionPolicy": {
-    "version": 5,
+    "version": 6,
     "referenceInputTokens": 1000000,
     "referenceOutputTokens": 100000,
     "referenceUsageDescription": "Aggregate uncached usage across requests within the selected context tier, not a single 1M-token request or predicted task cost. Cache reads/writes are excluded.",
     "profiles": {
       "orchestrator": {
         "strategy": "value_balanced",
-        "configurationSelection": { "mode": "bounded_effort", "allowedEfforts": ["low", "medium"], "effortChangePolicy": "automatic" },
+        "configurationSelection": { "mode": "bounded_effort", "allowedEfforts": ["high"], "effortChangePolicy": "automatic" },
         "qualityBands": { "artificialAnalysis.intelligenceIndex": 3, "liveBench.instructionFollowing": 3 }
       },
       "quick": {

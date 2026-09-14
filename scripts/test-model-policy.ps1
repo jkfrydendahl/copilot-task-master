@@ -168,9 +168,9 @@ Run-Test "Sol vision has explicit provenance and admits the configured Visual/UI
 }
 Run-Test "Every profile preauthorizes its task-appropriate effort range" {
     $p=Get-ModelPolicyConfig (Join-Path $repo "config\model-policy.json")
-    Assert-True ($p.selectionPolicy.version -eq 5) "Configuration policy version not advanced"
+    Assert-True ($p.selectionPolicy.version -eq 6) "Configuration policy version not advanced"
     $ranges=@{
-        quick="low";mechanical="low";triage="low";orchestrator="low,medium"
+        quick="low";mechanical="low";triage="low";orchestrator="high"
         "default-development"="medium,high";review="medium,high";"visual-ui"="medium,high"
         "agentic-implementation"="high,xhigh,max";"deep-reasoning"="high,xhigh,max"
     }
@@ -179,6 +179,10 @@ Run-Test "Every profile preauthorizes its task-appropriate effort range" {
         Assert-True ($selection.mode -eq "bounded_effort" -and $selection.effortChangePolicy -eq "automatic") "Missing automatic authorization: $key"
         Assert-True (($selection.allowedEfforts -join ",") -eq $ranges[$key]) "Wrong effort range: $key"
     }
+    $orchestrator = Get-Content (Join-Path $repo "task-profiles.json") -Raw | ConvertFrom-Json | Where-Object key -eq "orchestrator"
+    Assert-True ($orchestrator.effort -eq "high") "Launcher default disagrees with high-only policy"
+    Assert-True ($p.profileArtificialAnalysisMetrics.orchestrator -eq "intelligence" -and
+        $p.profileLiveBenchCategories.orchestrator -eq "instructionFollowing") "Orchestrator primary/supporting metrics changed"
 }
 Run-Test "Invalid or obsolete effort policies fail rather than silently changing authorization" {
     $path=Join-Path ([IO.Path]::GetTempPath()) "$([guid]::NewGuid().ToString('N')).json"

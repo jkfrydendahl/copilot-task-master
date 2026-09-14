@@ -457,6 +457,34 @@ Run-Test "Exact configuration wins ties and LiveBench cannot corroborate another
     Assert-True ($s.confidence -eq "reduced" -and -not $s.contested) "Different effort counted as corroboration"
 }
 . (Join-Path $PSScriptRoot "model-policy-config.ps1")
+Run-Test "Orchestrator high-only policy prevents medium retention and keeps AA primary" {
+    $p = Get-ModelPolicyConfig (Join-Path $PSScriptRoot "..\config\model-policy.json")
+    $current = @{key="orchestrator";model="one";effort="medium";context="default"}
+    $verdicts = @(foreach ($entry in @(@("one","low"),@("one","medium"),@("one","high"),@("two","high"))) {
+        @{modelId=$entry[0];effort=$entry[1];context="default";admissible=$true;reasonCodes=@();
+            pricing=@{inputPerMillion=0.75;outputPerMillion=3.75}}
+    })
+    $records = @(foreach ($entry in @(@("one","low",99),@("one","medium",40),@("one","high",41.2),@("two","high",37))) {
+        $r = Record $entry[0] $entry[2]
+        $r.effort=$entry[1]; $r.metric="intelligenceIndex"
+        $r
+    })
+    foreach ($entry in @(@("one",81.4125),@("two",99))) {
+        $r = Record $entry[0] $entry[1] liveBench
+        $r.effort="high"; $r.metric="instructionFollowing"
+        $records += @($r)
+    }
+    $s = Get-ProfileSelection -Profile $current -Evidence $records -Verdicts $verdicts -Policy $p -Aliases @{}
+    Assert-True ($s.winner.model -eq "one" -and $s.winner.effort -eq "high" -and $s.winner.score -eq 41.2) "Medium retained within band or low score admitted"
+    Assert-True ($s.decidingSource -eq "artificialAnalysis" -and $s.contested) "LB disagreement replaced AA rather than being reported"
+    $pending = Resolve-ProfileSelectionState -CurrentModel one -Selection $s
+    Assert-True (-not $pending.applied -and $pending.state.pending.effort -eq "high") "High change bypassed confirmation"
+    $forced = Resolve-ProfileSelectionState -CurrentModel one -Selection $s -ForceImmediateApply
+    Assert-True ($forced.applied -and $forced.finalConfiguration.effort -eq "high") "Authorized same-model high change not applied"
+    $current.effort="high"
+    $s = Get-ProfileSelection -Profile $current -Evidence $records -Verdicts $verdicts -Policy $p -Aliases @{}
+    Assert-True ($s.winner.effort -eq "high" -and -not (Resolve-ProfileSelectionState -CurrentModel one -Selection $s -ForceImmediateApply).applied) "Next run reverted the high default"
+}
 Run-Test "Multiple effort variants of one model do not inflate independent corroboration" {
     $verdicts=@();$records=@()
     foreach ($effort in @("high","xhigh")) {

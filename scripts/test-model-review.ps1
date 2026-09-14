@@ -223,4 +223,46 @@ Run-Test "Grouped exclusions distinguish configurations instead of merging model
     $coverage=@(Get-ModelReviewCoverage @(@{key="agentic-implementation";verdicts=$verdicts;evidence=@{diagnostics=@()}}))
     Assert-True ($coverage.Count -eq 2 -and @($coverage.effort | Select-Object -Unique).Count -eq 2) "Configuration exclusions were conflated"
 }
+Run-Test "Orchestrator supporting scores are visible, configuration matched and clearly labelled" {
+    $p = Get-ModelPolicyConfig (Join-Path $repo "config\model-policy.json")
+    $profile = @{key="orchestrator";model="one";effort="high";context="default"}
+    $verdict = @{modelId="one";effort="high";context="default";admissible=$true;reasonCodes=@();warningCodes=@();
+        pricing=@{inputPerMillion=0.75;outputPerMillion=3.75};capabilities=@{}}
+    $aa = @{model="one";effort="high";context="default";score=41.2;source="artificialAnalysis";metric="intelligenceIndex";
+        alias="one-high";sourceDate=$null;sourceVersion="aa-v1";publicationAgeUnknown=$true;cached=$false;harness="fixture"}
+    $lb = @{model="one";effort="high";context="default";score=81.4125;source="liveBench";metric="instructionFollowing";
+        alias="one-lb-high";sourceDate="2026-09-01";fetchedAtUtc="2026-09-14Z";sourceVersion="lb-v1";
+        publicationAgeUnknown=$false;cached=$false;harness="fixture";sourceMetadata=@{reasoning=89.29325;instructionFollowing=81.4125}}
+    $selection = Get-ProfileSelection -Profile $profile -Evidence @($aa,$lb) -Verdicts @($verdict) -Policy $p -Aliases @{}
+    $result = @{key="orchestrator";selection=$selection;resolution=(Resolve-ProfileSelectionState -CurrentModel one -Selection $selection);
+        requirement=$p.profileRequirements.orchestrator;fallback=$null;verdicts=@($verdict);evidence=@{records=@($aa,$lb)}}
+    $report = (Get-ProfileReviewReportLines $result) -join "`n"
+    Assert-True ($selection.decidingSource -eq "artificialAnalysis" -and $selection.winner.score -eq 41.2) "LB replaced or blended with AA"
+    foreach ($term in @("Orchestrator LiveBench supporting evidence","one / high / default","one-lb-high",
+        "89.2933","81.4125","2026-09-01","2026-09-14Z","or a blended ranking","not necessarily the applied configuration")) {
+        Assert-True ($report.Contains($term)) "Missing supporting evidence: $term"
+    }
+    Assert-True ($report.IndexOf("89.2933") -lt $report.IndexOf("<details>")) "Supporting scores hidden in collapsed details"
+    Assert-True ($report.Contains("| False |`n`nThese are")) "Supporting caveats rendered as a table row"
+    $lb.cached=$true; $lb.sourceDate=$null
+    $support = (Get-OrchestratorSupportingEvidenceReportLines $result) -join "`n"
+    Assert-True ($support.Contains("| n/a | 2026-09-14Z | True |") -and $support.Contains("Cached evidence cannot authorize")) "Provenance obscured"
+    foreach ($value in @($null, "99", -1, 101, [double]::NaN, [double]::PositiveInfinity)) {
+        $lb.sourceMetadata.reasoning=$value
+        $support = (Get-OrchestratorSupportingEvidenceReportLines $result) -join "`n"
+        Assert-True ($support.Contains("n/a (missing or invalid)")) "Invalid supporting score shown as valid"
+    }
+    $lb.sourceMetadata.reasoning=0
+    Assert-True (((Get-OrchestratorSupportingEvidenceReportLines $result) -join "`n").Contains("| 0 | 81.4125 |")) "Valid zero score lost"
+    foreach ($field in @("model","effort","context")) {
+        $original=$lb[$field]; $lb[$field]="different"
+        $support = (Get-OrchestratorSupportingEvidenceReportLines $result) -join "`n"
+        Assert-True ($support.Contains("no usable, exact-configuration") -and -not $support.Contains("81.4125")) "Mismatched $field substituted"
+        $lb[$field]=$original
+    }
+    $result.evidence.records=@($aa)
+    Assert-True (((Get-OrchestratorSupportingEvidenceReportLines $result) -join "`n").Contains("no usable, exact-configuration")) "Missing evidence hidden"
+    $result.selection.winner=$null
+    Assert-True (((Get-OrchestratorSupportingEvidenceReportLines $result) -join "`n").Contains("no eligible recommendation")) "No-winner report failed"
+}
 if ($script:Failed) { exit 1 }

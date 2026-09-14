@@ -317,7 +317,7 @@ Every profile uses `configurationSelection.mode: bounded_effort` and
 | Profiles | Allowed efforts |
 |---|---|
 | Quick, Mechanical, Triage | low |
-| Orchestrator | low, medium |
+| Orchestrator | high |
 | Default Development, Review, Visual/UI | medium, high |
 | Agentic Implementation, Deep Reasoning | high, xhigh, max |
 
@@ -325,6 +325,17 @@ Candidates are the intersection of that range and each model's supported efforts
 profile's fixed context.
 Models without effort controls keep their one native configuration and exact `none` aliases.
 Missing capability records and unmatched variants are reported, not guessed.
+
+Orchestrator uses high effort for controllable models as a deliberate experiment for routing,
+constraint retention and supervision, not a benchmark-proven fix for those behaviors. Its
+$3 / $15 hard token-price ceilings and AA Intelligence primary metric remain unchanged.
+Higher effort can consume more tokens even when per-token rates are unchanged.
+The report shows the recommendation's exact-configuration LiveBench reasoning and instruction-following
+scores outside the collapsed evidence details, including publication/retrieval dates and cache status.
+Missing or unusable matches are explicit; scores from other efforts are never substituted.
+These metrics are not blended with AA: reasoning is informational, while instruction following
+keeps its existing corroboration/fallback role. External benchmarks do not establish reliable
+Copilot CLI delegation or improvement over an unmeasured effort setting.
 
 The framework compares **measured configurations**, not the maximum setting by definition:
 an `xhigh` result can win even if the model supports an unmeasured `max` setting. Each configuration
