@@ -1,6 +1,7 @@
 Set-StrictMode -Version Latest
 $ErrorActionPreference = "Stop"
 . (Join-Path $PSScriptRoot "model-benchmark-evidence.ps1")
+. (Join-Path $PSScriptRoot "model-policy-config.ps1")
 $script:Failed = 0
 function Assert-True($Condition, $Message) { if (-not $Condition) { throw $Message } }
 function Run-Test($Name, [scriptblock]$Action) {
@@ -8,7 +9,7 @@ function Run-Test($Name, [scriptblock]$Action) {
 }
 $now=[datetime]"2026-09-08Z"
 $profile=@{key="default-development";effort="medium";context="default"}
-$policy=@{profileArtificialAnalysisMetrics=@{"default-development"="coding"};profileLiveBenchCategories=@{"default-development"="coding"};consensusPolicy=@{staleAfterDays=45;benchmarkMaxPublicationAgeDays=90}}
+$policy=Get-ModelPolicyConfig (Join-Path $PSScriptRoot "..\config\model-policy.json")
 $aliases=@{one=@{artificialAnalysis=@{medium="one-medium";max="one-max"};liveBench=@{medium="one-lb"}}}
 $aa=@{status="ok";sourceDate=$null;fetchedAtUtc="2026-09-08Z";sourceUrl="https://example.test/aa";sourceVersion="aa-v1";models=@{"one-medium"=@{name="One medium";codingIndex=50;intelligenceIndex=60};"one-max"=@{codingIndex=90}}}
 $lb=@{status="ok";sourceDate="2026-09-01";fetchedAtUtc="2026-09-08Z";sourceUrl="https://example.test/lb";sourceVersion="lb-v1";models=@{"one-lb"=@{coding=80}}}
@@ -150,5 +151,63 @@ Run-Test "Gemini LiveBench high alias never supplies medium evidence and preserv
     $r = Get-ProfileBenchmarkEvidence -Profile $current -Configurations $configurations -Sources @{liveBench=$source} `
         -Aliases $mapping -Policy $p -NowUtc ([datetime]"2026-09-14Z")
     Assert-True ($r.records.Count -eq 0 -and $r.diagnostics -match "publication_stale") "Expired supporting evidence admitted"
+}
+Run-Test "Role evidence keeps exact public components separate and fingerprints only deciding data" {
+    $p=Get-ModelPolicyConfig (Join-Path $PSScriptRoot "..\config\model-policy.json")
+    $current=@{key="orchestrator";effort="medium";context="default"}
+    $source=@{status="ok";fetchedAtUtc="2026-09-08Z";sourceDate=$null;sourceUrl="https://example.test/components";
+        sourceVersion="page1";models=@{"one-medium"=@{name="One medium";automationBench=0.6;enterpriseOpsGym=0.4;lcr=0.8;ifbench=0.7}}}
+    $read={Get-ProfileBenchmarkEvidence -Profile $current -Models @("one") -Sources @{artificialAnalysisComponents=$source;artificialAnalysis=$aa} -Aliases $aliases -Policy $p -NowUtc $now}
+    $first=& $read
+    Assert-True ($first.records.Count -eq 4 -and @($first.records | Where-Object source -eq artificialAnalysis).Count -eq 0) "Hidden aggregate deciding evidence or missing support"
+    $deciding=@($first.records | Where-Object metric -eq automationBench)[0]
+    Assert-True ($deciding.score -eq 0.6 -and $deciding.alias -eq "one-medium" -and
+        $deciding.configurationId -eq (New-ModelConfiguration one medium default).configurationId) "Exact component identity lost"
+    $source.models["one-medium"].lcr=0.9;$source.sourceVersion="page2"
+    $second=& $read
+    Assert-True (($second.records | Where-Object metric -eq automationBench).sourceVersion -eq $deciding.sourceVersion) "Support/page churn changed deciding observation"
+    $source.models["one-medium"].automationBench=1.1
+    $invalid=& $read
+    Assert-True (@($invalid.records | Where-Object metric -eq automationBench).Count -eq 0 -and $invalid.diagnostics -match "score_missing_or_invalid") "Native scale not enforced"
+}
+Run-Test "Components never borrow another effort or accept composite model identities" {
+    $p=Get-ModelPolicyConfig (Join-Path $PSScriptRoot "..\config\model-policy.json")
+    $current=@{key="orchestrator";effort="medium";context="default"}
+    foreach($record in @(
+        @{name="One (medium) with fallback";automationBench=0.8},
+        @{name="One";effort="high";automationBench=0.8}
+    )) {
+        $source=@{status="ok";fetchedAtUtc="2026-09-08Z";sourceDate=$null;models=@{"one-medium"=$record}}
+        $r=Get-ProfileBenchmarkEvidence -Profile $current -Models @("one") -Sources @{artificialAnalysisComponents=$source} -Aliases $aliases -Policy $p -NowUtc $now
+        Assert-True ($r.records.Count -eq 0 -and $r.diagnostics -match "identity") "Composite/other effort accepted"
+    }
+}
+Run-Test "API aggregate confirmation is independent of other aggregate metrics" {
+    $source=ConvertTo-CanonicalModelData $aa
+    $first=Evidence -Sources @{artificialAnalysis=$source}
+    $source.sourceVersion="changed-api";$source.models["one-medium"].intelligenceIndex=95
+    $second=Evidence -Sources @{artificialAnalysis=$source}
+    Assert-True ($first.records[0].sourceVersion -eq $second.records[0].sourceVersion) "Intelligence change confirmed coding"
+    $source.models["one-medium"].codingIndex=51
+    $third=Evidence -Sources @{artificialAnalysis=$source}
+    Assert-True ($first.records[0].sourceVersion -ne $third.records[0].sourceVersion) "Deciding score change not observed"
+}
+Run-Test "Invalid unrelated scores do not change a usable metric observation" {
+    $source=ConvertTo-CanonicalModelData $aa
+    $source.models["one-max"].codingIndex="invalid-one"
+    $first=Evidence -Sources @{artificialAnalysis=$source}
+    $source.models["one-max"].codingIndex="invalid-two"
+    $second=Evidence -Sources @{artificialAnalysis=$source}
+    Assert-True ($first.records[0].sourceVersion -eq $second.records[0].sourceVersion) "Invalid row churn became confirmation evidence"
+}
+Run-Test "Ambiguous aliases and invalid artifact dates cannot authorize evidence" {
+    $mapping=@{one=@{artificialAnalysis=@{medium="one-medium";max="one-medium"}}}
+    $r=Evidence -Sources @{artificialAnalysis=$aa} -Mapping $mapping
+    Assert-True ($r.records.Count -eq 0 -and $r.diagnostics -match "alias_ambiguous") "One row supplied different efforts"
+    foreach($date in @("invalid","2026-09-09Z")) {
+        $source=ConvertTo-CanonicalModelData $lb;$source.artifactPublishedAtUtc=$date
+        $r=Evidence -Sources @{liveBench=$source}
+        Assert-True ($r.records.Count -eq 0 -and $r.diagnostics -match "artifact_publication_invalid") "Invalid/future artifact date accepted"
+    }
 }
 if ($script:Failed) { exit 1 }

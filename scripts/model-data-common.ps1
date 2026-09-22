@@ -126,17 +126,56 @@ function Test-ModelDataFresh {
     return $age -ge 0 -and $age -le $MaxAgeDays
 }
 
+function Test-ModelScore {
+    param($Score, [double]$Minimum = 0, [double]$Maximum = 100)
+    return ($Score -is [double] -or $Score -is [int] -or $Score -is [long] -or $Score -is [decimal]) -and
+        [double]::IsFinite([double]$Score) -and $Score -ge $Minimum -and $Score -le $Maximum
+}
+
+function Get-StructuredJsonText {
+    param([string]$Text, [int]$Start)
+    $opening = $Text[$Start]
+    if ($opening -notin @('[','{')) { throw [FormatException]::new("Expected a structured JSON container.") }
+    $closing = if ($opening -eq '[') { ']' } else { '}' }
+    $depth = 0
+    $quoted = $false
+    $escaped = $false
+    for ($i = $Start; $i -lt $Text.Length; $i++) {
+        $character = $Text[$i]
+        if ($quoted) {
+            if ($escaped) { $escaped = $false }
+            elseif ($character -eq '\') { $escaped = $true }
+            elseif ($character -eq '"') { $quoted = $false }
+            continue
+        }
+        if ($character -eq '"') { $quoted = $true }
+        elseif ($character -eq $opening) { $depth++ }
+        elseif ($character -eq $closing) {
+            $depth--
+            if ($depth -eq 0) { return $Text.Substring($Start, $i - $Start + 1) }
+        }
+    }
+    throw [FormatException]::new("Truncated structured JSON.")
+}
+
+function Get-PageJsonPayload {
+    param([AllowEmptyString()][string]$Html)
+    # Decode JSON strings, never execute page scripts. Chunks may split a record.
+    $chunks = @(foreach ($match in [regex]::Matches($Html, 'self\.__next_f\.push\(\[1,("(?:\\.|[^"\\])*")\]\)')) {
+        ConvertFrom-JsonAsHashtableCompat $match.Groups[1].Value
+    })
+    return $chunks -join ""
+}
+
 function Write-ModelJsonAtomic {
     param(
         [Parameter(Mandatory = $true)][string]$SnapshotPath,
         [Parameter(Mandatory = $true)]$SnapshotObject
     )
-
     $directory = Split-Path -Path $SnapshotPath -Parent
     if (-not (Test-Path $directory)) {
         New-Item -ItemType Directory -Path $directory -Force | Out-Null
     }
-
     $tempPath = Join-Path $directory ("{0}.tmp" -f [Guid]::NewGuid().ToString("N"))
     $json = $SnapshotObject | ConvertTo-Json -Depth 20
     try {

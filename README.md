@@ -294,20 +294,47 @@ New models with unknown capabilities remain visibly unresolved rather than being
 ### Evidence and selection
 
 `config/model-ranking-aliases.json` maps AA general-model and LiveBench model/effort pairs to explicit source IDs.
+AA public components reuse those exact AA identities, but remain separate source observations.
 Max/xhigh scores cannot stand in for high/medium/low. Update mappings and documented capabilities
 when new variants appear; price refresh alone does not supply those facts.
 
-- [Artificial Analysis API](https://artificialanalysis.ai/api/v2/data/llms/models) is primary: coding for development/UI/quick/mechanical, intelligence for orchestration/triage/review/reasoning.
-- Agentic implementation first uses matched [AA coding-agent harnesses](https://artificialanalysis.ai/agents/coding-agents), then LiveBench **Agentic Coding**. General AA coding is informational only and cannot authorize an Agentic replacement.
-- [LiveBench](https://github.com/LiveBench/new-livebench/tree/main/public) corroborates AA. If no eligible matched AA candidates exist, a matched LiveBench pool can select a labelled fallback. Cost-feed failure does not discard quality data.
+- [Artificial Analysis API](https://artificialanalysis.ai/api/v2/data/llms/models) supplies the Coding and Intelligence indices. [AA coding-agent harnesses](https://artificialanalysis.ai/agents/coding-agents) supply specialized Agentic evidence.
+- AA public model pages supply workflow, instruction-following, long-document reasoning and visual-understanding components. One deterministically chosen known-model page supplies the bulk comparison records plus the current model; the adapter does not fetch every model separately or execute page scripts.
+- [LiveBench](https://github.com/LiveBench/new-livebench/tree/main/public) supplies explicitly authorized fallback and supporting categories. Incomplete categories are unusable, rather than averages of whichever columns happen to exist. Cost-feed failure does not discard quality data.
 - Single-source evidence is allowed with reduced confidence. AA and LiveBench raw scores are never averaged; disagreement is disclosed, not a veto.
 - All eligible models compete; there is no orchestration shortlist. Family preferences from `config/model-policy.json` are informational fallback suggestions, never benchmark gates or automatic family upgrades.
 
 `selectionPolicy.profiles` in `config/model-policy.json` sets the strategy for every profile:
 
-| Profiles | Strategy | Selection rule |
-|---|---|---|
-| All nine profiles | `value_balanced` | Lowest reference AIC within the configured score band below the best **eligible** configuration in the deciding source. |
+| Profile | Primary deciding metric | Authorized fallbacks, in order | Supporting only |
+|---|---|---|---|
+| Quick | AA Coding | LiveBench Coding | IFBench, LiveBench instruction following |
+| Default Development | AA Coding | LiveBench Coding | IFBench, LiveBench instruction following |
+| Agentic Implementation | AA Coding Agent Index | LiveBench Agentic Coding | AutomationBench-AA, EnterpriseOps-Gym-AA |
+| Deep Reasoning | AA Intelligence | LiveBench Reasoning | AA-LCR |
+| Review | AA Coding | LiveBench Coding | LiveBench Reasoning, AA-LCR |
+| Visual/UI | AA Coding | LiveBench Coding | MMMU Pro |
+| Mechanical | AutomationBench-AA | AA Coding, LiveBench Coding | IFBench, LiveBench instruction following, EnterpriseOps-Gym-AA |
+| Orchestrator | AutomationBench-AA | EnterpriseOps-Gym-AA | AA-LCR, IFBench, LiveBench instruction following |
+| Triage | AA Intelligence | LiveBench Reasoning | IFBench, LiveBench instruction following |
+
+All nine profiles use `value_balanced`: the cheapest eligible configuration within the deciding
+metric's native score band. The first usable authorized route supplies the comparable pool.
+Supporting metrics never become hidden weights, vetoes or replacement routes. General coding
+cannot authorize an Agentic replacement, and general intelligence cannot rescue Orchestrator.
+The policy's metric registry records units, ranges, benchmark lineage and limitations; overlapping
+components are not independent corroboration of their aggregate.
+
+These are external-harness proxies for local task performance, not guarantees:
+[AutomationBench-AA](https://artificialanalysis.ai/evaluations/automationbench-aa) measures
+guardrail-adjusted objective completion and prohibits clarifying questions.
+[EnterpriseOps-Gym-AA](https://artificialanalysis.ai/evaluations/enterprise-ops-gym-aa) uses AA's
+oracle-tool harness and strict pass@1; it does not test tool discovery or reproduce the original
+paper's setup. [IFBench](https://artificialanalysis.ai/evaluations/ifbench) is single-turn;
+[AA-LCR](https://artificialanalysis.ai/evaluations/artificial-analysis-long-context-reasoning)
+measures long-document reasoning, not conversation memory. MMMU Pro measures visual understanding,
+not UI implementation fidelity. Coding scores are a proxy for review quality.
+BFCL is deferred; there is no family-score inheritance or personal-preference override.
 
 #### Automatic configuration selection
 
@@ -335,24 +362,16 @@ verified availability, capabilities and pricing. Ambiguous identities or multipl
 same model/effort, composite systems, incomplete coverage and incompatible benchmark suites are
 reported rather than guessed. Legacy cached label-only agent records are not silently upgraded.
 
-An Agentic replacement decided by LiveBench requires a score for the incumbent's exact configuration
-in the same usable LiveBench observation. Without that comparison, the candidate is reported but the
-current profile stays, even with force. AA-primary selection retains its existing ability to replace
-an unscored incumbent. If neither specialized source provides eligible evidence, the profile stays;
-general coding scores cannot rescue the selection. Existing hard budgets, value bands and two
-distinct-observation confirmation still apply. Changing an agent variant, harness/version or benchmark
-suite starts a new confirmation count; changing scores within that identity can confirm a candidate.
+Every fallback replacement requires the incumbent's exact configuration in the same usable metric
+observation. An established stronger deciding basis cannot be downgraded through a weaker fallback,
+even with force. Primary routes may replace an unscored incumbent; if no authorized route is usable,
+the current assignment stays. The report distinguishes recommendations from permission to apply.
+Incumbent provenance belongs to the actual model/effort/context, not to its family or profile name.
+Manual configuration changes do not inherit another configuration's basis.
 
-Orchestrator uses high effort for controllable models as a deliberate experiment for routing,
-constraint retention and supervision, not a benchmark-proven fix for those behaviors. Its
-$3 / $15 hard token-price ceilings and AA Intelligence primary metric remain unchanged.
-Higher effort can consume more tokens even when per-token rates are unchanged.
-The report shows the recommendation's exact-configuration LiveBench reasoning and instruction-following
-scores outside the collapsed evidence details, including publication/retrieval dates and cache status.
-Missing or unusable matches are explicit; scores from other efforts are never substituted.
-These metrics are not blended with AA: reasoning is informational, while instruction following
-keeps its existing corroboration/fallback role. External benchmarks do not establish reliable
-Copilot CLI delegation or improvement over an unmeasured effort setting.
+Orchestrator retains high-only effort and its $3 / $15 ceilings. Changing the deciding metric does
+not establish reliable Copilot CLI delegation, constraint retention or supervision. All profiles
+show exact-configuration supporting scores and gaps outside collapsed evidence details.
 
 The framework compares **measured configurations**, not the maximum setting by definition:
 an `xhigh` result can win even if the model supports an unmeasured `max` setting. Each configuration
@@ -375,9 +394,11 @@ settings cost the same per task. Effort-related task cost and latency are report
 Token-price ceilings and reference AIC do not impose a total task or session spending cap.
 
 Each value profile has explicit `qualityBands` keyed by `source.metric`, for example
-`artificialAnalysis.intelligenceIndex` and `liveBench.instructionFollowing` for Orchestrator.
+`artificialAnalysisComponents.automationBench` and `artificialAnalysisComponents.enterpriseOpsGym` for Orchestrator.
 The initial tolerances are **0.03** for the 0-1 AA coding-agent index and **3 absolute score points**
-for each applicable AA general-model and LiveBench metric. These are configurable starting policy
+for each applicable AA general-model and LiveBench metric. The new workflow metrics use **zero**
+tolerance: highest eligible published score, with cost breaking exact ties. This conservative
+pilot is not a statistical significance claim. These are configurable starting policy
 choices, not percentages of capability, absolute competence floors, or empirically established
 task-success thresholds. Bands are not transferred
 between sources or averaged. Every possible deciding-source metric needs its own band; zero
@@ -395,8 +416,9 @@ inside those ceilings. There is no separate premium veto and no automatic increa
 An over-budget model is excluded before establishing the eligible quality reference, so adding it
 cannot raise the quality bar for affordable candidates.
 
-Except for the Agentic LiveBench fallback guard above, an incumbent without a matched score
-does not freeze an otherwise authorized candidate. Missing incumbent pricing is still not a veto.
+On a primary route, an incumbent without a matched score does not freeze an otherwise authorized
+candidate. Fallbacks require the comparison and stronger-basis protection described above.
+Missing incumbent pricing is still not a veto.
 The candidate still needs its own eligible configuration, fresh pricing,
 matched evidence and confirmation. Reports disclose missing incumbent evidence rather than
 claiming a measured quality improvement. Missing incumbent prices leave savings and percentage
@@ -405,27 +427,37 @@ same source, metric, observation and complete configuration, including native `n
 
 Retrieval age and publication age are distinct: retrieval must be within 45 days and a known
 publication date within 90 days. Unknown publication dates remain unknown and reduce confidence.
-Source fingerprints identify content observations, not publisher methodology-version IDs;
+Metric-scoped fingerprints identify score observations, not publisher methodology-version IDs;
 agent fingerprints also include variant, harness/version and benchmark-component identities. AA API scores are
 not substituted with numbers from its public pages. Benchmarks do not prove performance at the
 profile's requested context length or in the Copilot CLI harness. LLM Stats is not currently an input.
-Fresh sources take priority over cached sources; cached AA cannot block a fresh LiveBench fallback.
+Fresh sources take priority over cached sources, subject to the incumbent comparison and
+stronger-basis guards.
 If only cached evidence remains, it may inform the recommendation but cannot authorize a change.
+LiveBench's dated filename is a **suite label**, not the latest results-publication date.
+The last artifact update is recorded separately; it does not refresh every row's unknown
+evaluation age. Model release dates and retrieval times are never substituted for score dates.
 
 ### Confirmation, retention and reporting
 
-Two distinct observations from the **deciding source** confirm a change to the same model,
+Two distinct observations of the **deciding metric** confirm a change to the same model,
 effective effort and context. Repeated content,
 older publications, cached observations, or unrelated source failures do not advance confirmation.
-Changing the deciding source resets pending confirmation. Policy, effort/context and alias
+Supporting-score or unrelated page changes do not advance the count. Changing the deciding metric,
+route, known methodology or harness identity resets pending confirmation. Policy, effort/context and alias
 fingerprints prevent old evidence from authorizing a new configuration.
 Strategy, band, ceiling or allowed-range changes also invalidate pending confirmation. Force
 bypasses only the wait, not value qualification, hard budgets, allowed ranges or the candidate's
 availability, capabilities, pricing and evidence requirements. No threshold change directly
 rewrites the current model.
 
-Confirmation state schema 2 includes the complete configuration in pending and active records.
-Migration invalidates model-only confirmation counts but keeps current profile settings.
+Policy schema 3 defines role contracts; ranking snapshot schema 4 stores the separated sources.
+Confirmation state schema 3 includes metric and configuration identities plus incumbent basis.
+Migration invalidates incompatible pending counts while retaining current assignments,
+trustworthy provenance, compatible caches and publication rollback history. Unknown historical
+basis remains unknown rather than being inferred from the new policy.
+Legacy specialized AA-agent activations retain their unambiguous metric basis; a general
+AA activation alone cannot establish which historical index was used.
 The broad policy fingerprint can also reset other profiles' pending counts when policy changes.
 If evidence is insufficient, the report says **retained**, not **winner**. If no replacement qualifies,
 even an over-budget incumbent is retained with an explicit warning rather than writing an empty
@@ -447,11 +479,14 @@ The implementation uses focused modules under `scripts/`:
 |---|---|
 | `model-data-common.ps1` | Fetch results, JSON/member access, content fingerprints, freshness and atomic JSON writes; no provider imports. |
 | `model-artificial-analysis.ps1`, `model-livebench.ps1` | Provider-specific acquisition and parsing. |
+| `model-aa-component-data.ps1` | Pure, non-executing AA public-component normalization and validation. |
+| `model-aa-components.ps1` | Bulk public-component acquisition, separate from API aggregates and pricing. |
+| `model-role-evidence.ps1` | Pure profile-contract qualification and comparable metric pools. |
 | `model-pricing-data.ps1` | GitHub pricing acquisition and last-known-good rates. |
 | `model-configuration.ps1` | Shared candidate generation, effective-effort normalization and model/effort/context identities. |
 | `model-benchmark-evidence.ps1`, `model-admissibility.ps1` | Configuration-matched evidence and independent eligibility gates. |
 | `model-profile-selection.ps1` | Pure selection and confirmation-state transitions. |
-| `model-value-selection.ps1` | Reference costs, cheapest-qualified ranking and incumbent cost-increase guards. |
+| `model-value-selection.ps1` | Reference costs and cheapest-qualified ranking within native metric bands. |
 | `model-review-report.ps1` | Decision summary, grouped coverage and expandable audit detail. |
 | `review-task-profiles.ps1` | End-to-end orchestration. |
 

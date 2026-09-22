@@ -14,7 +14,7 @@ function Get-LiveBenchCategoryColumns {
         foreach ($key in $CategoryMap.Keys) {
             if ($key -ieq $preferred) {
                 $value = $CategoryMap[$key]
-                if ($value -is [System.Collections.IEnumerable]) {
+                if ($value -is [System.Collections.IEnumerable] -and $value -isnot [string]) {
                     return @($value | ForEach-Object { [string]$_ })
                 }
             }
@@ -33,16 +33,17 @@ function Get-NumericAverageFromRecord {
     $values = New-Object System.Collections.Generic.List[double]
     foreach ($column in $Columns) {
         if (-not $Record.PSObject.Properties.Name.Contains($column)) {
-            continue
+            return $null
         }
         $text = [string]$Record.$column
         if ([string]::IsNullOrWhiteSpace($text)) {
-            continue
+            return $null
         }
         $number = 0.0
-        if ([double]::TryParse($text, [System.Globalization.NumberStyles]::Float, [System.Globalization.CultureInfo]::InvariantCulture, [ref]$number)) {
+        if ([double]::TryParse($text, [System.Globalization.NumberStyles]::Float, [System.Globalization.CultureInfo]::InvariantCulture, [ref]$number) -and
+            [double]::IsFinite($number) -and $number -ge 0 -and $number -le 100) {
             $values.Add($number)
-        }
+        } else { return $null }
     }
 
     if ($values.Count -eq 0) {
@@ -155,6 +156,11 @@ function Parse-LiveBenchData {
     }
 
     $models = @{}
+    $diagnostics = [System.Collections.Generic.List[string]]::new()
+    $categoryColumns = @{
+        coding=$codingColumns;agenticCoding=$agenticCodingColumns
+        reasoning=$reasoningColumns;instructionFollowing=$instructionFollowingColumns
+    }
     foreach ($row in $rows) {
         $modelName = [string]$row.model
         if ([string]::IsNullOrWhiteSpace($modelName)) {
@@ -168,6 +174,10 @@ function Parse-LiveBenchData {
             reasoning = Get-NumericAverageFromRecord -Record $row -Columns $reasoningColumns
             instructionFollowing = Get-NumericAverageFromRecord -Record $row -Columns $instructionFollowingColumns
             costPerSuccessfulTask = if ($costByModel.ContainsKey($modelName)) { [double]$costByModel[$modelName] } else { $null }
+            evaluationDate = $null
+        }
+        foreach ($metric in $categoryColumns.Keys) {
+            if ($null -eq $models[$modelName].$metric) { $diagnostics.Add("${modelName}: ${metric} category_incomplete_or_invalid") }
         }
     }
 
@@ -177,6 +187,8 @@ function Parse-LiveBenchData {
             message = "LiveBench parsed but yielded no models."
             models = @{}
             sourceDate = $SourceDate
+            categoryColumns = $categoryColumns
+            diagnostics = @($diagnostics)
         }
     }
 
@@ -194,7 +206,9 @@ function Parse-LiveBenchData {
         costStatus = $costStatus
         costMessage = $costMessage
         models = $models
-        sourceDate = $SourceDate
+        sourceDate = if ([string]::IsNullOrWhiteSpace($SourceDate)) { $null } else { $SourceDate }
+        categoryColumns = $categoryColumns
+        diagnostics = @($diagnostics)
     }
 }
 
@@ -257,7 +271,7 @@ function Get-LiveBenchData {
             status = "error"
             message = "LiveBench table fetch failed: $($tableFetch.error)"
             models = @{}
-            sourceDate = $tableDate -replace '_', '-'
+            sourceDate = $null
             fetchedAtUtc = $fetchedAtUtc
             sourceUrl = [string]$latestTable.html_url
         }
@@ -271,7 +285,7 @@ function Get-LiveBenchData {
                 status = "unavailable"
                 message = "LiveBench categories fetch failed: $($categoryFetch.error)"
                 models = @{}
-                sourceDate = $tableDate -replace '_', '-'
+                sourceDate = $null
                 fetchedAtUtc = $fetchedAtUtc
                 sourceUrl = [string]$latestTable.html_url
             }
@@ -285,7 +299,33 @@ function Get-LiveBenchData {
         if ($costFetch.status -eq "ok") { $costText = [string]$costFetch.content }
     }
 
-    $parsed = Parse-LiveBenchData -CsvText ([string]$tableFetch.content) -CategoriesJsonText $categoriesText -CostCsvText $costText -SourceDate ($tableDate -replace '_', '-')
+    $parsed = Parse-LiveBenchData -CsvText ([string]$tableFetch.content) -CategoriesJsonText $categoriesText -CostCsvText $costText
+    $publication = $null
+    $artifactCommit = $null
+    $diagnostics = @(Get-ObjectMemberValue $parsed "diagnostics")
+    $commits = & $FetchJson ("https://api.github.com/repos/LiveBench/new-livebench/commits?path=public%2F$($latestTable.name)&per_page=1")
+    $commitRecords = @(Get-ObjectMemberValue $commits "value")
+    if ($commits.status -eq "ok" -and $commitRecords.Count) {
+        $commit = $commitRecords[0]
+        $date = Get-ObjectMemberValue (Get-ObjectMemberValue (Get-ObjectMemberValue $commit "commit") "committer") "date"
+        $parsedDate = [datetime]::MinValue
+        $validDate = $false
+        if ($date -is [datetime]) { $parsedDate = $date.ToUniversalTime(); $validDate = $true }
+        elseif ($null -ne $date) {
+            $validDate = [datetime]::TryParse([string]$date, [Globalization.CultureInfo]::InvariantCulture,
+                ([Globalization.DateTimeStyles]::AssumeUniversal -bor [Globalization.DateTimeStyles]::AdjustToUniversal), [ref]$parsedDate)
+        }
+        if ($validDate) {
+            $publication = $parsedDate.ToUniversalTime().ToString("o")
+            $artifactCommit = Get-ObjectMemberValue $commit "sha"
+        } elseif ($null -ne $date) {
+            $publication = [string]$date
+            $diagnostics += "artifact_publication_invalid"
+        }
+    } elseif ($commits.status -ne "ok") {
+        $diagnostics += "artifact_publication_fetch_failed: $((Get-ObjectMemberValue $commits 'error'))"
+    }
+    if ($null -eq $publication) { $diagnostics += "artifact_publication_unknown; row evaluation ages remain unknown" }
     return [pscustomobject]@{
         status = $parsed.status
         message = $parsed.message
@@ -293,6 +333,11 @@ function Get-LiveBenchData {
         costMessage = if (Test-ObjectMember -InputObject $parsed -Name "costMessage") { $parsed.costMessage } else { $parsed.message }
         models = $parsed.models
         sourceDate = $parsed.sourceDate
+        datasetVersion = $tableDate -replace '_', '-'
+        artifactPublishedAtUtc = $publication
+        artifactCommit = $artifactCommit
+        categoryColumns = Get-ObjectMemberValue $parsed "categoryColumns"
+        diagnostics = $diagnostics
         sourceVersion = if ($parsed.status -eq "ok") { Get-ModelDataFingerprint @{table=$tableFetch.content;categories=$categoriesText} } else { $null }
         fetchedAtUtc = $fetchedAtUtc
         sourceUrl = [string]$latestTable.html_url

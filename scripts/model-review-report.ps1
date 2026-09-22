@@ -73,45 +73,42 @@ function Format-ModelReportNumber {
     return ([double]$Value).ToString("G12", [Globalization.CultureInfo]::InvariantCulture)
 }
 
-function Get-OrchestratorSupportingEvidenceReportLines {
+function Get-RoleSupportingEvidenceReportLines {
     param($Result)
     $lines = [System.Collections.Generic.List[string]]::new()
     $winner = $Result.selection.winner
     $lines.Add("")
-    $lines.Add("**Orchestrator LiveBench supporting evidence** (for the recommended configuration, not necessarily the applied configuration):")
+    $lines.Add("**Supporting evidence** (informational only; for the recommended configuration, not necessarily the applied configuration):")
     if ($null -eq $winner) {
         $lines.Add("Unavailable: no eligible recommendation to match.")
         return @($lines)
     }
-    $matched = @($Result.evidence.records | Where-Object {
-        $_.source -eq "liveBench" -and $_.model -eq $winner.model -and $_.effort -eq $winner.effort -and
-        (Get-ObjectMemberValue $_ "context") -eq $winner.context
-    })
-    if (-not $matched.Count) {
-        $lines.Add("Unavailable: no usable, exact-configuration LiveBench evidence for $(Format-ModelReportConfiguration $winner). Missing, expired or unmatched evidence is not a zero score; other efforts are not substituted.")
-        return @($lines)
-    }
     $lines.Add("")
-    $lines.Add("| Configuration (model / effort / context) | Exact LB alias | LB reasoning (0-100) | LB instruction following (0-100) | Published | Retrieved | Cached |")
-    $lines.Add("|---|---|---|---|---|---|---|")
-    foreach ($record in $matched) {
-        $scores = @(foreach ($metric in @("reasoning", "instructionFollowing")) {
-            $score = Get-ObjectMemberValue $record.sourceMetadata $metric
-            if (($score -is [double] -or $score -is [int] -or $score -is [long] -or $score -is [decimal]) -and
-                [double]::IsFinite([double]$score) -and $score -ge 0 -and $score -le 100) {
-                Format-ModelReportValue $score
-            } else {
-                "n/a (missing or invalid)"
-            }
+    $lines.Add("| Metric | Configuration (model / effort / context) | Exact alias | Score | Native units | Results published | Retrieved | Cached |")
+    $lines.Add("|---|---|---|---|---|---|---|---|")
+    foreach ($key in $Result.selection.supportingMetrics) {
+        $definition = $Result.selection.metricDefinitions[$key]
+        $matched = @($Result.evidence.records | Where-Object {
+            $_.source -eq $definition.source -and $_.metric -eq $definition.metric -and
+            $_.model -eq $winner.model -and $_.effort -eq $winner.effort -and
+            (Get-ObjectMemberValue $_ "context") -eq $winner.context
         })
+        $record = if ($matched.Count -eq 1) { $matched[0] } else { $null }
+        $score = Get-ObjectMemberValue $record "score"
+        $valid = Test-ModelScore $score $definition.min $definition.max
         $lines.Add((Format-ModelReportRow @(
-            (Format-ModelReportConfiguration $record), $record.alias, $scores[0], $scores[1],
-            $record.sourceDate, $record.fetchedAtUtc, $record.cached
+            $definition.label, (Format-ModelReportConfiguration $winner), (Get-ObjectMemberValue $record "alias"),
+            $(if ($valid) { Format-ModelReportNumber $score } else { "n/a (missing or invalid)" }),
+            $definition.scale, (Get-ObjectMemberValue $record "sourceDate"),
+            (Get-ObjectMemberValue $record "fetchedAtUtc"), (Get-ObjectMemberValue $record "cached")
         )))
     }
     $lines.Add("")
-    $lines.Add("These are separate LiveBench metrics, not AA Intelligence Index scores or a blended ranking. Reasoning is informational; instruction following retains its existing corroboration/fallback role. AA remains primary when eligible matched AA evidence exists. Cached evidence cannot authorize a switch; an n/a publication date means publication age is unknown.")
-    $lines.Add("External benchmark results do not establish reliable Copilot CLI delegation, constraint retention or subagent-result review, or improvement over an unmeasured effort setting.")
+    $lines.Add("Separate metrics, not a blended ranking or hidden veto. n/a means no usable, exact-configuration evidence; it is not zero and other efforts are not substituted. Cached evidence cannot authorize a switch; unknown publication age remains unknown.")
+    foreach ($key in $Result.selection.supportingMetrics) {
+        $definition = $Result.selection.metricDefinitions[$key]
+        $lines.Add("$($definition.label): $($definition.limitation)")
+    }
     return @($lines)
 }
 
@@ -131,12 +128,18 @@ function Get-ProfileReviewReportLines {
     $lines.Add("Quality leader before hard-budget exclusions: $leader. Family fallback (informational, not a winner): $fallback.")
     $lines.Add("Strategy: **$($r.selection.strategy)**.")
     $promotionBlockReason = Get-ObjectMemberValue $r.selection "promotionBlockReason"
-    if ($r.key -eq "agentic-implementation") {
-        $lines.Add("Agentic selection uses AA Coding Agent Index, then LiveBench Agentic Coding. General AA coding is informational only and cannot authorize a replacement.")
-        $lines.Add("AA agent identities are resolved from structured records. Harness/variant and benchmark components are preserved; ambiguous, composite, incomplete or legacy label-only records cannot authorize selection.")
-        if ($null -ne $promotionBlockReason) {
-            $lines.Add("**Fallback replacement blocked:** the incumbent has no exact-configuration score in the deciding LiveBench observation. The candidate remains informational; force cannot bypass this requirement.")
-        }
+    $routes = @($r.selection.evidenceRoutes | ForEach-Object { $r.selection.metricDefinitions[$_].label })
+    $lines.Add("Authorized deciding routes, strongest first: **$($routes -join ' > ')**. Supporting metrics are informational only.")
+    $lines.Add("Task fit: external-harness proxy, not a measurement of Copilot CLI task success.")
+    $lines.Add("Decision status: **$($r.resolution.status)**. Deciding metric: $(Format-ModelReportValue $r.selection.metricKey).")
+    $basis = Get-ObjectMemberValue $r.resolution.state "incumbentBasis"
+    $lines.Add("Incumbent selection basis (applied/current after run): $(if ($null -ne $basis) { Format-ModelReportValue $basis.metricKey } else { 'unknown; no historical provenance inferred' }).")
+    foreach ($key in $r.selection.evidenceRoutes) {
+        $definition = $r.selection.metricDefinitions[$key]
+        $lines.Add("$($definition.label) ($($definition.scale)): $($definition.limitation)")
+    }
+    if ($null -ne $promotionBlockReason -or $r.resolution.status -match "retained_stronger_incumbent_basis") {
+        $lines.Add("**Fallback replacement blocked:** comparable exact-incumbent evidence is required, and a weaker route cannot displace an established stronger basis. The candidate is informational only; force cannot bypass this requirement.")
     }
     if ($r.selection.configurationMode -eq "bounded_effort") {
         $candidateAic = Format-ModelReportNumber $r.selection.candidateReferenceAic
@@ -170,11 +173,9 @@ function Get-ProfileReviewReportLines {
         }
     }
     if ($r.selection.contested) {
-        $lines.Add("**Warning: LiveBench does not support the recommendation under this profile's quality rule; AA remains primary.**")
+        $lines.Add("**Warning: an independent fallback metric disagrees under this profile's quality rule; the authorized primary route still decides.**")
     }
-    if ($r.key -eq "orchestrator") {
-        $lines.AddRange([string[]](Get-OrchestratorSupportingEvidenceReportLines -Result $r))
-    }
+    $lines.AddRange([string[]](Get-RoleSupportingEvidenceReportLines -Result $r))
     if ($r.resolution.state.pending) {
         $pending = $r.resolution.state.pending
         $pendingModel = Format-ModelReportConfiguration $pending
@@ -206,9 +207,10 @@ function Get-ProfileReviewReportLines {
     foreach ($evidence in $r.evidence.records) {
         $lines.Add((Format-ModelReportRow @(
             $evidence.model, $evidence.source, $evidence.alias, $evidence.effort,
-            $evidence.metric, $evidence.score, $evidence.publicationAgeUnknown,
+            $evidence.metric, (Format-ModelReportNumber $evidence.score), $evidence.publicationAgeUnknown,
             $evidence.cached, $evidence.harness,
-            $(if ($r.key -eq "agentic-implementation" -and $evidence.source -eq "artificialAnalysis") { "informational only" } else { "selection / corroboration" })
+            $(if ("$($evidence.source).$($evidence.metric)" -in $r.selection.supportingMetrics) { "supporting only" }
+                elseif ("$($evidence.source).$($evidence.metric)" -eq $r.selection.metricKey) { "deciding" } else { "authorized fallback" })
         )))
     }
     $lines.Add("")
@@ -246,8 +248,9 @@ function Get-TaskProfileReviewReport {
         )))
     }
     $lines.Add("")
-    $lines.Add("Recommendations rank eligible configurations, not all models globally. AA is primary; LiveBench is corroboration or a labelled fallback. Unknown publication age, cached evidence, single-source coverage and external agent harnesses reduce confidence. A context capability is not a benchmark measurement at that context length.")
+    $lines.Add("Recommendations rank eligible configurations using each profile's explicit metric routes, not a global model ranking. Supporting scores never blend, rank or veto; overlapping benchmark lineage is not independent corroboration. Unknown publication age, cached evidence, single-source coverage and external harnesses reduce confidence. A context capability is not a benchmark measurement at that context length.")
     $lines.Add("Value-balanced profiles minimize reference AIC within a source-specific gap of their best eligible score, under fixed hard input/output price ceilings. Bands are policy tolerances, not capability percentages or proof of task success. Token-price ceilings are not total session-spend limits.")
+    $lines.Add("New workflow metrics start with zero score tolerance: highest published eligible score wins, then cost breaks exact ties. This is a conservative pilot, not a statistical significance claim. Fallback replacements require comparable incumbent evidence and cannot weaken an established selection basis.")
     $lines.Add("Configuration cells show model / effective effort / context; 'none' means the model exposes no effort control. Allowed effort ranges are standing authorization: model and effort changes apply together after confirmation. Force bypasses only the confirmation wait, never hard budgets, allowed ranges, availability, capabilities or evidence requirements.")
     $lines.Add("")
     $lines.Add("## Pricing refresh")
@@ -278,18 +281,19 @@ function Get-TaskProfileReviewReport {
     $lines.Add("")
     $lines.Add("## Benchmark sources")
     $lines.Add("")
-    $lines.Add("| Source | Status | Published | Retrieved | Observation identity |")
-    $lines.Add("|---|---|---|---|---|")
+    $lines.Add("| Source | Status | Results published | Suite label | Artifact updated | Retrieved | Raw observation identity |")
+    $lines.Add("|---|---|---|---|---|---|---|")
     foreach ($name in @($Sources.Keys | Sort-Object)) {
         $source = $Sources[$name]
         $lines.Add((Format-ModelReportRow @(
             $name, (Get-ObjectMemberValue $source "status"),
-            (Get-ObjectMemberValue $source "sourceDate"), (Get-ObjectMemberValue $source "fetchedAtUtc"),
+            (Get-ObjectMemberValue $source "sourceDate"), (Get-ObjectMemberValue $source "datasetVersion"),
+            (Get-ObjectMemberValue $source "artifactPublishedAtUtc"), (Get-ObjectMemberValue $source "fetchedAtUtc"),
             (Get-ObjectMemberValue $source "sourceVersion")
         )))
     }
     $lines.Add("")
-    $lines.Add("Source fingerprints identify observations, not benchmark methodology versions. Unknown publication dates are not replaced with fetch dates. AA API scores are not replaced by public-page scores. Data attribution: https://artificialanalysis.ai and https://github.com/LiveBench/new-livebench.")
+    $lines.Add("Confirmation uses metric-scoped observations, not the raw page fingerprint. Suite labels, artifact updates, row evaluation ages and retrieval times are distinct: an artifact update does not make every row newly evaluated. Unknown dates or methodology versions are not fabricated. AA public components remain separate from API aggregates; public pricing is never imported. Data attribution: https://artificialanalysis.ai and https://github.com/LiveBench/new-livebench.")
     $lines.Add("")
     foreach ($warning in $SourceDiagnostics) {
         $lines.Add("- Source warning: $(Format-ModelReportValue $warning)")

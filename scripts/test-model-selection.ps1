@@ -48,16 +48,23 @@ Run-Test "Invalid prices never become free models" {
 }
 . (Join-Path $PSScriptRoot "model-profile-selection.ps1")
 $policy=@{profileRequirements=@{test=$req};selectionPolicy=@{version=1;referenceInputTokens=1000000;referenceOutputTokens=100000}}
-$profile=@{key="test";model="unknown-incumbent";effort="medium";context="default"}
+$profile=@{key="test";model="old";effort="medium";context="default"}
 function Record($Model, $Score, $Source="artificialAnalysis", $Version="v1") {
     [pscustomobject]@{model=$Model;score=$Score;source=$Source;metric="codingIndex";alias="$Model-medium";effort="medium";sourceVersion=$Version;sourceDate=$null;publicationAgeUnknown=$true;cached=$false}
 }
 function Select-Models($Records, $Verdicts=@((Verdict)), $Profile=$profile, $Strategy="quality_first",
-    $Bands=@{"artificialAnalysis.codingIndex"=3;"liveBench.codingIndex"=3}, $Budget=$req) {
+    $Bands=@{"artificialAnalysis.codingIndex"=3;"liveBench.codingIndex"=3}, $Budget=$req, [switch]$OverlappingLineage) {
     $configuredPolicy = $policy.Clone()
     $configuredPolicy.profileRequirements = @{test=$Budget}
     $configuredPolicy.selectionPolicy = $policy.selectionPolicy.Clone()
-    $configuredPolicy.selectionPolicy.profiles = @{test=@{strategy=$Strategy;qualityBands=$Bands}}
+    $configuredPolicy.selectionPolicy.profiles = @{test=@{
+        strategy=$Strategy;qualityBands=$Bands;evidenceRoutes=@("artificialAnalysis.codingIndex","liveBench.codingIndex");supportingMetrics=@()
+    }}
+    $configuredPolicy.evidenceMetrics=@{
+        "artificialAnalysis.codingIndex"=@{source="artificialAnalysis";metric="codingIndex";min=0;max=100;lineage=@("aa")}
+        "liveBench.codingIndex"=@{source="liveBench";metric="codingIndex";min=0;max=100;lineage=@("lb")}
+    }
+    if ($OverlappingLineage) { $configuredPolicy.evidenceMetrics["liveBench.codingIndex"].lineage=@("aa") }
     Get-ProfileSelection -Profile $Profile -Evidence $Records -Verdicts $Verdicts -Policy $configuredPolicy -Aliases @{}
 }
 Run-Test "Scored pool can replace an unscored incumbent" {
@@ -121,7 +128,7 @@ Run-Test "Policy migration and source switches reset pending evidence" {
     $s.policyFingerprint="new-policy"
     $b=Resolve-ProfileSelectionState -CurrentModel "old" -Selection $s -State $a.state
     Assert-True ($b.state.pending.count -eq 1) "Policy change reused count"
-    $lb=Select-Models @((Record one 80 liveBench))
+    $lb=Select-Models @((Record one 80 liveBench),(Record old 60 liveBench))
     $c=Resolve-ProfileSelectionState -CurrentModel "old" -Selection $lb -State $a.state
     Assert-True ($c.state.pending.count -eq 1) "Source switch reused count"
     $legacy=Resolve-ProfileSelectionState -CurrentModel "old" -Selection $s -State @{activeOverride=@{model="legacy"}}
@@ -246,8 +253,7 @@ Run-Test "Incomparable incumbent evidence is disclosed without vetoing a qualifi
         { param($r) $r.source = "liveBench" },
         { param($r) $r.metric = "intelligenceIndex" },
         { param($r) $r.effort = "high" },
-        { param($r) $r.cached = $true },
-        { param($r) $r.sourceVersion = "older" }
+        { param($r) $r.cached = $true }
     )) {
         $old = Record one 60
         & $mutate $old
@@ -457,7 +463,7 @@ Run-Test "Exact configuration wins ties and LiveBench cannot corroborate another
     Assert-True ($s.confidence -eq "reduced" -and -not $s.contested) "Different effort counted as corroboration"
 }
 . (Join-Path $PSScriptRoot "model-policy-config.ps1")
-Run-Test "Orchestrator high-only policy prevents medium retention and keeps AA primary" {
+Run-Test "Orchestrator high-only policy uses workflow evidence, not general or supporting scores" {
     $p = Get-ModelPolicyConfig (Join-Path $PSScriptRoot "..\config\model-policy.json")
     $current = @{key="orchestrator";model="one";effort="medium";context="default"}
     $verdicts = @(foreach ($entry in @(@("one","low"),@("one","medium"),@("one","high"),@("two","high"))) {
@@ -466,7 +472,7 @@ Run-Test "Orchestrator high-only policy prevents medium retention and keeps AA p
     })
     $records = @(foreach ($entry in @(@("one","low",99),@("one","medium",40),@("one","high",41.2),@("two","high",37))) {
         $r = Record $entry[0] $entry[2]
-        $r.effort=$entry[1]; $r.metric="intelligenceIndex"
+        $r.effort=$entry[1]; $r.source="artificialAnalysisComponents"; $r.metric="automationBench"; $r.score/=100
         $r
     })
     foreach ($entry in @(@("one",81.4125),@("two",99))) {
@@ -475,8 +481,8 @@ Run-Test "Orchestrator high-only policy prevents medium retention and keeps AA p
         $records += @($r)
     }
     $s = Get-ProfileSelection -Profile $current -Evidence $records -Verdicts $verdicts -Policy $p -Aliases @{}
-    Assert-True ($s.winner.model -eq "one" -and $s.winner.effort -eq "high" -and $s.winner.score -eq 41.2) "Medium retained within band or low score admitted"
-    Assert-True ($s.decidingSource -eq "artificialAnalysis" -and $s.contested) "LB disagreement replaced AA rather than being reported"
+    Assert-True ($s.winner.model -eq "one" -and $s.winner.effort -eq "high" -and [math]::Abs($s.winner.score - 0.412) -lt 1e-12) "Medium retained within band or low score admitted"
+    Assert-True ($s.decidingSource -eq "artificialAnalysisComponents" -and $s.decidingMetric -eq "automationBench") "Supporting IF replaced workflow evidence"
     $pending = Resolve-ProfileSelectionState -CurrentModel one -Selection $s
     Assert-True (-not $pending.applied -and $pending.state.pending.effort -eq "high") "High change bypassed confirmation"
     $forced = Resolve-ProfileSelectionState -CurrentModel one -Selection $s -ForceImmediateApply
@@ -530,7 +536,7 @@ Run-Test "Preauthorized effort changes apply after confirmation or force, includ
 Run-Test "Configuration state migrates model-only counts and records complete pending and active pairs" {
     $s=Agentic-Selection -WinnerEffort high
     $first=Resolve-ProfileSelectionState -CurrentModel one -Selection $s
-    Assert-True ($first.state.schemaVersion -eq 2 -and $first.state.pending.effort -eq "high" -and $first.state.pending.context -eq "default") "Pending pair absent"
+    Assert-True ($first.state.schemaVersion -eq 3 -and $first.state.pending.effort -eq "high" -and $first.state.pending.context -eq "default") "Pending pair absent"
     $legacy=ConvertTo-CanonicalModelData $first.state
     $legacy.schemaVersion=1; $legacy.pending.count=99
     $secondSelection=Agentic-Selection -WinnerEffort high -Version v2
@@ -568,8 +574,9 @@ Run-Test "All profiles reject out-of-range efforts and contexts even with force"
             @("outside",$outside,"default",99),@("context",$range[-1],"long_context",100))) {
             $v=Verdict; $v.modelId=$configuration[0]; $v.effort=$configuration[1]; $v.context=$configuration[2]
             $r=Record $configuration[0] $configuration[3]; $r.effort=$configuration[1]
-            $r.metric="$($p.profileArtificialAnalysisMetrics[$key])Index"
-            if ($key -eq "agentic-implementation") { $r.source="artificialAnalysisCodingAgents"; $r.metric="codingAgentIndex"; $r.score/=100 }
+            $definition=$p.evidenceMetrics[$p.selectionPolicy.profiles[$key].evidenceRoutes[0]]
+            $r.metric=$definition.metric;$r.source=$definition.source
+            if ($definition.max -eq 1) { $r.score/=100 }
             $r | Add-Member -NotePropertyName context -NotePropertyValue $configuration[2]
             $verdicts+=@($v); $records+=@($r)
         }
@@ -580,8 +587,8 @@ Run-Test "All profiles reject out-of-range efforts and contexts even with force"
         $native=Verdict; $native.modelId="native"; $native.effort="none"
         $native.capabilities=$cap.Clone(); $native.capabilities.effortMode="unsupported"
         $nativeRecord=Record native 98; $nativeRecord.effort="none"
-        $nativeRecord.metric="$($p.profileArtificialAnalysisMetrics[$key])Index"
-        if ($key -eq "agentic-implementation") { $nativeRecord.source="artificialAnalysisCodingAgents"; $nativeRecord.metric="codingAgentIndex"; $nativeRecord.score/=100 }
+        $nativeRecord.metric=$definition.metric;$nativeRecord.source=$definition.source
+        if ($definition.max -eq 1) { $nativeRecord.score/=100 }
         $s=Get-ProfileSelection -Profile $current -Verdicts (@($verdicts)+@($native)) -Evidence (@($records)+@($nativeRecord)) -Policy $p -Aliases @{}
         Assert-True ($s.winner.model -eq "native" -and $s.winner.effort -eq "none") "Native effort configuration was excluded for $key"
     }
@@ -612,18 +619,23 @@ Run-Test "Agentic fallback requires the incumbent in the same exact LiveBench ob
     $two=Verdict;$two.modelId="two";$two.effort="high"
     $candidate=Record two 70 liveBench;$candidate.effort="high";$candidate.metric="agenticCoding"
     $general=Record one 99;$general.effort="high"
-    foreach ($mode in @("matched","missing","effort","context","version","cached")) {
+    foreach ($mode in @("matched","missing","effort","context","version","cached","invalid-score")) {
         $incumbent=Record one 60 liveBench;$incumbent.effort="high";$incumbent.metric="agenticCoding"
         switch ($mode) {
             "effort" {$incumbent.effort="xhigh"}
             "context" {$incumbent | Add-Member -NotePropertyName context -NotePropertyValue long_context}
             "version" {$incumbent.sourceVersion="different"}
             "cached" {$incumbent.cached=$true}
+            "invalid-score" {$incumbent.score=-1}
         }
         $records=@($general,$candidate)
         if ($mode -ne "missing") { $records+=@($incumbent) }
         $s=Get-ProfileSelection -Profile $current -Evidence $records -Verdicts @($one,$two) -Policy $p -Aliases @{}
         $r=Resolve-ProfileSelectionState -CurrentModel one -Selection $s -ForceImmediateApply
+        if ($mode -eq "version") {
+            Assert-True ($null -eq $s.winner -and -not $r.applied -and $s.roleDiagnostics -match "incomparable_observations") "Mixed observations authorized fallback"
+            continue
+        }
         Assert-True ($s.decidingSource -eq "liveBench" -and $s.winner.model -eq "two") "General coding authorized fallback"
         Assert-True ($r.applied -eq ($mode -eq "matched")) "Wrong fallback permission for $mode"
         if ($mode -ne "matched") { Assert-True ($r.status -eq "retained_fallback_incumbent_evidence_missing") "Missing fallback explanation" }
@@ -670,5 +682,95 @@ Run-Test "Blocked fallback observations still protect against publication rollba
     $s=Get-ProfileSelection -Profile $current -Evidence @($candidate,$incumbent) -Verdicts @($one,$two) -Policy $p -Aliases @{}
     $rollback=Resolve-ProfileSelectionState -CurrentModel one -Selection $s -State $blocked.state -ForceImmediateApply
     Assert-True ($rollback.status -eq "retained_source_regression" -and -not $rollback.applied) "Matched old fallback bypassed rollback guard"
+}
+Run-Test "Every fallback requires matched incumbent evidence, not just Agentic" {
+    $two=Verdict;$two.modelId="two"
+    $current=@{key="test";model="one";effort="medium";context="default"}
+    foreach($matched in @($false,$true)) {
+        $records=@((Record two 80 liveBench))
+        if($matched){$records+=@((Record one 60 liveBench))}
+        $selection=Select-Models $records @((Verdict),$two) $current
+        $resolution=Resolve-ProfileSelectionState -CurrentModel one -Selection $selection -ForceImmediateApply
+        Assert-True ($resolution.applied -eq $matched) "Fallback safety was profile-specific"
+    }
+}
+Run-Test "Different deciding observations cannot be mixed into one comparable pool" {
+    $two=Verdict;$two.modelId="two"
+    $selection=Select-Models @((Record one 60 artificialAnalysis old),(Record two 70 artificialAnalysis new)) @((Verdict),$two)
+    Assert-True ($null -eq $selection.winner -and $selection.roleDiagnostics -match "incomparable_observations") "Incomparable scores ranked together"
+    $records=@((Record one 60),(Record two 70))
+    $records[0] | Add-Member metricIdentity "suite-one"
+    $records[1] | Add-Member metricIdentity "suite-two"
+    $selection=Select-Models $records @((Verdict),$two)
+    Assert-True ($null -eq $selection.winner) "Different methodology identities ranked together"
+}
+Run-Test "A stronger established basis survives policy migration and blocks weaker replacements" {
+    $two=Verdict;$two.modelId="two"
+    $current=@{key="test";model="one";effort="medium";context="default"}
+    $primary=Select-Models @((Record one 90)) @((Verdict),$two) $current
+    $established=Resolve-ProfileSelectionState -CurrentModel one -Selection $primary
+    Assert-True ($established.state.incumbentBasis.metricKey -eq "artificialAnalysis.codingIndex") "Incumbent win did not record deciding basis"
+    $fallback=Select-Models @((Record one 60 liveBench),(Record two 90 liveBench)) @((Verdict),$two) $current
+    $fallback.policyFingerprint="new-policy"
+    $blocked=Resolve-ProfileSelectionState -CurrentModel one -Selection $fallback -State $established.state -ForceImmediateApply
+    Assert-True (-not $blocked.applied -and $blocked.status -eq "retained_stronger_incumbent_basis") "Weaker fallback erased established primary"
+    $next=Select-Models @((Record one 60 artificialAnalysis v2),(Record two 90 artificialAnalysis v2)) @((Verdict),$two) $current
+    Assert-True ((Resolve-ProfileSelectionState -CurrentModel one -Selection $next -State $blocked.state -ForceImmediateApply).applied) "Primary recovery frozen"
+    $blocked.state.incumbentBasis.configurationId="other/medium/default"
+    Assert-True ((Resolve-ProfileSelectionState -CurrentModel one -Selection $fallback -State $blocked.state -ForceImmediateApply).applied) "Manual configuration inherited another model's basis"
+}
+Run-Test "Migration resets pending counts but preserves publication rollback history" {
+    $selection=Select-Models @((Record one 60));$selection.winner.sourceDate="2026-09-01"
+    $legacy=@{schemaVersion=2;policyFingerprint="old";latestSourceDates=@{artificialAnalysis="2026-09-05"};
+        activeOverride=@{configurationId="old/medium/default";model="old";effort="medium";context="default";decidingSource="artificialAnalysis"};
+        pending=@{model="one";count=99};observations=@{}}
+    $r=Resolve-ProfileSelectionState -CurrentModel old -Selection $selection -State $legacy -ForceImmediateApply
+    Assert-True (-not $r.applied -and $r.status -eq "retained_source_regression" -and $null -eq $r.state.pending) "Migration erased rollback history or reused counts"
+    Assert-True ($r.state.activeOverride.model -eq "old") "Migration discarded trustworthy activation history"
+}
+Run-Test "Invalid numeric types cannot win or become the reported quality reference" {
+    $two=Verdict;$two.modelId="two"
+    foreach($score in @($true,"99",101,[double]::NaN)) {
+        $s=Select-Models @((Record one 0),(Record two $score)) @((Verdict),$two)
+        Assert-True ($s.winner.model -eq "one" -and $s.qualityWinner.model -eq "one") "Invalid score participated in ranking"
+    }
+}
+Run-Test "Artifact publication rollback is protected without claiming a row evaluation date" {
+    $first=Select-Models @((Record one 70))
+    $first.winner | Add-Member artifactPublishedAtUtc "2026-09-22T00:00:00Z"
+    $pending=Resolve-ProfileSelectionState -CurrentModel old -Selection $first
+    $older=Select-Models @((Record one 71 artificialAnalysis v2))
+    $older.winner | Add-Member artifactPublishedAtUtc "2026-09-21T00:00:00Z"
+    $blocked=Resolve-ProfileSelectionState -CurrentModel old -Selection $older -State $pending.state -ForceImmediateApply
+    Assert-True (-not $blocked.applied -and $blocked.status -eq "retained_source_regression") "Older artifact confirmed a change"
+    Assert-True ($null -eq $older.winner.sourceDate) "Artifact date became a row publication date"
+}
+Run-Test "Overlapping lineage cannot inflate independent corroboration" {
+    $two=Verdict;$two.modelId="two"
+    $records=@((Record one 80),(Record two 70),(Record one 80 liveBench),(Record two 70 liveBench))
+    foreach($record in $records){$record.publicationAgeUnknown=$false}
+    $independent=Select-Models $records @((Verdict),$two)
+    $overlapping=Select-Models $records @((Verdict),$two) -OverlappingLineage
+    Assert-True ($independent.confidence -eq "corroborated" -and $overlapping.confidence -eq "reduced") "Overlap claimed independent corroboration"
+    Assert-True ($independent.winner.model -eq $overlapping.winner.model) "Lineage became a hidden ranking weight"
+}
+Run-Test "Migration preserves unambiguous legacy Agentic basis without inventing general-index provenance" {
+    $p=Get-ModelPolicyConfig (Join-Path $PSScriptRoot "..\config\model-policy.json")
+    $current=@{key="agentic-implementation";model="one";effort="high";context="default"}
+    $one=Verdict;$one.effort="high"
+    $two=Verdict;$two.modelId="two";$two.effort="high"
+    $a=Record one 60 liveBench;$a.effort="high";$a.metric="agenticCoding"
+    $b=Record two 70 liveBench;$b.effort="high";$b.metric="agenticCoding"
+    $selection=Get-ProfileSelection -Profile $current -Evidence @($a,$b) -Verdicts @($one,$two) -Policy $p -Aliases @{}
+    foreach($source in @("artificialAnalysisCodingAgents","artificialAnalysis")) {
+        $legacy=@{schemaVersion=2;policyFingerprint="old";latestSourceDates=@{};observations=@{};pending=$null;
+            activeOverride=@{model="one";effort="high";context="default";configurationId=(New-ModelConfiguration one high default).configurationId;
+                decidingSource=$source;evidenceIdentity="published-harness";observation="legacy-observation";activatedAtUtc="2026-09-14Z"}}
+        $r=Resolve-ProfileSelectionState -CurrentModel one -Selection $selection -State $legacy -ForceImmediateApply
+        Assert-True ($r.applied -eq ($source -eq "artificialAnalysis")) "Trustworthy basis lost or ambiguous historical metric invented"
+        if($source -eq "artificialAnalysisCodingAgents") {
+            Assert-True ($r.status -eq "retained_stronger_incumbent_basis" -and $r.state.incumbentBasis.metricKey -eq "artificialAnalysisCodingAgents.codingAgentIndex") "Legacy specialized basis not retained"
+        }
+    }
 }
 if ($script:Failed) { exit 1 }

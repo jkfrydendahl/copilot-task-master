@@ -2,6 +2,7 @@ Set-StrictMode -Version Latest
 $ErrorActionPreference = "Stop"
 . (Join-Path $PSScriptRoot "model-data-common.ps1")
 . (Join-Path $PSScriptRoot "model-artificial-analysis.ps1")
+. (Join-Path $PSScriptRoot "model-aa-components.ps1")
 . (Join-Path $PSScriptRoot "model-livebench.ps1")
 . (Join-Path $PSScriptRoot "model-policy-config.ps1")
 . (Join-Path $PSScriptRoot "model-availability.ps1")
@@ -65,9 +66,14 @@ function Invoke-TaskProfileReview {
         $previous = ConvertFrom-JsonAsHashtableCompat (Get-Content -LiteralPath $snapshotPath -Raw)
     }
     if ($null -eq $Sources) {
+        $componentSlugs = @(foreach ($id in $aliases.Keys) {
+            $mapping = Get-ObjectMemberValue $aliases[$id] "artificialAnalysis"
+            if ($mapping -is [System.Collections.IDictionary]) { foreach ($slug in $mapping.Values) { $slug } }
+        })
         $Sources = @{
             artificialAnalysis = Get-ArtificialAnalysisIntelligenceIndexData
             artificialAnalysisCodingAgents = Get-ArtificialAnalysisCodingAgentIndexData
+            artificialAnalysisComponents = Get-AAComponentData -ModelSlugs $componentSlugs
             liveBench = Get-LiveBenchData
         }
     }
@@ -75,7 +81,7 @@ function Invoke-TaskProfileReview {
     if (-not $PSBoundParameters.ContainsKey("NowUtc")) { $NowUtc = [datetime]::UtcNow }
     $resolvedSources = @{}
     $sourceDiagnostics = [System.Collections.Generic.List[string]]::new()
-    foreach ($source in @("artificialAnalysis", "artificialAnalysisCodingAgents", "liveBench")) {
+    foreach ($source in @("artificialAnalysis", "artificialAnalysisCodingAgents", "artificialAnalysisComponents", "liveBench")) {
         $current = $Sources[$source]
         if ((Get-ObjectMemberValue $current "status") -eq "ok") {
             $resolvedSources[$source] = $current
@@ -86,13 +92,18 @@ function Invoke-TaskProfileReview {
         if ($null -ne $cached -and (Get-ObjectMemberValue $cached "status") -in @("ok", "cached")) {
             $cached = ConvertTo-CanonicalModelData $cached
             $cached.status = "cached"
+            if ($source -eq "liveBench" -and (Get-ObjectMemberValue $previous "schemaVersion") -lt 4) {
+                $cached["datasetVersion"] = Get-ObjectMemberValue $cached "sourceDate"
+                $cached["sourceDate"] = $null
+                $cached["categoryCompletenessUnknown"] = $true
+            }
             $resolvedSources[$source] = $cached
         } else {
             $resolvedSources[$source] = $current
         }
     }
     $snapshot = [ordered]@{
-        schemaVersion = 3
+        schemaVersion = 4
         generatedAtUtc = $NowUtc.ToUniversalTime().ToString("o")
         sources = $resolvedSources
         consensus = @{ profiles = @{} }
@@ -128,14 +139,12 @@ function Invoke-TaskProfileReview {
             }
             Get-ModelAdmissibilityVerdict @admissibilityOptions
         })
-        $evidenceConfigurations = @($candidates.configurations)
-        if ($profile.key -eq "agentic-implementation") {
-            $evidenceConfigurations = $verdictConfigurations
-        }
+        $evidenceConfigurations = $verdictConfigurations
         $evidence = Get-ProfileBenchmarkEvidence -Profile $profile -Configurations $evidenceConfigurations -Sources $resolvedSources `
             -Aliases $aliases -Capabilities $capabilities -Policy $policy -NowUtc $NowUtc
         $evidence.diagnostics = @($candidates.diagnostics) + @($evidence.diagnostics)
         $selection = Get-ProfileSelection -Profile $profile -Evidence $evidence.records -Verdicts $verdicts -Policy $policy -Aliases $aliases
+        $evidence.diagnostics += @($selection.roleDiagnostics)
         $oldProfiles = Get-ObjectMemberValue (Get-ObjectMemberValue $previous "consensus") "profiles"
         $oldState = Get-ObjectMemberValue $oldProfiles $profile.key
         $resolved = Resolve-ProfileSelectionState -CurrentModel $profile.model -Selection $selection `

@@ -1,5 +1,6 @@
 Set-StrictMode -Version Latest
 . (Join-Path $PSScriptRoot "model-data-common.ps1")
+. (Join-Path $PSScriptRoot "model-role-evidence.ps1")
 
 function Get-ModelReferenceCost {
     param($Verdict, $SelectionPolicy)
@@ -40,9 +41,7 @@ function Get-ValueBalancedSelection {
         $null
     }
     $comparableIncumbent = @($Evidence | Where-Object {
-        $_.configurationId -eq $CurrentConfiguration.configurationId -and $_.source -eq $winner.source -and
-        $_.metric -eq $winner.metric -and
-        $_.cached -eq $winner.cached -and $_.sourceVersion -eq $winner.sourceVersion
+        $_.configurationId -eq $CurrentConfiguration.configurationId -and (Test-BenchmarkEvidenceComparable $_ $winner)
     })
     return [pscustomobject]@{
         winner = $winner

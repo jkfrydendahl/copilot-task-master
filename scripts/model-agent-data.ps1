@@ -3,25 +3,7 @@ Set-StrictMode -Version Latest
 
 function Get-AgentJsonArrayText {
     param([string]$Text, [int]$Start)
-    $depth = 0
-    $quoted = $false
-    $escaped = $false
-    for ($i = $Start; $i -lt $Text.Length; $i++) {
-        $character = $Text[$i]
-        if ($quoted) {
-            if ($escaped) { $escaped = $false }
-            elseif ($character -eq '\') { $escaped = $true }
-            elseif ($character -eq '"') { $quoted = $false }
-            continue
-        }
-        if ($character -eq '"') { $quoted = $true }
-        elseif ($character -eq '[') { $depth++ }
-        elseif ($character -eq ']') {
-            $depth--
-            if ($depth -eq 0) { return $Text.Substring($Start, $i - $Start + 1) }
-        }
-    }
-    throw [FormatException]::new("Truncated structured agent rows.")
+    Get-StructuredJsonText $Text $Start
 }
 
 function Test-AgentScore {
@@ -37,11 +19,7 @@ function ConvertFrom-AgentPageData {
     $seen = @{}
     $suite = $null
     try {
-        # Decode JSON string payloads only; never execute the page's JavaScript.
-        $chunks = @(foreach ($match in [regex]::Matches($Html, 'self\.__next_f\.push\(\[1,("(?:\\.|[^"\\])*")\]\)')) {
-            ConvertFrom-JsonAsHashtableCompat $match.Groups[1].Value
-        })
-        $text = $chunks -join ""
+        $text = Get-PageJsonPayload $Html
         foreach ($match in [regex]::Matches($text, '"(?:rows|benchmarkRows)"\s*:\s*\[')) {
             $start = $match.Index + $match.Length - 1
             $rows = @(ConvertFrom-JsonAsHashtableCompat (Get-AgentJsonArrayText $text $start))

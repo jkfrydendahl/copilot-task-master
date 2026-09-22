@@ -19,18 +19,31 @@ function Assert-ModelConfigNumber {
 
 function Get-ModelPolicyConfig {
     param([Parameter(Mandatory)][string]$PolicyPath)
-    $p=Read-ModelConfig $PolicyPath 2
-    foreach ($field in @("familyPatterns","classPreferences","profileLiveBenchCategories","profileArtificialAnalysisMetrics","profileRequirements","consensusPolicy","selectionPolicy")) {
+    $p=Read-ModelConfig $PolicyPath 3
+    foreach ($field in @("familyPatterns","classPreferences","evidenceMetrics","profileRequirements","consensusPolicy","selectionPolicy")) {
         if ($p[$field] -isnot [System.Collections.IDictionary]) { throw "Missing/invalid policy object: $field" }
     }
     if ($p.denylist -isnot [array]) { throw "Policy denylist must be an array." }
+    foreach ($id in $p.evidenceMetrics.Keys) {
+        $metric = $p.evidenceMetrics[$id]
+        if ($metric -isnot [System.Collections.IDictionary] -or
+            $metric["source"] -notin @("artificialAnalysis","artificialAnalysisCodingAgents","artificialAnalysisComponents","liveBench") -or
+            $id -cne "$($metric['source']).$($metric['metric'])") { throw "Invalid evidence metric '$id'." }
+        Assert-ModelConfigNumber $metric["min"] "$id.min"
+        Assert-ModelConfigNumber $metric["max"] "$id.max" -Positive
+        if ($metric.min -ge $metric.max) { throw "Invalid score range for '$id'." }
+        foreach ($field in @("label","scale","limitation")) {
+            if ([string]::IsNullOrWhiteSpace([string]$metric[$field])) { throw "Missing $id.$field." }
+        }
+        if ($metric["lineage"] -isnot [array] -or -not $metric.lineage.Count) { throw "Missing lineage for '$id'." }
+    }
     $strategies = $p.selectionPolicy["profiles"]
     if ($strategies -isnot [System.Collections.IDictionary]) { throw "selectionPolicy.profiles must be an object." }
     foreach ($key in $strategies.Keys) {
         if ($key -notin $script:KnownTaskProfileKeys) { throw "Unknown selection profile '$key'." }
     }
     foreach ($key in $script:KnownTaskProfileKeys) {
-        foreach ($map in @("profileRequirements","classPreferences","profileLiveBenchCategories","profileArtificialAnalysisMetrics")) {
+        foreach ($map in @("profileRequirements","classPreferences")) {
             if (-not $p[$map].Contains($key)) { throw "$map missing profile '$key'." }
         }
         $req=$p.profileRequirements[$key]
@@ -39,8 +52,6 @@ function Get-ModelPolicyConfig {
             if ($req[$field] -isnot [bool]) { throw "$key.$field must be boolean." }
         }
         if (-not $req.costSensitive) { throw "A hard budget is required for $key." }
-        if ($p.profileArtificialAnalysisMetrics[$key] -notin @("coding","intelligence")) { throw "Unknown AA metric for $key." }
-        if ($p.profileLiveBenchCategories[$key] -notin @("coding","agenticCoding","reasoning","instructionFollowing")) { throw "Unknown LiveBench category for $key." }
         $strategy = $strategies[$key]
         if ($strategy -isnot [System.Collections.IDictionary] -or $strategy["strategy"] -notin @("quality_first", "value_balanced")) {
             throw "Missing/invalid selection strategy for '$key'."
@@ -59,24 +70,25 @@ function Get-ModelPolicyConfig {
         if ($strategy.Contains("maxAutomaticCostIncreasePercent")) {
             throw "Incumbent-relative cost limits are obsolete for '$key'; use the fixed hard budget."
         }
-        if ($key -eq "agentic-implementation") {
-            if ($strategy["decidingSources"] -isnot [array] -or
-                ($strategy.decidingSources -join ",") -ne "artificialAnalysisCodingAgents,liveBench" -or
-                $strategy["requireMatchedIncumbentOnFallback"] -isnot [bool] -or
-                -not $strategy.requireMatchedIncumbentOnFallback -or
-                $p.profileLiveBenchCategories[$key] -ne "agenticCoding") {
-                throw "Agentic selection requires AA agent evidence, agentic LiveBench fallback and a matched incumbent on fallback."
+        foreach ($field in @("evidenceRoutes","supportingMetrics")) {
+            $metrics = $strategy[$field]
+            if ($metrics -isnot [array] -or ($field -eq "evidenceRoutes" -and -not $metrics.Count) -or
+                @($metrics | Where-Object { $_ -isnot [string] -or -not $p.evidenceMetrics.Contains($_) }).Count -or
+                @($metrics | Select-Object -Unique).Count -ne $metrics.Count) {
+                throw "Invalid $field for '$key'."
             }
-        } elseif ($strategy.Contains("decidingSources") -or $strategy.Contains("requireMatchedIncumbentOnFallback")) {
-            throw "Agentic source authorization is not configured for '$key'."
+        }
+        if (@($strategy.supportingMetrics | Where-Object { $_ -in $strategy.evidenceRoutes }).Count) {
+            throw "A metric cannot both decide and support '$key'."
         }
         if ($strategy.strategy -eq "value_balanced") {
             $bands = $strategy["qualityBands"]
             if ($bands -isnot [System.Collections.IDictionary]) { throw "Missing qualityBands for '$key'." }
-            $metrics = @("artificialAnalysis.$($p.profileArtificialAnalysisMetrics[$key])Index", "liveBench.$($p.profileLiveBenchCategories[$key])")
-            if ($key -eq "agentic-implementation") { $metrics = @("artificialAnalysisCodingAgents.codingAgentIndex", "liveBench.agenticCoding") }
+            $metrics = $strategy.evidenceRoutes
             foreach ($metric in $metrics) {
                 Assert-ModelConfigNumber $bands[$metric] "$key.qualityBands.$metric"
+                $definition = $p.evidenceMetrics[$metric]
+                if ($bands[$metric] -gt ($definition.max - $definition.min)) { throw "Quality band exceeds '$metric' scale." }
             }
             foreach ($metric in $bands.Keys) {
                 if ($metric -notin $metrics) { throw "Unknown quality band '$metric' for '$key'." }

@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 2,
+  "schemaVersion": 3,
   "denylist": [
     "claude-fable-5"
   ],
@@ -27,27 +27,19 @@
     "mechanical": ["haiku-family", "mai-family", "gpt-luna-family", "mini-family"],
     "triage": ["sonnet-family", "mai-family", "gpt-luna-family", "mini-family"]
   },
-  "profileLiveBenchCategories": {
-    "agentic-implementation": "agenticCoding",
-    "deep-reasoning": "reasoning",
-    "orchestrator": "instructionFollowing",
-    "triage": "instructionFollowing",
-    "default-development": "coding",
-    "review": "reasoning",
-    "visual-ui": "coding",
-    "quick": "coding",
-    "mechanical": "coding"
-  },
-  "profileArtificialAnalysisMetrics": {
-    "agentic-implementation": "coding",
-    "default-development": "coding",
-    "visual-ui": "coding",
-    "quick": "coding",
-    "mechanical": "coding",
-    "orchestrator": "intelligence",
-    "triage": "intelligence",
-    "deep-reasoning": "intelligence",
-    "review": "intelligence"
+  "evidenceMetrics": {
+    "artificialAnalysis.codingIndex": { "source": "artificialAnalysis", "metric": "codingIndex", "label": "AA Coding Index", "min": 0, "max": 100, "scale": "index points", "lineage": ["aa-coding"], "limitation": "Coding aggregate; not direct evidence of review or UI implementation quality." },
+    "artificialAnalysis.intelligenceIndex": { "source": "artificialAnalysis", "metric": "intelligenceIndex", "label": "AA Intelligence Index", "min": 0, "max": 100, "scale": "index points", "lineage": ["aa-intelligence", "automationbench-aa", "aa-lcr"], "limitation": "General reasoning proxy; overlaps component benchmarks, not independent corroboration." },
+    "artificialAnalysisCodingAgents.codingAgentIndex": { "source": "artificialAnalysisCodingAgents", "metric": "codingAgentIndex", "label": "AA Coding Agent Index", "min": 0, "max": 1, "scale": "fraction", "lineage": ["aa-coding-agents"], "limitation": "External coding-agent harness, not Copilot CLI." },
+    "liveBench.coding": { "source": "liveBench", "metric": "coding", "label": "LiveBench Coding", "min": 0, "max": 100, "scale": "percentage points", "lineage": ["livebench-coding"], "limitation": "Coding proxy, not direct review or UI implementation evidence." },
+    "liveBench.agenticCoding": { "source": "liveBench", "metric": "agenticCoding", "label": "LiveBench Agentic Coding", "min": 0, "max": 100, "scale": "percentage points", "lineage": ["livebench-agentic"], "limitation": "External agentic coding evaluation, not the local orchestration workflow." },
+    "liveBench.reasoning": { "source": "liveBench", "metric": "reasoning", "label": "LiveBench Reasoning", "min": 0, "max": 100, "scale": "percentage points", "lineage": ["livebench-reasoning"], "limitation": "Reasoning proxy; does not establish interactive triage skill." },
+    "liveBench.instructionFollowing": { "source": "liveBench", "metric": "instructionFollowing", "label": "LiveBench Instruction Following", "min": 0, "max": 100, "scale": "percentage points", "lineage": ["livebench-if"], "limitation": "Instruction following, not end-to-end workflow completion." },
+    "artificialAnalysisComponents.automationBench": { "source": "artificialAnalysisComponents", "metric": "automationBench", "label": "AutomationBench-AA", "min": 0, "max": 1, "scale": "guardrail-adjusted objective fraction", "lineage": ["automationbench-aa"], "limitation": "Workflow/tool-use proxy; clarifying questions prohibited. Not interactive orchestration or conversation-memory evidence." },
+    "artificialAnalysisComponents.enterpriseOpsGym": { "source": "artificialAnalysisComponents", "metric": "enterpriseOpsGym", "label": "EnterpriseOps-Gym-AA", "min": 0, "max": 1, "scale": "strict pass@1 fraction", "lineage": ["enterpriseops-aa"], "limitation": "AA oracle-tool workflow harness; tools supplied. Not tool-discovery evidence or the original paper's scores." },
+    "artificialAnalysisComponents.ifbench": { "source": "artificialAnalysisComponents", "metric": "ifbench", "label": "IFBench (AA)", "min": 0, "max": 1, "scale": "accuracy fraction", "lineage": ["ifbench-aa"], "limitation": "Single-turn instruction following, not multi-turn retention." },
+    "artificialAnalysisComponents.lcr": { "source": "artificialAnalysisComponents", "metric": "lcr", "label": "AA-LCR", "min": 0, "max": 1, "scale": "accuracy fraction", "lineage": ["aa-lcr"], "limitation": "Long-document reasoning, not conversational retention." },
+    "artificialAnalysisComponents.mmmuPro": { "source": "artificialAnalysisComponents", "metric": "mmmuPro", "label": "MMMU Pro (AA)", "min": 0, "max": 1, "scale": "accuracy fraction", "lineage": ["mmmu-pro-aa"], "limitation": "Visual understanding, not UI implementation fidelity." }
   },
   "profileRequirements": {
     "quick": { "inputCeilingPerMillion": 2, "outputCeilingPerMillion": 10, "requiresVision": false, "requiresCliAgent": true, "costSensitive": true },
@@ -67,40 +59,50 @@
     "benchmarkMaxPublicationAgeDays": 90
   },
   "selectionPolicy": {
-    "version": 7,
+    "version": 8,
     "referenceInputTokens": 1000000,
     "referenceOutputTokens": 100000,
     "referenceUsageDescription": "Aggregate uncached usage across requests within the selected context tier, not a single 1M-token request or predicted task cost. Cache reads/writes are excluded.",
     "profiles": {
       "orchestrator": {
         "strategy": "value_balanced",
+        "evidenceRoutes": ["artificialAnalysisComponents.automationBench", "artificialAnalysisComponents.enterpriseOpsGym"],
+        "supportingMetrics": ["artificialAnalysisComponents.lcr", "artificialAnalysisComponents.ifbench", "liveBench.instructionFollowing"],
         "configurationSelection": { "mode": "bounded_effort", "allowedEfforts": ["high"], "effortChangePolicy": "automatic" },
-        "qualityBands": { "artificialAnalysis.intelligenceIndex": 3, "liveBench.instructionFollowing": 3 }
+        "qualityBands": { "artificialAnalysisComponents.automationBench": 0, "artificialAnalysisComponents.enterpriseOpsGym": 0 }
       },
       "quick": {
         "strategy": "value_balanced",
+        "evidenceRoutes": ["artificialAnalysis.codingIndex", "liveBench.coding"],
+        "supportingMetrics": ["artificialAnalysisComponents.ifbench", "liveBench.instructionFollowing"],
         "configurationSelection": { "mode": "bounded_effort", "allowedEfforts": ["low"], "effortChangePolicy": "automatic" },
         "qualityBands": { "artificialAnalysis.codingIndex": 3, "liveBench.coding": 3 }
       },
       "mechanical": {
         "strategy": "value_balanced",
+        "evidenceRoutes": ["artificialAnalysisComponents.automationBench", "artificialAnalysis.codingIndex", "liveBench.coding"],
+        "supportingMetrics": ["artificialAnalysisComponents.ifbench", "liveBench.instructionFollowing", "artificialAnalysisComponents.enterpriseOpsGym"],
         "configurationSelection": { "mode": "bounded_effort", "allowedEfforts": ["low"], "effortChangePolicy": "automatic" },
-        "qualityBands": { "artificialAnalysis.codingIndex": 3, "liveBench.coding": 3 }
+        "qualityBands": { "artificialAnalysisComponents.automationBench": 0, "artificialAnalysis.codingIndex": 3, "liveBench.coding": 3 }
       },
       "triage": {
         "strategy": "value_balanced",
+        "evidenceRoutes": ["artificialAnalysis.intelligenceIndex", "liveBench.reasoning"],
+        "supportingMetrics": ["artificialAnalysisComponents.ifbench", "liveBench.instructionFollowing"],
         "configurationSelection": { "mode": "bounded_effort", "allowedEfforts": ["low"], "effortChangePolicy": "automatic" },
-        "qualityBands": { "artificialAnalysis.intelligenceIndex": 3, "liveBench.instructionFollowing": 3 }
+        "qualityBands": { "artificialAnalysis.intelligenceIndex": 3, "liveBench.reasoning": 3 }
       },
       "default-development": {
         "strategy": "value_balanced",
+        "evidenceRoutes": ["artificialAnalysis.codingIndex", "liveBench.coding"],
+        "supportingMetrics": ["artificialAnalysisComponents.ifbench", "liveBench.instructionFollowing"],
         "configurationSelection": { "mode": "bounded_effort", "allowedEfforts": ["medium", "high"], "effortChangePolicy": "automatic" },
         "qualityBands": { "artificialAnalysis.codingIndex": 3, "liveBench.coding": 3 }
       },
       "agentic-implementation": {
         "strategy": "value_balanced",
-        "decidingSources": ["artificialAnalysisCodingAgents", "liveBench"],
-        "requireMatchedIncumbentOnFallback": true,
+        "evidenceRoutes": ["artificialAnalysisCodingAgents.codingAgentIndex", "liveBench.agenticCoding"],
+        "supportingMetrics": ["artificialAnalysisComponents.automationBench", "artificialAnalysisComponents.enterpriseOpsGym"],
         "configurationSelection": {
           "mode": "bounded_effort",
           "allowedEfforts": ["high", "xhigh", "max"],
@@ -110,16 +112,22 @@
       },
       "deep-reasoning": {
         "strategy": "value_balanced",
+        "evidenceRoutes": ["artificialAnalysis.intelligenceIndex", "liveBench.reasoning"],
+        "supportingMetrics": ["artificialAnalysisComponents.lcr"],
         "configurationSelection": { "mode": "bounded_effort", "allowedEfforts": ["high", "xhigh", "max"], "effortChangePolicy": "automatic" },
         "qualityBands": { "artificialAnalysis.intelligenceIndex": 3, "liveBench.reasoning": 3 }
       },
       "review": {
         "strategy": "value_balanced",
+        "evidenceRoutes": ["artificialAnalysis.codingIndex", "liveBench.coding"],
+        "supportingMetrics": ["liveBench.reasoning", "artificialAnalysisComponents.lcr"],
         "configurationSelection": { "mode": "bounded_effort", "allowedEfforts": ["medium", "high"], "effortChangePolicy": "automatic" },
-        "qualityBands": { "artificialAnalysis.intelligenceIndex": 3, "liveBench.reasoning": 3 }
+        "qualityBands": { "artificialAnalysis.codingIndex": 3, "liveBench.coding": 3 }
       },
       "visual-ui": {
         "strategy": "value_balanced",
+        "evidenceRoutes": ["artificialAnalysis.codingIndex", "liveBench.coding"],
+        "supportingMetrics": ["artificialAnalysisComponents.mmmuPro"],
         "configurationSelection": { "mode": "bounded_effort", "allowedEfforts": ["medium", "high"], "effortChangePolicy": "automatic" },
         "qualityBands": { "artificialAnalysis.codingIndex": 3, "liveBench.coding": 3 }
       }

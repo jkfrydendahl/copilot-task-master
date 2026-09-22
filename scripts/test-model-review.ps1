@@ -65,7 +65,7 @@ Run-Test "Offline review uses same-run pricing, preserves profiles and writes de
         }
         Assert-True (Test-Path (Join-Path $root "data\model-pricing-snapshot.json")) "Pricing not persisted"
         $state=Get-Content (Join-Path $root "data\model-ranking-snapshot.json") -Raw | ConvertFrom-Json
-        Assert-True ($state.schemaVersion -eq 3 -and $state.consensus.profiles.'default-development'.policyFingerprint) "State migration/provenance"
+        Assert-True ($state.schemaVersion -eq 4 -and $state.consensus.profiles.'default-development'.policyFingerprint) "State migration/provenance"
         foreach ($changedAliases in @(@{one="Reassigned Identity"},@{})) {
             @{schemaVersion=1;aliases=$changedAliases} | ConvertTo-Json | Set-Content (Join-Path $root "config\model-pricing-aliases.json")
             $aliasRun=Invoke-TaskProfileReview -RepoRoot $root -Availability @{models=@("one");verified=$true;source="fixture"} -Sources $sources -FetchPricing {param($url) @{status="error";error="fixture outage"}} -ForceImmediateApply -NowUtc ([datetime]"2026-09-08Z")
@@ -81,6 +81,7 @@ Run-Test "Offline review uses same-run pricing, preserves profiles and writes de
             return $source
         }
         function Get-ArtificialAnalysisCodingAgentIndexData { return @{status="error";message="fixture unavailable"} }
+        function Get-AAComponentData { param($ModelSlugs) return @{status="error";message="fixture unavailable"} }
         function Get-LiveBenchData { return @{status="error";message="fixture unavailable"} }
         $liveClock=Invoke-TaskProfileReview -RepoRoot $root -Availability @{models=@("one");verified=$true;source="fixture"} -FetchPricing $fetch
         Assert-True (($liveClock.results | Where-Object key -eq "default-development").evidence.records.Count -gt 0) "Just-fetched data treated as future/stale"
@@ -116,7 +117,7 @@ Run-Test "Reports distinguish fixed authorization from informational incumbent c
     })
     $records = @(foreach ($model in @("gemini","opus","astra")) {
         [pscustomobject]@{model=$model;score=@{gemini=46.8;opus=51;astra=54}[$model];source="artificialAnalysis";
-            metric="intelligenceIndex";effort="medium";alias=$model;sourceVersion="v1";sourceDate=$null;
+            metric="codingIndex";effort="medium";alias=$model;sourceVersion="v1";sourceDate=$null;
             publicationAgeUnknown=$true;cached=$false;harness="fixture"}
     })
     $selection = Get-ProfileSelection -Profile $profile -Evidence $records -Verdicts $verdicts -Policy $policy -Aliases @{}
@@ -165,7 +166,7 @@ Run-Test "Agentic review confirms and applies the complete authorized pair, incl
                 "hidden-max"=(New-NormalizedAgentFixture hidden-max "GPT-hidden (max)" 0.99)
             }}
             artificialAnalysis=@{status="ok";sourceVersion="aa-v1";sourceDate="2026-09-09";fetchedAtUtc="2026-09-09Z";sourceUrl="https://example.test/aa";models=@{
-                "one-low"=@{codingIndex=80};"one-medium"=@{intelligenceIndex=80};"one-high"=@{codingIndex=99}
+                "one-low"=@{codingIndex=80};"one-medium"=@{codingIndex=80};"one-high"=@{codingIndex=80}
             }}
         }
         $fetch={param($u) @{status="ok";content='<table><tr><th>Model</th><th>Input</th><th>Output</th></tr><tr><td>One</td><td>$1</td><td>$5</td></tr><tr><td>Two</td><td>$1</td><td>$5</td></tr><tr><td>Hidden</td><td>$1</td><td>$5</td></tr></table>'}}
@@ -174,6 +175,7 @@ Run-Test "Agentic review confirms and applies the complete authorized pair, incl
             @{force=$false;version="agents-v2";apply=$true},@{force=$true;version="agents-v3";apply=$true})) {
             if ($run.force) { Write-ModelJsonAtomic $profilePath $profiles }
             $sources.artificialAnalysisCodingAgents.sourceVersion=$run.version
+            if ($run.version -ne "agents-v1") { $sources.artificialAnalysisCodingAgents.models["two-xhigh"].codingAgentIndex=0.681 }
             $review=Invoke-TaskProfileReview -RepoRoot $root -Availability @{models=@("gpt-one","gpt-two");verified=$true;source="fixture"} `
                 -Sources $sources -FetchPricing $fetch -ForceImmediateApply:$run.force -NowUtc ([datetime]"2026-09-09Z")
             $agentic=$review.results | Where-Object key -eq "agentic-implementation"
@@ -244,12 +246,12 @@ Run-Test "Grouped exclusions distinguish configurations instead of merging model
     $coverage=@(Get-ModelReviewCoverage @(@{key="agentic-implementation";verdicts=$verdicts;evidence=@{diagnostics=@()}}))
     Assert-True ($coverage.Count -eq 2 -and @($coverage.effort | Select-Object -Unique).Count -eq 2) "Configuration exclusions were conflated"
 }
-Run-Test "Orchestrator supporting scores are visible, configuration matched and clearly labelled" {
+Run-Test "Generic supporting scores are visible, configuration matched and clearly labelled" {
     $p = Get-ModelPolicyConfig (Join-Path $repo "config\model-policy.json")
     $profile = @{key="orchestrator";model="one";effort="high";context="default"}
     $verdict = @{modelId="one";effort="high";context="default";admissible=$true;reasonCodes=@();warningCodes=@();
         pricing=@{inputPerMillion=0.75;outputPerMillion=3.75};capabilities=@{}}
-    $aa = @{model="one";effort="high";context="default";score=41.2;source="artificialAnalysis";metric="intelligenceIndex";
+    $aa = @{model="one";effort="high";context="default";score=0.412;source="artificialAnalysisComponents";metric="automationBench";
         alias="one-high";sourceDate=$null;sourceVersion="aa-v1";publicationAgeUnknown=$true;cached=$false;harness="fixture"}
     $lb = @{model="one";effort="high";context="default";score=81.4125;source="liveBench";metric="instructionFollowing";
         alias="one-lb-high";sourceDate="2026-09-01";fetchedAtUtc="2026-09-14Z";sourceVersion="lb-v1";
@@ -258,32 +260,106 @@ Run-Test "Orchestrator supporting scores are visible, configuration matched and 
     $result = @{key="orchestrator";selection=$selection;resolution=(Resolve-ProfileSelectionState -CurrentModel one -Selection $selection);
         requirement=$p.profileRequirements.orchestrator;fallback=$null;verdicts=@($verdict);evidence=@{records=@($aa,$lb)}}
     $report = (Get-ProfileReviewReportLines $result) -join "`n"
-    Assert-True ($selection.decidingSource -eq "artificialAnalysis" -and $selection.winner.score -eq 41.2) "LB replaced or blended with AA"
-    foreach ($term in @("Orchestrator LiveBench supporting evidence","one / high / default","one-lb-high",
-        "89.2933","81.4125","2026-09-01","2026-09-14Z","or a blended ranking","not necessarily the applied configuration")) {
+    Assert-True ($selection.decidingSource -eq "artificialAnalysisComponents" -and $selection.winner.score -eq 0.412) "LB replaced or blended with workflow evidence"
+    foreach ($term in @("Supporting evidence","one / high / default","one-lb-high",
+        "81.4125","2026-09-01","2026-09-14Z","not a blended ranking","not necessarily the applied configuration","AA-LCR","n/a (missing or invalid)")) {
         Assert-True ($report.Contains($term)) "Missing supporting evidence: $term"
     }
-    Assert-True ($report.IndexOf("89.2933") -lt $report.IndexOf("<details>")) "Supporting scores hidden in collapsed details"
-    Assert-True ($report.Contains("| False |`n`nThese are")) "Supporting caveats rendered as a table row"
+    Assert-True ($report.IndexOf("81.4125") -lt $report.IndexOf("<details>")) "Supporting scores hidden in collapsed details"
     $lb.cached=$true; $lb.sourceDate=$null
-    $support = (Get-OrchestratorSupportingEvidenceReportLines $result) -join "`n"
-    Assert-True ($support.Contains("| n/a | 2026-09-14Z | True |") -and $support.Contains("Cached evidence cannot authorize")) "Provenance obscured"
+    $support = (Get-RoleSupportingEvidenceReportLines $result) -join "`n"
+    Assert-True ($support.Contains("2026-09-14Z | True |") -and $support.Contains("Cached evidence cannot authorize")) "Provenance obscured"
     foreach ($value in @($null, "99", -1, 101, [double]::NaN, [double]::PositiveInfinity)) {
-        $lb.sourceMetadata.reasoning=$value
-        $support = (Get-OrchestratorSupportingEvidenceReportLines $result) -join "`n"
-        Assert-True ($support.Contains("n/a (missing or invalid)")) "Invalid supporting score shown as valid"
+        $lb.score=$value
+        $support = (Get-RoleSupportingEvidenceReportLines $result) -join "`n"
+        $line=@($support -split "`n" | Where-Object { $_ -match '^\| LiveBench Instruction Following' })[0]
+        Assert-True ($line.Contains("n/a (missing or invalid)")) "Invalid supporting score shown as valid"
     }
-    $lb.sourceMetadata.reasoning=0
-    Assert-True (((Get-OrchestratorSupportingEvidenceReportLines $result) -join "`n").Contains("| 0 | 81.4125 |")) "Valid zero score lost"
+    $lb.score=0
+    Assert-True (((Get-RoleSupportingEvidenceReportLines $result) -join "`n").Contains("| 0 |")) "Valid zero score lost"
+    $lb.score=81.4125
     foreach ($field in @("model","effort","context")) {
         $original=$lb[$field]; $lb[$field]="different"
-        $support = (Get-OrchestratorSupportingEvidenceReportLines $result) -join "`n"
+        $support = (Get-RoleSupportingEvidenceReportLines $result) -join "`n"
         Assert-True ($support.Contains("no usable, exact-configuration") -and -not $support.Contains("81.4125")) "Mismatched $field substituted"
         $lb[$field]=$original
     }
     $result.evidence.records=@($aa)
-    Assert-True (((Get-OrchestratorSupportingEvidenceReportLines $result) -join "`n").Contains("no usable, exact-configuration")) "Missing evidence hidden"
+    Assert-True (((Get-RoleSupportingEvidenceReportLines $result) -join "`n").Contains("no usable, exact-configuration")) "Missing evidence hidden"
     $result.selection.winner=$null
-    Assert-True (((Get-OrchestratorSupportingEvidenceReportLines $result) -join "`n").Contains("no eligible recommendation")) "No-winner report failed"
+    Assert-True (((Get-RoleSupportingEvidenceReportLines $result) -join "`n").Contains("no eligible recommendation")) "No-winner report failed"
+}
+Run-Test "Nine-role offline review confirms only deciding changes and preserves good component caches" {
+    $root=Join-Path ([IO.Path]::GetTempPath()) ([guid]::NewGuid().ToString("N"))
+    foreach($dir in @("config","data","reports")) { New-Item -ItemType Directory (Join-Path $root $dir) -Force | Out-Null }
+    try {
+        Copy-Item (Join-Path $repo "config\model-policy.json") (Join-Path $root "config")
+        $p=Get-ModelPolicyConfig (Join-Path $root "config\model-policy.json")
+        $profiles=@(foreach($key in $p.selectionPolicy.profiles.Keys) {
+            @{key=$key;model="gpt-one";effort=$p.selectionPolicy.profiles[$key].configurationSelection.allowedEfforts[0];context="default"}
+        })
+        Write-ModelJsonAtomic (Join-Path $root "task-profiles.json") $profiles
+        $caps=@{};$aliases=@{};$aaModels=@{};$componentModels=@{};$agentModels=@{}
+        foreach($model in @("gpt-one","gpt-two")) {
+            $caps[$model]=@{asOf="2026-09-22";capabilitySource="fixture";vision=$true;visionSource="fixture";
+                supportedContexts=@("default");supportedEfforts=@("low","medium","high")}
+            $aliases[$model]=@{artificialAnalysis=@{}}
+            foreach($effort in @("low","medium","high")) {
+                $slug="$model-$effort";$aliases[$model].artificialAnalysis[$effort]=$slug
+                $score=if($model -eq "gpt-two"){0.9}else{0.7}
+                $aaModels[$slug]=@{codingIndex=$score*100;intelligenceIndex=$score*100}
+                $componentModels[$slug]=@{name=$model;effort=$effort;automationBench=$score;enterpriseOpsGym=$score;
+                    lcr=0.7;ifbench=0.8;mmmuPro=0.6}
+                if($effort -eq "high") { $agentModels[$slug]=New-NormalizedAgentFixture $slug "$model ($effort)" $score }
+            }
+        }
+        Write-ModelJsonAtomic (Join-Path $root "config\model-capabilities.json") @{schemaVersion=2;models=$caps}
+        Write-ModelJsonAtomic (Join-Path $root "config\model-ranking-aliases.json") @{schemaVersion=2;aliases=$aliases}
+        Write-ModelJsonAtomic (Join-Path $root "config\model-pricing-aliases.json") @{schemaVersion=1;aliases=@{"gpt-one"="One";"gpt-two"="Two"}}
+        $sources=@{}
+        foreach($entry in @(@("artificialAnalysis",$aaModels),@("artificialAnalysisComponents",$componentModels),@("artificialAnalysisCodingAgents",$agentModels))) {
+            $sources[$entry[0]]=@{status="ok";models=$entry[1];sourceVersion="whole-page-v1";sourceDate=$null;
+                fetchedAtUtc="2026-09-22Z";sourceUrl="https://example.test"}
+        }
+        $fetch={param($u) @{status="ok";content='<table><tr><th>Model</th><th>Input</th><th>Output</th></tr><tr><td>One</td><td>$1</td><td>$5</td></tr><tr><td>Two</td><td>$1</td><td>$5</td></tr></table>'}}
+        $options=@{RepoRoot=$root;Availability=@{models=@("gpt-one","gpt-two");verified=$true;source="fixture"};Sources=$sources;FetchPricing=$fetch;NowUtc=[datetime]"2026-09-22Z"}
+        $first=Invoke-TaskProfileReview @options
+        Assert-True ($first.results.Count -eq 9 -and @($first.results | Where-Object { $_.resolution.state.pending.count -eq 1 }).Count -eq 9) "Not all role contracts reached pending"
+        foreach($row in $componentModels.Values) { $row.lcr=0.99 }
+        $sources.artificialAnalysisComponents.sourceVersion="unrelated-page-change"
+        $same=Invoke-TaskProfileReview @options
+        Assert-True (@($same.results | Where-Object { $_.resolution.applied -or $_.resolution.state.pending.count -ne 1 }).Count -eq 0) "Support churn confirmed a recommendation"
+        foreach($slug in @($aaModels.Keys | Where-Object {$_ -like "gpt-two-*"})) {
+            $aaModels[$slug].codingIndex=91;$aaModels[$slug].intelligenceIndex=91
+            $componentModels[$slug].automationBench=0.91
+        }
+        $agentModels["gpt-two-high"].codingAgentIndex=0.91
+        $confirmed=Invoke-TaskProfileReview @options
+        Assert-True (@($confirmed.results | Where-Object { $_.resolution.applied -and $_.finalModel -eq "gpt-two" }).Count -eq 9) "Deciding changes failed to confirm all roles"
+        $legacy=ConvertTo-CanonicalModelData $confirmed.snapshot
+        $legacy.schemaVersion=3
+        $legacy.sources.liveBench=@{status="ok";sourceDate="2026-06-25";fetchedAtUtc="2026-09-22Z";models=@{one=@{coding=99}}}
+        Write-ModelJsonAtomic (Join-Path $root "data\model-ranking-snapshot.json") $legacy
+        $sources.artificialAnalysisComponents=@{status="unavailable";message="malformed component observation"}
+        foreach($slug in @($aaModels.Keys | Where-Object {$_ -like "gpt-one-*"})) { $aaModels[$slug].codingIndex=99 }
+        $outage=Invoke-TaskProfileReview @options -ForceImmediateApply
+        $mechanical=$outage.results | Where-Object key -eq mechanical
+        $orchestrator=$outage.results | Where-Object key -eq orchestrator
+        Assert-True ($mechanical.resolution.status -eq "retained_stronger_incumbent_basis" -and $mechanical.finalModel -eq "gpt-two") "Weaker coding fallback replaced established workflow winner"
+        Assert-True (-not $orchestrator.resolution.applied -and $orchestrator.resolution.status -eq "retained_cached_evidence") "Cached workflow evidence authorized promotion"
+        Assert-True ($outage.snapshot.sources.artificialAnalysisComponents.status -eq "cached" -and
+            $outage.snapshot.sources.artificialAnalysisComponents.models["gpt-two-high"].automationBench -eq 0.91) "Malformed observation overwrote good component cache"
+        Assert-True ($outage.snapshot.sources.liveBench.categoryCompletenessUnknown -and
+            $null -eq $outage.snapshot.sources.liveBench.sourceDate -and $outage.snapshot.sources.liveBench.datasetVersion -eq "2026-06-25") "Legacy LB cache silently upgraded its dates or category completeness"
+        $report=Get-Content (Join-Path $root "reports\task-profile-review.md") -Raw
+        Assert-True ([regex]::Matches($report,'\*\*Supporting evidence\*\*').Count -eq 9) "Supporting report remained profile-specific"
+        foreach($term in @("AutomationBench-AA","EnterpriseOps-Gym-AA","strict pass@1","interactive orchestration","Incumbent selection basis","Fallback replacement blocked")) {
+            Assert-True ($report.Contains($term)) "Missing role explanation: $term"
+        }
+    } finally {
+        Get-ChildItem -LiteralPath $root -File -Recurse | Remove-Item
+        foreach($dir in @("config","data","reports")) { Remove-Item -LiteralPath (Join-Path $root $dir) }
+        Remove-Item -LiteralPath $root
+    }
 }
 if ($script:Failed) { exit 1 }

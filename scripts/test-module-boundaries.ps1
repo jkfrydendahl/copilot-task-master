@@ -23,7 +23,7 @@ Run-Test "Policy and shared data load without benchmark provider dependencies" {
     . (Join-Path $PSScriptRoot "model-configuration.ps1")
 
     $policy = Get-ModelPolicyConfig (Join-Path $PSScriptRoot "..\config\model-policy.json")
-    Assert-True ($policy.schemaVersion -eq 2) "Policy failed to load"
+    Assert-True ($policy.schemaVersion -eq 3) "Policy failed to load"
     Assert-True ([bool](Get-Command Get-ProfileModelConfigurations)) "Configuration helper did not load"
     Assert-True (-not (Get-Command Get-LiveBenchData -ErrorAction SilentlyContinue)) "Policy imported LiveBench"
     Assert-True (-not (Get-Command Get-ArtificialAnalysisIntelligenceIndexData -ErrorAction SilentlyContinue)) "Policy imported AA"
@@ -58,4 +58,11 @@ Run-Test "Agent identity resolution is isolated from fetching and selection" {
     Assert-True (-not (Get-Command Get-ProfileSelection -ErrorAction SilentlyContinue)) "Identity module imports selection"
 }
 
+Run-Test "Component normalization and role qualification load without acquisition or state writers" {
+    . (Join-Path $PSScriptRoot "model-aa-component-data.ps1")
+    . (Join-Path $PSScriptRoot "model-role-evidence.ps1")
+    Assert-True ([bool](Get-Command ConvertFrom-AAComponentPage) -and [bool](Get-Command Get-RoleEvidencePool)) "Pure modules missing"
+    Assert-True (-not (Get-Command Get-AAComponentData -ErrorAction SilentlyContinue)) "Pure module imported component fetching"
+    Assert-True (-not (Get-Command Resolve-ProfileSelectionState -ErrorAction SilentlyContinue)) "Role module imported persistence"
+}
 if ($script:Failed) { exit 1 }

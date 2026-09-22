@@ -150,11 +150,114 @@ Run-Test "LiveBench handles missing, empty and single-column category mappings" 
         $result=Parse-LiveBenchData -CsvText $csv -CategoriesJsonText $categories
         $expectedCoding=if ($categories.Contains('["code_generation"]')) {80} else {70}
         Assert-True ($result.status -eq "ok" -and $result.models.one.coding -eq $expectedCoding) "Coding category failed for '$categories'"
-        Assert-True ($result.models.one.agenticCoding -eq 70 -and $result.models.one.reasoning -eq 50 -and $result.models.one.instructionFollowing -eq 60) "Other category mappings failed"
+        if ($categories.Contains('["code_generation"]')) {
+            Assert-True ($result.models.one.agenticCoding -eq 70 -and $result.models.one.reasoning -eq 50 -and $result.models.one.instructionFollowing -eq 60) "Explicit category mappings failed"
+        } else {
+            Assert-True ($null -eq $result.models.one.agenticCoding -and $null -eq $result.models.one.reasoning -and $null -eq $result.models.one.instructionFollowing) "Partial categories were silently averaged"
+        }
     }
     $result=Get-LiveBenchData -FetchJson {param($u) @{
         status="ok";value=@(@{name="table_2026_09_09.csv";download_url="table";html_url="https://example.test/lb"})
     }} -FetchText {param($u) @{status="ok";content=$csv}}
     Assert-True ($result.status -eq "ok" -and $result.sourceVersion -and $result.models.one.coding -eq 70) "Missing categories file blocked the adapter"
+}
+function Component-Html($Data) {
+    $json = "x:" + ($Data | ConvertTo-Json -Depth 20 -Compress)
+    $cut = [int]($json.Length / 2)
+    '<script>self.__next_f.push([1,' + (ConvertTo-Json -InputObject $json.Substring(0,$cut) -Compress) +
+        ']);self.__next_f.push([1,' + (ConvertTo-Json -InputObject $json.Substring($cut) -Compress) + '])</script>'
+}
+Run-Test "AA components include current and bulk models without inventing missing scores" {
+    . (Join-Path $PSScriptRoot "model-aa-component-data.ps1")
+    $data=@{
+        currentModel=@{slug="one-high";name="One (high)";automationBenchPartialScore=0;lcr=0.8;releaseDate="2026-09-22"}
+        models=@(@{slug="two-high";name="Two (high)";automationBenchPartialScore=0.6;enterpriseOpsGym=0.4;ifbench=$null},
+            @{slug="navigation-only";name="Navigation"})
+    }
+    $r=ConvertFrom-AAComponentPage (Component-Html $data)
+    Assert-True ($r.status -eq "ok" -and $r.models.Count -eq 2) "Lost bulk/current records or included navigation"
+    Assert-True ($r.models["one-high"].automationBench -eq 0 -and $r.models["one-high"].lcr -eq 0.8) "Zero/metric mapping lost"
+    Assert-True ($null -eq $r.models["two-high"].ifbench -and $null -eq $r.sourceDate) "Missing score/publication invented"
+}
+Run-Test "AA component parsing rejects malformed, conflicting and invalid scores" {
+    . (Join-Path $PSScriptRoot "model-aa-component-data.ps1")
+    $one=@{slug="one-high";name="One (high)";automationBenchPartialScore=0.5}
+    foreach($html in @("",'<script>self.__next_f.push([1,"x:{\"models\":[invalid]}"])</script>',
+        (Component-Html @{models=@($one,@{slug="one-high";name="One (high)";automationBenchPartialScore=0.7})}))) {
+        Assert-True ((ConvertFrom-AAComponentPage $html).status -eq "unavailable") "Invalid observation accepted"
+    }
+    foreach($bad in @("0.5",-0.1,1.01)) {
+        $r=ConvertFrom-AAComponentPage (Component-Html @{models=@(@{slug="one-high";name="One (high)";automationBenchPartialScore=$bad;lcr=0.8})})
+        Assert-True ($r.status -eq "ok" -and $null -eq $r.models["one-high"].automationBench -and $r.diagnostics.Count) "Invalid metric accepted or unrelated metric discarded"
+    }
+    $r=ConvertFrom-AAComponentPage (Component-Html @{models=@($one,$one)})
+    Assert-True ($r.status -eq "ok" -and $r.models.Count -eq 1) "Identical duplicates became ambiguous"
+}
+Run-Test "AA component acquisition uses one deterministic anchor and stable metric observations" {
+    . (Join-Path $PSScriptRoot "model-aa-components.ps1")
+    $script:componentFetches=@()
+    $data=@{models=@(@{slug="one-high";name="One (high)";automationBenchPartialScore=0.5;lcr=0.8})}
+    $fetch={param($u) $script:componentFetches+=@($u); @{status="ok";content=(Component-Html $data)}}
+    $first=Get-AAComponentData -ModelSlugs @("two-high","one-high") -FetchText $fetch
+    Assert-True ($script:componentFetches.Count -eq 1 -and $script:componentFetches[0] -eq "https://artificialanalysis.ai/models/one-high") "Per-model fetching or preferred anchor"
+    Assert-True ($first.status -eq "ok" -and $first.metricVersions.automationBench -and $null -eq $first.sourceDate) "Missing component provenance"
+    $data.models[0].lcr=0.9
+    $second=Get-AAComponentData -ModelSlugs @("one-high") -FetchText $fetch
+    Assert-True ($first.metricVersions.automationBench -eq $second.metricVersions.automationBench -and $first.metricVersions.lcr -ne $second.metricVersions.lcr) "Supporting score confirmed deciding metric"
+    $bad=Get-AAComponentData -ModelSlugs @() -FetchText {throw "Must not fetch"}
+    Assert-True ($bad.status -eq "unavailable") "Missing anchor not explicit"
+    $bad=Get-AAComponentData -ModelSlugs @("one-high") -FetchText {param($u) @{status="error";error="HTTP503"}}
+    Assert-True ($bad.status -eq "error" -and $bad.message -match "HTTP503") "Fetch failure hidden"
+}
+Run-Test "LiveBench rejects incomplete or invalid category scores without dropping other categories" {
+    foreach($bad in @("", "NaN", "-1", "101")) {
+        $csv="model,code_generation,code_completion,python`none,80,$bad,70"
+        $r=Parse-LiveBenchData -CsvText $csv -CategoriesJsonText '{"Coding":["code_generation","code_completion"],"Agentic Coding":["python"]}'
+        Assert-True ($null -eq $r.models.one.coding -and $r.models.one.agenticCoding -eq 70 -and $r.diagnostics -match "coding") "Invalid/partial category accepted or unrelated category lost"
+    }
+}
+Run-Test "LiveBench separates suite label, artifact publication and unknown row evaluation age" {
+    $r=Get-LiveBenchData -FetchJson {
+        param($u)
+        if($u -match "/commits\?") { @{status="ok";value=@(@{sha="commit1";commit=@{committer=@{date="2026-09-22T05:38:00Z"}}})} }
+        else { @{status="ok";value=@(@{name="table_2026_06_25.csv";download_url="table";html_url="https://example.test/lb"})} }
+    } -FetchText {param($u) @{status="ok";content="model,code_generation,code_completion`none,80,60"}}
+    Assert-True ($r.status -eq "ok" -and $r.datasetVersion -eq "2026-06-25" -and $null -eq $r.sourceDate) "Suite name treated as results publication"
+    Assert-True ([datetime]$r.artifactPublishedAtUtc -eq [datetime]"2026-09-22T05:38:00Z" -and $null -eq $r.models.one.evaluationDate) "Artifact update falsely refreshed row evaluation"
+    Assert-True (($r.categoryColumns.coding -join ",") -eq "code_generation,code_completion") "Category methodology not retained"
+}
+Run-Test "Public component parser preserves effort and rejects fallback-served workflow scores" {
+    . (Join-Path $PSScriptRoot "model-aa-component-data.ps1")
+    $row=@{slug="one-high";name="One";effort=@{slug="high"};automationBenchPartialScore=0.8;lcr=0.7;
+        automationBenchBreakdown=@{fallbackServedTurnCount=1}}
+    $r=ConvertFrom-AAComponentPage (Component-Html @{currentModel=$row})
+    Assert-True ($r.status -eq "ok" -and $r.models["one-high"].effort -eq "high") "Published effort lost"
+    Assert-True ($null -eq $r.models["one-high"].automationBench -and $r.models["one-high"].lcr -eq 0.7 -and $r.diagnostics -match "fallback") "Composite workflow score used as a pure model score"
+    $copy=@{slug="one-high";name="One";automationBenchPartialScore=0.8;lcr=0.7}
+    $r=ConvertFrom-AAComponentPage (Component-Html @{currentModel=$row;models=@($copy)})
+    Assert-True ($null -eq $r.models["one-high"].automationBench) "Comparison duplicate revived a known composite score"
+}
+Run-Test "LiveBench preserves native GitHub timestamps under non-US cultures" {
+    $culture=[Globalization.CultureInfo]::CurrentCulture
+    try {
+        [Globalization.CultureInfo]::CurrentCulture=[Globalization.CultureInfo]::GetCultureInfo("da-DK")
+        $r=Get-LiveBenchData -FetchJson {
+            param($u)
+            if($u -match "/commits\?") { @{status="ok";value=@(@{sha="commit1";commit=@{committer=@{date=[datetime]"2026-09-22T05:38:00Z"}}})} }
+            else { @{status="ok";value=@(@{name="table_2026_06_25.csv";download_url="table";html_url="https://example.test/lb"})} }
+        } -FetchText {param($u) @{status="ok";content="model,code_generation,code_completion`none,80,60"}}
+        Assert-True ($r.artifactPublishedAtUtc -match '^2026-09-22T05:38:00' -and $r.artifactCommit -eq "commit1") "Native UTC timestamp was lost to local date parsing"
+    } finally { [Globalization.CultureInfo]::CurrentCulture=$culture }
+}
+Run-Test "Duplicate public rows cannot hide composite or unresolvable effort identities" {
+    . (Join-Path $PSScriptRoot "model-aa-component-data.ps1")
+    $plain=@{slug="one-high";name="One";lcr=0.8}
+    foreach($uncertain in @(
+        @{slug="one-high";name="One with fallback";lcr=0.8},
+        @{slug="one-high";name="One";effort=@{level=40};lcr=0.8}
+    )) {
+        $r=ConvertFrom-AAComponentPage (Component-Html @{models=@($plain,$uncertain)})
+        Assert-True ($r.status -eq "unavailable" -and $r.diagnostics -match "identity") "Duplicate row hid an ambiguous identity"
+    }
 }
 if ($script:Failed) { exit 1 }
