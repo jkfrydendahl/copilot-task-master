@@ -4,7 +4,7 @@
     "label": "Orchestrator (route per task)",
     "description": "Mixed or evolving workloads where one session should classify each request and route to task-class subagents without relaunching.",
     "hint": "When you open the chat, describe the task. The session should choose inline vs @task-class agent routing per request.",
-    "model": "gemini-3.8-flash",
+    "model": "gemini-3.7-flash",
     "effort": "high",
     "context": "default"
   },
@@ -49,7 +49,7 @@
     "label": "Review",
     "description": "Ordinary diff review. For risky/large/business-critical diffs, use Deep reasoning instead.",
     "hint": "When you open the chat, run /review (or /code-review-synthesis for multi-model). Stage your changes first.",
-    "model": "claude-opus-5",
+    "model": "gemini-3.8-flash",
     "effort": "high",
     "context": "default"
   },
