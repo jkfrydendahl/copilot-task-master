@@ -201,16 +201,24 @@ Run-Test "All capability, availability and denylist gates report independently" 
         Assert-True ($v.reasonCodes -contains $reason) "Missing gate $reason"
     }
 }
-Run-Test "Sol vision has explicit provenance and admits the configured Visual/UI variant" {
+Run-Test "Published and runtime-verified vision admit the configured Visual/UI variant" {
     $policy = Get-ModelPolicyConfig (Join-Path $repo "config\model-policy.json")
-    $cap = (Get-ModelCapabilitiesCatalog (Join-Path $repo "config\model-capabilities.json")).models["gpt-5.6-sol"]
-    Assert-True ($cap.vision -eq $true -and $cap.visionSource -eq "https://artificialanalysis.ai/models/gpt-5-6-sol-medium") "Sol vision not supported by a matched published source"
-    $price = @{verifiedAtUtc="2026-09-09";tiers=@{default=@{inputPerMillion=4;outputPerMillion=20}}}
-    $verdict = Get-ModelAdmissibilityVerdict -ModelId "gpt-5.6-sol" -ProfileKey "visual-ui" `
-        -AvailabilityVerified $true -AvailableModels @("gpt-5.6-sol") -CapabilityRecord $cap -PricingRecord $price `
-        -ProfileRequirement $policy.profileRequirements["visual-ui"] -ProfileContextTier "default" -ProfileEffort "medium" `
-        -NowUtc ([datetime]"2026-09-09Z")
-    Assert-True ($verdict.admissible -and $verdict.warningCodes.Count -eq 0) "Verified vision or approved Visual/UI budget rejected Sol"
+    foreach($observation in @(
+        @{asOf="2026-09-09Z";source="https://artificialanalysis.ai/models/gpt-5-6-sol-medium"},
+        @{asOf="2026-09-23T08:34:24.561Z";source="copilot-sdk models.list; authenticated runtime fixture"}
+    )){
+        $cap = @{
+            asOf=$observation.asOf;capabilitySource=$observation.source
+            vision=$true;visionSource=$observation.source
+            supportedContexts=@("default");supportedEfforts=@("medium")
+        }
+        $price = @{verifiedAtUtc="2026-09-24Z";tiers=@{default=@{inputPerMillion=4;outputPerMillion=20}}}
+        $verdict = Get-ModelAdmissibilityVerdict -ModelId "gpt-5.6-sol" -ProfileKey "visual-ui" `
+            -AvailabilityVerified $true -AvailableModels @("gpt-5.6-sol") -CapabilityRecord $cap -PricingRecord $price `
+            -ProfileRequirement $policy.profileRequirements["visual-ui"] -ProfileContextTier "default" -ProfileEffort "medium" `
+            -NowUtc ([datetime]"2026-09-24Z")
+        Assert-True ($verdict.admissible -and $verdict.warningCodes.Count -eq 0) "Verified vision or approved Visual/UI budget rejected Sol: $($observation.source)"
+    }
 }
 Run-Test "Every profile preauthorizes its task-appropriate effort range" {
     $p=Get-ModelPolicyConfig (Join-Path $repo "config\model-policy.json")

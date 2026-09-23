@@ -21,7 +21,7 @@ $testFiles = @(
     (Join-Path $PSScriptRoot "test-model-launch-args.ps1")
 )
 
-$overallFailed = $false
+$failedFiles = [System.Collections.Generic.List[string]]::new()
 foreach ($testFile in $testFiles) {
     Write-Host "==== Running $testFile ====" -ForegroundColor Cyan
     # Each test file calls `exit 1` on failure. Run it in its own pwsh
@@ -29,14 +29,18 @@ foreach ($testFile in $testFiles) {
     # code terminates only that test file's run, not this aggregator.
     & pwsh -NoProfile -File $testFile
     if ($LASTEXITCODE -ne 0) {
-        $overallFailed = $true
+        $failedFiles.Add((Split-Path $testFile -Leaf))
         Write-Host "==== FAILED: $testFile ====" -ForegroundColor Red
     } else {
         Write-Host "==== OK: $testFile ====" -ForegroundColor Green
     }
 }
 
-if ($overallFailed) {
+Write-Host ""
+Write-Host "Test files passed: $($testFiles.Count - $failedFiles.Count)"
+Write-Host "Test files failed: $($failedFiles.Count)"
+if ($failedFiles.Count -gt 0) {
+    Write-Host "Failed files: $($failedFiles -join ', ')" -ForegroundColor Red
     Write-Host "One or more test files failed." -ForegroundColor Red
     exit 1
 }
