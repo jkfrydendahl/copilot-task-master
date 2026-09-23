@@ -1,0 +1,4390 @@
+{
+  "runtimeStatus": "ok",
+  "discoverySnapshot": {
+    "maxAgeDays": 7,
+    "observedAtUtc": "2026-09-23T08:34:24.561Z",
+    "message": "Local model-discovery snapshot is valid (validity: 7 days).",
+    "status": "valid"
+  },
+  "models": [
+    {
+      "model": "auto",
+      "runtimeListed": true,
+      "reasons": [
+        "denylisted_disabled_virtual_or_ambiguous",
+        "capabilities_missing",
+        "pricing_alias_missing",
+        "benchmark_aliases_missing; structured agent evidence is resolved separately"
+      ],
+      "status": "blocked",
+      "helpListed": false
+    },
+    {
+      "model": "claude-fable-5",
+      "runtimeListed": false,
+      "reasons": [
+        "denylisted_disabled_virtual_or_ambiguous",
+        "benchmark_aliases_missing; structured agent evidence is resolved separately"
+      ],
+      "status": "blocked",
+      "helpListed": true
+    },
+    {
+      "model": "claude-fable-5.1",
+      "runtimeListed": false,
+      "reasons": [
+        "enabled_runtime_metadata_missing; existing facts retain their original verification dates",
+        "capabilities_missing",
+        "benchmark_aliases_missing; structured agent evidence is resolved separately"
+      ],
+      "status": "blocked",
+      "helpListed": true
+    },
+    {
+      "model": "claude-haiku-4.5",
+      "runtimeListed": true,
+      "reasons": [],
+      "status": "ready_for_comparison",
+      "helpListed": true
+    },
+    {
+      "model": "claude-opus-4.5",
+      "runtimeListed": false,
+      "reasons": [
+        "enabled_runtime_metadata_missing; existing facts retain their original verification dates",
+        "pricing_alias_missing",
+        "benchmark_aliases_missing; structured agent evidence is resolved separately"
+      ],
+      "status": "partial",
+      "helpListed": false
+    },
+    {
+      "model": "claude-opus-4.6",
+      "runtimeListed": false,
+      "reasons": [
+        "enabled_runtime_metadata_missing; existing facts retain their original verification dates",
+        "pricing_alias_missing",
+        "benchmark_aliases_missing; structured agent evidence is resolved separately"
+      ],
+      "status": "partial",
+      "helpListed": false
+    },
+    {
+      "model": "claude-opus-4.7",
+      "runtimeListed": false,
+      "reasons": [
+        "enabled_runtime_metadata_missing; existing facts retain their original verification dates"
+      ],
+      "status": "partial",
+      "helpListed": true
+    },
+    {
+      "model": "claude-opus-4.8",
+      "runtimeListed": true,
+      "reasons": [],
+      "status": "ready_for_comparison",
+      "helpListed": true
+    },
+    {
+      "model": "claude-opus-4.8-fast",
+      "runtimeListed": true,
+      "reasons": [
+        "exact_pricing_identity_missing_or_conflicting",
+        "benchmark_aliases_missing; structured agent evidence is resolved separately"
+      ],
+      "status": "partial",
+      "helpListed": true
+    },
+    {
+      "model": "claude-opus-5",
+      "runtimeListed": true,
+      "reasons": [],
+      "status": "ready_for_comparison",
+      "helpListed": true
+    },
+    {
+      "model": "claude-opus-5.5",
+      "runtimeListed": true,
+      "reasons": [],
+      "status": "ready_for_comparison",
+      "helpListed": false
+    },
+    {
+      "model": "claude-sonnet-4.5",
+      "runtimeListed": false,
+      "reasons": [
+        "enabled_runtime_metadata_missing; existing facts retain their original verification dates",
+        "pricing_alias_missing",
+        "benchmark_aliases_missing; structured agent evidence is resolved separately"
+      ],
+      "status": "partial",
+      "helpListed": false
+    },
+    {
+      "model": "claude-sonnet-4.6",
+      "runtimeListed": false,
+      "reasons": [
+        "enabled_runtime_metadata_missing; existing facts retain their original verification dates"
+      ],
+      "status": "partial",
+      "helpListed": true
+    },
+    {
+      "model": "claude-sonnet-5",
+      "runtimeListed": true,
+      "reasons": [],
+      "status": "ready_for_comparison",
+      "helpListed": true
+    },
+    {
+      "model": "gemini-3.1-pro-preview",
+      "runtimeListed": false,
+      "reasons": [
+        "enabled_runtime_metadata_missing; existing facts retain their original verification dates",
+        "pricing_alias_missing",
+        "benchmark_aliases_missing; structured agent evidence is resolved separately"
+      ],
+      "status": "partial",
+      "helpListed": false
+    },
+    {
+      "model": "gemini-3.5-flash",
+      "runtimeListed": false,
+      "reasons": [
+        "enabled_runtime_metadata_missing; existing facts retain their original verification dates"
+      ],
+      "status": "partial",
+      "helpListed": true
+    },
+    {
+      "model": "gemini-3.6-flash",
+      "runtimeListed": false,
+      "reasons": [
+        "enabled_runtime_metadata_missing; existing facts retain their original verification dates"
+      ],
+      "status": "partial",
+      "helpListed": true
+    },
+    {
+      "model": "gemini-3.7-flash",
+      "runtimeListed": false,
+      "reasons": [
+        "enabled_runtime_metadata_missing; existing facts retain their original verification dates"
+      ],
+      "status": "partial",
+      "helpListed": true
+    },
+    {
+      "model": "gemini-3.8-flash",
+      "runtimeListed": false,
+      "reasons": [
+        "enabled_runtime_metadata_missing; existing facts retain their original verification dates"
+      ],
+      "status": "partial",
+      "helpListed": true
+    },
+    {
+      "model": "gpt-5-mini",
+      "runtimeListed": false,
+      "reasons": [
+        "enabled_runtime_metadata_missing; existing facts retain their original verification dates",
+        "benchmark_aliases_missing; structured agent evidence is resolved separately"
+      ],
+      "status": "partial",
+      "helpListed": true
+    },
+    {
+      "model": "gpt-5.2",
+      "runtimeListed": false,
+      "reasons": [
+        "enabled_runtime_metadata_missing; existing facts retain their original verification dates",
+        "pricing_alias_missing",
+        "benchmark_aliases_missing; structured agent evidence is resolved separately"
+      ],
+      "status": "partial",
+      "helpListed": false
+    },
+    {
+      "model": "gpt-5.2-codex",
+      "runtimeListed": false,
+      "reasons": [
+        "enabled_runtime_metadata_missing; existing facts retain their original verification dates",
+        "pricing_alias_missing",
+        "benchmark_aliases_missing; structured agent evidence is resolved separately"
+      ],
+      "status": "partial",
+      "helpListed": false
+    },
+    {
+      "model": "gpt-5.3-codex",
+      "runtimeListed": true,
+      "reasons": [
+        "enabled_runtime_metadata_missing; existing facts retain their original verification dates"
+      ],
+      "status": "partial",
+      "helpListed": true
+    },
+    {
+      "model": "gpt-5.4",
+      "runtimeListed": true,
+      "reasons": [],
+      "status": "ready_for_comparison",
+      "helpListed": true
+    },
+    {
+      "model": "gpt-5.4-mini",
+      "runtimeListed": true,
+      "reasons": [],
+      "status": "ready_for_comparison",
+      "helpListed": true
+    },
+    {
+      "model": "gpt-5.5",
+      "runtimeListed": true,
+      "reasons": [],
+      "status": "ready_for_comparison",
+      "helpListed": true
+    },
+    {
+      "model": "gpt-5.6-luna",
+      "runtimeListed": true,
+      "reasons": [],
+      "status": "ready_for_comparison",
+      "helpListed": true
+    },
+    {
+      "model": "gpt-5.6-sol",
+      "runtimeListed": true,
+      "reasons": [],
+      "status": "ready_for_comparison",
+      "helpListed": true
+    },
+    {
+      "model": "gpt-5.6-terra",
+      "runtimeListed": true,
+      "reasons": [],
+      "status": "ready_for_comparison",
+      "helpListed": true
+    },
+    {
+      "model": "gpt-6-astra",
+      "runtimeListed": true,
+      "reasons": [],
+      "status": "ready_for_comparison",
+      "helpListed": true
+    },
+    {
+      "model": "gpt-6-luna",
+      "runtimeListed": true,
+      "reasons": [],
+      "status": "ready_for_comparison",
+      "helpListed": false
+    },
+    {
+      "model": "gpt-6-sol",
+      "runtimeListed": true,
+      "reasons": [],
+      "status": "ready_for_comparison",
+      "helpListed": false
+    },
+    {
+      "model": "grok-4.5",
+      "runtimeListed": true,
+      "reasons": [
+        "enabled_runtime_metadata_missing; existing facts retain their original verification dates"
+      ],
+      "status": "partial",
+      "helpListed": true
+    },
+    {
+      "model": "grok-4.6",
+      "runtimeListed": true,
+      "reasons": [
+        "enabled_runtime_metadata_missing; existing facts retain their original verification dates"
+      ],
+      "status": "partial",
+      "helpListed": false
+    },
+    {
+      "model": "grok-4.7",
+      "runtimeListed": true,
+      "reasons": [
+        "enabled_runtime_metadata_missing; existing facts retain their original verification dates",
+        "capabilities_missing",
+        "pricing_alias_missing",
+        "benchmark_aliases_missing; structured agent evidence is resolved separately"
+      ],
+      "status": "blocked",
+      "helpListed": false
+    },
+    {
+      "model": "kimi-k2.7-code",
+      "runtimeListed": false,
+      "reasons": [
+        "enabled_runtime_metadata_missing; existing facts retain their original verification dates",
+        "capabilities_missing",
+        "benchmark_aliases_missing; structured agent evidence is resolved separately"
+      ],
+      "status": "blocked",
+      "helpListed": true
+    },
+    {
+      "model": "kimi-k3",
+      "runtimeListed": false,
+      "reasons": [
+        "enabled_runtime_metadata_missing; existing facts retain their original verification dates",
+        "capabilities_missing",
+        "benchmark_aliases_missing; structured agent evidence is resolved separately"
+      ],
+      "status": "blocked",
+      "helpListed": true
+    },
+    {
+      "model": "mai-code-1-flash-picker",
+      "runtimeListed": false,
+      "reasons": [
+        "enabled_runtime_metadata_missing; existing facts retain their original verification dates",
+        "benchmark_aliases_missing; structured agent evidence is resolved separately"
+      ],
+      "status": "partial",
+      "helpListed": false
+    },
+    {
+      "model": "mai-code-1.1-flash",
+      "runtimeListed": true,
+      "reasons": [
+        "benchmark_aliases_missing; structured agent evidence is resolved separately"
+      ],
+      "status": "partial",
+      "helpListed": true
+    },
+    {
+      "model": "Claude Sonnet 4",
+      "runtimeListed": false,
+      "reasons": [
+        "unmapped_public_pricing_identity; runtime identity required"
+      ],
+      "status": "discovered_only",
+      "helpListed": false
+    },
+    {
+      "model": "GPT-5.4 nano",
+      "runtimeListed": false,
+      "reasons": [
+        "unmapped_public_pricing_identity; runtime identity required"
+      ],
+      "status": "discovered_only",
+      "helpListed": false
+    },
+    {
+      "model": "Grok 4.7",
+      "runtimeListed": false,
+      "reasons": [
+        "unmapped_public_pricing_identity; runtime identity required"
+      ],
+      "status": "discovered_only",
+      "helpListed": false
+    }
+  ],
+  "rejectedMappings": [],
+  "unmappedBenchmarkVariants": [
+    {
+      "alias": "a-x-k2",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "agnes-2-5-pro-alpha",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "agnes-2-5-pro-beta",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "agnes-3-0-flash",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "apertus-70b-instruct",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "apertus-8b-instruct",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "apodex-1-1",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "apriel-v1-5-15b-thinker",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "apriel-v1-6-15b-thinker",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "celeris-1",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "claude-3-5-haiku",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "claude-3-7-sonnet",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "claude-3-7-sonnet-thinking",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "claude-3-haiku",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "claude-4-1-opus-thinking",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "claude-4-5-haiku-reasoning",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "claude-4-5-sonnet",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "claude-4-5-sonnet-thinking",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "claude-4-opus",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "claude-4-opus-thinking",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "claude-4-sonnet",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "claude-4-sonnet-thinking",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "claude-opus-4-5",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "claude-opus-4-5-thinking",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "claude-opus-4-6",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "claude-opus-4-6-adaptive",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "claude-opus-4-7-non-reasoning",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "claude-sonnet-4-6",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "claude-sonnet-4-6-non-reasoning-low-effort",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "claude-sonnet-5-non-reasoning",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "cogito-v2-1-reasoning",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "command-a",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "command-a-plus",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "deepseek-r1",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "deepseek-r1-0120",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "deepseek-r1-distill-llama-70b",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "deepseek-r1-distill-llama-8b",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "deepseek-r1-distill-qwen-1-5b",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "deepseek-r1-distill-qwen-14b",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "deepseek-r1-distill-qwen-32b",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "deepseek-r1-qwen3-8b",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "deepseek-v3",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "deepseek-v3-0324",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "deepseek-v3-1",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "deepseek-v3-1-reasoning",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "deepseek-v3-1-terminus",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "deepseek-v3-1-terminus-reasoning",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "deepseek-v3-2",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "deepseek-v3-2-0925",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "deepseek-v3-2-reasoning",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "deepseek-v3-2-reasoning-0925",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "deepseek-v3-2-speciale",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "deepseek-v4-1-flash",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "deepseek-v4-flash",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "deepseek-v4-flash-0420",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "deepseek-v4-flash-0420-high",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "deepseek-v4-flash-0420-non-reasoning",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "deepseek-v4-flash-vision",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "deepseek-v4-pro",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "deepseek-v4-pro-0424",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "deepseek-v4-pro-0424-high",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "deepseek-v4-pro-0424-non-reasoning",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "devstral-2",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "devstral-medium",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "devstral-small",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "devstral-small-2",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "devstral-small-2505",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "diffusiongemma-26b-a4b",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "doubao-seed-code",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "ernie-4-5-300b-a47b",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "ernie-5-0-thinking-preview",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "exaone-4-0-1-2b",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "exaone-4-0-1-2b-reasoning",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "exaone-4-0-32b",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "exaone-4-0-32b-reasoning",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "exaone-4-5-33b",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "falcon-h1r-7b",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "g9v3-39a5b",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "g9v3-3b",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "gemini-1-5-flash",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "gemini-1-5-flash-8b",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "gemini-1-5-pro",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "gemini-2-0-flash",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "gemini-2-5-flash",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "gemini-2-5-flash-04-2025",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "gemini-2-5-flash-lite",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "gemini-2-5-flash-lite-preview-09-2025",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "gemini-2-5-flash-lite-preview-09-2025-reasoning",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "gemini-2-5-flash-lite-reasoning",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "gemini-2-5-flash-preview-09-2025",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "gemini-2-5-flash-preview-09-2025-reasoning",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "gemini-2-5-flash-reasoning",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "gemini-2-5-pro",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "gemini-3-1-flash-lite-preview",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "gemini-3-1-pro-preview",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "gemini-3-5-flash-lite",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "gemini-3-5-flash-minimal",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "gemini-3-flash",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "gemini-3-flash-reasoning",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "gemini-3-pro",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "gemini-3-pro-low",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "gemma-3-12b",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "gemma-3-1b",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "gemma-3-270m",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "gemma-3-27b",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "gemma-3-4b",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "gemma-3n-e2b",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "gemma-3n-e4b",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "gemma-4-12b",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "gemma-4-12b-non-reasoning",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "gemma-4-26b-a4b",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "gemma-4-26b-a4b-non-reasoning",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "gemma-4-31b",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "gemma-4-31b-non-reasoning",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "gemma-4-e2b",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "gemma-4-e2b-non-reasoning",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "gemma-4-e4b",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "gemma-4-e4b-non-reasoning",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "glm-4-5-air",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "glm-4-5v",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "glm-4-5v-reasoning",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "glm-4-6",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "glm-4-6-reasoning",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "glm-4-6v",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "glm-4-6v-reasoning",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "glm-4-7",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "glm-4-7-flash",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "glm-4-7-flash-non-reasoning",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "glm-4-7-non-reasoning",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "glm-4.5",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "glm-5",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "glm-5-1",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "glm-5-1-non-reasoning",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "glm-5-2",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "glm-5-2-non-reasoning",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "glm-5-3",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "glm-5-3-flash",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "glm-5-non-reasoning",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "glm-5-turbo",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "glm-5v-turbo",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "gpt-4",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "gpt-4-1",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "gpt-4-1-mini",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "gpt-4-1-nano",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "gpt-4o",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "gpt-4o-2024-08-06",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "gpt-4o-chatgpt",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "gpt-4o-mini",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "gpt-5",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "gpt-5-1",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "gpt-5-1-codex",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "gpt-5-1-codex-mini",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "gpt-5-1-non-reasoning",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "gpt-5-2",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "gpt-5-2-codex",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "gpt-5-2-medium",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "gpt-5-2-non-reasoning",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "gpt-5-4-mini-non-reasoning",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "gpt-5-4-nano",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "gpt-5-4-nano-medium",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "gpt-5-4-nano-non-reasoning",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "gpt-5-4-non-reasoning",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "gpt-5-5-instant-05-26",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "gpt-5-5-instant-06-26",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "gpt-5-5-non-reasoning",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "gpt-5-6-luna-non-reasoning",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "gpt-5-6-sol-non-reasoning",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "gpt-5-6-terra-non-reasoning",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "gpt-5-chatgpt",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "gpt-5-codex",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "gpt-5-low",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "gpt-5-medium",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "gpt-5-mini",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "gpt-5-mini-medium",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "gpt-5-mini-minimal",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "gpt-5-minimal",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "gpt-5-nano",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "gpt-5-nano-medium",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "gpt-5-nano-minimal",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "gpt-6-luna-non-reasoning",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "gpt-6-sol-non-reasoning",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "gpt-oss-120b",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "gpt-oss-120b-low",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "gpt-oss-20b",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "gpt-oss-20b-low",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "granite-3-3-8b-instruct",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "granite-4-0-350m",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "granite-4-0-h-350m",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "granite-4-0-h-nano-1b",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "granite-4-0-h-small",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "granite-4-0-micro",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "granite-4-0-nano-1b",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "granite-4-1-30b",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "granite-4-1-3b",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "granite-4-1-8b",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "granite-4-2-30b",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "granite-4-2-3b",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "granite-4-2-8b",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "grok-3",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "grok-3-mini-reasoning",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "grok-4",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "grok-4-1-fast",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "grok-4-1-fast-reasoning",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "grok-4-20",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "grok-4-20-0309",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "grok-4-20-0309-non-reasoning",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "grok-4-20-non-reasoning",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "grok-4-3",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "grok-4-3-low",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "grok-4-3-medium",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "grok-4-3-non-reasoning",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "grok-4-7",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "grok-4-7-high",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "grok-4-fast",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "grok-4-fast-reasoning",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "grok-build-0-1-06-16",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "grok-code-fast-1",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "hermes-4-llama-3-1-405b",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "hermes-4-llama-3-1-405b-reasoning",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "hermes-4-llama-3-1-70b",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "hermes-4-llama-3-1-70b-reasoning",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "hy3",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "hy3-non-reasoning",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "hy3-preview",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "hyperclova-x-seed-think-32b",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "hypernova-60b",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "inkling",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "inkling-small",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "intellect-3",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "jamba-1-7-large",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "jamba-1-7-mini",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "jamba-reasoning-3b",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "jt-35b-flash",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "jt-4-1-flash-236b-a21b",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "jt-mini",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "k-exaone",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "k-exaone-2-0-0803",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "k-exaone-non-reasoning",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "k2-horizon-0-9b",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "k2-horizon-3-7b",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "k2-horizon-375b-a23b",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "k2-horizon-7b",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "k2-horizon-mova-36b-a4b",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "k2-think-v2",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "k2-v2",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "k2-v2-low",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "k2-v2-medium",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "kat-coder-pro-v1",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "kat-coder-pro-v2",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "kimi-k2",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "kimi-k2-0905",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "kimi-k2-5",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "kimi-k2-5-non-reasoning",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "kimi-k2-6",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "kimi-k2-6-non-reasoning",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "kimi-k2-7-code",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "kimi-k2-thinking",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "kimi-k3",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "kimi-k3-low",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "kimi-linear-48b-a3b-instruct",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "lfm2-1-2b",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "lfm2-2-6b",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "lfm2-24b-a2b",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "lfm2-5-1-2b-instruct",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "lfm2-5-1-2b-thinking",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "lfm2-5-2-6b",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "lfm2-5-8b-a1b",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "lfm2-5-vl-1-6b",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "lfm2-8b-a1b",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "ling-1t",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "ling-2-6-1t",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "ling-2-6-flash",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "ling-3-0-flash",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "ling-3-0-flash-fin",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "ling-3-0-flash-vl",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "ling-3-0-tiny",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "ling-flash-2-0",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "ling-mini-2-0",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "llama-3-1-instruct-405b",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "llama-3-1-instruct-70b",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "llama-3-1-instruct-8b",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "llama-3-1-nemotron-instruct-70b",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "llama-3-1-nemotron-nano-4b-reasoning",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "llama-3-1-nemotron-ultra-253b-v1-reasoning",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "llama-3-2-instruct-11b-vision",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "llama-3-2-instruct-1b",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "llama-3-2-instruct-3b",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "llama-3-2-instruct-90b-vision",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "llama-3-3-instruct-70b",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "llama-3-3-nemotron-super-49b",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "llama-3-3-nemotron-super-49b-reasoning",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "llama-3-instruct-70b",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "llama-3-instruct-8b",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "llama-4-maverick",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "llama-4-scout",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "llama-nemotron-super-49b-v1-5",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "llama-nemotron-super-49b-v1-5-reasoning",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "longcat-2-0",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "longcat-flash-lite",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "magistral-medium",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "magistral-medium-2509",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "magistral-small",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "magistral-small-2509",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "mercury-2",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "mi-dm-k-2-5-pro-dec28",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "midm-250-pro-rsnsft",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "mimo-v2-0206",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "mimo-v2-5-0424",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "mimo-v2-5-pro",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "mimo-v2-5-pro-non-reasoning",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "mimo-v2-6-pro",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "mimo-v2-flash",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "mimo-v2-flash-reasoning",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "mimo-v2-omni",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "mimo-v2-omni-0327",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "mimo-v2-pro",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "minicpm-v4-6-1-3b",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "minicpm5-1b",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "minicpm5-1b-non-reasoning",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "minicpm5-2b",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "minimax-m1-40k",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "minimax-m1-80k",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "minimax-m2",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "minimax-m2-1",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "minimax-m2-5",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "minimax-m2-7",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "minimax-m3",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "ministral-3-14b",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "ministral-3-3b",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "ministral-3-8b",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "mistral-7b-instruct",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "mistral-large-2",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "mistral-large-2407",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "mistral-large-3",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "mistral-medium-3",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "mistral-medium-3-1",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "mistral-medium-3-5",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "mistral-small-3",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "mistral-small-3-1",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "mistral-small-3-2",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "mistral-small-4",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "mistral-small-4-non-reasoning",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "molmo-7b-d",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "molmo2-8b",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "motif-0714",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "motif-2-12-7b",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "motif-3",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "muse-glimmer",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "muse-spark",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "muse-spark-1-1",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "muse-spark-1-2",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "muse-spark-1-3",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "muse-spark-1-3-xhigh",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "nanbeige4-1-3b",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "nemotron-3-5-lightning",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "nemotron-3-nano-omni-30b-a3b",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "nemotron-cascade-2-30b-a3b",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "nex-n2-pro",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "north-mini-code",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "nova-2-0-lite",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "nova-2-0-lite-reasoning",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "nova-2-0-lite-reasoning-low",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "nova-2-0-lite-reasoning-medium",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "nova-2-0-omni",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "nova-2-0-omni-reasoning-low",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "nova-2-0-omni-reasoning-medium",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "nova-2-0-pro",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "nova-2-0-pro-reasoning-low",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "nova-2-0-pro-reasoning-medium",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "nova-lite",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "nova-micro",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "nova-premier",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "nova-pro",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "nvidia-nemotron-3-nano-30b-a3b",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "nvidia-nemotron-3-nano-30b-a3b-reasoning",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "nvidia-nemotron-3-nano-4b",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "nvidia-nemotron-3-super-120b-a12b",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "nvidia-nemotron-3-ultra-550b-a55b",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "nvidia-nemotron-nano-12b-v2-vl",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "nvidia-nemotron-nano-12b-v2-vl-reasoning",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "nvidia-nemotron-nano-9b-v2",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "nvidia-nemotron-nano-9b-v2-reasoning",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "o1",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "o3",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "o3-mini-high",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "o4-mini",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "olmo-2-32b",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "olmo-2-7b",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "olmo-3-1-32b-instruct",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "olmo-3-1-32b-think",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "olmo-3-32b-think",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "olmo-3-7b-instruct",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "olmo-3-7b-think",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "phi-3-mini",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "phi-4",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "phi-4-mini",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "phi-4-multimodal",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "pixtral-large-2411",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "quasar-438b",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "qwen2-5-72b-instruct",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "qwen3-0.6b-instruct",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "qwen3-0.6b-instruct-reasoning",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "qwen3-1.7b-instruct",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "qwen3-1.7b-instruct-reasoning",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "qwen3-14b-instruct",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "qwen3-14b-instruct-reasoning",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "qwen3-235b-a22b-instruct",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "qwen3-235b-a22b-instruct-2507",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "qwen3-235b-a22b-instruct-2507-reasoning",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "qwen3-235b-a22b-instruct-reasoning",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "qwen3-30b-a3b-2507",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "qwen3-30b-a3b-2507-reasoning",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "qwen3-30b-a3b-instruct",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "qwen3-30b-a3b-instruct-reasoning",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "qwen3-32b-instruct",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "qwen3-32b-instruct-reasoning",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "qwen3-4b-2507-instruct",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "qwen3-4b-2507-instruct-reasoning",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "qwen3-4b-instruct-reasoning",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "qwen3-5-0-8b",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "qwen3-5-0-8b-non-reasoning",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "qwen3-5-122b-a10b",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "qwen3-5-122b-a10b-non-reasoning",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "qwen3-5-27b",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "qwen3-5-27b-non-reasoning",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "qwen3-5-2b",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "qwen3-5-2b-non-reasoning",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "qwen3-5-35b-a3b",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "qwen3-5-35b-a3b-non-reasoning",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "qwen3-5-397b-a17b",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "qwen3-5-397b-a17b-non-reasoning",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "qwen3-5-4b",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "qwen3-5-4b-non-reasoning",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "qwen3-5-9b",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "qwen3-5-9b-non-reasoning",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "qwen3-5-omni-flash",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "qwen3-5-omni-plus",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "qwen3-6-27b",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "qwen3-6-27b-non-reasoning",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "qwen3-6-35b-a3b",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "qwen3-6-35b-a3b-non-reasoning",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "qwen3-6-max",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "qwen3-6-plus",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "qwen3-7-max",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "qwen3-7-plus",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "qwen3-8-2-4t-a95b",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "qwen3-8-27b",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "qwen3-8-27b-low",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "qwen3-8-27b-medium",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "qwen3-8-27b-non-reasoning",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "qwen3-8-flash-next",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "qwen3-8-max",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "qwen3-8-max-0803",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "qwen3-8b-instruct",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "qwen3-8b-instruct-reasoning",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "qwen3-coder-30b-a3b-instruct",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "qwen3-coder-480b-a35b-instruct",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "qwen3-coder-next",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "qwen3-max",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "qwen3-max-preview",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "qwen3-max-thinking",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "qwen3-max-thinking-preview",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "qwen3-next-80b-a3b-instruct",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "qwen3-next-80b-a3b-reasoning",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "qwen3-omni-30b-a3b-instruct",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "qwen3-omni-30b-a3b-reasoning",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "qwen3-vl-235b-a22b-instruct",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "qwen3-vl-235b-a22b-reasoning",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "qwen3-vl-30b-a3b-instruct",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "qwen3-vl-30b-a3b-reasoning",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "qwen3-vl-32b-instruct",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "qwen3-vl-32b-reasoning",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "qwen3-vl-4b-instruct",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "qwen3-vl-4b-reasoning",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "qwen3-vl-8b-instruct",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "qwen3-vl-8b-reasoning",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "qwq-32b",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "reka-flash-3",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "ring-1t",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "ring-2-6-1t",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "ring-flash-2-0",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "sarvam-105b",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "sarvam-30b",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "sarvam-m-reasoning",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "seed-oss-36b-instruct",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "solar-open-100b-reasoning",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "solar-open2-250b",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "solar-pro-2",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "solar-pro-2-reasoning",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "solar-pro-3",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "solar-pro4",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "step-3-5-flash",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "step-3-5-flash-0202",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "step-3-7-flash",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "step-3-vl-10b",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "step-5",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "tiny-aya-global",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "tri-21b-think-preview",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "tri-21b-think-v0-5",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "trinity-large-thinking",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "claude-fable-5-1-max-effort",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "liveBench"
+    },
+    {
+      "alias": "claude-fable-5-max-effort",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "liveBench"
+    },
+    {
+      "alias": "claude-opus-4-5-20251101-thinking-64k-high-effort",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "liveBench"
+    },
+    {
+      "alias": "claude-opus-4-6-thinking-auto-high-effort",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "liveBench"
+    },
+    {
+      "alias": "deepseek-v4-flash",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "liveBench"
+    },
+    {
+      "alias": "deepseek-v4-flash-0731",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "liveBench"
+    },
+    {
+      "alias": "deepseek-v4-flash-vision-exp",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "liveBench"
+    },
+    {
+      "alias": "deepseek-v4-pro",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "liveBench"
+    },
+    {
+      "alias": "deepseek-v4-pro-0813",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "liveBench"
+    },
+    {
+      "alias": "deepseek-v4.1-flash-max",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "liveBench"
+    },
+    {
+      "alias": "gemini-3.1-pro-preview-high",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "liveBench"
+    },
+    {
+      "alias": "gemini-3.5-flash-lite-high",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "liveBench"
+    },
+    {
+      "alias": "glm-5.2",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "liveBench"
+    },
+    {
+      "alias": "glm-5.3",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "liveBench"
+    },
+    {
+      "alias": "glm-5.3-flash",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "liveBench"
+    },
+    {
+      "alias": "gpt-5.2-2025-12-11-high",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "liveBench"
+    },
+    {
+      "alias": "gpt-5.2-codex",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "liveBench"
+    },
+    {
+      "alias": "gpt-5.4-nano-xhigh",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "liveBench"
+    },
+    {
+      "alias": "grok-4.3",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "liveBench"
+    },
+    {
+      "alias": "grok-4.5",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "liveBench"
+    },
+    {
+      "alias": "grok-4.6",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "liveBench"
+    },
+    {
+      "alias": "grok-4.7-xhigh",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "liveBench"
+    },
+    {
+      "alias": "grok-build-0.1",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "liveBench"
+    },
+    {
+      "alias": "inkling-xhigh",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "liveBench"
+    },
+    {
+      "alias": "kimi-k2.6-thinking",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "liveBench"
+    },
+    {
+      "alias": "kimi-k2.7-code",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "liveBench"
+    },
+    {
+      "alias": "kimi-k3",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "liveBench"
+    },
+    {
+      "alias": "minimax-m3",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "liveBench"
+    },
+    {
+      "alias": "muse-spark-1.1-xhigh",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "liveBench"
+    },
+    {
+      "alias": "muse-spark-1.2-xhigh",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "liveBench"
+    },
+    {
+      "alias": "muse-spark-1.3-xhigh",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "liveBench"
+    },
+    {
+      "alias": "nemotron-3-ultra-550b-a55b",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "liveBench"
+    },
+    {
+      "alias": "ox-alpha-max",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "liveBench"
+    },
+    {
+      "alias": "qwen3.6-27b",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "liveBench"
+    },
+    {
+      "alias": "qwen3.6-plus",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "liveBench"
+    },
+    {
+      "alias": "qwen3.7-max",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "liveBench"
+    },
+    {
+      "alias": "qwen3.8-27b",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "liveBench"
+    },
+    {
+      "alias": "qwen3.8-flash-next",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "liveBench"
+    },
+    {
+      "alias": "qwen3.8-max",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "liveBench"
+    },
+    {
+      "alias": "smaug-agentic",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "liveBench"
+    },
+    {
+      "alias": "smaug-flash",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "liveBench"
+    },
+    {
+      "alias": "smaug-mini",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "liveBench"
+    },
+    {
+      "alias": "union-alpha",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "liveBench"
+    }
+  ],
+  "generatedAtUtc": "2026-09-23T08:47:43.2757343Z",
+  "diagnostics": [],
+  "runtimeFetchedAtUtc": "2026-09-23T08:34:24.561Z",
+  "runtimeAuthenticated": true,
+  "runtimeVersion": "1.0.85",
+  "changes": [
+    {
+      "model": "claude-haiku-4.5",
+      "field": "capability",
+      "previous": {
+        "asOf": "2026-09-08",
+        "capabilitySource": "copilot-cli-session-model-metadata",
+        "effortMode": "unsupported",
+        "supportedContexts": [
+          "default"
+        ],
+        "supportedEfforts": [],
+        "vision": null
+      },
+      "current": {
+        "asOf": "2026-09-23T08:34:24.561Z",
+        "capabilitySource": "copilot-sdk models.list; authenticated runtime 1.0.85",
+        "effortMode": "unsupported",
+        "supportedContexts": [
+          "default"
+        ],
+        "supportedEfforts": [],
+        "vision": true,
+        "visionSource": "copilot-sdk models.list; authenticated runtime 1.0.85"
+      }
+    },
+    {
+      "model": "claude-opus-4.8",
+      "field": "capability",
+      "previous": {
+        "asOf": "2026-09-08",
+        "capabilitySource": "copilot-cli-session-model-metadata",
+        "supportedContexts": [
+          "default",
+          "long_context"
+        ],
+        "supportedEfforts": [
+          "low",
+          "medium",
+          "high",
+          "xhigh",
+          "max"
+        ],
+        "vision": null
+      },
+      "current": {
+        "asOf": "2026-09-23T08:34:24.561Z",
+        "capabilitySource": "copilot-sdk models.list; authenticated runtime 1.0.85",
+        "effortMode": "supported",
+        "supportedContexts": [
+          "default",
+          "long_context"
+        ],
+        "supportedEfforts": [
+          "low",
+          "medium",
+          "high",
+          "xhigh",
+          "max"
+        ],
+        "vision": true,
+        "visionSource": "copilot-sdk models.list; authenticated runtime 1.0.85"
+      }
+    },
+    {
+      "model": "claude-opus-4.8-fast",
+      "field": "capability",
+      "previous": {
+        "asOf": "2026-09-08",
+        "capabilitySource": "copilot-cli-session-model-metadata",
+        "supportedContexts": [
+          "default",
+          "long_context"
+        ],
+        "supportedEfforts": [
+          "low",
+          "medium",
+          "high",
+          "xhigh",
+          "max"
+        ],
+        "vision": null
+      },
+      "current": {
+        "asOf": "2026-09-23T08:34:24.561Z",
+        "capabilitySource": "copilot-sdk models.list; authenticated runtime 1.0.85",
+        "effortMode": "supported",
+        "supportedContexts": [
+          "default",
+          "long_context"
+        ],
+        "supportedEfforts": [
+          "low",
+          "medium",
+          "high",
+          "xhigh",
+          "max"
+        ],
+        "vision": true,
+        "visionSource": "copilot-sdk models.list; authenticated runtime 1.0.85"
+      }
+    },
+    {
+      "model": "claude-opus-5",
+      "field": "capability",
+      "previous": {
+        "asOf": "2026-09-08",
+        "capabilitySource": "copilot-cli-session-model-metadata",
+        "supportedContexts": [
+          "default",
+          "long_context"
+        ],
+        "supportedEfforts": [
+          "low",
+          "medium",
+          "high",
+          "xhigh",
+          "max"
+        ],
+        "vision": true,
+        "visionSource": "https://artificialanalysis.ai/models/claude-opus-5"
+      },
+      "current": {
+        "asOf": "2026-09-23T08:34:24.561Z",
+        "capabilitySource": "copilot-sdk models.list; authenticated runtime 1.0.85",
+        "effortMode": "supported",
+        "supportedContexts": [
+          "default",
+          "long_context"
+        ],
+        "supportedEfforts": [
+          "low",
+          "medium",
+          "high",
+          "xhigh",
+          "max"
+        ],
+        "vision": true,
+        "visionSource": "copilot-sdk models.list; authenticated runtime 1.0.85"
+      }
+    },
+    {
+      "model": "claude-opus-5.5",
+      "field": "capability",
+      "previous": null,
+      "current": {
+        "asOf": "2026-09-23T08:34:24.561Z",
+        "capabilitySource": "copilot-sdk models.list; authenticated runtime 1.0.85",
+        "effortMode": "supported",
+        "supportedContexts": [
+          "default",
+          "long_context"
+        ],
+        "supportedEfforts": [
+          "low",
+          "medium",
+          "high",
+          "xhigh",
+          "max"
+        ],
+        "vision": true,
+        "visionSource": "copilot-sdk models.list; authenticated runtime 1.0.85"
+      }
+    },
+    {
+      "model": "claude-opus-5.5",
+      "field": "benchmarks",
+      "previous": null,
+      "current": {
+        "liveBench": {
+          "max": "claude-opus-5-5-max-effort",
+          "xhigh": "claude-opus-5-5-xhigh-effort"
+        }
+      }
+    },
+    {
+      "model": "claude-opus-5.5",
+      "field": "pricing",
+      "previous": null,
+      "current": "Claude Opus 5.5"
+    },
+    {
+      "model": "claude-sonnet-5",
+      "field": "capability",
+      "previous": {
+        "asOf": "2026-09-08",
+        "capabilitySource": "copilot-cli-session-model-metadata",
+        "supportedContexts": [
+          "default",
+          "long_context"
+        ],
+        "supportedEfforts": [
+          "low",
+          "medium",
+          "high",
+          "xhigh",
+          "max"
+        ],
+        "vision": true,
+        "visionSource": "https://artificialanalysis.ai/models/claude-sonnet-5"
+      },
+      "current": {
+        "asOf": "2026-09-23T08:34:24.561Z",
+        "capabilitySource": "copilot-sdk models.list; authenticated runtime 1.0.85",
+        "effortMode": "supported",
+        "supportedContexts": [
+          "default",
+          "long_context"
+        ],
+        "supportedEfforts": [
+          "low",
+          "medium",
+          "high",
+          "xhigh",
+          "max"
+        ],
+        "vision": true,
+        "visionSource": "copilot-sdk models.list; authenticated runtime 1.0.85"
+      }
+    },
+    {
+      "model": "gpt-5.4",
+      "field": "capability",
+      "previous": {
+        "asOf": "2026-09-08",
+        "capabilitySource": "copilot-cli-session-model-metadata",
+        "supportedContexts": [
+          "default",
+          "long_context"
+        ],
+        "supportedEfforts": [
+          "low",
+          "medium",
+          "high",
+          "xhigh"
+        ],
+        "vision": null
+      },
+      "current": {
+        "asOf": "2026-09-23T08:34:24.561Z",
+        "capabilitySource": "copilot-sdk models.list; authenticated runtime 1.0.85",
+        "effortMode": "supported",
+        "supportedContexts": [
+          "default",
+          "long_context"
+        ],
+        "supportedEfforts": [
+          "none",
+          "low",
+          "medium",
+          "high",
+          "xhigh"
+        ],
+        "vision": true,
+        "visionSource": "copilot-sdk models.list; authenticated runtime 1.0.85"
+      }
+    },
+    {
+      "model": "gpt-5.4-mini",
+      "field": "capability",
+      "previous": {
+        "asOf": "2026-09-08",
+        "capabilitySource": "copilot-cli-session-model-metadata",
+        "supportedContexts": [
+          "default"
+        ],
+        "supportedEfforts": [
+          "low",
+          "medium",
+          "high",
+          "xhigh"
+        ],
+        "vision": null
+      },
+      "current": {
+        "asOf": "2026-09-23T08:34:24.561Z",
+        "capabilitySource": "copilot-sdk models.list; authenticated runtime 1.0.85",
+        "effortMode": "supported",
+        "supportedContexts": [
+          "default"
+        ],
+        "supportedEfforts": [
+          "none",
+          "low",
+          "medium",
+          "high",
+          "xhigh"
+        ],
+        "vision": true,
+        "visionSource": "copilot-sdk models.list; authenticated runtime 1.0.85"
+      }
+    },
+    {
+      "model": "gpt-5.5",
+      "field": "capability",
+      "previous": {
+        "asOf": "2026-09-08",
+        "capabilitySource": "copilot-cli-session-model-metadata",
+        "supportedContexts": [
+          "default",
+          "long_context"
+        ],
+        "supportedEfforts": [
+          "low",
+          "medium",
+          "high",
+          "xhigh"
+        ],
+        "vision": null
+      },
+      "current": {
+        "asOf": "2026-09-23T08:34:24.561Z",
+        "capabilitySource": "copilot-sdk models.list; authenticated runtime 1.0.85",
+        "effortMode": "supported",
+        "supportedContexts": [
+          "default",
+          "long_context"
+        ],
+        "supportedEfforts": [
+          "none",
+          "low",
+          "medium",
+          "high",
+          "xhigh"
+        ],
+        "vision": true,
+        "visionSource": "copilot-sdk models.list; authenticated runtime 1.0.85"
+      }
+    },
+    {
+      "model": "gpt-5.6-luna",
+      "field": "capability",
+      "previous": {
+        "asOf": "2026-09-08",
+        "capabilitySource": "copilot-cli-session-model-metadata",
+        "supportedContexts": [
+          "default",
+          "long_context"
+        ],
+        "supportedEfforts": [
+          "low",
+          "medium",
+          "high",
+          "xhigh",
+          "max"
+        ],
+        "vision": null
+      },
+      "current": {
+        "asOf": "2026-09-23T08:34:24.561Z",
+        "capabilitySource": "copilot-sdk models.list; authenticated runtime 1.0.85",
+        "effortMode": "supported",
+        "supportedContexts": [
+          "default",
+          "long_context"
+        ],
+        "supportedEfforts": [
+          "none",
+          "low",
+          "medium",
+          "high",
+          "xhigh",
+          "max"
+        ],
+        "vision": true,
+        "visionSource": "copilot-sdk models.list; authenticated runtime 1.0.85"
+      }
+    },
+    {
+      "model": "gpt-5.6-sol",
+      "field": "capability",
+      "previous": {
+        "asOf": "2026-09-08",
+        "capabilitySource": "copilot-cli-session-model-metadata",
+        "supportedContexts": [
+          "default",
+          "long_context"
+        ],
+        "supportedEfforts": [
+          "low",
+          "medium",
+          "high",
+          "xhigh",
+          "max"
+        ],
+        "vision": true,
+        "visionSource": "https://artificialanalysis.ai/models/gpt-5-6-sol-medium",
+        "visionVerifiedAt": "2026-09-09"
+      },
+      "current": {
+        "asOf": "2026-09-23T08:34:24.561Z",
+        "capabilitySource": "copilot-sdk models.list; authenticated runtime 1.0.85",
+        "effortMode": "supported",
+        "supportedContexts": [
+          "default",
+          "long_context"
+        ],
+        "supportedEfforts": [
+          "none",
+          "low",
+          "medium",
+          "high",
+          "xhigh",
+          "max"
+        ],
+        "vision": true,
+        "visionSource": "copilot-sdk models.list; authenticated runtime 1.0.85"
+      }
+    },
+    {
+      "model": "gpt-5.6-terra",
+      "field": "capability",
+      "previous": {
+        "asOf": "2026-09-08",
+        "capabilitySource": "copilot-cli-session-model-metadata",
+        "supportedContexts": [
+          "default",
+          "long_context"
+        ],
+        "supportedEfforts": [
+          "low",
+          "medium",
+          "high",
+          "xhigh",
+          "max"
+        ],
+        "vision": null
+      },
+      "current": {
+        "asOf": "2026-09-23T08:34:24.561Z",
+        "capabilitySource": "copilot-sdk models.list; authenticated runtime 1.0.85",
+        "effortMode": "supported",
+        "supportedContexts": [
+          "default",
+          "long_context"
+        ],
+        "supportedEfforts": [
+          "none",
+          "low",
+          "medium",
+          "high",
+          "xhigh",
+          "max"
+        ],
+        "vision": true,
+        "visionSource": "copilot-sdk models.list; authenticated runtime 1.0.85"
+      }
+    },
+    {
+      "model": "gpt-6-astra",
+      "field": "capability",
+      "previous": {
+        "asOf": "2026-09-08",
+        "capabilitySource": "copilot-cli-session-model-metadata",
+        "supportedContexts": [
+          "default",
+          "long_context"
+        ],
+        "supportedEfforts": [
+          "low",
+          "medium",
+          "high",
+          "xhigh",
+          "max"
+        ],
+        "vision": true,
+        "visionSource": "https://artificialanalysis.ai/models/gpt-6-astra"
+      },
+      "current": {
+        "asOf": "2026-09-23T08:34:24.561Z",
+        "capabilitySource": "copilot-sdk models.list; authenticated runtime 1.0.85",
+        "effortMode": "supported",
+        "supportedContexts": [
+          "default",
+          "long_context"
+        ],
+        "supportedEfforts": [
+          "low",
+          "medium",
+          "high",
+          "xhigh",
+          "max"
+        ],
+        "vision": true,
+        "visionSource": "copilot-sdk models.list; authenticated runtime 1.0.85"
+      }
+    },
+    {
+      "model": "gpt-6-luna",
+      "field": "capability",
+      "previous": null,
+      "current": {
+        "asOf": "2026-09-23T08:34:24.561Z",
+        "capabilitySource": "copilot-sdk models.list; authenticated runtime 1.0.85",
+        "effortMode": "supported",
+        "supportedContexts": [
+          "default",
+          "long_context"
+        ],
+        "supportedEfforts": [
+          "none",
+          "low",
+          "medium",
+          "high",
+          "xhigh",
+          "max"
+        ],
+        "vision": true,
+        "visionSource": "copilot-sdk models.list; authenticated runtime 1.0.85"
+      }
+    },
+    {
+      "model": "gpt-6-luna",
+      "field": "benchmarks",
+      "previous": null,
+      "current": {
+        "artificialAnalysis": {
+          "high": "gpt-6-luna-high",
+          "low": "gpt-6-luna-low",
+          "max": "gpt-6-luna",
+          "medium": "gpt-6-luna-medium",
+          "xhigh": "gpt-6-luna-xhigh"
+        },
+        "liveBench": {
+          "max": "gpt-6-luna-max"
+        }
+      }
+    },
+    {
+      "model": "gpt-6-luna",
+      "field": "pricing",
+      "previous": null,
+      "current": "GPT-6 Luna"
+    },
+    {
+      "model": "gpt-6-sol",
+      "field": "capability",
+      "previous": null,
+      "current": {
+        "asOf": "2026-09-23T08:34:24.561Z",
+        "capabilitySource": "copilot-sdk models.list; authenticated runtime 1.0.85",
+        "effortMode": "supported",
+        "supportedContexts": [
+          "default",
+          "long_context"
+        ],
+        "supportedEfforts": [
+          "none",
+          "low",
+          "medium",
+          "high",
+          "xhigh",
+          "max"
+        ],
+        "vision": true,
+        "visionSource": "copilot-sdk models.list; authenticated runtime 1.0.85"
+      }
+    },
+    {
+      "model": "gpt-6-sol",
+      "field": "benchmarks",
+      "previous": null,
+      "current": {
+        "artificialAnalysis": {
+          "high": "gpt-6-sol-high",
+          "low": "gpt-6-sol-low",
+          "max": "gpt-6-sol",
+          "medium": "gpt-6-sol-medium",
+          "xhigh": "gpt-6-sol-xhigh"
+        },
+        "liveBench": {
+          "max": "gpt-6-sol-max"
+        }
+      }
+    },
+    {
+      "model": "gpt-6-sol",
+      "field": "pricing",
+      "previous": null,
+      "current": "GPT-6 Sol"
+    },
+    {
+      "model": "mai-code-1.1-flash",
+      "field": "capability",
+      "previous": {
+        "asOf": "2026-09-08",
+        "capabilitySource": "copilot-cli-session-model-metadata",
+        "supportedContexts": [
+          "default"
+        ],
+        "supportedEfforts": [
+          "low",
+          "medium",
+          "high"
+        ],
+        "vision": null
+      },
+      "current": {
+        "asOf": "2026-09-23T08:34:24.561Z",
+        "capabilitySource": "copilot-sdk models.list; authenticated runtime 1.0.85",
+        "effortMode": "supported",
+        "supportedContexts": [
+          "default"
+        ],
+        "supportedEfforts": [
+          "low",
+          "medium",
+          "high"
+        ],
+        "vision": true,
+        "visionSource": "copilot-sdk models.list; authenticated runtime 1.0.85"
+      }
+    }
+  ],
+  "schemaVersion": 1,
+  "runtimeModels": [
+    {
+      "maxContextTokens": 0,
+      "name": "Auto",
+      "id": "auto"
+    },
+    {
+      "policyState": "enabled",
+      "toolCalls": true,
+      "maxContextTokens": 200000,
+      "id": "claude-haiku-4.5",
+      "vision": true,
+      "tokenPrices": {
+        "batchSize": 1000000,
+        "cacheReadPrice": 10,
+        "inputPrice": 100,
+        "cacheWritePrice": 125,
+        "cachePrice": 10,
+        "outputPrice": 500
+      },
+      "name": "Claude Haiku 4.5",
+      "reasoningEffort": false
+    },
+    {
+      "policyState": "enabled",
+      "toolCalls": true,
+      "maxContextTokens": 1000000,
+      "supportedReasoningEfforts": [
+        "low",
+        "medium",
+        "high",
+        "xhigh",
+        "max"
+      ],
+      "id": "claude-opus-4.8",
+      "vision": true,
+      "tokenPrices": {
+        "longContext": {
+          "cacheReadPrice": 50,
+          "contextMax": 936000,
+          "inputPrice": 500,
+          "cacheWrite1hPrice": 1000,
+          "maxPromptTokens": 936000,
+          "cacheWritePrice": 625,
+          "cachePrice": 50,
+          "outputPrice": 2500
+        },
+        "batchSize": 1000000,
+        "cacheReadPrice": 50,
+        "contextMax": 200000,
+        "inputPrice": 500,
+        "cacheWrite1hPrice": 1000,
+        "maxPromptTokens": 200000,
+        "cacheWritePrice": 625,
+        "cachePrice": 50,
+        "outputPrice": 2500
+      },
+      "name": "Claude Opus 4.8",
+      "reasoningEffort": true
+    },
+    {
+      "policyState": "enabled",
+      "toolCalls": true,
+      "maxContextTokens": 1000000,
+      "supportedReasoningEfforts": [
+        "low",
+        "medium",
+        "high",
+        "xhigh",
+        "max"
+      ],
+      "id": "claude-opus-4.8-fast",
+      "vision": true,
+      "tokenPrices": {
+        "longContext": {
+          "cacheReadPrice": 100,
+          "contextMax": 936000,
+          "inputPrice": 1000,
+          "cacheWrite1hPrice": 2000,
+          "maxPromptTokens": 936000,
+          "cacheWritePrice": 1250,
+          "cachePrice": 100,
+          "outputPrice": 5000
+        },
+        "batchSize": 1000000,
+        "cacheReadPrice": 100,
+        "contextMax": 200000,
+        "inputPrice": 1000,
+        "cacheWrite1hPrice": 2000,
+        "maxPromptTokens": 200000,
+        "cacheWritePrice": 1250,
+        "cachePrice": 100,
+        "outputPrice": 5000
+      },
+      "name": "Claude Opus 4.8 (fast mode)",
+      "reasoningEffort": true
+    },
+    {
+      "policyState": "enabled",
+      "toolCalls": true,
+      "maxContextTokens": 1000000,
+      "supportedReasoningEfforts": [
+        "low",
+        "medium",
+        "high",
+        "xhigh",
+        "max"
+      ],
+      "id": "claude-opus-5",
+      "vision": true,
+      "tokenPrices": {
+        "longContext": {
+          "cacheReadPrice": 50,
+          "contextMax": 936000,
+          "inputPrice": 500,
+          "cacheWrite1hPrice": 1000,
+          "maxPromptTokens": 936000,
+          "cacheWritePrice": 625,
+          "cachePrice": 50,
+          "outputPrice": 2500
+        },
+        "batchSize": 1000000,
+        "cacheReadPrice": 50,
+        "contextMax": 200000,
+        "inputPrice": 500,
+        "cacheWrite1hPrice": 1000,
+        "maxPromptTokens": 200000,
+        "cacheWritePrice": 625,
+        "cachePrice": 50,
+        "outputPrice": 2500
+      },
+      "name": "Claude Opus 5",
+      "reasoningEffort": true
+    },
+    {
+      "policyState": "enabled",
+      "toolCalls": true,
+      "maxContextTokens": 1000000,
+      "supportedReasoningEfforts": [
+        "low",
+        "medium",
+        "high",
+        "xhigh",
+        "max"
+      ],
+      "id": "claude-opus-5.5",
+      "vision": true,
+      "tokenPrices": {
+        "longContext": {
+          "cacheReadPrice": 20,
+          "contextMax": 872000,
+          "inputPrice": 400,
+          "maxPromptTokens": 872000,
+          "cacheWritePrice": 500,
+          "cachePrice": 20,
+          "outputPrice": 2000
+        },
+        "batchSize": 1000000,
+        "cacheReadPrice": 20,
+        "contextMax": 200000,
+        "inputPrice": 400,
+        "maxPromptTokens": 200000,
+        "cacheWritePrice": 500,
+        "cachePrice": 20,
+        "outputPrice": 2000
+      },
+      "name": "Claude Opus 5.5",
+      "reasoningEffort": true
+    },
+    {
+      "policyState": "enabled",
+      "toolCalls": true,
+      "maxContextTokens": 1000000,
+      "supportedReasoningEfforts": [
+        "low",
+        "medium",
+        "high",
+        "xhigh",
+        "max"
+      ],
+      "id": "claude-sonnet-5",
+      "vision": true,
+      "tokenPrices": {
+        "longContext": {
+          "cacheReadPrice": 20,
+          "contextMax": 936000,
+          "inputPrice": 200,
+          "cacheWrite1hPrice": 400,
+          "maxPromptTokens": 936000,
+          "cacheWritePrice": 250,
+          "cachePrice": 20,
+          "outputPrice": 1000
+        },
+        "batchSize": 1000000,
+        "cacheReadPrice": 20,
+        "contextMax": 200000,
+        "inputPrice": 200,
+        "cacheWrite1hPrice": 400,
+        "maxPromptTokens": 200000,
+        "cacheWritePrice": 250,
+        "cachePrice": 20,
+        "outputPrice": 1000
+      },
+      "name": "Claude Sonnet 5",
+      "reasoningEffort": true
+    },
+    {
+      "toolCalls": true,
+      "maxContextTokens": 400000,
+      "supportedReasoningEfforts": [
+        "low",
+        "medium",
+        "high",
+        "xhigh"
+      ],
+      "id": "gpt-5.3-codex",
+      "vision": true,
+      "tokenPrices": {
+        "batchSize": 1000000,
+        "cacheReadPrice": 17.5,
+        "contextMax": 272000,
+        "inputPrice": 175,
+        "maxPromptTokens": 272000,
+        "cacheWritePrice": 0,
+        "cachePrice": 17.5,
+        "outputPrice": 1400
+      },
+      "name": "GPT-5.3-Codex",
+      "reasoningEffort": true
+    },
+    {
+      "policyState": "enabled",
+      "toolCalls": true,
+      "maxContextTokens": 1050000,
+      "supportedReasoningEfforts": [
+        "none",
+        "low",
+        "medium",
+        "high",
+        "xhigh"
+      ],
+      "id": "gpt-5.4",
+      "vision": true,
+      "tokenPrices": {
+        "longContext": {
+          "cacheReadPrice": 50,
+          "contextMax": 922000,
+          "inputPrice": 500,
+          "maxPromptTokens": 922000,
+          "cacheWritePrice": 0,
+          "cachePrice": 50,
+          "outputPrice": 2250
+        },
+        "batchSize": 1000000,
+        "cacheReadPrice": 25,
+        "contextMax": 272000,
+        "inputPrice": 250,
+        "maxPromptTokens": 272000,
+        "cacheWritePrice": 0,
+        "cachePrice": 25,
+        "outputPrice": 1500
+      },
+      "name": "GPT-5.4",
+      "reasoningEffort": true
+    },
+    {
+      "policyState": "enabled",
+      "toolCalls": true,
+      "maxContextTokens": 400000,
+      "supportedReasoningEfforts": [
+        "none",
+        "low",
+        "medium",
+        "high",
+        "xhigh"
+      ],
+      "id": "gpt-5.4-mini",
+      "vision": true,
+      "tokenPrices": {
+        "batchSize": 1000000,
+        "cacheReadPrice": 7.5,
+        "contextMax": 272000,
+        "inputPrice": 75,
+        "maxPromptTokens": 272000,
+        "cacheWritePrice": 0,
+        "cachePrice": 7.5,
+        "outputPrice": 450
+      },
+      "name": "GPT-5.4 mini",
+      "reasoningEffort": true
+    },
+    {
+      "policyState": "enabled",
+      "toolCalls": true,
+      "maxContextTokens": 1050000,
+      "supportedReasoningEfforts": [
+        "none",
+        "low",
+        "medium",
+        "high",
+        "xhigh"
+      ],
+      "id": "gpt-5.5",
+      "vision": true,
+      "tokenPrices": {
+        "longContext": {
+          "cacheReadPrice": 100,
+          "contextMax": 922000,
+          "inputPrice": 1000,
+          "maxPromptTokens": 922000,
+          "cacheWritePrice": 0,
+          "cachePrice": 100,
+          "outputPrice": 4500
+        },
+        "batchSize": 1000000,
+        "cacheReadPrice": 50,
+        "contextMax": 272000,
+        "inputPrice": 500,
+        "maxPromptTokens": 272000,
+        "cacheWritePrice": 0,
+        "cachePrice": 50,
+        "outputPrice": 3000
+      },
+      "name": "GPT-5.5",
+      "reasoningEffort": true
+    },
+    {
+      "policyState": "enabled",
+      "toolCalls": true,
+      "maxContextTokens": 1050000,
+      "supportedReasoningEfforts": [
+        "none",
+        "low",
+        "medium",
+        "high",
+        "xhigh",
+        "max"
+      ],
+      "id": "gpt-5.6-luna",
+      "vision": true,
+      "tokenPrices": {
+        "longContext": {
+          "cacheReadPrice": 4,
+          "contextMax": 922000,
+          "inputPrice": 40,
+          "maxPromptTokens": 922000,
+          "cacheWritePrice": 50,
+          "cachePrice": 4,
+          "outputPrice": 180
+        },
+        "batchSize": 1000000,
+        "cacheReadPrice": 2,
+        "contextMax": 200000,
+        "inputPrice": 20,
+        "maxPromptTokens": 200000,
+        "cacheWritePrice": 25,
+        "cachePrice": 2,
+        "outputPrice": 120
+      },
+      "name": "GPT-5.6 Luna",
+      "reasoningEffort": true
+    },
+    {
+      "policyState": "enabled",
+      "toolCalls": true,
+      "maxContextTokens": 1050000,
+      "supportedReasoningEfforts": [
+        "none",
+        "low",
+        "medium",
+        "high",
+        "xhigh",
+        "max"
+      ],
+      "id": "gpt-5.6-sol",
+      "vision": true,
+      "tokenPrices": {
+        "longContext": {
+          "cacheReadPrice": 80,
+          "contextMax": 922000,
+          "inputPrice": 800,
+          "maxPromptTokens": 922000,
+          "cacheWritePrice": 1000,
+          "cachePrice": 80,
+          "outputPrice": 3000
+        },
+        "batchSize": 1000000,
+        "cacheReadPrice": 40,
+        "contextMax": 272000,
+        "inputPrice": 400,
+        "maxPromptTokens": 272000,
+        "cacheWritePrice": 500,
+        "cachePrice": 40,
+        "outputPrice": 2000
+      },
+      "name": "GPT-5.6 Sol",
+      "reasoningEffort": true
+    },
+    {
+      "policyState": "enabled",
+      "toolCalls": true,
+      "maxContextTokens": 1050000,
+      "supportedReasoningEfforts": [
+        "none",
+        "low",
+        "medium",
+        "high",
+        "xhigh",
+        "max"
+      ],
+      "id": "gpt-5.6-terra",
+      "vision": true,
+      "tokenPrices": {
+        "longContext": {
+          "cacheReadPrice": 40,
+          "contextMax": 922000,
+          "inputPrice": 400,
+          "maxPromptTokens": 922000,
+          "cacheWritePrice": 500,
+          "cachePrice": 40,
+          "outputPrice": 1800
+        },
+        "batchSize": 1000000,
+        "cacheReadPrice": 20,
+        "contextMax": 272000,
+        "inputPrice": 200,
+        "maxPromptTokens": 272000,
+        "cacheWritePrice": 250,
+        "cachePrice": 20,
+        "outputPrice": 1200
+      },
+      "name": "GPT-5.6 Terra",
+      "reasoningEffort": true
+    },
+    {
+      "policyState": "enabled",
+      "toolCalls": true,
+      "maxContextTokens": 1050000,
+      "supportedReasoningEfforts": [
+        "low",
+        "medium",
+        "high",
+        "xhigh",
+        "max"
+      ],
+      "id": "gpt-6-astra",
+      "vision": true,
+      "tokenPrices": {
+        "longContext": {
+          "cacheReadPrice": 200,
+          "contextMax": 1050000,
+          "inputPrice": 2000,
+          "maxPromptTokens": 1050000,
+          "cacheWritePrice": 2500,
+          "cachePrice": 200,
+          "outputPrice": 7500
+        },
+        "batchSize": 1000000,
+        "cacheReadPrice": 100,
+        "contextMax": 272000,
+        "inputPrice": 1000,
+        "maxPromptTokens": 272000,
+        "cacheWritePrice": 1250,
+        "cachePrice": 100,
+        "outputPrice": 5000
+      },
+      "name": "GPT-6 Astra",
+      "reasoningEffort": true
+    },
+    {
+      "policyState": "enabled",
+      "toolCalls": true,
+      "maxContextTokens": 1000000,
+      "supportedReasoningEfforts": [
+        "none",
+        "low",
+        "medium",
+        "high",
+        "xhigh",
+        "max"
+      ],
+      "id": "gpt-6-luna",
+      "vision": true,
+      "tokenPrices": {
+        "longContext": {
+          "cacheReadPrice": 2,
+          "contextMax": 872000,
+          "inputPrice": 20,
+          "maxPromptTokens": 872000,
+          "cacheWritePrice": 25,
+          "cachePrice": 2,
+          "outputPrice": 75
+        },
+        "batchSize": 1000000,
+        "cacheReadPrice": 1,
+        "contextMax": 272000,
+        "inputPrice": 10,
+        "maxPromptTokens": 272000,
+        "cacheWritePrice": 12.5,
+        "cachePrice": 1,
+        "outputPrice": 50
+      },
+      "name": "GPT-6 Luna",
+      "reasoningEffort": true
+    },
+    {
+      "policyState": "enabled",
+      "toolCalls": true,
+      "maxContextTokens": 1000000,
+      "supportedReasoningEfforts": [
+        "none",
+        "low",
+        "medium",
+        "high",
+        "xhigh",
+        "max"
+      ],
+      "id": "gpt-6-sol",
+      "vision": true,
+      "tokenPrices": {
+        "longContext": {
+          "cacheReadPrice": 40,
+          "contextMax": 872000,
+          "inputPrice": 400,
+          "maxPromptTokens": 872000,
+          "cacheWritePrice": 500,
+          "cachePrice": 40,
+          "outputPrice": 1500
+        },
+        "batchSize": 1000000,
+        "cacheReadPrice": 20,
+        "contextMax": 272000,
+        "inputPrice": 200,
+        "maxPromptTokens": 272000,
+        "cacheWritePrice": 250,
+        "cachePrice": 20,
+        "outputPrice": 1000
+      },
+      "name": "GPT-6 Sol",
+      "reasoningEffort": true
+    },
+    {
+      "toolCalls": true,
+      "maxContextTokens": 500000,
+      "supportedReasoningEfforts": [
+        "low",
+        "medium",
+        "high"
+      ],
+      "id": "grok-4.5",
+      "vision": true,
+      "tokenPrices": {
+        "longContext": {
+          "cacheReadPrice": 100,
+          "contextMax": 500000,
+          "inputPrice": 400,
+          "maxPromptTokens": 500000,
+          "cacheWritePrice": 0,
+          "cachePrice": 100,
+          "outputPrice": 1200
+        },
+        "batchSize": 1000000,
+        "cacheReadPrice": 50,
+        "contextMax": 200000,
+        "inputPrice": 200,
+        "maxPromptTokens": 200000,
+        "cacheWritePrice": 0,
+        "cachePrice": 50,
+        "outputPrice": 600
+      },
+      "name": "Grok 4.5",
+      "reasoningEffort": true
+    },
+    {
+      "toolCalls": true,
+      "maxContextTokens": 500000,
+      "supportedReasoningEfforts": [
+        "low",
+        "medium",
+        "high",
+        "xhigh"
+      ],
+      "id": "grok-4.6",
+      "vision": true,
+      "tokenPrices": {
+        "longContext": {
+          "cacheReadPrice": 100,
+          "contextMax": 500000,
+          "inputPrice": 400,
+          "maxPromptTokens": 500000,
+          "cacheWritePrice": 0,
+          "cachePrice": 100,
+          "outputPrice": 1200
+        },
+        "batchSize": 1000000,
+        "cacheReadPrice": 50,
+        "contextMax": 200000,
+        "inputPrice": 200,
+        "maxPromptTokens": 200000,
+        "cacheWritePrice": 0,
+        "cachePrice": 50,
+        "outputPrice": 600
+      },
+      "name": "Grok 4.6",
+      "reasoningEffort": true
+    },
+    {
+      "toolCalls": true,
+      "maxContextTokens": 500000,
+      "supportedReasoningEfforts": [
+        "low",
+        "medium",
+        "high"
+      ],
+      "id": "grok-4.7",
+      "vision": true,
+      "tokenPrices": {
+        "longContext": {
+          "cacheReadPrice": 100,
+          "contextMax": 500000,
+          "inputPrice": 400,
+          "maxPromptTokens": 500000,
+          "cacheWritePrice": 0,
+          "cachePrice": 100,
+          "outputPrice": 1200
+        },
+        "batchSize": 1000000,
+        "cacheReadPrice": 50,
+        "contextMax": 200000,
+        "inputPrice": 200,
+        "maxPromptTokens": 200000,
+        "cacheWritePrice": 0,
+        "cachePrice": 50,
+        "outputPrice": 600
+      },
+      "name": "Grok 4.7",
+      "reasoningEffort": true
+    },
+    {
+      "policyState": "enabled",
+      "toolCalls": true,
+      "maxContextTokens": 256000,
+      "supportedReasoningEfforts": [
+        "low",
+        "medium",
+        "high"
+      ],
+      "id": "mai-code-1.1-flash",
+      "vision": true,
+      "tokenPrices": {
+        "batchSize": 1000000,
+        "cacheReadPrice": 2,
+        "contextMax": 128000,
+        "inputPrice": 20,
+        "maxPromptTokens": 128000,
+        "cacheWritePrice": 25,
+        "cachePrice": 2,
+        "outputPrice": 120
+      },
+      "name": "MAI-Code-1.1-Flash",
+      "reasoningEffort": true
+    }
+  ]
+}
