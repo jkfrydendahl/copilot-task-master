@@ -117,6 +117,7 @@ Run-Test "Offline review uses same-run pricing, preserves profiles and writes de
 Run-Test "Workflow persists price updates and runs all new suites" {
     $workflow=Get-Content (Join-Path $repo ".github\workflows\monthly-task-profile-review.yml") -Raw
     Assert-True ($workflow -match 'data/model-pricing-snapshot.json') "Missing pricing PR path"
+    Assert-True ($workflow -match 'run:\s*\.\\scripts\\review-task-profiles\.ps1 -RequireFreshDiscovery') "Action does not enforce discovery freshness"
     foreach($term in @("data/model-discovery-snapshot.json","npm ci","data/model-onboarding-snapshot.json",
         "config/model-capabilities.json","config/model-ranking-aliases.json","config/model-pricing-aliases.json")){
         Assert-True ($workflow.Contains($term)) "Missing onboarding workflow integration: $term"

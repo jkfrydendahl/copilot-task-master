@@ -1,3 +1,5 @@
+param([switch]$RequireFreshDiscovery)
+
 Set-StrictMode -Version Latest
 $ErrorActionPreference = "Stop"
 . (Join-Path $PSScriptRoot "model-data-common.ps1")
@@ -23,9 +25,15 @@ function Invoke-TaskProfileReview {
         [hashtable]$Sources = $null,
         [scriptblock]$FetchPricing = { param($url) Invoke-TextFetch -Url $url },
         [switch]$ForceImmediateApply = ([string]$env:FORCE_BENCHMARK_CONSENSUS -match '^(?i:true|1)$'),
+        [switch]$RequireFreshDiscovery,
         [datetime]$NowUtc = [datetime]::UtcNow
     )
     $policy = Get-ModelPolicyConfig (Join-Path $RepoRoot "config\model-policy.json")
+    if ($RequireFreshDiscovery) {
+        $discovery=Read-ModelDiscoverySnapshot -Path (Join-Path $RepoRoot "data\model-discovery-snapshot.json") `
+            -MaxAgeDays $policy.consensusPolicy.discoveryFreshnessDays -NowUtc $NowUtc
+        if ($discovery.status -ne "valid") { throw $discovery.message }
+    }
     $capabilityCatalog = Get-ModelCapabilitiesCatalog (Join-Path $RepoRoot "config\model-capabilities.json")
     $capabilities = $capabilityCatalog.models
     $aliasConfig = Read-ModelConfig (Join-Path $RepoRoot "config\model-ranking-aliases.json") 2
@@ -53,6 +61,9 @@ function Invoke-TaskProfileReview {
         }
     }
     $useDiscoverySnapshot=$null -eq $Availability
+    if ($RequireFreshDiscovery -and -not $useDiscoverySnapshot) {
+        throw "Fresh discovery enforcement requires the committed local discovery snapshot, not injected availability."
+    }
     if ($useDiscoverySnapshot -and $null -ne $RuntimeCatalog) {
         throw "Injected runtime metadata requires an explicit Availability object; normal reviews consume the local discovery snapshot."
     }
@@ -104,8 +115,12 @@ function Invoke-TaskProfileReview {
         }
     }
     if($useDiscoverySnapshot){
+        # Recheck after fetching: metadata can expire while public sources are loading.
         $discovery=Read-ModelDiscoverySnapshot -Path (Join-Path $RepoRoot "data\model-discovery-snapshot.json") `
             -MaxAgeDays $policy.consensusPolicy.discoveryFreshnessDays -NowUtc $NowUtc
+        if ($RequireFreshDiscovery -and $discovery.status -ne "valid") {
+            throw $discovery.message
+        }
         $Availability=$discovery.availability
         $RuntimeCatalog=$discovery.runtime
     }
@@ -235,4 +250,4 @@ function Invoke-TaskProfileReview {
     }
 }
 
-if ($MyInvocation.InvocationName -ne '.') { Invoke-TaskProfileReview | Out-Null }
+if ($MyInvocation.InvocationName -ne '.') { Invoke-TaskProfileReview -RequireFreshDiscovery:$RequireFreshDiscovery | Out-Null }

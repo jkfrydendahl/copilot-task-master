@@ -253,8 +253,11 @@ allowlisted model metadata, never credentials or account identity, and runs no i
 A failed local refresh does not overwrite a previously valid snapshot.
 
 The snapshot is valid for **7 days**, configured by `consensusPolicy.discoveryFreshnessDays`.
-Missing, invalid, future-dated or expired metadata **freezes all profile changes, even with force**.
-The Action can still refresh public pricing/benchmarks and publish an explanatory report.
+Missing, invalid, future-dated or expired metadata **fails the Action, even with force**.
+The review step uses `-RequireFreshDiscovery` and exits with an error explaining how to
+refresh and push the metadata. No review results are written and the PR step is skipped.
+Local reviews without this switch can still refresh public pricing/benchmarks and generate
+an explanatory report, but all profile changes remain frozen when discovery is invalid.
 Refresh and push metadata before a manual or scheduled review; the monthly schedule does not
 renew this seven-day validity. Availability is explicitly **locally verified at the recorded time**,
 not live-verified by the Action. Access changes after capture cannot be detected remotely.

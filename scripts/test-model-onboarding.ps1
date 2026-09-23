@@ -269,8 +269,8 @@ Run-Test "Local refresh and remote review use a sanitized persistent snapshot wi
         Assert-True ($failed -and (Get-Content $path -Raw) -ceq $before) "Failed refresh replaced good snapshot"
         function Get-RuntimeModelCatalog {throw "Remote review must not authenticate"}
         function Get-ModelAvailability {throw "Remote review must not discover accounts"}
-        foreach($days in @(1,2)){
-            $r=Invoke-TaskProfileReview -RepoRoot $root -Sources $f.Sources -FetchPricing {param($u)$f.PricingFetch} -ForceImmediateApply -NowUtc $now.AddDays($days)
+        foreach($days in @(1,2,7)){
+            $r=Invoke-TaskProfileReview -RepoRoot $root -Sources $f.Sources -FetchPricing {param($u)$f.PricingFetch} -ForceImmediateApply -RequireFreshDiscovery -NowUtc $now.AddDays($days)
             Assert-True ($r.results[0].finalModel -eq "future-1.0") "Committed local metadata not used"
             $caps=Get-ModelCapabilitiesCatalog (Join-Path $root "config\model-capabilities.json")
             Assert-True ($caps.models["future-1.0"].asOf -eq "2026-09-23Z") "Remote review renewed capability age"
@@ -289,9 +289,64 @@ Run-Test "Local refresh and remote review use a sanitized persistent snapshot wi
         Assert-True (-not $r.results[0].resolution.applied -and $r.onboarding.discoverySnapshot.status -eq "missing") "Missing snapshot authorized changes"
         $report=Get-Content (Join-Path $root "reports\task-profile-review.md") -Raw
         Assert-True ($report.Contains("not live-verified") -and $report.Contains("7 days")) "Recorded availability presented as live"
+        $future=ConvertFrom-JsonAsHashtableCompat $before
+        $future.observedAtUtc=$now.AddDays(1).ToString("o")
+        $future.runtime.fetchedAtUtc=$future.observedAtUtc
+        foreach($case in @(
+            @{status="expired";json=$before;at=$now.AddDays(7).AddSeconds(1)},
+            @{status="invalid";json="{broken";at=$now},
+            @{status="invalid";json=($future | ConvertTo-Json -Depth 15);at=$now},
+            @{status="missing";json=$null;at=$now}
+        )){
+            if($null -eq $case.json){
+                if(Test-Path -LiteralPath $path){Remove-Item -LiteralPath $path}
+            }else{Set-Content -LiteralPath $path -Value $case.json}
+            $filesBefore=@(Get-ChildItem -LiteralPath $root -File -Recurse | Get-FileHash | Select-Object Path,Hash)
+            foreach($force in @($false,$true)){
+                $message=$null
+                try{
+                    Invoke-TaskProfileReview -RepoRoot $root -Sources $f.Sources -FetchPricing {param($u)$f.PricingFetch} `
+                        -RequireFreshDiscovery -ForceImmediateApply:$force -NowUtc $case.at | Out-Null
+                }catch{$message=$_.Exception.Message}
+                Assert-True ($null -ne $message -and $message.Contains("snapshot is $($case.status)") -and
+                    $message.Contains("refresh-model-catalog.ps1") -and $message.Contains("commit and push")) "Strict review did not fail with actionable discovery guidance"
+                $filesAfter=@(Get-ChildItem -LiteralPath $root -File -Recurse | Get-FileHash | Select-Object Path,Hash)
+                Assert-True ((Get-ModelDataFingerprint $filesBefore) -eq (Get-ModelDataFingerprint $filesAfter)) "Strict discovery failure wrote review files"
+            }
+        }
     }finally{
         foreach($file in @(Get-ChildItem -LiteralPath $root -File -Recurse)){Remove-Item -LiteralPath $file.FullName}
         foreach($dir in @("config","data","reports")){Remove-Item -LiteralPath (Join-Path $root $dir)}
+        Remove-Item -LiteralPath $root
+    }
+}
+Run-Test "Strict review entry point exits nonzero before fetching or writing when discovery is unusable" {
+    $root=Join-Path ([IO.Path]::GetTempPath()) ([guid]::NewGuid().ToString("N"))
+    foreach($dir in @("scripts","config","data")){New-Item -ItemType Directory (Join-Path $root $dir) -Force | Out-Null}
+    try{
+        Get-ChildItem -LiteralPath $PSScriptRoot -Filter "*.ps1" -File | Copy-Item -Destination (Join-Path $root "scripts")
+        Copy-Item (Join-Path $PSScriptRoot "..\config\model-policy.json") (Join-Path $root "config")
+        $f=New-OnboardingFixture
+        $snapshot=New-ModelDiscoverySnapshot $f.Availability $f.RuntimeCatalog
+        $expired=[datetime]::UtcNow.AddDays(-8).ToString("o")
+        $snapshot.observedAtUtc=$expired
+        $snapshot.runtime.fetchedAtUtc=$expired
+        $path=Join-Path $root "data\model-discovery-snapshot.json"
+        foreach($case in @(
+            @{status="missing";json=$null},
+            @{status="invalid";json="{broken"},
+            @{status="expired";json=($snapshot | ConvertTo-Json -Depth 15)}
+        )){
+            if($null -ne $case.json){Set-Content -LiteralPath $path -Value $case.json}
+            $output=(& (Get-Process -Id $PID).Path -NoProfile -File (Join-Path $root "scripts\review-task-profiles.ps1") -RequireFreshDiscovery 2>&1 | Out-String)
+            Assert-True ($LASTEXITCODE -ne 0) "Strict command returned success for $($case.status) discovery"
+            Assert-True ($output.Contains("snapshot is $($case.status)") -and $output.Contains("refresh-model-catalog.ps1")) "Strict command lost actionable discovery error"
+        }
+        Assert-True (-not (Test-Path (Join-Path $root "reports")) -and
+            -not (Test-Path (Join-Path $root "data\model-pricing-snapshot.json"))) "Strict command wrote results"
+    }finally{
+        foreach($file in @(Get-ChildItem -LiteralPath $root -File -Recurse)){Remove-Item -LiteralPath $file.FullName}
+        foreach($dir in @("scripts","config","data")){Remove-Item -LiteralPath (Join-Path $root $dir)}
         Remove-Item -LiteralPath $root
     }
 }

@@ -44,7 +44,7 @@ jobs:
 
       - name: Review using committed local model metadata
         shell: pwsh
-        run: .\scripts\review-task-profiles.ps1
+        run: .\scripts\review-task-profiles.ps1 -RequireFreshDiscovery
         env:
           GH_TOKEN: ${{ github.token }}
           FORCE_BENCHMARK_CONSENSUS: ${{ github.event_name == 'workflow_dispatch' && inputs.force_benchmark_consensus || 'false' }}
@@ -70,7 +70,8 @@ jobs:
 
             Uses committed `data/model-discovery-snapshot.json`, refreshed locally
             using the user's own credentials. Missing, invalid or expired discovery
-            metadata blocks profile changes, including forced runs.
+            metadata fails the Action before results are written or a PR is updated,
+            including forced runs.
 
             Includes:
             - current profile matrix
