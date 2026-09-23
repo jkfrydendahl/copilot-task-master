@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 3,
+  "schemaVersion": 4,
   "denylist": [
     "claude-fable-5"
   ],
@@ -53,13 +53,15 @@
     "deep-reasoning": { "inputCeilingPerMillion": 10, "outputCeilingPerMillion": 45, "requiresVision": false, "requiresCliAgent": true, "costSensitive": true }
   },
   "consensusPolicy": {
+    "discoveryFreshnessDays": 7,
     "staleAfterDays": 45,
     "capabilityFreshnessDays": 60,
     "pricingFreshnessDays": 45,
     "benchmarkMaxPublicationAgeDays": 90
   },
   "selectionPolicy": {
-    "version": 8,
+    "version": 12,
+    "costTieBreak": "newest_verified_release",
     "referenceInputTokens": 1000000,
     "referenceOutputTokens": 100000,
     "referenceUsageDescription": "Aggregate uncached usage across requests within the selected context tier, not a single 1M-token request or predicted task cost. Cache reads/writes are excluded.",
@@ -67,35 +69,61 @@
       "orchestrator": {
         "strategy": "value_balanced",
         "evidenceRoutes": ["artificialAnalysisComponents.automationBench", "artificialAnalysisComponents.enterpriseOpsGym"],
-        "supportingMetrics": ["artificialAnalysisComponents.lcr", "artificialAnalysisComponents.ifbench", "liveBench.instructionFollowing"],
+        "supportingMetrics": [],
+        "qualification": {
+          "minimumModels": 2,
+          "dimensions": [
+            { "key": "long-context", "evidenceRoutes": ["artificialAnalysisComponents.lcr"], "qualityBands": { "artificialAnalysisComponents.lcr": 0.05 } },
+            { "key": "instruction-following", "evidenceRoutes": ["liveBench.instructionFollowing", "artificialAnalysisComponents.ifbench"], "qualityBands": { "artificialAnalysisComponents.ifbench": 0.03, "liveBench.instructionFollowing": 3 } }
+          ]
+        },
         "configurationSelection": { "mode": "bounded_effort", "allowedEfforts": ["high"], "effortChangePolicy": "automatic" },
-        "qualityBands": { "artificialAnalysisComponents.automationBench": 0, "artificialAnalysisComponents.enterpriseOpsGym": 0 }
+        "qualityBands": { "artificialAnalysisComponents.automationBench": 0.03, "artificialAnalysisComponents.enterpriseOpsGym": 0.03 }
       },
       "quick": {
         "strategy": "value_balanced",
         "evidenceRoutes": ["artificialAnalysis.codingIndex", "liveBench.coding"],
         "supportingMetrics": ["artificialAnalysisComponents.ifbench", "liveBench.instructionFollowing"],
+        "qualification": { "minimumModels": 2, "dimensions": [] },
         "configurationSelection": { "mode": "bounded_effort", "allowedEfforts": ["low"], "effortChangePolicy": "automatic" },
         "qualityBands": { "artificialAnalysis.codingIndex": 3, "liveBench.coding": 3 }
       },
       "mechanical": {
         "strategy": "value_balanced",
-        "evidenceRoutes": ["artificialAnalysisComponents.automationBench", "artificialAnalysis.codingIndex", "liveBench.coding"],
-        "supportingMetrics": ["artificialAnalysisComponents.ifbench", "liveBench.instructionFollowing", "artificialAnalysisComponents.enterpriseOpsGym"],
+        "evidenceRoutes": ["artificialAnalysisComponents.automationBench", "artificialAnalysisComponents.enterpriseOpsGym"],
+        "supportingMetrics": [],
+        "qualification": {
+          "minimumModels": 2,
+          "dimensions": [
+            { "key": "instruction-following", "evidenceRoutes": ["artificialAnalysisComponents.ifbench", "liveBench.instructionFollowing"], "qualityBands": { "artificialAnalysisComponents.ifbench": 0.03, "liveBench.instructionFollowing": 3 } }
+          ]
+        },
         "configurationSelection": { "mode": "bounded_effort", "allowedEfforts": ["low"], "effortChangePolicy": "automatic" },
-        "qualityBands": { "artificialAnalysisComponents.automationBench": 0, "artificialAnalysis.codingIndex": 3, "liveBench.coding": 3 }
+        "qualityBands": { "artificialAnalysisComponents.automationBench": 0, "artificialAnalysisComponents.enterpriseOpsGym": 0 }
       },
       "triage": {
         "strategy": "value_balanced",
         "evidenceRoutes": ["artificialAnalysis.intelligenceIndex", "liveBench.reasoning"],
-        "supportingMetrics": ["artificialAnalysisComponents.ifbench", "liveBench.instructionFollowing"],
+        "supportingMetrics": [],
+        "qualification": {
+          "minimumModels": 2,
+          "dimensions": [
+            { "key": "instruction-following", "evidenceRoutes": ["artificialAnalysisComponents.ifbench", "liveBench.instructionFollowing"], "qualityBands": { "artificialAnalysisComponents.ifbench": 0.03, "liveBench.instructionFollowing": 3 } }
+          ]
+        },
         "configurationSelection": { "mode": "bounded_effort", "allowedEfforts": ["low"], "effortChangePolicy": "automatic" },
         "qualityBands": { "artificialAnalysis.intelligenceIndex": 3, "liveBench.reasoning": 3 }
       },
       "default-development": {
         "strategy": "value_balanced",
         "evidenceRoutes": ["artificialAnalysis.codingIndex", "liveBench.coding"],
-        "supportingMetrics": ["artificialAnalysisComponents.ifbench", "liveBench.instructionFollowing"],
+        "supportingMetrics": [],
+        "qualification": {
+          "minimumModels": 2,
+          "dimensions": [
+            { "key": "instruction-following", "evidenceRoutes": ["liveBench.instructionFollowing", "artificialAnalysisComponents.ifbench"], "qualityBands": { "artificialAnalysisComponents.ifbench": 0.03, "liveBench.instructionFollowing": 3 } }
+          ]
+        },
         "configurationSelection": { "mode": "bounded_effort", "allowedEfforts": ["medium", "high"], "effortChangePolicy": "automatic" },
         "qualityBands": { "artificialAnalysis.codingIndex": 3, "liveBench.coding": 3 }
       },
@@ -103,6 +131,7 @@
         "strategy": "value_balanced",
         "evidenceRoutes": ["artificialAnalysisCodingAgents.codingAgentIndex", "liveBench.agenticCoding"],
         "supportingMetrics": ["artificialAnalysisComponents.automationBench", "artificialAnalysisComponents.enterpriseOpsGym"],
+        "qualification": { "minimumModels": 2, "dimensions": [] },
         "configurationSelection": {
           "mode": "bounded_effort",
           "allowedEfforts": ["high", "xhigh", "max"],
@@ -113,21 +142,40 @@
       "deep-reasoning": {
         "strategy": "value_balanced",
         "evidenceRoutes": ["artificialAnalysis.intelligenceIndex", "liveBench.reasoning"],
-        "supportingMetrics": ["artificialAnalysisComponents.lcr"],
+        "supportingMetrics": [],
+        "qualification": {
+          "minimumModels": 2,
+          "dimensions": [
+            { "key": "long-context", "evidenceRoutes": ["artificialAnalysisComponents.lcr"], "qualityBands": { "artificialAnalysisComponents.lcr": 0.05 } }
+          ]
+        },
         "configurationSelection": { "mode": "bounded_effort", "allowedEfforts": ["high", "xhigh", "max"], "effortChangePolicy": "automatic" },
         "qualityBands": { "artificialAnalysis.intelligenceIndex": 3, "liveBench.reasoning": 3 }
       },
       "review": {
         "strategy": "value_balanced",
         "evidenceRoutes": ["artificialAnalysis.codingIndex", "liveBench.coding"],
-        "supportingMetrics": ["liveBench.reasoning", "artificialAnalysisComponents.lcr"],
+        "supportingMetrics": [],
+        "qualification": {
+          "minimumModels": 2,
+          "dimensions": [
+            { "key": "reasoning", "evidenceRoutes": ["artificialAnalysis.intelligenceIndex", "liveBench.reasoning"], "qualityBands": { "artificialAnalysis.intelligenceIndex": 3, "liveBench.reasoning": 3 } },
+            { "key": "long-context", "evidenceRoutes": ["artificialAnalysisComponents.lcr"], "qualityBands": { "artificialAnalysisComponents.lcr": 0.05 } }
+          ]
+        },
         "configurationSelection": { "mode": "bounded_effort", "allowedEfforts": ["medium", "high"], "effortChangePolicy": "automatic" },
         "qualityBands": { "artificialAnalysis.codingIndex": 3, "liveBench.coding": 3 }
       },
       "visual-ui": {
         "strategy": "value_balanced",
         "evidenceRoutes": ["artificialAnalysis.codingIndex", "liveBench.coding"],
-        "supportingMetrics": ["artificialAnalysisComponents.mmmuPro"],
+        "supportingMetrics": [],
+        "qualification": {
+          "minimumModels": 2,
+          "dimensions": [
+            { "key": "visual-understanding", "evidenceRoutes": ["artificialAnalysisComponents.mmmuPro"], "qualityBands": { "artificialAnalysisComponents.mmmuPro": 0.03 } }
+          ]
+        },
         "configurationSelection": { "mode": "bounded_effort", "allowedEfforts": ["medium", "high"], "effortChangePolicy": "automatic" },
         "qualityBands": { "artificialAnalysis.codingIndex": 3, "liveBench.coding": 3 }
       }

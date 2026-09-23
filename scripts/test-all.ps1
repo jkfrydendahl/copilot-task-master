@@ -14,6 +14,9 @@ $testFiles = @(
     (Join-Path $PSScriptRoot "test-model-pricing.ps1"),
     (Join-Path $PSScriptRoot "test-model-evidence.ps1"),
     (Join-Path $PSScriptRoot "test-model-selection.ps1"),
+    (Join-Path $PSScriptRoot "test-model-recency.ps1"),
+    (Join-Path $PSScriptRoot "test-model-onboarding.ps1"),
+    (Join-Path $PSScriptRoot "test-role-qualification.ps1"),
     (Join-Path $PSScriptRoot "test-model-review.ps1"),
     (Join-Path $PSScriptRoot "test-model-launch-args.ps1")
 )

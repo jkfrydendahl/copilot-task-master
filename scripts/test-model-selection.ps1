@@ -463,7 +463,7 @@ Run-Test "Exact configuration wins ties and LiveBench cannot corroborate another
     Assert-True ($s.confidence -eq "reduced" -and -not $s.contested) "Different effort counted as corroboration"
 }
 . (Join-Path $PSScriptRoot "model-policy-config.ps1")
-Run-Test "Orchestrator high-only policy uses workflow evidence, not general or supporting scores" {
+Run-Test "Orchestrator high-only policy requires workflow and qualifying role dimensions" {
     $p = Get-ModelPolicyConfig (Join-Path $PSScriptRoot "..\config\model-policy.json")
     $current = @{key="orchestrator";model="one";effort="medium";context="default"}
     $verdicts = @(foreach ($entry in @(@("one","low"),@("one","medium"),@("one","high"),@("two","high"))) {
@@ -475,11 +475,14 @@ Run-Test "Orchestrator high-only policy uses workflow evidence, not general or s
         $r.effort=$entry[1]; $r.source="artificialAnalysisComponents"; $r.metric="automationBench"; $r.score/=100
         $r
     })
-    foreach ($entry in @(@("one",81.4125),@("two",99))) {
+    foreach ($entry in @(@("one",81.4125),@("two",80))) {
         $r = Record $entry[0] $entry[1] liveBench
         $r.effort="high"; $r.metric="instructionFollowing"
         $records += @($r)
+        $lcr=Record $entry[0] 0.8 artificialAnalysisComponents
+        $lcr.effort="high";$lcr.metric="lcr";$records+=@($lcr)
     }
+    $oldIf=Record one 81.4125 liveBench;$oldIf.metric="instructionFollowing";$records+=@($oldIf)
     $s = Get-ProfileSelection -Profile $current -Evidence $records -Verdicts $verdicts -Policy $p -Aliases @{}
     Assert-True ($s.winner.model -eq "one" -and $s.winner.effort -eq "high" -and [math]::Abs($s.winner.score - 0.412) -lt 1e-12) "Medium retained within band or low score admitted"
     Assert-True ($s.decidingSource -eq "artificialAnalysisComponents" -and $s.decidingMetric -eq "automationBench") "Supporting IF replaced workflow evidence"
@@ -511,7 +514,9 @@ function Agentic-Selection($CurrentModel="one", $CurrentEffort="high", $WinnerMo
     $candidate=Verdict; $candidate.modelId=$WinnerModel; $candidate | Add-Member -NotePropertyName effort -NotePropertyValue $WinnerEffort -Force
     $a=Record $CurrentModel 0.60 artificialAnalysisCodingAgents $Version; $a.effort=$CurrentEffort; $a.metric="codingAgentIndex"
     $b=Record $WinnerModel 0.70 artificialAnalysisCodingAgents $Version; $b.effort=$WinnerEffort; $b.metric="codingAgentIndex"
-    Get-ProfileSelection -Profile $current -Verdicts @($old,$candidate) -Evidence @($a,$b) -Policy $p -Aliases @{}
+    $peer=Verdict;$peer.modelId="peer";$peer | Add-Member effort high -Force
+    $peerRecord=Record peer 0.50 artificialAnalysisCodingAgents $Version;$peerRecord.effort="high";$peerRecord.metric="codingAgentIndex"
+    Get-ProfileSelection -Profile $current -Verdicts @($old,$candidate,$peer) -Evidence @($a,$b,$peerRecord) -Policy $p -Aliases @{}
 }
 Run-Test "Preauthorized effort changes apply after confirmation or force, including within one model" {
     foreach ($model in @("one","two")) {
@@ -536,7 +541,7 @@ Run-Test "Preauthorized effort changes apply after confirmation or force, includ
 Run-Test "Configuration state migrates model-only counts and records complete pending and active pairs" {
     $s=Agentic-Selection -WinnerEffort high
     $first=Resolve-ProfileSelectionState -CurrentModel one -Selection $s
-    Assert-True ($first.state.schemaVersion -eq 3 -and $first.state.pending.effort -eq "high" -and $first.state.pending.context -eq "default") "Pending pair absent"
+    Assert-True ($first.state.schemaVersion -eq 4 -and $first.state.pending.effort -eq "high" -and $first.state.pending.context -eq "default") "Pending pair absent"
     $legacy=ConvertTo-CanonicalModelData $first.state
     $legacy.schemaVersion=1; $legacy.pending.count=99
     $secondSelection=Agentic-Selection -WinnerEffort high -Version v2
@@ -579,6 +584,13 @@ Run-Test "All profiles reject out-of-range efforts and contexts even with force"
             if ($definition.max -eq 1) { $r.score/=100 }
             $r | Add-Member -NotePropertyName context -NotePropertyValue $configuration[2]
             $verdicts+=@($v); $records+=@($r)
+            foreach ($dimension in $p.selectionPolicy.profiles[$key].qualification.dimensions) {
+                $extraDefinition=$p.evidenceMetrics[$dimension.evidenceRoutes[0]]
+                $extra=$r | Select-Object *
+                $extra.source=$extraDefinition.source;$extra.metric=$extraDefinition.metric
+                $extra.score=$configuration[3] * $extraDefinition.max / 100
+                $records+=@($extra)
+            }
         }
         $s=Get-ProfileSelection -Profile $current -Verdicts $verdicts -Evidence $records -Policy $p -Aliases @{}
         $result=Resolve-ProfileSelectionState -CurrentModel one -Selection $s -ForceImmediateApply
@@ -589,7 +601,14 @@ Run-Test "All profiles reject out-of-range efforts and contexts even with force"
         $nativeRecord=Record native 98; $nativeRecord.effort="none"
         $nativeRecord.metric=$definition.metric;$nativeRecord.source=$definition.source
         if ($definition.max -eq 1) { $nativeRecord.score/=100 }
-        $s=Get-ProfileSelection -Profile $current -Verdicts (@($verdicts)+@($native)) -Evidence (@($records)+@($nativeRecord)) -Policy $p -Aliases @{}
+        $nativeRecords=@($nativeRecord)
+        foreach ($dimension in $p.selectionPolicy.profiles[$key].qualification.dimensions) {
+            $extraDefinition=$p.evidenceMetrics[$dimension.evidenceRoutes[0]]
+            $extra=$nativeRecord | Select-Object *
+            $extra.source=$extraDefinition.source;$extra.metric=$extraDefinition.metric;$extra.score=0.98*$extraDefinition.max
+            $nativeRecords+=@($extra)
+        }
+        $s=Get-ProfileSelection -Profile $current -Verdicts (@($verdicts)+@($native)) -Evidence (@($records)+$nativeRecords) -Policy $p -Aliases @{}
         Assert-True ($s.winner.model -eq "native" -and $s.winner.effort -eq "none") "Native effort configuration was excluded for $key"
     }
 }
@@ -619,6 +638,8 @@ Run-Test "Agentic fallback requires the incumbent in the same exact LiveBench ob
     $two=Verdict;$two.modelId="two";$two.effort="high"
     $candidate=Record two 70 liveBench;$candidate.effort="high";$candidate.metric="agenticCoding"
     $general=Record one 99;$general.effort="high"
+    $peer=Verdict;$peer.modelId="peer";$peer.effort="high"
+    $peerRecord=Record peer 50 liveBench;$peerRecord.effort="high";$peerRecord.metric="agenticCoding"
     foreach ($mode in @("matched","missing","effort","context","version","cached","invalid-score")) {
         $incumbent=Record one 60 liveBench;$incumbent.effort="high";$incumbent.metric="agenticCoding"
         switch ($mode) {
@@ -628,9 +649,9 @@ Run-Test "Agentic fallback requires the incumbent in the same exact LiveBench ob
             "cached" {$incumbent.cached=$true}
             "invalid-score" {$incumbent.score=-1}
         }
-        $records=@($general,$candidate)
+        $records=@($general,$candidate,$peerRecord)
         if ($mode -ne "missing") { $records+=@($incumbent) }
-        $s=Get-ProfileSelection -Profile $current -Evidence $records -Verdicts @($one,$two) -Policy $p -Aliases @{}
+        $s=Get-ProfileSelection -Profile $current -Evidence $records -Verdicts @($one,$two,$peer) -Policy $p -Aliases @{}
         $r=Resolve-ProfileSelectionState -CurrentModel one -Selection $s -ForceImmediateApply
         if ($mode -eq "version") {
             Assert-True ($null -eq $s.winner -and -not $r.applied -and $s.roleDiagnostics -match "incomparable_observations") "Mixed observations authorized fallback"
@@ -641,10 +662,10 @@ Run-Test "Agentic fallback requires the incumbent in the same exact LiveBench ob
         if ($mode -ne "matched") { Assert-True ($r.status -eq "retained_fallback_incumbent_evidence_missing") "Missing fallback explanation" }
         else {
             $first=Resolve-ProfileSelectionState -CurrentModel one -Selection $s
-            $candidate.sourceVersion="v2";$incumbent.sourceVersion="v2"
-            $next=Get-ProfileSelection -Profile $current -Evidence @($candidate,$incumbent) -Verdicts @($one,$two) -Policy $p -Aliases @{}
+            $candidate.sourceVersion="v2";$incumbent.sourceVersion="v2";$peerRecord.sourceVersion="v2"
+            $next=Get-ProfileSelection -Profile $current -Evidence @($candidate,$incumbent,$peerRecord) -Verdicts @($one,$two,$peer) -Policy $p -Aliases @{}
             Assert-True ((Resolve-ProfileSelectionState -CurrentModel one -Selection $next -State $first.state).applied) "Valid fallback failed normal confirmation"
-            $candidate.sourceVersion="v1"
+            $candidate.sourceVersion="v1";$peerRecord.sourceVersion="v1"
         }
     }
     $s=Get-ProfileSelection -Profile $current -Evidence @($general) -Verdicts @($one,$two) -Policy $p -Aliases @{}
@@ -674,7 +695,9 @@ Run-Test "Blocked fallback observations still protect against publication rollba
     $one=Verdict;$one.effort="high"
     $two=Verdict;$two.modelId="two";$two.effort="high"
     $candidate=Record two 70 liveBench;$candidate.effort="high";$candidate.metric="agenticCoding";$candidate.sourceDate="2026-09-14"
-    $s=Get-ProfileSelection -Profile $current -Evidence @($candidate) -Verdicts @($one,$two) -Policy $p -Aliases @{}
+    $peer=Verdict;$peer.modelId="peer";$peer.effort="high"
+    $peerRecord=Record peer 50 liveBench;$peerRecord.effort="high";$peerRecord.metric="agenticCoding";$peerRecord.sourceDate="2026-09-14"
+    $s=Get-ProfileSelection -Profile $current -Evidence @($candidate,$peerRecord) -Verdicts @($one,$two,$peer) -Policy $p -Aliases @{}
     $blocked=Resolve-ProfileSelectionState -CurrentModel one -Selection $s -ForceImmediateApply
     Assert-True ($blocked.status -eq "retained_fallback_incumbent_evidence_missing" -and $blocked.state.latestSourceDates.liveBench -eq "2026-09-14") "Blocked source date not tracked"
     $incumbent=Record one 60 liveBench;$incumbent.effort="high";$incumbent.metric="agenticCoding"

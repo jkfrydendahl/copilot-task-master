@@ -1,7 +1,7 @@
 {
   "schemaVersion": 2,
-  "verifiedAt": "2026-09-08",
-  "notes": "Explicit AA general-model and LiveBench source identities by actual effort. Empty/unlisted variants remain unresolved. AA API may lag public-page coverage or use a different evaluation release; never substitute public-page numbers. 'none' is for CLI models without an effort control. AA coding agents are resolved automatically from structured source records, not this alias catalog. External agent harnesses are not Copilot CLI measurements.",
+  "verifiedAt": "2026-09-23",
+  "notes": "Explicit AA general-model and LiveBench source identities by actual effort. September 23 coverage audit checked AA release/effort metadata and LiveBench modelLinks.js. Empty/unlisted variants remain unresolved: Opus 4.7 non-reasoning conflicts with its high-effort metadata; Grok LiveBench rows omit effort; Gemini 3.5 minimal is not low. AA API may lag public-page coverage or use a different evaluation release; never substitute public-page numbers. 'none' is for CLI models without an effort control. AA coding agents are resolved automatically from structured source records, not this alias catalog. External agent harnesses are not Copilot CLI measurements.",
   "aliases": {
     "claude-sonnet-5": {
       "artificialAnalysis": {
@@ -34,6 +34,9 @@
         "high": "gpt-6-astra-high",
         "xhigh": "gpt-6-astra-xhigh",
         "max": "gpt-6-astra"
+      },
+      "liveBench": {
+        "max": "gpt-6-astra-max"
       }
     },
     "gpt-5.6-sol": {
@@ -83,6 +86,9 @@
       }
     },
     "gemini-3.7-flash": {
+      "liveBench": {
+        "high": "gemini-3.7-flash-high"
+      },
       "artificialAnalysis": {
         "low": "gemini-3-7-flash-low",
         "medium": "gemini-3-7-flash-medium",
@@ -108,33 +114,78 @@
       }
     },
     "claude-opus-4.8": {
+      "artificialAnalysis": {
+        "max": "claude-opus-4-8"
+      },
       "liveBench": {
         "max": "claude-opus-4-8-max-effort"
       }
     },
     "claude-opus-4.7": {
+      "artificialAnalysis": {
+        "max": "claude-opus-4-7"
+      },
       "liveBench": {
         "xhigh": "claude-opus-4-7-xhigh-effort"
       }
     },
     "claude-sonnet-4.6": {
+      "artificialAnalysis": {
+        "max": "claude-sonnet-4-6-adaptive"
+      },
       "liveBench": {
         "medium": "claude-sonnet-4-6-thinking-auto-medium-effort"
       }
     },
     "gpt-5.5": {
+      "artificialAnalysis": {
+        "low": "gpt-5-5-low",
+        "medium": "gpt-5-5-medium",
+        "high": "gpt-5-5-high",
+        "xhigh": "gpt-5-5"
+      },
       "liveBench": {
         "xhigh": "gpt-5.5-xhigh"
       }
     },
     "gpt-5.4": {
+      "artificialAnalysis": {
+        "low": "gpt-5-4-low",
+        "xhigh": "gpt-5-4"
+      },
       "liveBench": {
         "xhigh": "gpt-5.4-xhigh"
       }
     },
     "gpt-5.4-mini": {
+      "artificialAnalysis": {
+        "medium": "gpt-5-4-mini-medium",
+        "xhigh": "gpt-5-4-mini"
+      },
       "liveBench": {
         "xhigh": "gpt-5.4-mini-xhigh"
+      }
+    },
+    "gpt-5.3-codex": {
+      "artificialAnalysis": {
+        "xhigh": "gpt-5-3-codex"
+      }
+    },
+    "gemini-3.6-flash": {
+      "artificialAnalysis": {
+        "high": "gemini-3-6-flash"
+      },
+      "liveBench": {
+        "high": "gemini-3.6-flash-high"
+      }
+    },
+    "gemini-3.5-flash": {
+      "artificialAnalysis": {
+        "medium": "gemini-3-5-flash-medium",
+        "high": "gemini-3-5-flash"
+      },
+      "liveBench": {
+        "high": "gemini-3.5-flash-high"
       }
     }
   }

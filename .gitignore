@@ -9,3 +9,5 @@ usage-pending-*.json
 
 # Local machine repo paths (personal, not portable)
 repos.json
+
+node_modules/

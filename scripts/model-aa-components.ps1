@@ -9,7 +9,7 @@ function Get-AAComponentData {
     $anchor = @($ModelSlugs | Where-Object { $_ -match '^[a-z0-9][a-z0-9.-]*$' } | Sort-Object -Unique | Select-Object -First 1)
     $url = if ($anchor.Count) { "https://artificialanalysis.ai/models/$($anchor[0])" } else { $null }
     $result = [ordered]@{
-        status="unavailable"; message="No valid AA model identity for the bulk component page."; models=@{}
+        status="unavailable"; message="No valid AA model identity for the bulk component page."; models=@{}; releases=@{}; identities=@{}
         sourceUrl=$url; sourceDate=$null; fetchedAtUtc=[datetime]::UtcNow.ToString("o")
         sourceVersion=$null; metricVersions=@{}; diagnostics=@(); observationSchemaVersion=1
         publicationDateKind="unknown"; evaluationDate=$null
@@ -24,7 +24,7 @@ function Get-AAComponentData {
         return [pscustomobject]$result
     }
     $parsed = ConvertFrom-AAComponentPage $fetch.content
-    foreach ($field in @("status","message","models","diagnostics")) { $result[$field] = $parsed.$field }
+    foreach ($field in @("status","message","models","releases","identities","diagnostics")) { $result[$field] = $parsed.$field }
     if ($parsed.status -eq "ok") {
         foreach ($metric in $script:AAComponentProperties.Keys) {
             $scores = @{}

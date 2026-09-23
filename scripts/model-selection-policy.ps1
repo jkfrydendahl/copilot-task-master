@@ -16,7 +16,7 @@ function Get-PreferredModelForProfilePolicy {
     # Informational fallback only; this never selects or applies a benchmark winner.
     param(
         [Parameter(Mandatory = $true)][string]$ProfileKey,
-        [Parameter(Mandatory = $true)][string[]]$ValidModels,
+        [Parameter(Mandatory = $true)][AllowEmptyCollection()][string[]]$ValidModels,
         [hashtable]$Policy = (Get-ModelSelectionPolicy),
         [string[]]$AdmissibleModels
     )

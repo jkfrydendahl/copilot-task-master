@@ -2,6 +2,7 @@ Set-StrictMode -Version Latest
 . (Join-Path $PSScriptRoot "model-configuration.ps1")
 . (Join-Path $PSScriptRoot "model-agent-identity.ps1")
 . (Join-Path $PSScriptRoot "model-role-evidence.ps1")
+. (Join-Path $PSScriptRoot "model-release-data.ps1")
 
 function Get-SourceMetricObservation {
     param($Source, $Definition)
@@ -48,7 +49,15 @@ function Get-ProfileBenchmarkEvidence {
         })
     }
     $contract = $Policy.selectionPolicy.profiles[$Profile.key]
-    $metricKeys = @(@($contract.evidenceRoutes) + @($contract.supportingMetrics) | Select-Object -Unique)
+    $modelReleases = @{}
+    foreach ($model in @($Configurations | ForEach-Object model | Sort-Object -Unique)) {
+        $modelReleases[$model] = Get-ModelReleaseEvidence -Model $model -Source (Get-ObjectMemberValue $Sources "artificialAnalysisComponents") `
+            -Aliases $Aliases -StaleAfterDays $Policy.consensusPolicy.staleAfterDays -NowUtc $NowUtc
+    }
+    $qualificationMetrics = @(foreach ($dimension in @(Get-ObjectMemberValue (Get-ObjectMemberValue $contract "qualification") "dimensions")) {
+        if ($null -ne $dimension) { $dimension.evidenceRoutes }
+    })
+    $metricKeys = @(@($contract.evidenceRoutes) + $qualificationMetrics + @($contract.supportingMetrics) | Select-Object -Unique)
     foreach ($metricKey in $metricKeys) {
         $definition = $Policy.evidenceMetrics[$metricKey]
         $sourceName = $definition.source
@@ -150,6 +159,7 @@ function Get-ProfileBenchmarkEvidence {
             }
             $records.Add([pscustomobject]@{
                 model = $model
+                modelRelease = $modelReleases[$model]
                 effort = $effort
                 context = $configuration.context
                 configurationId = $configuration.configurationId
@@ -162,7 +172,7 @@ function Get-ProfileBenchmarkEvidence {
                 sourceVersion = $observation.version
                 metricIdentity = $observation.identity
                 metricKey = $metricKey
-                evidenceRole = if ($metricKey -in $contract.evidenceRoutes) { "deciding" } else { "supporting" }
+                evidenceRole = if ($metricKey -in $contract.evidenceRoutes) { "deciding" } elseif ($metricKey -in $qualificationMetrics) { "qualification" } else { "supporting" }
                 scale = $definition.scale
                 limitation = $definition.limitation
                 lineage = $definition.lineage

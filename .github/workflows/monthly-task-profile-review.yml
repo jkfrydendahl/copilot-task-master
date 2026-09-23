@@ -34,15 +34,15 @@ jobs:
         with:
           node-version: "22"
 
-      - name: Install GitHub Copilot CLI
+      - name: Install test dependencies
         shell: pwsh
-        run: npm install --global @github/copilot
+        run: npm ci --ignore-scripts --no-audit --no-fund
 
       - name: Run tests
         shell: pwsh
         run: .\scripts\test-all.ps1
 
-      - name: Generate review report
+      - name: Review using committed local model metadata
         shell: pwsh
         run: .\scripts\review-task-profiles.ps1
         env:
@@ -61,8 +61,16 @@ jobs:
             task-profiles.json
             data/model-ranking-snapshot.json
             data/model-pricing-snapshot.json
+            data/model-onboarding-snapshot.json
+            config/model-capabilities.json
+            config/model-ranking-aliases.json
+            config/model-pricing-aliases.json
           body: |
             Automated monthly review for `task-profiles.json`.
+
+            Uses committed `data/model-discovery-snapshot.json`, refreshed locally
+            using the user's own credentials. Missing, invalid or expired discovery
+            metadata blocks profile changes, including forced runs.
 
             Includes:
             - current profile matrix
@@ -70,7 +78,8 @@ jobs:
             - automatic model-effort selection within preauthorized ranges for all profiles
             - live GitHub pricing updates, hard-budget exclusions, and unresolved model metadata
             - confirmed model-effort changes applied together in `task-profiles.json`
-            - invalid/deprecated model handling (if CLI model list is available)
+            - invalid/deprecated model handling using locally recorded discovery
             - newly available model candidates
+            - locally verified runtime capabilities, exact source mappings and unresolved onboarding blockers
             - required manual check against:
               https://docs.github.com/en/copilot/reference/ai-models/model-comparison

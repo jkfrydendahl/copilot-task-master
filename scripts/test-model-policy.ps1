@@ -44,17 +44,41 @@ Run-Test "All profiles use explicit source-specific value bands without incumben
         Assert-True ($strategy.strategy -eq "value_balanced") "Missing value strategy for $key"
         Assert-True (-not $strategy.Contains("maxAutomaticCostIncreasePercent")) "Obsolete incumbent-relative limit for $key"
         foreach ($metric in $strategy.evidenceRoutes) {
-            $band = if ($metric -like "artificialAnalysisComponents.*") { 0 } elseif ($metric -like "artificialAnalysisCodingAgents.*") { 0.03 } else { 3 }
+            $band = if ($metric -like "artificialAnalysisComponents.*") {
+                if ($key -eq "orchestrator") { 0.03 } else { 0 }
+            } elseif ($metric -like "artificialAnalysisCodingAgents.*") { 0.03 } else { 3 }
             Assert-True ($strategy.qualityBands[$metric] -eq $band) "Wrong native metric band: $key $metric"
         }
     }
     Assert-True ($p.selectionPolicy.profiles["agentic-implementation"].qualityBands["artificialAnalysisCodingAgents.codingAgentIndex"] -eq 0.03) "Agent index band used the wrong scale"
+}
+Run-Test "Long-document calibration leaves every other qualification band unchanged" {
+    $p = Get-ModelPolicyConfig (Join-Path $repo "config\model-policy.json")
+    $longDocumentProfiles = @()
+    foreach ($key in $p.selectionPolicy.profiles.Keys) {
+        foreach ($dimension in $p.selectionPolicy.profiles[$key].qualification.dimensions) {
+            foreach ($metric in $dimension.evidenceRoutes) {
+                $expected = if ($metric -eq "artificialAnalysisComponents.lcr") {
+                    $longDocumentProfiles += $key
+                    0.05
+                } elseif ($p.evidenceMetrics[$metric].max -eq 1) { 0.03 } else { 3 }
+                Assert-True ($dimension.qualityBands[$metric] -eq $expected) "Wrong qualification tolerance: $key $metric"
+            }
+        }
+    }
+    Assert-True (($longDocumentProfiles | Sort-Object) -join "," -eq "deep-reasoning,orchestrator,review") "Long-document calibration affected the wrong profiles"
 }
 Run-Test "Invalid strategies and incomplete or nonnumeric bands fail validation" {
     $path = Join-Path ([IO.Path]::GetTempPath()) "$([guid]::NewGuid().ToString('N')).json"
     try {
         foreach ($mutate in @(
             { param($p) $p.selectionPolicy.Remove("profiles") },
+            { param($p) $p.consensusPolicy.Remove("discoveryFreshnessDays") },
+            { param($p) $p.consensusPolicy.discoveryFreshnessDays=0 },
+            { param($p) $p.consensusPolicy.discoveryFreshnessDays="7" },
+            { param($p) $p.consensusPolicy.discoveryFreshnessDays=0.5 },
+            { param($p) $p.selectionPolicy.Remove("costTieBreak") },
+            { param($p) $p.selectionPolicy.costTieBreak="newest_model_name" },
             { param($p) $p.selectionPolicy.profiles.Remove("review") },
             { param($p) $p.selectionPolicy.profiles.orchestrator.strategy = "cheapest" },
             { param($p) $p.selectionPolicy.profiles.orchestrator.maxAutomaticCostIncreasePercent = 0 },
@@ -73,6 +97,19 @@ Run-Test "Invalid strategies and incomplete or nonnumeric bands fail validation"
             { param($p) $p.selectionPolicy.profiles.review.evidenceRoutes=@("liveBench.coding","liveBench.coding") },
             { param($p) $p.evidenceMetrics["liveBench.coding"].max=0 },
             { param($p) $p.selectionPolicy.profiles.orchestrator.qualityBands["liveBench.typo"] = 3 },
+            { param($p) $p.selectionPolicy.profiles.review.Remove("qualification") },
+            { param($p) $p.selectionPolicy.profiles.review.qualification.minimumModels = 1 },
+            { param($p) $p.selectionPolicy.profiles.review.qualification.minimumModels = "2" },
+            { param($p) $p.selectionPolicy.profiles.review.qualification.dimensions = $null },
+            { param($p) $p.selectionPolicy.profiles.review.qualification.dimensions[0].key = "primary" },
+            { param($p) $p.selectionPolicy.profiles.review.qualification.dimensions[1].key = "reasoning" },
+            { param($p) $p.selectionPolicy.profiles.review.qualification.dimensions[0].evidenceRoutes = @("unknown.metric") },
+            { param($p) $p.selectionPolicy.profiles.review.qualification.dimensions[0].evidenceRoutes = @("artificialAnalysis.codingIndex") },
+            { param($p) $p.selectionPolicy.profiles.review.qualification.dimensions[0].qualityBands.Remove("artificialAnalysis.intelligenceIndex") },
+            { param($p) $p.selectionPolicy.profiles.review.qualification.dimensions[1].qualityBands["artificialAnalysisComponents.lcr"] = 3 },
+            { param($p) $p.selectionPolicy.profiles.review.qualification.dimensions[1].qualityBands["artificialAnalysisComponents.lcr"] = -1 },
+            { param($p) $p.selectionPolicy.profiles.review.qualification.dimensions[1].qualityBands["unknown.metric"] = 0 },
+            { param($p) $p.selectionPolicy.profiles.review.supportingMetrics = @("artificialAnalysisComponents.lcr") },
             { param($p) $p.selectionPolicy.profiles["typo"] = @{strategy="quality_first"} }
         )) {
             $p = Get-ModelPolicyConfig (Join-Path $repo "config\model-policy.json")
@@ -114,7 +151,7 @@ Run-Test "Capabilities contain no prices and preserve launcher effort semantics"
         Assert-True (-not $r.ContainsKey("pricing")) "Prices still embedded"
         if ($r.vision) {Assert-True ([bool]$r.visionSource) "Vision guessed"}
     }
-    Run-Test "Policy schema v3 validates values beyond the version field" {
+    Run-Test "Policy schema v4 validates values beyond the version field" {
         $path=Join-Path ([System.IO.Path]::GetTempPath()) "$([guid]::NewGuid().ToString('N')).json"
         try {
             foreach ($mutate in @(
@@ -130,7 +167,7 @@ Run-Test "Capabilities contain no prices and preserve launcher effort semantics"
                 $p | ConvertTo-Json -Depth 15 | Set-Content -LiteralPath $path
                 $threw=$false
                 try { Get-ModelPolicyConfig $path | Out-Null } catch { $threw=$true; Assert-True ($_ -notmatch "schemaVersion") "Only schema was tested" }
-                Assert-True $threw "Accepted invalid v3 policy"
+                Assert-True $threw "Accepted invalid v4 policy"
             }
         } finally { if (Test-Path -LiteralPath $path) { Remove-Item -LiteralPath $path } }
     }
@@ -177,7 +214,17 @@ Run-Test "Sol vision has explicit provenance and admits the configured Visual/UI
 }
 Run-Test "Every profile preauthorizes its task-appropriate effort range" {
     $p=Get-ModelPolicyConfig (Join-Path $repo "config\model-policy.json")
-    Assert-True ($p.selectionPolicy.version -eq 8 -and $p.schemaVersion -eq 3) "Role evidence contract not versioned"
+    Assert-True ($p.selectionPolicy.version -eq 12 -and $p.schemaVersion -eq 4) "Role evidence contract not versioned"
+    Assert-True ($p.consensusPolicy.discoveryFreshnessDays -eq 7) "Local discovery validity changed"
+    Assert-True ($p.selectionPolicy.costTieBreak -eq "newest_verified_release") "Recency tie policy missing"
+    foreach ($key in @("orchestrator","default-development")) {
+        $dimension=@($p.selectionPolicy.profiles[$key].qualification.dimensions | Where-Object key -eq "instruction-following")[0]
+        Assert-True ($dimension.evidenceRoutes[0] -eq "liveBench.instructionFollowing") "Coverage correction missing: $key"
+    }
+    foreach ($metric in $p.selectionPolicy.profiles.orchestrator.qualityBands.Keys) {
+        Assert-True ($p.selectionPolicy.profiles.orchestrator.qualityBands[$metric] -eq 0.03) "Orchestrator workflow band"
+        Assert-True ($p.selectionPolicy.profiles.mechanical.qualityBands[$metric] -eq 0) "Mechanical band changed"
+    }
     $ranges=@{
         quick="low";mechanical="low";triage="low";orchestrator="high"
         "default-development"="medium,high";review="medium,high";"visual-ui"="medium,high"
@@ -192,14 +239,14 @@ Run-Test "Every profile preauthorizes its task-appropriate effort range" {
             "deep-reasoning"="artificialAnalysis.intelligenceIndex,liveBench.reasoning"
             review="artificialAnalysis.codingIndex,liveBench.coding"
             "visual-ui"="artificialAnalysis.codingIndex,liveBench.coding"
-            mechanical="artificialAnalysisComponents.automationBench,artificialAnalysis.codingIndex,liveBench.coding"
+            mechanical="artificialAnalysisComponents.automationBench,artificialAnalysisComponents.enterpriseOpsGym"
             orchestrator="artificialAnalysisComponents.automationBench,artificialAnalysisComponents.enterpriseOpsGym"
             triage="artificialAnalysis.intelligenceIndex,liveBench.reasoning"
         }
         foreach($key in $routes.Keys) {
             $contract=$p.selectionPolicy.profiles[$key]
             Assert-True (($contract.evidenceRoutes -join ",") -eq $routes[$key]) "Wrong deciding route: $key"
-            Assert-True ($contract.supportingMetrics.Count -gt 0) "Missing supporting contract: $key"
+            Assert-True ($contract.supportingMetrics -is [array] -and $contract.qualification.minimumModels -eq 2) "Missing role contract: $key"
         }
     }
     foreach ($key in $ranges.Keys) {

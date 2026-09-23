@@ -12,18 +12,22 @@ $ErrorActionPreference = "Stop"
 . (Join-Path $PSScriptRoot "model-profile-selection.ps1")
 . (Join-Path $PSScriptRoot "model-selection-policy.ps1")
 . (Join-Path $PSScriptRoot "model-review-report.ps1")
+. (Join-Path $PSScriptRoot "model-onboarding.ps1")
+. (Join-Path $PSScriptRoot "model-discovery-snapshot.ps1")
 
 function Invoke-TaskProfileReview {
     param(
         [string]$RepoRoot = (Split-Path $PSScriptRoot -Parent),
         $Availability = $null,
+        $RuntimeCatalog = $null,
         [hashtable]$Sources = $null,
         [scriptblock]$FetchPricing = { param($url) Invoke-TextFetch -Url $url },
         [switch]$ForceImmediateApply = ([string]$env:FORCE_BENCHMARK_CONSENSUS -match '^(?i:true|1)$'),
         [datetime]$NowUtc = [datetime]::UtcNow
     )
     $policy = Get-ModelPolicyConfig (Join-Path $RepoRoot "config\model-policy.json")
-    $capabilities = (Get-ModelCapabilitiesCatalog (Join-Path $RepoRoot "config\model-capabilities.json")).models
+    $capabilityCatalog = Get-ModelCapabilitiesCatalog (Join-Path $RepoRoot "config\model-capabilities.json")
+    $capabilities = $capabilityCatalog.models
     $aliasConfig = Read-ModelConfig (Join-Path $RepoRoot "config\model-ranking-aliases.json") 2
     $aliases = $aliasConfig.aliases
     if ($aliases -isnot [System.Collections.IDictionary]) { throw "Invalid benchmark aliases." }
@@ -48,18 +52,15 @@ function Invoke-TaskProfileReview {
             throw "Invalid task profile: $($profile.key)"
         }
     }
-    if ($null -eq $Availability) {
-        $Availability = Get-ModelAvailability -Denylist $policy.denylist
+    $useDiscoverySnapshot=$null -eq $Availability
+    if ($useDiscoverySnapshot -and $null -ne $RuntimeCatalog) {
+        throw "Injected runtime metadata requires an explicit Availability object; normal reviews consume the local discovery snapshot."
     }
-    $models = @($Availability.models | Sort-Object -Unique)
-    $pricingAliases = (Read-ModelConfig (Join-Path $RepoRoot "config\model-pricing-aliases.json") 1).aliases
-    $pricingOptions = @{
-        SnapshotPath = Join-Path $RepoRoot "data\model-pricing-snapshot.json"
-        Aliases = $pricingAliases
-        FetchText = $FetchPricing
-        NowUtc = $NowUtc
+    if (-not $useDiscoverySnapshot -and $null -eq $RuntimeCatalog) {
+        $RuntimeCatalog=@{status="not_requested";authenticated=$false;models=@();message="Caller supplied discovery without runtime metadata."}
     }
-    $pricing = Update-ModelPricingSnapshot @pricingOptions
+    $pricingAliasConfig = Read-ModelConfig (Join-Path $RepoRoot "config\model-pricing-aliases.json") 1
+    $pricingFetch = & $FetchPricing $script:GitHubPricingUrl
     $snapshotPath = Join-Path $RepoRoot "data\model-ranking-snapshot.json"
     $previous = @{}
     if (Test-Path -LiteralPath $snapshotPath) {
@@ -102,6 +103,22 @@ function Invoke-TaskProfileReview {
             $resolvedSources[$source] = $current
         }
     }
+    if($useDiscoverySnapshot){
+        $discovery=Read-ModelDiscoverySnapshot -Path (Join-Path $RepoRoot "data\model-discovery-snapshot.json") `
+            -MaxAgeDays $policy.consensusPolicy.discoveryFreshnessDays -NowUtc $NowUtc
+        $Availability=$discovery.availability
+        $RuntimeCatalog=$discovery.runtime
+    }
+    $onboarding = Resolve-ModelOnboarding -Availability $Availability -RuntimeCatalog $RuntimeCatalog `
+        -CapabilityCatalog $capabilityCatalog -AliasConfig $aliasConfig -PricingAliasConfig $pricingAliasConfig `
+        -Sources $resolvedSources -PricingFetch $pricingFetch -Policy $policy -NowUtc $NowUtc
+    $Availability = $onboarding.availability
+    $models = @($Availability.models)
+    $capabilities = $onboarding.capabilities.models
+    $aliases = $onboarding.selectionAliases
+    $pricingAliases = $onboarding.pricingAliases.aliases
+    $pricing = Update-ModelPricingSnapshot -SnapshotPath (Join-Path $RepoRoot "data\model-pricing-snapshot.json") `
+        -Aliases $pricingAliases -FetchText { param($url) $pricingFetch } -NowUtc $NowUtc
     $snapshot = [ordered]@{
         schemaVersion = 4
         generatedAtUtc = $NowUtc.ToUniversalTime().ToString("o")
@@ -190,8 +207,19 @@ function Invoke-TaskProfileReview {
         Availability = $Availability
         NowUtc = $NowUtc
         Forced = [bool]$ForceImmediateApply
+        Onboarding = $onboarding.audit
     }
     $lines = Get-TaskProfileReviewReport @reportOptions
+    foreach ($catalog in @(
+        @{path="config\model-capabilities.json";before=$capabilityCatalog;after=$onboarding.capabilities},
+        @{path="config\model-ranking-aliases.json";before=$aliasConfig;after=$onboarding.aliases},
+        @{path="config\model-pricing-aliases.json";before=$pricingAliasConfig;after=$onboarding.pricingAliases}
+    )) {
+        if ((Get-ModelDataFingerprint $catalog.before) -ne (Get-ModelDataFingerprint $catalog.after)) {
+            Write-ModelJsonAtomic -SnapshotPath (Join-Path $RepoRoot $catalog.path) -SnapshotObject $catalog.after
+        }
+    }
+    Write-ModelJsonAtomic -SnapshotPath (Join-Path $RepoRoot "data\model-onboarding-snapshot.json") -SnapshotObject $onboarding.audit
     Write-ModelJsonAtomic -SnapshotPath $snapshotPath -SnapshotObject $snapshot
     if ($changed) { Write-ModelJsonAtomic -SnapshotPath $profilesPath -SnapshotObject $profiles }
     $reportPath = Join-Path $RepoRoot "reports\task-profile-review.md"
@@ -203,6 +231,7 @@ function Invoke-TaskProfileReview {
         results = @($results)
         pricing = $pricing
         snapshot = $snapshot
+        onboarding = $onboarding.audit
     }
 }
 

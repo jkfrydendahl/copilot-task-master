@@ -12,6 +12,8 @@ $script:AAComponentProperties = [ordered]@{
 function ConvertFrom-AAComponentPage {
     param([AllowEmptyString()][string]$Html)
     $models = @{}
+    $releases = @{}
+    $identities = @{}
     $blockedModels = @{}
     $blockedScores = @{}
     $diagnostics = [System.Collections.Generic.List[string]]::new()
@@ -23,7 +25,8 @@ function ConvertFrom-AAComponentPage {
         })
         foreach ($row in $rows) {
             if ($row -isnot [System.Collections.IDictionary] -or
-                -not @($script:AAComponentProperties.Values | Where-Object { $row.Contains($_) }).Count) { continue }
+                (-not @($script:AAComponentProperties.Values | Where-Object { $row.Contains($_) }).Count -and
+                    -not $row.Contains("releaseDate") -and -not $row.Contains("release"))) { continue }
             $slug = Get-ObjectMemberValue $row "slug"
             $name = Get-ObjectMemberValue $row "name"
             if ($slug -isnot [string] -or $slug -notmatch '^[a-z0-9][a-z0-9.-]*$' -or
@@ -39,6 +42,26 @@ function ConvertFrom-AAComponentPage {
                 $blockedModels[$slug] = $true
                 $diagnostics.Add("${slug}: identity_ambiguous_or_effort_invalid")
                 continue
+            }
+            if ($null -ne (Get-ObjectMemberValue $row "releaseDate")) {
+                if (-not $releases.ContainsKey($slug)) { $releases[$slug] = @() }
+                $releases[$slug] += @{
+                    date=(Get-ObjectMemberValue $row "releaseDate")
+                    releaseId=(Get-ObjectMemberValue (Get-ObjectMemberValue $row "release") "slug")
+                    effort=$effort
+                }
+            }
+            $releaseId = Get-ObjectMemberValue (Get-ObjectMemberValue $row "release") "slug"
+            if ($releaseId -is [string] -and $releaseId -match '^[a-z0-9][a-z0-9.-]*$' -and
+                $effort -in @("none","minimal","low","medium","high","xhigh","max")) {
+                $identity = @{status="verified";releaseId=$releaseId;effort=$effort}
+                if ($name -match '(?i)non[- ](?:reasoning|thinking)' -and $effort -ne "none") {
+                    $identity.status = "conflicting"
+                }
+                if ($identities.ContainsKey($slug) -and
+                    (Get-ModelDataFingerprint $identities[$slug]) -ne (Get-ModelDataFingerprint $identity)) {
+                    $identities[$slug] = @{status="conflicting";releaseId=$releaseId;effort=$effort}
+                } else { $identities[$slug] = $identity }
             }
             $record = [ordered]@{ name = $name; effort = $effort }
             $hasScore = $false
@@ -76,7 +99,11 @@ function ConvertFrom-AAComponentPage {
             }
         }
     } catch [System.ArgumentException], [System.FormatException], [System.InvalidOperationException] {
-        return [pscustomobject]@{ status="unavailable"; message=$_.Exception.Message; models=@{}; sourceDate=$null; diagnostics=@($diagnostics) }
+        return [pscustomobject]@{ status="unavailable"; message=$_.Exception.Message; models=@{}; releases=@{}; identities=@{}; sourceDate=$null; diagnostics=@($diagnostics) }
+    }
+    foreach ($slug in $blockedModels.Keys) {
+        $releases[$slug] = @(@{blocked=$true})
+        $identities[$slug] = @{status="blocked"}
     }
     foreach ($slug in @($models.Keys)) {
         if ($blockedModels.ContainsKey($slug)) { $models.Remove($slug); continue }
@@ -91,6 +118,8 @@ function ConvertFrom-AAComponentPage {
         status = if ($models.Count) { "ok" } else { "unavailable" }
         message = if ($models.Count) { "Parsed AA public component scores." } else { "No structured AA component scores." }
         models = $models
+        releases = $releases
+        identities = $identities
         sourceDate = $null
         diagnostics = @($diagnostics)
     }

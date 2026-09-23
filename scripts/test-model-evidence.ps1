@@ -210,4 +210,34 @@ Run-Test "Ambiguous aliases and invalid artifact dates cannot authorize evidence
         Assert-True ($r.records.Count -eq 0 -and $r.diagnostics -match "artifact_publication_invalid") "Invalid/future artifact date accepted"
     }
 }
+Run-Test "Coverage audit aliases preserve all nineteen exact published model efforts" {
+    $aliases=(Read-ModelConfig (Join-Path $PSScriptRoot "..\config\model-ranking-aliases.json") 2).aliases
+    $expected=@(
+        @("claude-opus-4.8","artificialAnalysis","max","claude-opus-4-8"),
+        @("claude-opus-4.7","artificialAnalysis","max","claude-opus-4-7"),
+        @("claude-sonnet-4.6","artificialAnalysis","max","claude-sonnet-4-6-adaptive"),
+        @("gpt-5.5","artificialAnalysis","low","gpt-5-5-low"),
+        @("gpt-5.5","artificialAnalysis","medium","gpt-5-5-medium"),
+        @("gpt-5.5","artificialAnalysis","high","gpt-5-5-high"),
+        @("gpt-5.5","artificialAnalysis","xhigh","gpt-5-5"),
+        @("gpt-5.4","artificialAnalysis","low","gpt-5-4-low"),
+        @("gpt-5.4","artificialAnalysis","xhigh","gpt-5-4"),
+        @("gpt-5.4-mini","artificialAnalysis","medium","gpt-5-4-mini-medium"),
+        @("gpt-5.4-mini","artificialAnalysis","xhigh","gpt-5-4-mini"),
+        @("gpt-5.3-codex","artificialAnalysis","xhigh","gpt-5-3-codex"),
+        @("gemini-3.5-flash","artificialAnalysis","medium","gemini-3-5-flash-medium"),
+        @("gemini-3.5-flash","artificialAnalysis","high","gemini-3-5-flash"),
+        @("gemini-3.6-flash","artificialAnalysis","high","gemini-3-6-flash"),
+        @("gemini-3.5-flash","liveBench","high","gemini-3.5-flash-high"),
+        @("gemini-3.6-flash","liveBench","high","gemini-3.6-flash-high"),
+        @("gemini-3.7-flash","liveBench","high","gemini-3.7-flash-high"),
+        @("gpt-6-astra","liveBench","max","gpt-6-astra-max")
+    )
+    foreach ($entry in $expected) {
+        $model,$source,$effort,$alias=$entry
+        Assert-True ($aliases[$model][$source][$effort] -eq $alias) "Missing exact coverage mapping: $model/$source/$effort"
+    }
+    Assert-True (-not $aliases["gemini-3.5-flash"].artificialAnalysis.Contains("low")) "Minimal borrowed as low"
+    Assert-True (-not $aliases["claude-opus-4.7"].artificialAnalysis.Contains("high")) "Contradictory non-reasoning mapping"
+}
 if ($script:Failed) { exit 1 }

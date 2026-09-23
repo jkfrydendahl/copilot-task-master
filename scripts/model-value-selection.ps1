@@ -1,6 +1,7 @@
 Set-StrictMode -Version Latest
 . (Join-Path $PSScriptRoot "model-data-common.ps1")
 . (Join-Path $PSScriptRoot "model-role-evidence.ps1")
+. (Join-Path $PSScriptRoot "model-release-data.ps1")
 
 function Get-ModelReferenceCost {
     param($Verdict, $SelectionPolicy)
@@ -14,8 +15,8 @@ function Get-ModelReferenceCost {
 }
 
 function Get-ValueBalancedSelection {
-    param($Profile, $RankedEvidence, $VerdictsByConfiguration, $SelectionPolicy, $Evidence, $CurrentConfiguration)
-    $reference = $RankedEvidence[0]
+    param($Profile, $RankedEvidence, $VerdictsByConfiguration, $SelectionPolicy, $Evidence, $CurrentConfiguration, $QualityReference = $null)
+    $reference = if ($null -ne $QualityReference) { $QualityReference } else { $RankedEvidence[0] }
     $metricKey = "$($reference.source).$($reference.metric)"
     $bands = $SelectionPolicy.profiles[$Profile.key].qualityBands
     $maxGap = Get-ObjectMemberValue $bands $metricKey
@@ -29,7 +30,13 @@ function Get-ValueBalancedSelection {
         "effort"
         "context"
     )
-    $winner = @($qualified | Sort-Object -Property $sortOrder)[0]
+    $ordered = @($qualified | Sort-Object -Property $sortOrder)
+    $minimumCost = Get-ModelReferenceCost $VerdictsByConfiguration[$ordered[0].configurationId] $SelectionPolicy
+    $cheapest = @($ordered | Where-Object {
+        (Get-ModelReferenceCost $VerdictsByConfiguration[$_.configurationId] $SelectionPolicy) -eq $minimumCost
+    })
+    $recency = Get-ModelRecencyTieDecision $cheapest
+    $winner = @($cheapest | Where-Object model -in $recency.models)[0]
     $referenceCost = Get-ModelReferenceCost $VerdictsByConfiguration[$winner.configurationId] $SelectionPolicy
     $incumbent = $VerdictsByConfiguration[$CurrentConfiguration.configurationId]
     $incumbentCost = Get-ModelReferenceCost $incumbent $SelectionPolicy
@@ -45,6 +52,7 @@ function Get-ValueBalancedSelection {
     })
     return [pscustomobject]@{
         winner = $winner
+        recencyDecision = $recency
         qualityReference = $reference
         maxScoreGap = $maxGap
         scoreGap = $reference.score - $winner.score

@@ -1,0 +1,10 @@
+{
+  "name": "copilot-task-master",
+  "private": true,
+  "dependencies": {
+    "@github/copilot-sdk": "1.0.14"
+  },
+  "engines": {
+    "node": ">=22.12.0"
+  }
+}

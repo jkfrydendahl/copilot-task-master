@@ -19,11 +19,15 @@ function Assert-ModelConfigNumber {
 
 function Get-ModelPolicyConfig {
     param([Parameter(Mandatory)][string]$PolicyPath)
-    $p=Read-ModelConfig $PolicyPath 3
+    $p=Read-ModelConfig $PolicyPath 4
     foreach ($field in @("familyPatterns","classPreferences","evidenceMetrics","profileRequirements","consensusPolicy","selectionPolicy")) {
         if ($p[$field] -isnot [System.Collections.IDictionary]) { throw "Missing/invalid policy object: $field" }
     }
     if ($p.denylist -isnot [array]) { throw "Policy denylist must be an array." }
+    $discoveryDays=Get-ObjectMemberValue $p.consensusPolicy "discoveryFreshnessDays"
+    if(($discoveryDays -isnot [int] -and $discoveryDays -isnot [long]) -or $discoveryDays -lt 1){
+        throw "consensusPolicy.discoveryFreshnessDays must be a positive integer."
+    }
     foreach ($id in $p.evidenceMetrics.Keys) {
         $metric = $p.evidenceMetrics[$id]
         if ($metric -isnot [System.Collections.IDictionary] -or
@@ -81,6 +85,41 @@ function Get-ModelPolicyConfig {
         if (@($strategy.supportingMetrics | Where-Object { $_ -in $strategy.evidenceRoutes }).Count) {
             throw "A metric cannot both decide and support '$key'."
         }
+        $qualification = $strategy["qualification"]
+        if ($qualification -isnot [System.Collections.IDictionary] -or
+            ($qualification["minimumModels"] -isnot [int] -and $qualification["minimumModels"] -isnot [long]) -or $qualification.minimumModels -lt 2 -or
+            $qualification["dimensions"] -isnot [array]) {
+            throw "Invalid qualification for '$key'; at least two distinct comparison models are required."
+        }
+        $dimensionKeys = @("primary")
+        $usedMetrics = @($strategy.evidenceRoutes) + @($strategy.supportingMetrics)
+        foreach ($dimension in $qualification.dimensions) {
+            if ($dimension -isnot [System.Collections.IDictionary] -or
+                [string]::IsNullOrWhiteSpace([string]$dimension["key"]) -or $dimension.key -in $dimensionKeys) {
+                throw "Invalid or duplicate qualification dimension for '$key'."
+            }
+            $dimensionKeys += $dimension.key
+            $routes = $dimension["evidenceRoutes"]
+            $bands = $dimension["qualityBands"]
+            if ($routes -isnot [array] -or -not $routes.Count -or
+                $bands -isnot [System.Collections.IDictionary]) {
+                throw "Missing qualification routes/bands for '$key.$($dimension.key)'."
+            }
+            foreach ($metric in $routes) {
+                if ($metric -isnot [string] -or -not $p.evidenceMetrics.Contains($metric) -or $metric -in $usedMetrics) {
+                    throw "Unknown or reused qualification metric '$metric' for '$key'."
+                }
+                $usedMetrics += $metric
+                Assert-ModelConfigNumber $bands[$metric] "$key.$($dimension.key).$metric"
+                $definition = $p.evidenceMetrics[$metric]
+                if ($bands[$metric] -gt ($definition.max - $definition.min)) {
+                    throw "Qualification band exceeds '$metric' scale."
+                }
+            }
+            if (@($bands.Keys | Where-Object { $_ -notin $routes }).Count) {
+                throw "Unknown qualification band for '$key.$($dimension.key)'."
+            }
+        }
         if ($strategy.strategy -eq "value_balanced") {
             $bands = $strategy["qualityBands"]
             if ($bands -isnot [System.Collections.IDictionary]) { throw "Missing qualityBands for '$key'." }
@@ -107,6 +146,9 @@ function Get-ModelPolicyConfig {
         Assert-ModelConfigNumber $p.selectionPolicy[$field] "selectionPolicy.$field" -Positive
     }
     if ([string]::IsNullOrWhiteSpace($p.selectionPolicy.referenceUsageDescription)) { throw "Missing reference usage description." }
+    if ((Get-ObjectMemberValue $p.selectionPolicy "costTieBreak") -ne "newest_verified_release") {
+        throw "selectionPolicy.costTieBreak must be newest_verified_release."
+    }
     return $p
 }
 

@@ -50,7 +50,11 @@ function Get-ProfileSelection {
     })
     $contract = $Policy.selectionPolicy.profiles[$Profile.key]
     $role = Get-RoleEvidencePool -Profile $Profile -Policy $Policy -Eligible $eligible
-    $pool = @($role.pool)
+    $qualificationConfigurations = @($byConfiguration.Values | Where-Object admissible | ForEach-Object {
+        Get-RecordModelConfiguration -Record $_ -Profile $Profile
+    })
+    $qualification = Get-RoleQualification -Profile $Profile -Policy $Policy -Role $role -Eligible $eligible -Configurations $qualificationConfigurations
+    $pool = @($qualification.pool)
     $decidingSource = if ($pool.Count) { $pool[0].source } else { $null }
 
     $fingerprint = Get-ModelDataFingerprint @{
@@ -72,7 +76,7 @@ function Get-ProfileSelection {
             valueDecision = $null
             qualityWinner = $null
             decidingSource = $null
-            reason = "retained_insufficient_evidence"
+            reason = $(if ($qualification.enabled) { $qualification.status } else { "retained_insufficient_evidence" })
             confidence = "none"
             contested = $false
             policyFingerprint = $fingerprint
@@ -84,7 +88,8 @@ function Get-ProfileSelection {
             supportingMetrics = $contract.supportingMetrics
             metricDefinitions = $Policy.evidenceMetrics
             routeIndex = -1
-            roleDiagnostics = $role.diagnostics
+            roleDiagnostics = @($role.diagnostics) + @($qualification.diagnostics)
+            qualification = $qualification
         }
     }
 
@@ -104,7 +109,8 @@ function Get-ProfileSelection {
     $winner = $ranked[0]
     $valueDecision = $null
     if ($strategy -eq "value_balanced") {
-        $valueDecision = Get-ValueBalancedSelection $Profile $ranked $byConfiguration $Policy.selectionPolicy $comparisonEvidence $currentConfiguration
+        $qualityReference = if ($qualification.enabled) { $qualification.dimensions[0].reference } else { $null }
+        $valueDecision = Get-ValueBalancedSelection $Profile $ranked $byConfiguration $Policy.selectionPolicy $comparisonEvidence $currentConfiguration $qualityReference
         $winner = $valueDecision.winner
     }
     $definition = $Policy.evidenceMetrics[$role.metricKey]
@@ -142,9 +148,10 @@ function Get-ProfileSelection {
     $contested = $role.routeIndex -eq 0 -and $lbWinner.Count -gt 0 -and
         @($lbComparable | Where-Object { $_.score -gt $lbWinner[0].score + $lbTolerance }).Count -gt 0
 
+    $eligibleQualityReference = if ($qualification.enabled) { $qualification.dimensions[0].reference } else { $ranked[0] }
     if ($role.routeIndex -gt 0) {
         $reason = if ($decidingSource -eq "liveBench") { "livebench_fallback" } else { "role_metric_fallback" }
-    } elseif ($ranked[0].score -lt $qualityWinner.score) {
+    } elseif ($eligibleQualityReference.score -lt $qualityWinner.score) {
         $reason = "budget_constrained_choice"
     } elseif ($strategy -eq "value_balanced") {
         $reason = "value_balanced_choice"
@@ -155,6 +162,11 @@ function Get-ProfileSelection {
         $lbWinner.Count -eq 0 -or @($lbComparable.model | Select-Object -Unique).Count -lt 2 -or
         $role.routeIndex -gt 0 -or $contested -or
         $lbWinner[0].cached -or $lbWinner[0].publicationAgeUnknown
+    if ($qualification.enabled -and (
+        @($qualification.dimensions | Where-Object routeIndex -gt 0).Count -or
+        @($qualification.governingEvidence | Where-Object { $_.cached -or $_.publicationAgeUnknown }).Count)) {
+        $reducedConfidence = $true
+    }
     $hasVersion = -not [string]::IsNullOrWhiteSpace([string]$winner.sourceVersion)
     $promotionBlockReason = $null
     if ($role.routeIndex -gt 0 -and
@@ -164,6 +176,16 @@ function Get-ProfileSelection {
         })
         if (-not $hasVersion -or -not $matchedIncumbent.Count) {
             $promotionBlockReason = "retained_fallback_incumbent_evidence_missing"
+        }
+    }
+    if ($qualification.enabled -and $winner.configurationId -ne $currentConfiguration.configurationId) {
+        foreach ($dimension in @($qualification.dimensions | Where-Object { $_.key -ne "primary" -and $_.routeIndex -gt 0 })) {
+            $reference = $dimension.reference
+            if (-not @($comparisonEvidence | Where-Object {
+                $_.configurationId -eq $currentConfiguration.configurationId -and (Test-BenchmarkEvidenceComparable $_ $reference)
+            }).Count) {
+                $promotionBlockReason = "retained_qualification_fallback_incumbent_evidence_missing"
+            }
         }
     }
     $observation = Get-ModelDataFingerprint @{
@@ -179,7 +201,10 @@ function Get-ProfileSelection {
         harness=(Get-ObjectMemberValue $metadata "harness")
         versions=(Get-ObjectMemberValue $metadata "versions")
         suite=(Get-ObjectMemberValue $metadata "suiteFingerprint")
+        qualificationIdentity=$qualification.identity
+        recencyIdentity=(Get-ObjectMemberValue (Get-ObjectMemberValue $valueDecision "recencyDecision") "identity")
     }
+    if ($qualification.enabled) { $observation = $qualification.observation }
     $candidateCost = Get-ModelReferenceCost $byConfiguration[$winner.configurationId] $Policy.selectionPolicy
     return [pscustomobject]@{
         winner = $winner
@@ -197,7 +222,7 @@ function Get-ProfileSelection {
         contested = $contested
         policyFingerprint = $fingerprint
         observation = $observation
-        freshObservation = -not $winner.cached -and $hasVersion
+        freshObservation = -not $winner.cached -and $hasVersion -and $qualification.fresh
         promotionBlockReason = $promotionBlockReason
         evidenceIdentity = $evidenceIdentity
         metricKey = $role.metricKey
@@ -206,7 +231,8 @@ function Get-ProfileSelection {
         supportingMetrics = $contract.supportingMetrics
         metricDefinitions = $Policy.evidenceMetrics
         routeIndex = $role.routeIndex
-        roleDiagnostics = $role.diagnostics
+        roleDiagnostics = @($role.diagnostics) + @($qualification.diagnostics)
+        qualification = $qualification
     }
 }
 
@@ -219,9 +245,9 @@ function Resolve-ProfileSelectionState {
         [datetime]$NowUtc = [datetime]::UtcNow
     )
     $compatible = (Get-ObjectMemberValue $State "policyFingerprint") -eq $Selection.policyFingerprint -and
-        (Get-ObjectMemberValue $State "schemaVersion") -eq 3
+        (Get-ObjectMemberValue $State "schemaVersion") -eq 4
     $next = [ordered]@{
-        schemaVersion = 3
+        schemaVersion = 4
         policyFingerprint = $Selection.policyFingerprint
         pending = $null
         activeOverride = $null
@@ -237,7 +263,7 @@ function Resolve-ProfileSelectionState {
             $value = Get-ObjectMemberValue $State $field
             if ($null -ne $value) { $next[$field] = ConvertTo-CanonicalModelData $value }
         }
-        if ((Get-ObjectMemberValue $State "schemaVersion") -ne 3) {
+        if ((Get-ObjectMemberValue $State "schemaVersion") -lt 3) {
             $next.legacyLatestSourceDates = ConvertTo-CanonicalModelData $next.latestSourceDates
         }
     }
@@ -271,7 +297,36 @@ function Resolve-ProfileSelectionState {
         applied = $false
         status = $Selection.reason
     }
+    $qualification = Get-ObjectMemberValue $Selection "qualification"
+    $governingEvidence = if ($null -ne $qualification -and $qualification.enabled) {
+        @($qualification.governingEvidence)
+    } elseif ($null -ne $Selection.winner) { @($Selection.winner) } else { @() }
+    $dateUpdates = @{}
+    foreach ($record in @($governingEvidence | Where-Object { -not $_.cached })) {
+        $key = "$($record.source).$($record.metric)"
+        $sourceDate = $record.sourceDate
+        $dateKey = $key
+        if ([string]::IsNullOrWhiteSpace([string]$sourceDate)) {
+            $sourceDate = Get-ObjectMemberValue $record "artifactPublishedAtUtc"
+            $dateKey = "${key}:artifact"
+        }
+        $lastDate = Get-ObjectMemberValue $next.latestSourceDates $dateKey
+        if ($null -eq $lastDate -and $dateKey -eq $key) {
+            $lastDate = Get-ObjectMemberValue $next.legacyLatestSourceDates $record.source
+        }
+        if ($null -ne $lastDate -and -not [string]::IsNullOrWhiteSpace([string]$sourceDate) -and
+            [datetime]$sourceDate -lt [datetime]$lastDate) {
+            $result.status = "retained_source_regression"
+            return $result
+        }
+        if (-not [string]::IsNullOrWhiteSpace([string]$sourceDate)) {
+            if ($dateKey -eq $key) { $dateUpdates[$record.source] = $sourceDate }
+            $dateUpdates[$dateKey] = $sourceDate
+        }
+    }
+    foreach ($key in $dateUpdates.Keys) { $next.latestSourceDates[$key] = $dateUpdates[$key] }
     if ($null -eq $Selection.winner) {
+        if ($null -ne $qualification -and $qualification.enabled) { $next.pending = $null }
         return $result
     }
     $winner = $Selection.winner
@@ -282,26 +337,6 @@ function Resolve-ProfileSelectionState {
     }
     $source = $Selection.decidingSource
     $metricKey = $Selection.metricKey
-    $sourceDate = $winner.sourceDate
-    $dateKey = $metricKey
-    if ([string]::IsNullOrWhiteSpace([string]$sourceDate)) {
-        $sourceDate = Get-ObjectMemberValue $winner "artifactPublishedAtUtc"
-        $dateKey = "${metricKey}:artifact"
-    }
-    $lastDate = Get-ObjectMemberValue $next.latestSourceDates $dateKey
-    if ($null -eq $lastDate -and $dateKey -eq $metricKey) {
-        $lastDate = Get-ObjectMemberValue $next.legacyLatestSourceDates $source
-    }
-    if ($null -ne $lastDate -and -not [string]::IsNullOrWhiteSpace([string]$sourceDate) -and
-        [datetime]$sourceDate -lt [datetime]$lastDate) {
-        $result.status = "retained_source_regression"
-        return $result
-    }
-    # Publication rollback protection tracks observations, not just promotion attempts.
-    if (-not [string]::IsNullOrWhiteSpace([string]$sourceDate)) {
-        if ($dateKey -eq $metricKey) { $next.latestSourceDates[$source] = $sourceDate }
-        $next.latestSourceDates[$dateKey] = $sourceDate
-    }
     $promotionBlockReason = Get-ObjectMemberValue $Selection "promotionBlockReason"
     if ($null -ne $promotionBlockReason) {
         $result.status = $promotionBlockReason
@@ -314,12 +349,22 @@ function Resolve-ProfileSelectionState {
         metricIdentity=(Get-ObjectMemberValue $winner "metricIdentity")
         observedAtUtc=$NowUtc.ToUniversalTime().ToString("o")
     }
+    $weakerQualification = $false
+    if ($null -ne $qualification -and $qualification.enabled) {
+        $winnerBasis.qualificationRoutes = @{}
+        $oldRoutes = Get-ObjectMemberValue $next.incumbentBasis "qualificationRoutes"
+        foreach ($dimension in $qualification.dimensions) {
+            $winnerBasis.qualificationRoutes[$dimension.key] = $dimension.metricKey
+            $oldIndex = [array]::IndexOf(@($dimension.evidenceRoutes), (Get-ObjectMemberValue $oldRoutes $dimension.key))
+            if ($oldIndex -ge 0 -and $oldIndex -lt $dimension.routeIndex) { $weakerQualification = $true }
+        }
+    }
     if ($winnerConfiguration.configurationId -eq $currentConfiguration.configurationId) {
         $next.pending = $null
-        if ($basisIndex -lt 0 -or $Selection.routeIndex -le $basisIndex) { $next.incumbentBasis = $winnerBasis }
+        if (-not $weakerQualification -and ($basisIndex -lt 0 -or $Selection.routeIndex -le $basisIndex)) { $next.incumbentBasis = $winnerBasis }
         return $result
     }
-    if ($basisIndex -ge 0 -and $basisIndex -lt $Selection.routeIndex) {
+    if ($weakerQualification -or ($basisIndex -ge 0 -and $basisIndex -lt $Selection.routeIndex)) {
         $result.status = "retained_stronger_incumbent_basis"
         return $result
     }
