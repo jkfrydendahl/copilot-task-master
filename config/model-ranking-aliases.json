@@ -1,124 +1,8 @@
 {
-  "schemaVersion": 2,
-  "verifiedAt": "2026-09-23",
-  "notes": "Explicit AA general-model and LiveBench source identities by actual effort. September 23 coverage audit checked AA release/effort metadata and LiveBench modelLinks.js. Empty/unlisted variants remain unresolved: Opus 4.7 non-reasoning conflicts with its high-effort metadata; Grok LiveBench rows omit effort; Gemini 3.5 minimal is not low. AA API may lag public-page coverage or use a different evaluation release; never substitute public-page numbers. 'none' is for CLI models without an effort control. AA coding agents are resolved automatically from structured source records, not this alias catalog. External agent harnesses are not Copilot CLI measurements.",
   "aliases": {
-    "claude-sonnet-5": {
-      "artificialAnalysis": {
-        "low": "claude-sonnet-5-low",
-        "medium": "claude-sonnet-5-medium",
-        "high": "claude-sonnet-5-high",
-        "xhigh": "claude-sonnet-5-xhigh",
-        "max": "claude-sonnet-5"
-      },
-      "liveBench": {
-        "xhigh": "claude-sonnet-5-xhigh-effort"
-      }
-    },
-    "claude-opus-5": {
-      "artificialAnalysis": {
-        "low": "claude-opus-5-low",
-        "medium": "claude-opus-5-medium",
-        "high": "claude-opus-5-high",
-        "xhigh": "claude-opus-5-xhigh",
-        "max": "claude-opus-5"
-      },
-      "liveBench": {
-        "max": "claude-opus-5-max-effort"
-      }
-    },
-    "gpt-6-astra": {
-      "artificialAnalysis": {
-        "low": "gpt-6-astra-low",
-        "medium": "gpt-6-astra-medium",
-        "high": "gpt-6-astra-high",
-        "xhigh": "gpt-6-astra-xhigh",
-        "max": "gpt-6-astra"
-      },
-      "liveBench": {
-        "max": "gpt-6-astra-max"
-      }
-    },
-    "gpt-5.6-sol": {
-      "artificialAnalysis": {
-        "low": "gpt-5-6-sol-low",
-        "medium": "gpt-5-6-sol-medium",
-        "high": "gpt-5-6-sol-high",
-        "xhigh": "gpt-5-6-sol-xhigh",
-        "max": "gpt-5-6-sol"
-      },
-      "liveBench": {
-        "max": "gpt-5.6-sol-max"
-      }
-    },
-    "gpt-5.6-terra": {
-      "artificialAnalysis": {
-        "low": "gpt-5-6-terra-low",
-        "medium": "gpt-5-6-terra-medium",
-        "high": "gpt-5-6-terra-high",
-        "xhigh": "gpt-5-6-terra-xhigh",
-        "max": "gpt-5-6-terra"
-      },
-      "liveBench": {
-        "max": "gpt-5.6-terra-max"
-      }
-    },
-    "gpt-5.6-luna": {
-      "artificialAnalysis": {
-        "low": "gpt-5-6-luna-low",
-        "medium": "gpt-5-6-luna-medium",
-        "high": "gpt-5-6-luna-high",
-        "xhigh": "gpt-5-6-luna-xhigh",
-        "max": "gpt-5-6-luna"
-      },
-      "liveBench": {
-        "max": "gpt-5.6-luna-max"
-      }
-    },
-    "gemini-3.8-flash": {
-      "liveBench": {
-        "high": "gemini-3.8-flash-high"
-      },
-      "artificialAnalysis": {
-        "low": "gemini-3-8-flash-low",
-        "medium": "gemini-3-8-flash-medium",
-        "high": "gemini-3-8-flash"
-      }
-    },
-    "gemini-3.7-flash": {
-      "liveBench": {
-        "high": "gemini-3.7-flash-high"
-      },
-      "artificialAnalysis": {
-        "low": "gemini-3-7-flash-low",
-        "medium": "gemini-3-7-flash-medium",
-        "high": "gemini-3-7-flash"
-      }
-    },
-    "grok-4.6": {
-      "artificialAnalysis": {
-        "low": "grok-4-6-low",
-        "medium": "grok-4-6-medium",
-        "high": "grok-4-6",
-        "xhigh": "grok-4-6-xhigh"
-      }
-    },
-    "grok-4.5": {
-      "artificialAnalysis": {
-        "high": "grok-4-5"
-      }
-    },
     "claude-haiku-4.5": {
       "artificialAnalysis": {
         "none": "claude-4-5-haiku"
-      }
-    },
-    "claude-opus-4.8": {
-      "artificialAnalysis": {
-        "max": "claude-opus-4-8"
-      },
-      "liveBench": {
-        "max": "claude-opus-4-8-max-effort"
       }
     },
     "claude-opus-4.7": {
@@ -129,6 +13,26 @@
         "xhigh": "claude-opus-4-7-xhigh-effort"
       }
     },
+    "claude-opus-4.8": {
+      "artificialAnalysis": {
+        "max": "claude-opus-4-8"
+      },
+      "liveBench": {
+        "max": "claude-opus-4-8-max-effort"
+      }
+    },
+    "claude-opus-5": {
+      "artificialAnalysis": {
+        "high": "claude-opus-5-high",
+        "low": "claude-opus-5-low",
+        "max": "claude-opus-5",
+        "medium": "claude-opus-5-medium",
+        "xhigh": "claude-opus-5-xhigh"
+      },
+      "liveBench": {
+        "max": "claude-opus-5-max-effort"
+      }
+    },
     "claude-sonnet-4.6": {
       "artificialAnalysis": {
         "max": "claude-sonnet-4-6-adaptive"
@@ -137,15 +41,58 @@
         "medium": "claude-sonnet-4-6-thinking-auto-medium-effort"
       }
     },
-    "gpt-5.5": {
+    "claude-sonnet-5": {
       "artificialAnalysis": {
-        "low": "gpt-5-5-low",
-        "medium": "gpt-5-5-medium",
-        "high": "gpt-5-5-high",
-        "xhigh": "gpt-5-5"
+        "high": "claude-sonnet-5-high",
+        "low": "claude-sonnet-5-low",
+        "max": "claude-sonnet-5",
+        "medium": "claude-sonnet-5-medium",
+        "xhigh": "claude-sonnet-5-xhigh"
       },
       "liveBench": {
-        "xhigh": "gpt-5.5-xhigh"
+        "xhigh": "claude-sonnet-5-xhigh-effort"
+      }
+    },
+    "gemini-3.5-flash": {
+      "artificialAnalysis": {
+        "high": "gemini-3-5-flash",
+        "medium": "gemini-3-5-flash-medium"
+      },
+      "liveBench": {
+        "high": "gemini-3.5-flash-high"
+      }
+    },
+    "gemini-3.6-flash": {
+      "artificialAnalysis": {
+        "high": "gemini-3-6-flash"
+      },
+      "liveBench": {
+        "high": "gemini-3.6-flash-high"
+      }
+    },
+    "gemini-3.7-flash": {
+      "artificialAnalysis": {
+        "high": "gemini-3-7-flash",
+        "low": "gemini-3-7-flash-low",
+        "medium": "gemini-3-7-flash-medium"
+      },
+      "liveBench": {
+        "high": "gemini-3.7-flash-high"
+      }
+    },
+    "gemini-3.8-flash": {
+      "artificialAnalysis": {
+        "high": "gemini-3-8-flash",
+        "low": "gemini-3-8-flash-low",
+        "medium": "gemini-3-8-flash-medium"
+      },
+      "liveBench": {
+        "high": "gemini-3.8-flash-high"
+      }
+    },
+    "gpt-5.3-codex": {
+      "artificialAnalysis": {
+        "xhigh": "gpt-5-3-codex"
       }
     },
     "gpt-5.4": {
@@ -166,27 +113,357 @@
         "xhigh": "gpt-5.4-mini-xhigh"
       }
     },
-    "gpt-5.3-codex": {
+    "gpt-5.5": {
       "artificialAnalysis": {
-        "xhigh": "gpt-5-3-codex"
-      }
-    },
-    "gemini-3.6-flash": {
-      "artificialAnalysis": {
-        "high": "gemini-3-6-flash"
+        "high": "gpt-5-5-high",
+        "low": "gpt-5-5-low",
+        "medium": "gpt-5-5-medium",
+        "xhigh": "gpt-5-5"
       },
       "liveBench": {
-        "high": "gemini-3.6-flash-high"
+        "xhigh": "gpt-5.5-xhigh"
       }
     },
-    "gemini-3.5-flash": {
+    "gpt-5.6-luna": {
       "artificialAnalysis": {
-        "medium": "gemini-3-5-flash-medium",
-        "high": "gemini-3-5-flash"
+        "high": "gpt-5-6-luna-high",
+        "low": "gpt-5-6-luna-low",
+        "max": "gpt-5-6-luna",
+        "medium": "gpt-5-6-luna-medium",
+        "xhigh": "gpt-5-6-luna-xhigh"
       },
       "liveBench": {
-        "high": "gemini-3.5-flash-high"
+        "max": "gpt-5.6-luna-max"
       }
+    },
+    "gpt-5.6-sol": {
+      "artificialAnalysis": {
+        "high": "gpt-5-6-sol-high",
+        "low": "gpt-5-6-sol-low",
+        "max": "gpt-5-6-sol",
+        "medium": "gpt-5-6-sol-medium",
+        "xhigh": "gpt-5-6-sol-xhigh"
+      },
+      "liveBench": {
+        "max": "gpt-5.6-sol-max"
+      }
+    },
+    "gpt-5.6-terra": {
+      "artificialAnalysis": {
+        "high": "gpt-5-6-terra-high",
+        "low": "gpt-5-6-terra-low",
+        "max": "gpt-5-6-terra",
+        "medium": "gpt-5-6-terra-medium",
+        "xhigh": "gpt-5-6-terra-xhigh"
+      },
+      "liveBench": {
+        "max": "gpt-5.6-terra-max"
+      }
+    },
+    "gpt-6-astra": {
+      "artificialAnalysis": {
+        "high": "gpt-6-astra-high",
+        "low": "gpt-6-astra-low",
+        "max": "gpt-6-astra",
+        "medium": "gpt-6-astra-medium",
+        "xhigh": "gpt-6-astra-xhigh"
+      },
+      "liveBench": {
+        "max": "gpt-6-astra-max"
+      }
+    },
+    "grok-4.5": {
+      "artificialAnalysis": {
+        "high": "grok-4-5"
+      }
+    },
+    "grok-4.6": {
+      "artificialAnalysis": {
+        "high": "grok-4-6",
+        "low": "grok-4-6-low",
+        "medium": "grok-4-6-medium",
+        "xhigh": "grok-4-6-xhigh"
+      }
+    },
+    "claude-opus-5.5": {
+      "liveBench": {
+        "max": "claude-opus-5-5-max-effort",
+        "xhigh": "claude-opus-5-5-xhigh-effort"
+      }
+    },
+    "gpt-6-luna": {
+      "liveBench": {
+        "max": "gpt-6-luna-max"
+      },
+      "artificialAnalysis": {
+        "low": "gpt-6-luna-low",
+        "xhigh": "gpt-6-luna-xhigh",
+        "max": "gpt-6-luna",
+        "medium": "gpt-6-luna-medium",
+        "high": "gpt-6-luna-high"
+      }
+    },
+    "gpt-6-sol": {
+      "liveBench": {
+        "max": "gpt-6-sol-max"
+      },
+      "artificialAnalysis": {
+        "max": "gpt-6-sol",
+        "medium": "gpt-6-sol-medium",
+        "xhigh": "gpt-6-sol-xhigh",
+        "low": "gpt-6-sol-low",
+        "high": "gpt-6-sol-high"
+      }
+    }
+  },
+  "notes": "Explicit AA general-model and LiveBench source identities by actual effort. September 23 coverage audit checked AA release/effort metadata and LiveBench modelLinks.js. Empty/unlisted variants remain unresolved: Opus 4.7 non-reasoning conflicts with its high-effort metadata; Grok LiveBench rows omit effort; Gemini 3.5 minimal is not low. AA API may lag public-page coverage or use a different evaluation release; never substitute public-page numbers. 'none' is for CLI models without an effort control. AA coding agents are resolved automatically from structured source records, not this alias catalog. External agent harnesses are not Copilot CLI measurements.",
+  "schemaVersion": 2,
+  "verifiedAt": "2026-09-23",
+  "onboardingProofs": {
+    "gpt-5.6-sol/artificialAnalysis/max": {
+      "releaseId": "gpt-5-6-sol",
+      "alias": "gpt-5-6-sol",
+      "effort": "max"
+    },
+    "gpt-6-sol/artificialAnalysis/low": {
+      "releaseId": "gpt-6-sol",
+      "alias": "gpt-6-sol-low",
+      "effort": "low"
+    },
+    "gpt-5.4-mini/artificialAnalysis/xhigh": {
+      "releaseId": "gpt-5-4-mini",
+      "alias": "gpt-5-4-mini",
+      "effort": "xhigh"
+    },
+    "gpt-6-luna/artificialAnalysis/low": {
+      "releaseId": "gpt-6-luna",
+      "alias": "gpt-6-luna-low",
+      "effort": "low"
+    },
+    "gpt-5.6-luna/artificialAnalysis/xhigh": {
+      "releaseId": "gpt-5-6-luna",
+      "alias": "gpt-5-6-luna-xhigh",
+      "effort": "xhigh"
+    },
+    "gpt-5.4-mini/artificialAnalysis/medium": {
+      "releaseId": "gpt-5-4-mini",
+      "alias": "gpt-5-4-mini-medium",
+      "effort": "medium"
+    },
+    "gpt-5.6-sol/artificialAnalysis/xhigh": {
+      "releaseId": "gpt-5-6-sol",
+      "alias": "gpt-5-6-sol-xhigh",
+      "effort": "xhigh"
+    },
+    "claude-opus-4.8/artificialAnalysis/max": {
+      "releaseId": "claude-opus-4-8",
+      "alias": "claude-opus-4-8",
+      "effort": "max"
+    },
+    "claude-sonnet-5/artificialAnalysis/medium": {
+      "releaseId": "claude-sonnet-5",
+      "alias": "claude-sonnet-5-medium",
+      "effort": "medium"
+    },
+    "claude-sonnet-5/artificialAnalysis/low": {
+      "releaseId": "claude-sonnet-5",
+      "alias": "claude-sonnet-5-low",
+      "effort": "low"
+    },
+    "claude-opus-5/artificialAnalysis/high": {
+      "releaseId": "claude-opus-5",
+      "alias": "claude-opus-5-high",
+      "effort": "high"
+    },
+    "claude-opus-5/artificialAnalysis/medium": {
+      "releaseId": "claude-opus-5",
+      "alias": "claude-opus-5-medium",
+      "effort": "medium"
+    },
+    "gpt-5.6-sol/artificialAnalysis/medium": {
+      "releaseId": "gpt-5-6-sol",
+      "alias": "gpt-5-6-sol-medium",
+      "effort": "medium"
+    },
+    "gpt-5.6-terra/artificialAnalysis/high": {
+      "releaseId": "gpt-5-6-terra",
+      "alias": "gpt-5-6-terra-high",
+      "effort": "high"
+    },
+    "gpt-5.5/artificialAnalysis/low": {
+      "releaseId": "gpt-5-5",
+      "alias": "gpt-5-5-low",
+      "effort": "low"
+    },
+    "gpt-6-luna/artificialAnalysis/xhigh": {
+      "releaseId": "gpt-6-luna",
+      "alias": "gpt-6-luna-xhigh",
+      "effort": "xhigh"
+    },
+    "gpt-5.4/artificialAnalysis/xhigh": {
+      "releaseId": "gpt-5-4",
+      "alias": "gpt-5-4",
+      "effort": "xhigh"
+    },
+    "gpt-5.6-terra/artificialAnalysis/low": {
+      "releaseId": "gpt-5-6-terra",
+      "alias": "gpt-5-6-terra-low",
+      "effort": "low"
+    },
+    "gpt-5.6-luna/artificialAnalysis/max": {
+      "releaseId": "gpt-5-6-luna",
+      "alias": "gpt-5-6-luna",
+      "effort": "max"
+    },
+    "gpt-6-luna/artificialAnalysis/max": {
+      "releaseId": "gpt-6-luna",
+      "alias": "gpt-6-luna",
+      "effort": "max"
+    },
+    "gpt-5.6-terra/artificialAnalysis/medium": {
+      "releaseId": "gpt-5-6-terra",
+      "alias": "gpt-5-6-terra-medium",
+      "effort": "medium"
+    },
+    "claude-sonnet-5/artificialAnalysis/max": {
+      "releaseId": "claude-sonnet-5",
+      "alias": "claude-sonnet-5",
+      "effort": "max"
+    },
+    "claude-sonnet-5/artificialAnalysis/high": {
+      "releaseId": "claude-sonnet-5",
+      "alias": "claude-sonnet-5-high",
+      "effort": "high"
+    },
+    "gpt-6-sol/artificialAnalysis/medium": {
+      "releaseId": "gpt-6-sol",
+      "alias": "gpt-6-sol-medium",
+      "effort": "medium"
+    },
+    "gpt-6-astra/artificialAnalysis/high": {
+      "releaseId": "gpt-6-astra",
+      "alias": "gpt-6-astra-high",
+      "effort": "high"
+    },
+    "gpt-6-astra/artificialAnalysis/medium": {
+      "releaseId": "gpt-6-astra",
+      "alias": "gpt-6-astra-medium",
+      "effort": "medium"
+    },
+    "gpt-6-sol/artificialAnalysis/xhigh": {
+      "releaseId": "gpt-6-sol",
+      "alias": "gpt-6-sol-xhigh",
+      "effort": "xhigh"
+    },
+    "gpt-5.6-luna/artificialAnalysis/high": {
+      "releaseId": "gpt-5-6-luna",
+      "alias": "gpt-5-6-luna-high",
+      "effort": "high"
+    },
+    "gpt-6-astra/artificialAnalysis/low": {
+      "releaseId": "gpt-6-astra",
+      "alias": "gpt-6-astra-low",
+      "effort": "low"
+    },
+    "gpt-6-sol/artificialAnalysis/max": {
+      "releaseId": "gpt-6-sol",
+      "alias": "gpt-6-sol",
+      "effort": "max"
+    },
+    "gpt-5.6-sol/artificialAnalysis/low": {
+      "releaseId": "gpt-5-6-sol",
+      "alias": "gpt-5-6-sol-low",
+      "effort": "low"
+    },
+    "gpt-6-sol/artificialAnalysis/high": {
+      "releaseId": "gpt-6-sol",
+      "alias": "gpt-6-sol-high",
+      "effort": "high"
+    },
+    "claude-opus-5/artificialAnalysis/max": {
+      "releaseId": "claude-opus-5",
+      "alias": "claude-opus-5",
+      "effort": "max"
+    },
+    "gpt-6-astra/artificialAnalysis/max": {
+      "releaseId": "gpt-6-astra",
+      "alias": "gpt-6-astra",
+      "effort": "max"
+    },
+    "gpt-6-luna/artificialAnalysis/high": {
+      "releaseId": "gpt-6-luna",
+      "alias": "gpt-6-luna-high",
+      "effort": "high"
+    },
+    "gpt-6-astra/artificialAnalysis/xhigh": {
+      "releaseId": "gpt-6-astra",
+      "alias": "gpt-6-astra-xhigh",
+      "effort": "xhigh"
+    },
+    "claude-opus-5/artificialAnalysis/low": {
+      "releaseId": "claude-opus-5",
+      "alias": "claude-opus-5-low",
+      "effort": "low"
+    },
+    "claude-opus-5/artificialAnalysis/xhigh": {
+      "releaseId": "claude-opus-5",
+      "alias": "claude-opus-5-xhigh",
+      "effort": "xhigh"
+    },
+    "gpt-6-luna/artificialAnalysis/medium": {
+      "releaseId": "gpt-6-luna",
+      "alias": "gpt-6-luna-medium",
+      "effort": "medium"
+    },
+    "gpt-5.4/artificialAnalysis/low": {
+      "releaseId": "gpt-5-4",
+      "alias": "gpt-5-4-low",
+      "effort": "low"
+    },
+    "gpt-5.6-terra/artificialAnalysis/xhigh": {
+      "releaseId": "gpt-5-6-terra",
+      "alias": "gpt-5-6-terra-xhigh",
+      "effort": "xhigh"
+    },
+    "gpt-5.5/artificialAnalysis/high": {
+      "releaseId": "gpt-5-5",
+      "alias": "gpt-5-5-high",
+      "effort": "high"
+    },
+    "gpt-5.5/artificialAnalysis/xhigh": {
+      "releaseId": "gpt-5-5",
+      "alias": "gpt-5-5",
+      "effort": "xhigh"
+    },
+    "gpt-5.6-luna/artificialAnalysis/low": {
+      "releaseId": "gpt-5-6-luna",
+      "alias": "gpt-5-6-luna-low",
+      "effort": "low"
+    },
+    "gpt-5.5/artificialAnalysis/medium": {
+      "releaseId": "gpt-5-5",
+      "alias": "gpt-5-5-medium",
+      "effort": "medium"
+    },
+    "gpt-5.6-sol/artificialAnalysis/high": {
+      "releaseId": "gpt-5-6-sol",
+      "alias": "gpt-5-6-sol-high",
+      "effort": "high"
+    },
+    "gpt-5.6-terra/artificialAnalysis/max": {
+      "releaseId": "gpt-5-6-terra",
+      "alias": "gpt-5-6-terra",
+      "effort": "max"
+    },
+    "claude-sonnet-5/artificialAnalysis/xhigh": {
+      "releaseId": "claude-sonnet-5",
+      "alias": "claude-sonnet-5-xhigh",
+      "effort": "xhigh"
+    },
+    "gpt-5.6-luna/artificialAnalysis/medium": {
+      "releaseId": "gpt-5-6-luna",
+      "alias": "gpt-5-6-luna-medium",
+      "effort": "medium"
     }
   }
 }
