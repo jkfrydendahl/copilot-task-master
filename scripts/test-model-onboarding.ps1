@@ -248,6 +248,36 @@ Run-Test "Malformed, future, unauthenticated and duplicate discovery snapshots f
         Assert-True ($r.status -eq "invalid" -and -not $r.availability.verified -and $r.availability.models.Count -eq 0) "Invalid snapshot authorized models"
     }
 }
+Run-Test "Persisted discovery snapshot has canonical key order so refreshes diff only on data" {
+    $root=Join-Path ([IO.Path]::GetTempPath()) ([guid]::NewGuid().ToString("N"))
+    foreach($dir in @("config","data")){New-Item -ItemType Directory (Join-Path $root $dir) -Force | Out-Null}
+    try{
+        Copy-Item (Join-Path $PSScriptRoot "..\config\model-policy.json") (Join-Path $root "config")
+        $f=New-OnboardingFixture
+        $model=$f.RuntimeCatalog.models[0]
+        $model.supportedContextTiers=@("default","long_context")
+        $model.tokenPrices=@{outputPrice=250;inputPrice=50;cachePrice=5;longContext=@{outputPrice=300;inputPrice=60;maxPromptTokens=900000}}
+        Update-LocalModelDiscovery -RepoRoot $root -RuntimeProbe {$f.RuntimeCatalog} -HelpProbe {$f.Availability} -NowUtc $now | Out-Null
+        function Test-CanonicalKeyOrder($Node){
+            if($Node -is [pscustomobject]){
+                $names=@($Node.PSObject.Properties.Name)
+                if(($names -join ",") -cne (@($names | Sort-Object) -join ",")){return $false}
+                foreach($property in $Node.PSObject.Properties){if(-not (Test-CanonicalKeyOrder $property.Value)){return $false}}
+            }elseif($Node -is [array]){
+                foreach($item in $Node){if(-not (Test-CanonicalKeyOrder $item)){return $false}}
+            }
+            return $true
+        }
+        $written=Get-Content (Join-Path $root "data\model-discovery-snapshot.json") -Raw | ConvertFrom-Json
+        Assert-True (Test-CanonicalKeyOrder $written) "Snapshot keys are not persisted in canonical order"
+        Assert-True (@($written.runtime.models[0].supportedReasoningEfforts).Count -eq 2 -and
+            (@($written.runtime.models[0].supportedReasoningEfforts) -join ",") -ceq "low,high") "Canonical persistence reordered or lost array values"
+    }finally{
+        foreach($file in @(Get-ChildItem -LiteralPath $root -File -Recurse)){Remove-Item -LiteralPath $file.FullName}
+        foreach($dir in @("config","data")){Remove-Item -LiteralPath (Join-Path $root $dir)}
+        Remove-Item -LiteralPath $root
+    }
+}
 Run-Test "Local refresh and remote review use a sanitized persistent snapshot without remote authentication" {
     $root=Join-Path ([IO.Path]::GetTempPath()) ([guid]::NewGuid().ToString("N"))
     foreach($dir in @("config","data","reports")){New-Item -ItemType Directory (Join-Path $root $dir) -Force | Out-Null}

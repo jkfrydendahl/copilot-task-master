@@ -22,7 +22,8 @@ function Update-LocalModelDiscovery {
         throw "Local discovery failed; previous snapshot was not overwritten. Authenticate your local CLI with your own account and retry. $($check.message) $((Get-ObjectMemberValue $runtime 'message'))"
     }
     $path=Join-Path $RepoRoot "data\model-discovery-snapshot.json"
-    Write-ModelJsonAtomic -SnapshotPath $path -SnapshotObject $snapshot
+    # Hashtable key order varies per process, so persist a canonical (sorted) form to keep refresh diffs limited to real changes.
+    Write-ModelJsonAtomic -SnapshotPath $path -SnapshotObject (ConvertTo-CanonicalModelData $snapshot)
     Write-Host "Refreshed sanitized model metadata: $path"
     Write-Host "Observed locally at $($snapshot.observedAtUtc); valid for $($policy.consensusPolicy.discoveryFreshnessDays) days. Review and commit/push this metadata before running the remote review Action. Credentials were not exported."
     return $snapshot
