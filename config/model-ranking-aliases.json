@@ -33,6 +33,12 @@
         "max": "claude-opus-5-max-effort"
       }
     },
+    "claude-opus-5.5": {
+      "liveBench": {
+        "max": "claude-opus-5-5-max-effort",
+        "xhigh": "claude-opus-5-5-xhigh-effort"
+      }
+    },
     "claude-sonnet-4.6": {
       "artificialAnalysis": {
         "max": "claude-sonnet-4-6-adaptive"
@@ -172,6 +178,30 @@
         "max": "gpt-6-astra-max"
       }
     },
+    "gpt-6-luna": {
+      "artificialAnalysis": {
+        "high": "gpt-6-luna-high",
+        "low": "gpt-6-luna-low",
+        "max": "gpt-6-luna",
+        "medium": "gpt-6-luna-medium",
+        "xhigh": "gpt-6-luna-xhigh"
+      },
+      "liveBench": {
+        "max": "gpt-6-luna-max"
+      }
+    },
+    "gpt-6-sol": {
+      "artificialAnalysis": {
+        "high": "gpt-6-sol-high",
+        "low": "gpt-6-sol-low",
+        "max": "gpt-6-sol",
+        "medium": "gpt-6-sol-medium",
+        "xhigh": "gpt-6-sol-xhigh"
+      },
+      "liveBench": {
+        "max": "gpt-6-sol-max"
+      }
+    },
     "grok-4.5": {
       "artificialAnalysis": {
         "high": "grok-4-5"
@@ -185,285 +215,299 @@
         "xhigh": "grok-4-6-xhigh"
       }
     },
-    "claude-opus-5.5": {
+    "claude-sonnet-5.5": {
       "liveBench": {
-        "max": "claude-opus-5-5-max-effort",
-        "xhigh": "claude-opus-5-5-xhigh-effort"
+        "xhigh": "claude-sonnet-5-5-xhigh-effort",
+        "max": "claude-sonnet-5-5-max-effort"
       }
     },
-    "gpt-6-luna": {
-      "liveBench": {
-        "max": "gpt-6-luna-max"
-      },
+    "gpt-6.1-sol": {
       "artificialAnalysis": {
-        "low": "gpt-6-luna-low",
-        "xhigh": "gpt-6-luna-xhigh",
-        "max": "gpt-6-luna",
-        "medium": "gpt-6-luna-medium",
-        "high": "gpt-6-luna-high"
-      }
-    },
-    "gpt-6-sol": {
-      "liveBench": {
-        "max": "gpt-6-sol-max"
+        "xhigh": "gpt-6-1-sol-xhigh",
+        "high": "gpt-6-1-sol-high",
+        "max": "gpt-6-1-sol",
+        "low": "gpt-6-1-sol-low",
+        "medium": "gpt-6-1-sol-medium"
       },
-      "artificialAnalysis": {
-        "max": "gpt-6-sol",
-        "medium": "gpt-6-sol-medium",
-        "xhigh": "gpt-6-sol-xhigh",
-        "low": "gpt-6-sol-low",
-        "high": "gpt-6-sol-high"
+      "liveBench": {
+        "xhigh": "gpt-6.1-sol-xhigh",
+        "max": "gpt-6.1-sol-max"
       }
     }
   },
   "notes": "Explicit AA general-model and LiveBench source identities by actual effort. September 23 coverage audit checked AA release/effort metadata and LiveBench modelLinks.js. Empty/unlisted variants remain unresolved: Opus 4.7 non-reasoning conflicts with its high-effort metadata; Grok LiveBench rows omit effort; Gemini 3.5 minimal is not low. AA API may lag public-page coverage or use a different evaluation release; never substitute public-page numbers. 'none' is for CLI models without an effort control. AA coding agents are resolved automatically from structured source records, not this alias catalog. External agent harnesses are not Copilot CLI measurements.",
-  "schemaVersion": 2,
-  "verifiedAt": "2026-09-23",
   "onboardingProofs": {
-    "gpt-5.6-sol/artificialAnalysis/max": {
-      "releaseId": "gpt-5-6-sol",
-      "alias": "gpt-5-6-sol",
-      "effort": "max"
-    },
-    "gpt-6-sol/artificialAnalysis/low": {
-      "releaseId": "gpt-6-sol",
-      "alias": "gpt-6-sol-low",
-      "effort": "low"
-    },
-    "gpt-5.4-mini/artificialAnalysis/xhigh": {
-      "releaseId": "gpt-5-4-mini",
-      "alias": "gpt-5-4-mini",
-      "effort": "xhigh"
-    },
-    "gpt-6-luna/artificialAnalysis/low": {
-      "releaseId": "gpt-6-luna",
-      "alias": "gpt-6-luna-low",
-      "effort": "low"
-    },
-    "gpt-5.6-luna/artificialAnalysis/xhigh": {
-      "releaseId": "gpt-5-6-luna",
-      "alias": "gpt-5-6-luna-xhigh",
-      "effort": "xhigh"
-    },
-    "gpt-5.4-mini/artificialAnalysis/medium": {
-      "releaseId": "gpt-5-4-mini",
-      "alias": "gpt-5-4-mini-medium",
-      "effort": "medium"
-    },
-    "gpt-5.6-sol/artificialAnalysis/xhigh": {
-      "releaseId": "gpt-5-6-sol",
-      "alias": "gpt-5-6-sol-xhigh",
-      "effort": "xhigh"
-    },
     "claude-opus-4.8/artificialAnalysis/max": {
+      "effort": "max",
       "releaseId": "claude-opus-4-8",
-      "alias": "claude-opus-4-8",
-      "effort": "max"
-    },
-    "claude-sonnet-5/artificialAnalysis/medium": {
-      "releaseId": "claude-sonnet-5",
-      "alias": "claude-sonnet-5-medium",
-      "effort": "medium"
-    },
-    "claude-sonnet-5/artificialAnalysis/low": {
-      "releaseId": "claude-sonnet-5",
-      "alias": "claude-sonnet-5-low",
-      "effort": "low"
+      "alias": "claude-opus-4-8"
     },
     "claude-opus-5/artificialAnalysis/high": {
+      "effort": "high",
       "releaseId": "claude-opus-5",
-      "alias": "claude-opus-5-high",
-      "effort": "high"
-    },
-    "claude-opus-5/artificialAnalysis/medium": {
-      "releaseId": "claude-opus-5",
-      "alias": "claude-opus-5-medium",
-      "effort": "medium"
-    },
-    "gpt-5.6-sol/artificialAnalysis/medium": {
-      "releaseId": "gpt-5-6-sol",
-      "alias": "gpt-5-6-sol-medium",
-      "effort": "medium"
-    },
-    "gpt-5.6-terra/artificialAnalysis/high": {
-      "releaseId": "gpt-5-6-terra",
-      "alias": "gpt-5-6-terra-high",
-      "effort": "high"
-    },
-    "gpt-5.5/artificialAnalysis/low": {
-      "releaseId": "gpt-5-5",
-      "alias": "gpt-5-5-low",
-      "effort": "low"
-    },
-    "gpt-6-luna/artificialAnalysis/xhigh": {
-      "releaseId": "gpt-6-luna",
-      "alias": "gpt-6-luna-xhigh",
-      "effort": "xhigh"
-    },
-    "gpt-5.4/artificialAnalysis/xhigh": {
-      "releaseId": "gpt-5-4",
-      "alias": "gpt-5-4",
-      "effort": "xhigh"
-    },
-    "gpt-5.6-terra/artificialAnalysis/low": {
-      "releaseId": "gpt-5-6-terra",
-      "alias": "gpt-5-6-terra-low",
-      "effort": "low"
-    },
-    "gpt-5.6-luna/artificialAnalysis/max": {
-      "releaseId": "gpt-5-6-luna",
-      "alias": "gpt-5-6-luna",
-      "effort": "max"
-    },
-    "gpt-6-luna/artificialAnalysis/max": {
-      "releaseId": "gpt-6-luna",
-      "alias": "gpt-6-luna",
-      "effort": "max"
-    },
-    "gpt-5.6-terra/artificialAnalysis/medium": {
-      "releaseId": "gpt-5-6-terra",
-      "alias": "gpt-5-6-terra-medium",
-      "effort": "medium"
-    },
-    "claude-sonnet-5/artificialAnalysis/max": {
-      "releaseId": "claude-sonnet-5",
-      "alias": "claude-sonnet-5",
-      "effort": "max"
-    },
-    "claude-sonnet-5/artificialAnalysis/high": {
-      "releaseId": "claude-sonnet-5",
-      "alias": "claude-sonnet-5-high",
-      "effort": "high"
-    },
-    "gpt-6-sol/artificialAnalysis/medium": {
-      "releaseId": "gpt-6-sol",
-      "alias": "gpt-6-sol-medium",
-      "effort": "medium"
-    },
-    "gpt-6-astra/artificialAnalysis/high": {
-      "releaseId": "gpt-6-astra",
-      "alias": "gpt-6-astra-high",
-      "effort": "high"
-    },
-    "gpt-6-astra/artificialAnalysis/medium": {
-      "releaseId": "gpt-6-astra",
-      "alias": "gpt-6-astra-medium",
-      "effort": "medium"
-    },
-    "gpt-6-sol/artificialAnalysis/xhigh": {
-      "releaseId": "gpt-6-sol",
-      "alias": "gpt-6-sol-xhigh",
-      "effort": "xhigh"
-    },
-    "gpt-5.6-luna/artificialAnalysis/high": {
-      "releaseId": "gpt-5-6-luna",
-      "alias": "gpt-5-6-luna-high",
-      "effort": "high"
-    },
-    "gpt-6-astra/artificialAnalysis/low": {
-      "releaseId": "gpt-6-astra",
-      "alias": "gpt-6-astra-low",
-      "effort": "low"
-    },
-    "gpt-6-sol/artificialAnalysis/max": {
-      "releaseId": "gpt-6-sol",
-      "alias": "gpt-6-sol",
-      "effort": "max"
-    },
-    "gpt-5.6-sol/artificialAnalysis/low": {
-      "releaseId": "gpt-5-6-sol",
-      "alias": "gpt-5-6-sol-low",
-      "effort": "low"
-    },
-    "gpt-6-sol/artificialAnalysis/high": {
-      "releaseId": "gpt-6-sol",
-      "alias": "gpt-6-sol-high",
-      "effort": "high"
-    },
-    "claude-opus-5/artificialAnalysis/max": {
-      "releaseId": "claude-opus-5",
-      "alias": "claude-opus-5",
-      "effort": "max"
-    },
-    "gpt-6-astra/artificialAnalysis/max": {
-      "releaseId": "gpt-6-astra",
-      "alias": "gpt-6-astra",
-      "effort": "max"
-    },
-    "gpt-6-luna/artificialAnalysis/high": {
-      "releaseId": "gpt-6-luna",
-      "alias": "gpt-6-luna-high",
-      "effort": "high"
-    },
-    "gpt-6-astra/artificialAnalysis/xhigh": {
-      "releaseId": "gpt-6-astra",
-      "alias": "gpt-6-astra-xhigh",
-      "effort": "xhigh"
+      "alias": "claude-opus-5-high"
     },
     "claude-opus-5/artificialAnalysis/low": {
+      "effort": "low",
       "releaseId": "claude-opus-5",
-      "alias": "claude-opus-5-low",
-      "effort": "low"
+      "alias": "claude-opus-5-low"
+    },
+    "claude-opus-5/artificialAnalysis/max": {
+      "effort": "max",
+      "releaseId": "claude-opus-5",
+      "alias": "claude-opus-5"
+    },
+    "claude-opus-5/artificialAnalysis/medium": {
+      "effort": "medium",
+      "releaseId": "claude-opus-5",
+      "alias": "claude-opus-5-medium"
     },
     "claude-opus-5/artificialAnalysis/xhigh": {
+      "effort": "xhigh",
       "releaseId": "claude-opus-5",
-      "alias": "claude-opus-5-xhigh",
-      "effort": "xhigh"
+      "alias": "claude-opus-5-xhigh"
     },
-    "gpt-6-luna/artificialAnalysis/medium": {
-      "releaseId": "gpt-6-luna",
-      "alias": "gpt-6-luna-medium",
-      "effort": "medium"
+    "claude-sonnet-5/artificialAnalysis/high": {
+      "effort": "high",
+      "releaseId": "claude-sonnet-5",
+      "alias": "claude-sonnet-5-high"
     },
-    "gpt-5.4/artificialAnalysis/low": {
-      "releaseId": "gpt-5-4",
-      "alias": "gpt-5-4-low",
-      "effort": "low"
+    "claude-sonnet-5/artificialAnalysis/low": {
+      "effort": "low",
+      "releaseId": "claude-sonnet-5",
+      "alias": "claude-sonnet-5-low"
     },
-    "gpt-5.6-terra/artificialAnalysis/xhigh": {
-      "releaseId": "gpt-5-6-terra",
-      "alias": "gpt-5-6-terra-xhigh",
-      "effort": "xhigh"
+    "claude-sonnet-5/artificialAnalysis/max": {
+      "effort": "max",
+      "releaseId": "claude-sonnet-5",
+      "alias": "claude-sonnet-5"
     },
-    "gpt-5.5/artificialAnalysis/high": {
-      "releaseId": "gpt-5-5",
-      "alias": "gpt-5-5-high",
-      "effort": "high"
-    },
-    "gpt-5.5/artificialAnalysis/xhigh": {
-      "releaseId": "gpt-5-5",
-      "alias": "gpt-5-5",
-      "effort": "xhigh"
-    },
-    "gpt-5.6-luna/artificialAnalysis/low": {
-      "releaseId": "gpt-5-6-luna",
-      "alias": "gpt-5-6-luna-low",
-      "effort": "low"
-    },
-    "gpt-5.5/artificialAnalysis/medium": {
-      "releaseId": "gpt-5-5",
-      "alias": "gpt-5-5-medium",
-      "effort": "medium"
-    },
-    "gpt-5.6-sol/artificialAnalysis/high": {
-      "releaseId": "gpt-5-6-sol",
-      "alias": "gpt-5-6-sol-high",
-      "effort": "high"
-    },
-    "gpt-5.6-terra/artificialAnalysis/max": {
-      "releaseId": "gpt-5-6-terra",
-      "alias": "gpt-5-6-terra",
-      "effort": "max"
+    "claude-sonnet-5/artificialAnalysis/medium": {
+      "effort": "medium",
+      "releaseId": "claude-sonnet-5",
+      "alias": "claude-sonnet-5-medium"
     },
     "claude-sonnet-5/artificialAnalysis/xhigh": {
+      "effort": "xhigh",
       "releaseId": "claude-sonnet-5",
-      "alias": "claude-sonnet-5-xhigh",
-      "effort": "xhigh"
+      "alias": "claude-sonnet-5-xhigh"
+    },
+    "gpt-5.4-mini/artificialAnalysis/medium": {
+      "effort": "medium",
+      "releaseId": "gpt-5-4-mini",
+      "alias": "gpt-5-4-mini-medium"
+    },
+    "gpt-5.4-mini/artificialAnalysis/xhigh": {
+      "effort": "xhigh",
+      "releaseId": "gpt-5-4-mini",
+      "alias": "gpt-5-4-mini"
+    },
+    "gpt-5.4/artificialAnalysis/low": {
+      "effort": "low",
+      "releaseId": "gpt-5-4",
+      "alias": "gpt-5-4-low"
+    },
+    "gpt-5.4/artificialAnalysis/xhigh": {
+      "effort": "xhigh",
+      "releaseId": "gpt-5-4",
+      "alias": "gpt-5-4"
+    },
+    "gpt-5.5/artificialAnalysis/high": {
+      "effort": "high",
+      "releaseId": "gpt-5-5",
+      "alias": "gpt-5-5-high"
+    },
+    "gpt-5.5/artificialAnalysis/low": {
+      "effort": "low",
+      "releaseId": "gpt-5-5",
+      "alias": "gpt-5-5-low"
+    },
+    "gpt-5.5/artificialAnalysis/medium": {
+      "effort": "medium",
+      "releaseId": "gpt-5-5",
+      "alias": "gpt-5-5-medium"
+    },
+    "gpt-5.5/artificialAnalysis/xhigh": {
+      "effort": "xhigh",
+      "releaseId": "gpt-5-5",
+      "alias": "gpt-5-5"
+    },
+    "gpt-5.6-luna/artificialAnalysis/high": {
+      "effort": "high",
+      "releaseId": "gpt-5-6-luna",
+      "alias": "gpt-5-6-luna-high"
+    },
+    "gpt-5.6-luna/artificialAnalysis/low": {
+      "effort": "low",
+      "releaseId": "gpt-5-6-luna",
+      "alias": "gpt-5-6-luna-low"
+    },
+    "gpt-5.6-luna/artificialAnalysis/max": {
+      "effort": "max",
+      "releaseId": "gpt-5-6-luna",
+      "alias": "gpt-5-6-luna"
     },
     "gpt-5.6-luna/artificialAnalysis/medium": {
+      "effort": "medium",
       "releaseId": "gpt-5-6-luna",
-      "alias": "gpt-5-6-luna-medium",
-      "effort": "medium"
+      "alias": "gpt-5-6-luna-medium"
+    },
+    "gpt-5.6-luna/artificialAnalysis/xhigh": {
+      "effort": "xhigh",
+      "releaseId": "gpt-5-6-luna",
+      "alias": "gpt-5-6-luna-xhigh"
+    },
+    "gpt-5.6-sol/artificialAnalysis/high": {
+      "effort": "high",
+      "releaseId": "gpt-5-6-sol",
+      "alias": "gpt-5-6-sol-high"
+    },
+    "gpt-5.6-sol/artificialAnalysis/low": {
+      "effort": "low",
+      "releaseId": "gpt-5-6-sol",
+      "alias": "gpt-5-6-sol-low"
+    },
+    "gpt-5.6-sol/artificialAnalysis/max": {
+      "effort": "max",
+      "releaseId": "gpt-5-6-sol",
+      "alias": "gpt-5-6-sol"
+    },
+    "gpt-5.6-sol/artificialAnalysis/medium": {
+      "effort": "medium",
+      "releaseId": "gpt-5-6-sol",
+      "alias": "gpt-5-6-sol-medium"
+    },
+    "gpt-5.6-sol/artificialAnalysis/xhigh": {
+      "effort": "xhigh",
+      "releaseId": "gpt-5-6-sol",
+      "alias": "gpt-5-6-sol-xhigh"
+    },
+    "gpt-5.6-terra/artificialAnalysis/high": {
+      "effort": "high",
+      "releaseId": "gpt-5-6-terra",
+      "alias": "gpt-5-6-terra-high"
+    },
+    "gpt-5.6-terra/artificialAnalysis/low": {
+      "effort": "low",
+      "releaseId": "gpt-5-6-terra",
+      "alias": "gpt-5-6-terra-low"
+    },
+    "gpt-5.6-terra/artificialAnalysis/max": {
+      "effort": "max",
+      "releaseId": "gpt-5-6-terra",
+      "alias": "gpt-5-6-terra"
+    },
+    "gpt-5.6-terra/artificialAnalysis/medium": {
+      "effort": "medium",
+      "releaseId": "gpt-5-6-terra",
+      "alias": "gpt-5-6-terra-medium"
+    },
+    "gpt-5.6-terra/artificialAnalysis/xhigh": {
+      "effort": "xhigh",
+      "releaseId": "gpt-5-6-terra",
+      "alias": "gpt-5-6-terra-xhigh"
+    },
+    "gpt-6-astra/artificialAnalysis/high": {
+      "effort": "high",
+      "releaseId": "gpt-6-astra",
+      "alias": "gpt-6-astra-high"
+    },
+    "gpt-6-astra/artificialAnalysis/low": {
+      "effort": "low",
+      "releaseId": "gpt-6-astra",
+      "alias": "gpt-6-astra-low"
+    },
+    "gpt-6-astra/artificialAnalysis/max": {
+      "effort": "max",
+      "releaseId": "gpt-6-astra",
+      "alias": "gpt-6-astra"
+    },
+    "gpt-6-astra/artificialAnalysis/medium": {
+      "effort": "medium",
+      "releaseId": "gpt-6-astra",
+      "alias": "gpt-6-astra-medium"
+    },
+    "gpt-6-astra/artificialAnalysis/xhigh": {
+      "effort": "xhigh",
+      "releaseId": "gpt-6-astra",
+      "alias": "gpt-6-astra-xhigh"
+    },
+    "gpt-6-luna/artificialAnalysis/high": {
+      "effort": "high",
+      "releaseId": "gpt-6-luna",
+      "alias": "gpt-6-luna-high"
+    },
+    "gpt-6-luna/artificialAnalysis/low": {
+      "effort": "low",
+      "releaseId": "gpt-6-luna",
+      "alias": "gpt-6-luna-low"
+    },
+    "gpt-6-luna/artificialAnalysis/max": {
+      "effort": "max",
+      "releaseId": "gpt-6-luna",
+      "alias": "gpt-6-luna"
+    },
+    "gpt-6-luna/artificialAnalysis/medium": {
+      "effort": "medium",
+      "releaseId": "gpt-6-luna",
+      "alias": "gpt-6-luna-medium"
+    },
+    "gpt-6-luna/artificialAnalysis/xhigh": {
+      "effort": "xhigh",
+      "releaseId": "gpt-6-luna",
+      "alias": "gpt-6-luna-xhigh"
+    },
+    "gpt-6-sol/artificialAnalysis/high": {
+      "effort": "high",
+      "releaseId": "gpt-6-sol",
+      "alias": "gpt-6-sol-high"
+    },
+    "gpt-6-sol/artificialAnalysis/low": {
+      "effort": "low",
+      "releaseId": "gpt-6-sol",
+      "alias": "gpt-6-sol-low"
+    },
+    "gpt-6-sol/artificialAnalysis/max": {
+      "effort": "max",
+      "releaseId": "gpt-6-sol",
+      "alias": "gpt-6-sol"
+    },
+    "gpt-6-sol/artificialAnalysis/medium": {
+      "effort": "medium",
+      "releaseId": "gpt-6-sol",
+      "alias": "gpt-6-sol-medium"
+    },
+    "gpt-6-sol/artificialAnalysis/xhigh": {
+      "effort": "xhigh",
+      "releaseId": "gpt-6-sol",
+      "alias": "gpt-6-sol-xhigh"
+    },
+    "gpt-6.1-sol/artificialAnalysis/high": {
+      "effort": "high",
+      "releaseId": "gpt-6-1-sol",
+      "alias": "gpt-6-1-sol-high"
+    },
+    "gpt-6.1-sol/artificialAnalysis/max": {
+      "effort": "max",
+      "releaseId": "gpt-6-1-sol",
+      "alias": "gpt-6-1-sol"
+    },
+    "gpt-6.1-sol/artificialAnalysis/xhigh": {
+      "effort": "xhigh",
+      "releaseId": "gpt-6-1-sol",
+      "alias": "gpt-6-1-sol-xhigh"
+    },
+    "gpt-6.1-sol/artificialAnalysis/low": {
+      "effort": "low",
+      "releaseId": "gpt-6-1-sol",
+      "alias": "gpt-6-1-sol-low"
+    },
+    "gpt-6.1-sol/artificialAnalysis/medium": {
+      "effort": "medium",
+      "releaseId": "gpt-6-1-sol",
+      "alias": "gpt-6-1-sol-medium"
     }
-  }
+  },
+  "schemaVersion": 2,
+  "verifiedAt": "2026-09-23"
 }
