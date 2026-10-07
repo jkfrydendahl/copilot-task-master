@@ -8,9 +8,9 @@
       "claude-opus-5",
       "claude-opus-4.8",
       "claude-opus-4.8-fast",
-      "claude-opus-4.7",
       "claude-sonnet-4.6",
       "claude-haiku-4.5",
+      "gpt-6.1-sol",
       "gpt-6-sol",
       "gpt-6-luna",
       "gpt-6-astra",
@@ -25,19 +25,18 @@
       "mai-code-1.1-flash",
       "gemini-3.8-flash",
       "gemini-3.7-flash",
-      "gemini-3.6-flash",
-      "gemini-3.5-flash",
       "grok-4.5",
       "kimi-k3",
-      "kimi-k2.7-code"
+      "claude-sonnet-5.5",
+      "grok-4.6"
     ],
     "source": "locally captured CLI help",
     "verified": true
   },
-  "observedAtUtc": "2026-09-30T07:49:55.357Z",
+  "observedAtUtc": "2026-10-07T12:21:37.186Z",
   "runtime": {
     "authenticated": true,
-    "fetchedAtUtc": "2026-09-30T07:49:55.357Z",
+    "fetchedAtUtc": "2026-10-07T12:21:37.186Z",
     "models": [
       {
         "id": "auto",
