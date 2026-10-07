@@ -1,11 +1,11 @@
-# Monthly task profile review (2026-10-06)
+# Monthly task profile review (2026-10-07)
 
-Availability: **True** (local model-discovery snapshot; status=valid; observed=2026-09-30T07:49:55.357Z; validity=7 days; not live-verified by this review; recorded runtime reconciled); manual confirmation override: **True**.
+Availability: **True** (local model-discovery snapshot; status=valid; observed=2026-10-07T12:21:37.186Z; validity=7 days; not live-verified by this review; recorded runtime reconciled); manual confirmation override: **True**.
 
 ## Model discovery and onboarding
 
 Recorded authenticated runtime metadata usable: **True**; status **ok**; runtime 1.0.85. This review does not authenticate to a user's account.
-Local discovery snapshot: **valid**; observed **2026-09-30T07:49:55.357Z**; validity **7 days**. Availability was verified locally, not live-verified by this review.
+Local discovery snapshot: **valid**; observed **2026-10-07T12:21:37.186Z**; validity **7 days**. Availability was verified locally, not live-verified by this review.
 Local model-discovery snapshot is valid (validity: 7 days).
 Runtime and help catalogs are reconciled, not assumed exhaustive. Absence is not an explicit denial; runtime-disabled, ambiguous, denylisted and virtual routing models cannot enter selection. Public pricing/benchmark rows alone do not prove Copilot availability.
 Help-only entries are CLI-catalog evidence, not proof of per-account entitlement. The source columns distinguish these from recorded authenticated runtime entries.
@@ -22,7 +22,7 @@ Verified catalog facts are updated before comparison. Ready for comparison is no
 | claude-haiku-4.5 | True | True | ready_for_comparison | n/a |
 | claude-opus-4.5 | False | False | partial | enabled_runtime_metadata_missing; existing facts retain their original verification dates; pricing_alias_missing; benchmark_aliases_missing; structured agent evidence is resolved separately |
 | claude-opus-4.6 | False | False | partial | enabled_runtime_metadata_missing; existing facts retain their original verification dates; pricing_alias_missing; benchmark_aliases_missing; structured agent evidence is resolved separately |
-| claude-opus-4.7 | False | True | partial | enabled_runtime_metadata_missing; existing facts retain their original verification dates |
+| claude-opus-4.7 | False | False | partial | enabled_runtime_metadata_missing; existing facts retain their original verification dates |
 | claude-opus-4.8 | True | True | ready_for_comparison | n/a |
 | claude-opus-4.8-fast | True | True | partial | exact_pricing_identity_missing_or_conflicting; benchmark_aliases_missing; structured agent evidence is resolved separately |
 | claude-opus-5 | True | True | ready_for_comparison | n/a |
@@ -30,10 +30,10 @@ Verified catalog facts are updated before comparison. Ready for comparison is no
 | claude-sonnet-4.5 | False | False | partial | enabled_runtime_metadata_missing; existing facts retain their original verification dates; pricing_alias_missing; benchmark_aliases_missing; structured agent evidence is resolved separately |
 | claude-sonnet-4.6 | False | True | partial | enabled_runtime_metadata_missing; existing facts retain their original verification dates |
 | claude-sonnet-5 | True | True | ready_for_comparison | n/a |
-| claude-sonnet-5.5 | True | False | ready_for_comparison | n/a |
+| claude-sonnet-5.5 | True | True | ready_for_comparison | n/a |
 | gemini-3.1-pro-preview | False | False | partial | enabled_runtime_metadata_missing; existing facts retain their original verification dates; pricing_alias_missing; benchmark_aliases_missing; structured agent evidence is resolved separately |
-| gemini-3.5-flash | False | True | partial | enabled_runtime_metadata_missing; existing facts retain their original verification dates |
-| gemini-3.6-flash | False | True | partial | enabled_runtime_metadata_missing; existing facts retain their original verification dates |
+| gemini-3.5-flash | False | False | partial | enabled_runtime_metadata_missing; existing facts retain their original verification dates |
+| gemini-3.6-flash | False | False | partial | enabled_runtime_metadata_missing; existing facts retain their original verification dates |
 | gemini-3.7-flash | False | True | partial | enabled_runtime_metadata_missing; existing facts retain their original verification dates |
 | gemini-3.8-flash | False | True | partial | enabled_runtime_metadata_missing; existing facts retain their original verification dates |
 | gpt-5-mini | False | True | partial | enabled_runtime_metadata_missing; existing facts retain their original verification dates; benchmark_aliases_missing; structured agent evidence is resolved separately |
@@ -49,11 +49,10 @@ Verified catalog facts are updated before comparison. Ready for comparison is no
 | gpt-6-astra | True | True | ready_for_comparison | n/a |
 | gpt-6-luna | True | True | ready_for_comparison | n/a |
 | gpt-6-sol | True | True | ready_for_comparison | n/a |
-| gpt-6.1-sol | True | False | ready_for_comparison | n/a |
+| gpt-6.1-sol | True | True | ready_for_comparison | n/a |
 | grok-4.5 | True | True | partial | enabled_runtime_metadata_missing; existing facts retain their original verification dates |
-| grok-4.6 | True | False | partial | enabled_runtime_metadata_missing; existing facts retain their original verification dates |
+| grok-4.6 | True | True | partial | enabled_runtime_metadata_missing; existing facts retain their original verification dates |
 | grok-4.7 | True | False | blocked | enabled_runtime_metadata_missing; existing facts retain their original verification dates; capabilities_missing; pricing_alias_missing; benchmark_aliases_missing; structured agent evidence is resolved separately |
-| kimi-k2.7-code | False | True | blocked | enabled_runtime_metadata_missing; existing facts retain their original verification dates; capabilities_missing; benchmark_aliases_missing; structured agent evidence is resolved separately |
 | kimi-k3 | False | True | blocked | enabled_runtime_metadata_missing; existing facts retain their original verification dates; capabilities_missing; benchmark_aliases_missing; structured agent evidence is resolved separately |
 | mai-code-1-flash-picker | False | False | partial | enabled_runtime_metadata_missing; existing facts retain their original verification dates; benchmark_aliases_missing; structured agent evidence is resolved separately |
 | mai-code-1.1-flash | True | True | partial | benchmark_aliases_missing; structured agent evidence is resolved separately |
@@ -61,7 +60,7 @@ Verified catalog facts are updated before comparison. Ready for comparison is no
 | GPT-5.4 nano | False | False | discovered_only | unmapped_public_pricing_identity; runtime identity required |
 | Grok 4.7 | False | False | discovered_only | unmapped_public_pricing_identity; runtime identity required |
 
-Catalog changes: 0. Unmapped benchmark variants: 549; complete discovery details are retained in `data/model-onboarding-snapshot.json`. Such variants may be unrelated to Copilot and are not automatically admitted.
+Catalog changes: 18. Unmapped benchmark variants: 54; complete discovery details are retained in `data/model-onboarding-snapshot.json`. Such variants may be unrelated to Copilot and are not automatically admitted.
 </details>
 
 
@@ -69,13 +68,13 @@ Catalog changes: 0. Unmapped benchmark variants: 549; complete discovery details
 
 | Profile | Strategy | Current configuration | Recommended configuration | Applied/current after run | Outcome | Confidence |
 |---|---|---|---|---|---|---|
-| orchestrator | value_balanced | gemini-3.7-flash / high / default | gemini-3.7-flash / high / default | gemini-3.7-flash / high / default | budget_constrained_choice | reduced |
+| orchestrator | value_balanced | gemini-3.7-flash / high / default | n/a | gemini-3.7-flash / high / default | retained_insufficient_role_evidence | none |
 | quick | value_balanced | gemini-3.8-flash / low / default | gemini-3.8-flash / low / default | gemini-3.8-flash / low / default | budget_constrained_choice | reduced |
 | default-development | value_balanced | gemini-3.8-flash / high / default | gemini-3.8-flash / high / default | gemini-3.8-flash / high / default | value_balanced_choice | reduced |
 | agentic-implementation | value_balanced | claude-sonnet-5.5 / max / default | claude-sonnet-5.5 / max / default | claude-sonnet-5.5 / max / default | value_balanced_choice | reduced |
-| deep-reasoning | value_balanced | gpt-6.1-sol / max / long_context | gpt-6.1-sol / max / long_context | gpt-6.1-sol / max / long_context | budget_constrained_choice | reduced |
-| review | value_balanced | gemini-3.8-flash / high / default | n/a | gemini-3.8-flash / high / default | retained_no_role_qualified_candidate | none |
-| visual-ui | value_balanced | gemini-3.8-flash / high / default | gemini-3.8-flash / high / default | gemini-3.8-flash / high / default | value_balanced_choice | reduced |
+| deep-reasoning | value_balanced | gpt-6.1-sol / max / long_context | n/a | gpt-6.1-sol / max / long_context | retained_insufficient_role_evidence | none |
+| review | value_balanced | gemini-3.8-flash / high / default | n/a | gemini-3.8-flash / high / default | retained_insufficient_role_evidence | none |
+| visual-ui | value_balanced | gemini-3.8-flash / high / default | n/a | gemini-3.8-flash / high / default | retained_insufficient_role_evidence | none |
 | mechanical | value_balanced | gemini-3.8-flash / low / default | n/a | gemini-3.8-flash / low / default | retained_insufficient_role_evidence | none |
 | triage | value_balanced | gemini-3.7-flash / low / default | n/a | gemini-3.7-flash / low / default | retained_insufficient_role_evidence | none |
 
@@ -87,7 +86,7 @@ Configuration cells show model / effective effort / context; 'none' means the mo
 ## Pricing refresh
 
 - Status: **partial**. Source: https://docs.github.com/en/copilot/reference/copilot-billing/models-and-pricing
-- Last successful page fetch: 2026-10-06T06:44:11.6577346Z. Per-model verification ages govern eligibility.
+- Last successful page fetch: 2026-10-07T12:25:32.5835199Z. Per-model verification ages govern eligibility.
 - Freshness limit: 45 days. Missing rows retain their original timestamps. Capabilities are never refreshed by pricing.
 - Reference-cost comparison: Aggregate uncached usage across requests within the selected context tier, not a single 1M-token request or predicted task cost. Cache reads/writes are excluded.
 - Reference tokens: input 1000000, output 100000.
@@ -108,17 +107,17 @@ Configuration cells show model / effective effort / context; 'none' means the mo
 
 | Source | Status | Results published | Suite label | Artifact updated | Retrieved | Raw observation identity |
 |---|---|---|---|---|---|---|
-| artificialAnalysis | ok | n/a | n/a | n/a | 2026-10-06T06:44:05.5174975Z | 5b1ab974bfcb17006025acdcf9885a3ad4c0035a284bb6e8a2bc4843ae5e6c7b&#124;e36207f290b042c90dddba3be7b7f51a7f16b4c2d7356d5776cb171a314f77f0 |
-| artificialAnalysisCodingAgents | ok | n/a | n/a | n/a | 2026-10-06T06:44:06.9006947Z | bc0d5a5911f6e8603de69e87c987f95594d6705ea3347f7b2a550f7b524a3b72 |
-| artificialAnalysisComponents | ok | n/a | n/a | n/a | 2026-10-06T06:44:08.4480178Z | 164d20b9be019d7dd5cb9bfd9383184ab4e637ff16eb357ec74ffa66966530a0 |
-| liveBench | ok | n/a | 2026-06-25 | 2026-09-29T19:00:42.0000000Z | 2026-10-06T06:44:10.6876678Z | 56ad6f979705b3b67d62c851fa87954e9b3b19c469ff7ac215926239d8fbd25c |
+| artificialAnalysis | ok | n/a | n/a | n/a | 2026-10-07T12:25:28.2467497Z | c6f8df8e05b1a14d15413c1bcd3326a169a62513c5639fc5bb38ecd27adc43cd&#124;e36207f290b042c90dddba3be7b7f51a7f16b4c2d7356d5776cb171a314f77f0 |
+| artificialAnalysisCodingAgents | ok | n/a | n/a | n/a | 2026-10-07T12:25:29.6672859Z | bc0d5a5911f6e8603de69e87c987f95594d6705ea3347f7b2a550f7b524a3b72 |
+| artificialAnalysisComponents | ok | n/a | n/a | n/a | 2026-10-07T12:25:31.1273596Z | 0c8f8baf4b5449363a21e7a706054449c2af6fa67de184e988fd5b217bbbe656 |
+| liveBench | ok | n/a | 2026-06-25 | 2026-10-07T02:57:39.0000000Z | 2026-10-07T12:25:31.4354375Z | 6b02d2d0dde9978a5fa7c6326139dd7175d827e0b59bf4e98a2ef94537cab73d |
 
 Confirmation uses metric-scoped observations, not the raw page fingerprint. Suite labels, artifact updates, row evaluation ages and retrieval times are distinct: an artifact update does not make every row newly evaluated. Unknown dates or methodology versions are not fabricated. AA public components remain separate from API aggregates; public pricing is never imported. Data attribution: https://artificialanalysis.ai and https://github.com/LiveBench/new-livebench.
 
 
 ## Coverage and exclusions
 
-442 distinct exclusions, advisory warnings and evidence gaps. Repeated findings are listed once with every affected profile; full eligibility and scores remain available below.
+527 distinct exclusions, advisory warnings and evidence gaps. Repeated findings are listed once with every affected profile; full eligibility and scores remain available below.
 
 <details>
 <summary>Grouped coverage details</summary>
@@ -137,45 +136,14 @@ Confirmation uses metric-scoped observations, not the raw page fingerprint. Suit
 | evidence gap | n/a / n/a / n/a | artificialAnalysisCodingAgents: f2de07373c3626f1b9269a6ecad7804c: model_identity_unresolved_or_ambiguous 'Muse Spark 1.3 (max)' | agentic-implementation |
 | evidence gap | n/a / n/a / n/a | artificialAnalysisCodingAgents: f927d9c41b5c3021996eb14c3dd1341e: model_identity_unresolved_or_ambiguous 'Grok 4.7 (xhigh)' | agentic-implementation |
 | evidence gap | n/a / n/a / n/a | artificialAnalysisCodingAgents: fa2595093fa640e73d072e7d1aa7df82: model_or_provider_unresolved | agentic-implementation |
-| evidence gap | n/a / n/a / n/a | artificialAnalysisComponents: claude-fable-5-1-high: identity_ambiguous_or_effort_invalid | agentic-implementation, deep-reasoning, default-development, mechanical, orchestrator, quick, review, triage, visual-ui |
-| evidence gap | n/a / n/a / n/a | artificialAnalysisComponents: claude-fable-5-1-low: identity_ambiguous_or_effort_invalid | agentic-implementation, deep-reasoning, default-development, mechanical, orchestrator, quick, review, triage, visual-ui |
-| evidence gap | n/a / n/a / n/a | artificialAnalysisComponents: claude-fable-5-1-medium: identity_ambiguous_or_effort_invalid | agentic-implementation, deep-reasoning, default-development, mechanical, orchestrator, quick, review, triage, visual-ui |
-| evidence gap | n/a / n/a / n/a | artificialAnalysisComponents: claude-fable-5-1-xhigh: identity_ambiguous_or_effort_invalid | agentic-implementation, deep-reasoning, default-development, mechanical, orchestrator, quick, review, triage, visual-ui |
 | evidence gap | n/a / n/a / n/a | artificialAnalysisComponents: claude-fable-5-1: identity_ambiguous_or_effort_invalid | agentic-implementation, deep-reasoning, default-development, mechanical, orchestrator, quick, review, triage, visual-ui |
-| evidence gap | n/a / n/a / n/a | artificialAnalysisComponents: claude-fable-5: identity_ambiguous_or_effort_invalid | agentic-implementation, deep-reasoning, default-development, mechanical, orchestrator, quick, review, triage, visual-ui |
-| evidence gap | n/a / n/a / n/a | artificialAnalysisComponents: claude-opus-5-5-high: identity_ambiguous_or_effort_invalid | agentic-implementation, deep-reasoning, default-development, mechanical, orchestrator, quick, review, triage, visual-ui |
-| evidence gap | n/a / n/a / n/a | artificialAnalysisComponents: claude-opus-5-5-low: identity_ambiguous_or_effort_invalid | agentic-implementation, deep-reasoning, default-development, mechanical, orchestrator, quick, review, triage, visual-ui |
-| evidence gap | n/a / n/a / n/a | artificialAnalysisComponents: claude-opus-5-5-medium: identity_ambiguous_or_effort_invalid | agentic-implementation, deep-reasoning, default-development, mechanical, orchestrator, quick, review, triage, visual-ui |
-| evidence gap | n/a / n/a / n/a | artificialAnalysisComponents: claude-opus-5-5-xhigh: identity_ambiguous_or_effort_invalid | agentic-implementation, deep-reasoning, default-development, mechanical, orchestrator, quick, review, triage, visual-ui |
 | evidence gap | n/a / n/a / n/a | artificialAnalysisComponents: claude-opus-5-5: identity_ambiguous_or_effort_invalid | agentic-implementation, deep-reasoning, default-development, mechanical, orchestrator, quick, review, triage, visual-ui |
-| evidence gap | n/a / n/a / n/a | artificialAnalysisComponents: claude-sonnet-5-5-high: identity_ambiguous_or_effort_invalid | agentic-implementation, deep-reasoning, default-development, mechanical, orchestrator, quick, review, triage, visual-ui |
-| evidence gap | n/a / n/a / n/a | artificialAnalysisComponents: claude-sonnet-5-5-low: identity_ambiguous_or_effort_invalid | agentic-implementation, deep-reasoning, default-development, mechanical, orchestrator, quick, review, triage, visual-ui |
-| evidence gap | n/a / n/a / n/a | artificialAnalysisComponents: claude-sonnet-5-5-medium: identity_ambiguous_or_effort_invalid | agentic-implementation, deep-reasoning, default-development, mechanical, orchestrator, quick, review, triage, visual-ui |
-| evidence gap | n/a / n/a / n/a | artificialAnalysisComponents: claude-sonnet-5-5-xhigh: identity_ambiguous_or_effort_invalid | agentic-implementation, deep-reasoning, default-development, mechanical, orchestrator, quick, review, triage, visual-ui |
-| evidence gap | n/a / n/a / n/a | artificialAnalysisComponents: claude-sonnet-5-5: identity_ambiguous_or_effort_invalid | agentic-implementation, deep-reasoning, default-development, mechanical, orchestrator, quick, review, triage, visual-ui |
 | evidence gap | n/a / n/a / n/a | claude-fable-5.1: configuration capabilities_missing | agentic-implementation, deep-reasoning, default-development, mechanical, orchestrator, quick, review, triage, visual-ui |
 | evidence gap | n/a / n/a / n/a | claude-haiku-4.5: artificialAnalysis.codingIndex 'claude-4-5-haiku' score_missing_or_invalid | default-development, quick, review, visual-ui |
 | evidence gap | n/a / n/a / n/a | claude-haiku-4.5: artificialAnalysisCodingAgents effort 'none' structured_variant_not_matched | agentic-implementation |
 | evidence gap | n/a / n/a / n/a | claude-haiku-4.5: artificialAnalysisComponents.automationBench 'claude-4-5-haiku' score_missing_or_invalid | agentic-implementation, mechanical, orchestrator |
 | evidence gap | n/a / n/a / n/a | claude-haiku-4.5: artificialAnalysisComponents.enterpriseOpsGym 'claude-4-5-haiku' score_missing_or_invalid | agentic-implementation, mechanical, orchestrator |
 | evidence gap | n/a / n/a / n/a | claude-haiku-4.5: liveBench effort 'none' alias_not_configured | agentic-implementation, deep-reasoning, default-development, mechanical, orchestrator, quick, review, triage, visual-ui |
-| evidence gap | n/a / n/a / n/a | claude-opus-4.7: artificialAnalysis effort 'high' alias_not_configured | deep-reasoning, default-development, review, visual-ui |
-| evidence gap | n/a / n/a / n/a | claude-opus-4.7: artificialAnalysis effort 'low' alias_not_configured | quick, triage |
-| evidence gap | n/a / n/a / n/a | claude-opus-4.7: artificialAnalysis effort 'medium' alias_not_configured | default-development, review, visual-ui |
-| evidence gap | n/a / n/a / n/a | claude-opus-4.7: artificialAnalysis effort 'xhigh' alias_not_configured | deep-reasoning |
-| evidence gap | n/a / n/a / n/a | claude-opus-4.7: artificialAnalysisCodingAgents effort 'high' structured_variant_not_matched | agentic-implementation |
-| evidence gap | n/a / n/a / n/a | claude-opus-4.7: artificialAnalysisCodingAgents effort 'max' structured_variant_not_matched | agentic-implementation |
-| evidence gap | n/a / n/a / n/a | claude-opus-4.7: artificialAnalysisCodingAgents effort 'xhigh' structured_variant_not_matched | agentic-implementation |
-| evidence gap | n/a / n/a / n/a | claude-opus-4.7: artificialAnalysisComponents effort 'high' alias_not_configured | agentic-implementation, deep-reasoning, default-development, orchestrator, review, visual-ui |
-| evidence gap | n/a / n/a / n/a | claude-opus-4.7: artificialAnalysisComponents effort 'low' alias_not_configured | mechanical, quick, triage |
-| evidence gap | n/a / n/a / n/a | claude-opus-4.7: artificialAnalysisComponents effort 'medium' alias_not_configured | default-development, review, visual-ui |
-| evidence gap | n/a / n/a / n/a | claude-opus-4.7: artificialAnalysisComponents effort 'xhigh' alias_not_configured | agentic-implementation, deep-reasoning |
-| evidence gap | n/a / n/a / n/a | claude-opus-4.7: artificialAnalysisComponents.automationBench 'claude-opus-4-7' score_missing_or_invalid | agentic-implementation |
-| evidence gap | n/a / n/a / n/a | claude-opus-4.7: artificialAnalysisComponents.enterpriseOpsGym 'claude-opus-4-7' score_missing_or_invalid | agentic-implementation |
-| evidence gap | n/a / n/a / n/a | claude-opus-4.7: liveBench effort 'high' alias_not_configured | agentic-implementation, deep-reasoning, default-development, orchestrator, review, visual-ui |
-| evidence gap | n/a / n/a / n/a | claude-opus-4.7: liveBench effort 'low' alias_not_configured | mechanical, quick, triage |
-| evidence gap | n/a / n/a / n/a | claude-opus-4.7: liveBench effort 'max' alias_not_configured | agentic-implementation, deep-reasoning |
-| evidence gap | n/a / n/a / n/a | claude-opus-4.7: liveBench effort 'medium' alias_not_configured | default-development, review, visual-ui |
 | evidence gap | n/a / n/a / n/a | claude-opus-4.8-fast: artificialAnalysis effort 'high' alias_not_configured | deep-reasoning, default-development, review, visual-ui |
 | evidence gap | n/a / n/a / n/a | claude-opus-4.8-fast: artificialAnalysis effort 'low' alias_not_configured | quick, triage |
 | evidence gap | n/a / n/a / n/a | claude-opus-4.8-fast: artificialAnalysis effort 'max' alias_not_configured | deep-reasoning |
@@ -205,18 +173,32 @@ Confirmation uses metric-scoped observations, not the raw page fingerprint. Suit
 | evidence gap | n/a / n/a / n/a | claude-opus-4.8: artificialAnalysisComponents effort 'low' alias_not_configured | mechanical, quick, triage |
 | evidence gap | n/a / n/a / n/a | claude-opus-4.8: artificialAnalysisComponents effort 'medium' alias_not_configured | default-development, review, visual-ui |
 | evidence gap | n/a / n/a / n/a | claude-opus-4.8: artificialAnalysisComponents effort 'xhigh' alias_not_configured | agentic-implementation, deep-reasoning |
+| evidence gap | n/a / n/a / n/a | claude-opus-4.8: artificialAnalysisComponents.automationBench 'claude-opus-4-8' score_missing_or_invalid | agentic-implementation |
+| evidence gap | n/a / n/a / n/a | claude-opus-4.8: artificialAnalysisComponents.enterpriseOpsGym 'claude-opus-4-8' score_missing_or_invalid | agentic-implementation |
+| evidence gap | n/a / n/a / n/a | claude-opus-4.8: artificialAnalysisComponents.lcr 'claude-opus-4-8' score_missing_or_invalid | deep-reasoning |
 | evidence gap | n/a / n/a / n/a | claude-opus-4.8: liveBench effort 'high' alias_not_configured | agentic-implementation, deep-reasoning, default-development, orchestrator, review, visual-ui |
 | evidence gap | n/a / n/a / n/a | claude-opus-4.8: liveBench effort 'low' alias_not_configured | mechanical, quick, triage |
 | evidence gap | n/a / n/a / n/a | claude-opus-4.8: liveBench effort 'medium' alias_not_configured | default-development, review, visual-ui |
 | evidence gap | n/a / n/a / n/a | claude-opus-4.8: liveBench effort 'xhigh' alias_not_configured | agentic-implementation, deep-reasoning |
 | evidence gap | n/a / n/a / n/a | claude-opus-5: artificialAnalysisCodingAgents effort 'high' structured_variant_not_matched | agentic-implementation |
 | evidence gap | n/a / n/a / n/a | claude-opus-5: artificialAnalysisCodingAgents effort 'xhigh' structured_variant_not_matched | agentic-implementation |
+| evidence gap | n/a / n/a / n/a | claude-opus-5: artificialAnalysisComponents.automationBench 'claude-opus-5-high' score_missing_or_invalid | agentic-implementation, orchestrator |
+| evidence gap | n/a / n/a / n/a | claude-opus-5: artificialAnalysisComponents.automationBench 'claude-opus-5-low' score_missing_or_invalid | mechanical |
+| evidence gap | n/a / n/a / n/a | claude-opus-5: artificialAnalysisComponents.automationBench 'claude-opus-5-xhigh' score_missing_or_invalid | agentic-implementation |
+| evidence gap | n/a / n/a / n/a | claude-opus-5: artificialAnalysisComponents.automationBench 'claude-opus-5' score_missing_or_invalid | agentic-implementation |
 | evidence gap | n/a / n/a / n/a | claude-opus-5: artificialAnalysisComponents.enterpriseOpsGym 'claude-opus-5-high' score_missing_or_invalid | agentic-implementation, orchestrator |
 | evidence gap | n/a / n/a / n/a | claude-opus-5: artificialAnalysisComponents.enterpriseOpsGym 'claude-opus-5-low' score_missing_or_invalid | mechanical |
 | evidence gap | n/a / n/a / n/a | claude-opus-5: artificialAnalysisComponents.enterpriseOpsGym 'claude-opus-5-xhigh' score_missing_or_invalid | agentic-implementation |
+| evidence gap | n/a / n/a / n/a | claude-opus-5: artificialAnalysisComponents.enterpriseOpsGym 'claude-opus-5' score_missing_or_invalid | agentic-implementation |
 | evidence gap | n/a / n/a / n/a | claude-opus-5: artificialAnalysisComponents.ifbench 'claude-opus-5-high' score_missing_or_invalid | default-development, orchestrator |
 | evidence gap | n/a / n/a / n/a | claude-opus-5: artificialAnalysisComponents.ifbench 'claude-opus-5-low' score_missing_or_invalid | mechanical, quick, triage |
 | evidence gap | n/a / n/a / n/a | claude-opus-5: artificialAnalysisComponents.ifbench 'claude-opus-5-medium' score_missing_or_invalid | default-development |
+| evidence gap | n/a / n/a / n/a | claude-opus-5: artificialAnalysisComponents.lcr 'claude-opus-5-high' score_missing_or_invalid | deep-reasoning, orchestrator, review |
+| evidence gap | n/a / n/a / n/a | claude-opus-5: artificialAnalysisComponents.lcr 'claude-opus-5-medium' score_missing_or_invalid | review |
+| evidence gap | n/a / n/a / n/a | claude-opus-5: artificialAnalysisComponents.lcr 'claude-opus-5-xhigh' score_missing_or_invalid | deep-reasoning |
+| evidence gap | n/a / n/a / n/a | claude-opus-5: artificialAnalysisComponents.lcr 'claude-opus-5' score_missing_or_invalid | deep-reasoning |
+| evidence gap | n/a / n/a / n/a | claude-opus-5: artificialAnalysisComponents.mmmuPro 'claude-opus-5-high' score_missing_or_invalid | visual-ui |
+| evidence gap | n/a / n/a / n/a | claude-opus-5: artificialAnalysisComponents.mmmuPro 'claude-opus-5-medium' score_missing_or_invalid | visual-ui |
 | evidence gap | n/a / n/a / n/a | claude-opus-5: liveBench effort 'high' alias_not_configured | agentic-implementation, deep-reasoning, default-development, orchestrator, review, visual-ui |
 | evidence gap | n/a / n/a / n/a | claude-opus-5: liveBench effort 'low' alias_not_configured | mechanical, quick, triage |
 | evidence gap | n/a / n/a / n/a | claude-opus-5: liveBench effort 'medium' alias_not_configured | default-development, review, visual-ui |
@@ -244,7 +226,9 @@ Confirmation uses metric-scoped observations, not the raw page fingerprint. Suit
 | evidence gap | n/a / n/a / n/a | claude-sonnet-4.6: artificialAnalysisComponents effort 'high' alias_not_configured | agentic-implementation, deep-reasoning, default-development, orchestrator, review, visual-ui |
 | evidence gap | n/a / n/a / n/a | claude-sonnet-4.6: artificialAnalysisComponents effort 'low' alias_not_configured | mechanical, quick, triage |
 | evidence gap | n/a / n/a / n/a | claude-sonnet-4.6: artificialAnalysisComponents effort 'medium' alias_not_configured | default-development, review, visual-ui |
+| evidence gap | n/a / n/a / n/a | claude-sonnet-4.6: artificialAnalysisComponents.automationBench 'claude-sonnet-4-6-adaptive' score_missing_or_invalid | agentic-implementation |
 | evidence gap | n/a / n/a / n/a | claude-sonnet-4.6: artificialAnalysisComponents.enterpriseOpsGym 'claude-sonnet-4-6-adaptive' score_missing_or_invalid | agentic-implementation |
+| evidence gap | n/a / n/a / n/a | claude-sonnet-4.6: artificialAnalysisComponents.lcr 'claude-sonnet-4-6-adaptive' score_missing_or_invalid | deep-reasoning |
 | evidence gap | n/a / n/a / n/a | claude-sonnet-4.6: liveBench effort 'high' alias_not_configured | agentic-implementation, deep-reasoning, default-development, orchestrator, review, visual-ui |
 | evidence gap | n/a / n/a / n/a | claude-sonnet-4.6: liveBench effort 'low' alias_not_configured | mechanical, quick, triage |
 | evidence gap | n/a / n/a / n/a | claude-sonnet-4.6: liveBench effort 'max' alias_not_configured | agentic-implementation, deep-reasoning |
@@ -254,11 +238,21 @@ Confirmation uses metric-scoped observations, not the raw page fingerprint. Suit
 | evidence gap | n/a / n/a / n/a | claude-sonnet-5: artificialAnalysisCodingAgents effort 'high' structured_variant_not_matched | agentic-implementation |
 | evidence gap | n/a / n/a / n/a | claude-sonnet-5: artificialAnalysisCodingAgents effort 'max' structured_variant_not_matched | agentic-implementation |
 | evidence gap | n/a / n/a / n/a | claude-sonnet-5: artificialAnalysisCodingAgents effort 'xhigh' structured_variant_not_matched | agentic-implementation |
+| evidence gap | n/a / n/a / n/a | claude-sonnet-5: artificialAnalysisComponents.automationBench 'claude-sonnet-5-high' score_missing_or_invalid | agentic-implementation, orchestrator |
+| evidence gap | n/a / n/a / n/a | claude-sonnet-5: artificialAnalysisComponents.automationBench 'claude-sonnet-5-low' score_missing_or_invalid | mechanical |
+| evidence gap | n/a / n/a / n/a | claude-sonnet-5: artificialAnalysisComponents.automationBench 'claude-sonnet-5-xhigh' score_missing_or_invalid | agentic-implementation |
+| evidence gap | n/a / n/a / n/a | claude-sonnet-5: artificialAnalysisComponents.automationBench 'claude-sonnet-5' score_missing_or_invalid | agentic-implementation |
 | evidence gap | n/a / n/a / n/a | claude-sonnet-5: artificialAnalysisComponents.enterpriseOpsGym 'claude-sonnet-5-high' score_missing_or_invalid | agentic-implementation, orchestrator |
 | evidence gap | n/a / n/a / n/a | claude-sonnet-5: artificialAnalysisComponents.enterpriseOpsGym 'claude-sonnet-5-low' score_missing_or_invalid | mechanical |
+| evidence gap | n/a / n/a / n/a | claude-sonnet-5: artificialAnalysisComponents.enterpriseOpsGym 'claude-sonnet-5-xhigh' score_missing_or_invalid | agentic-implementation |
+| evidence gap | n/a / n/a / n/a | claude-sonnet-5: artificialAnalysisComponents.enterpriseOpsGym 'claude-sonnet-5' score_missing_or_invalid | agentic-implementation |
 | evidence gap | n/a / n/a / n/a | claude-sonnet-5: artificialAnalysisComponents.ifbench 'claude-sonnet-5-high' score_missing_or_invalid | default-development, orchestrator |
 | evidence gap | n/a / n/a / n/a | claude-sonnet-5: artificialAnalysisComponents.ifbench 'claude-sonnet-5-low' score_missing_or_invalid | mechanical, quick, triage |
 | evidence gap | n/a / n/a / n/a | claude-sonnet-5: artificialAnalysisComponents.ifbench 'claude-sonnet-5-medium' score_missing_or_invalid | default-development |
+| evidence gap | n/a / n/a / n/a | claude-sonnet-5: artificialAnalysisComponents.lcr 'claude-sonnet-5-high' score_missing_or_invalid | deep-reasoning, orchestrator, review |
+| evidence gap | n/a / n/a / n/a | claude-sonnet-5: artificialAnalysisComponents.lcr 'claude-sonnet-5-medium' score_missing_or_invalid | review |
+| evidence gap | n/a / n/a / n/a | claude-sonnet-5: artificialAnalysisComponents.lcr 'claude-sonnet-5-xhigh' score_missing_or_invalid | deep-reasoning |
+| evidence gap | n/a / n/a / n/a | claude-sonnet-5: artificialAnalysisComponents.lcr 'claude-sonnet-5' score_missing_or_invalid | deep-reasoning |
 | evidence gap | n/a / n/a / n/a | claude-sonnet-5: artificialAnalysisComponents.mmmuPro 'claude-sonnet-5-high' score_missing_or_invalid | visual-ui |
 | evidence gap | n/a / n/a / n/a | claude-sonnet-5: artificialAnalysisComponents.mmmuPro 'claude-sonnet-5-medium' score_missing_or_invalid | visual-ui |
 | evidence gap | n/a / n/a / n/a | claude-sonnet-5: liveBench effort 'high' alias_not_configured | agentic-implementation, deep-reasoning, default-development, orchestrator, review, visual-ui |
@@ -280,35 +274,31 @@ Confirmation uses metric-scoped observations, not the raw page fingerprint. Suit
 | evidence gap | n/a / n/a / n/a | claude-sonnet-5.5: liveBench effort 'high' alias_not_configured | agentic-implementation, deep-reasoning, default-development, orchestrator, review, visual-ui |
 | evidence gap | n/a / n/a / n/a | claude-sonnet-5.5: liveBench effort 'low' alias_not_configured | mechanical, quick, triage |
 | evidence gap | n/a / n/a / n/a | claude-sonnet-5.5: liveBench effort 'medium' alias_not_configured | default-development, review, visual-ui |
-| evidence gap | n/a / n/a / n/a | gemini-3.5-flash: artificialAnalysis effort 'low' alias_not_configured | quick, triage |
-| evidence gap | n/a / n/a / n/a | gemini-3.5-flash: artificialAnalysis.codingIndex 'gemini-3-5-flash-medium' score_missing_or_invalid | default-development, review, visual-ui |
-| evidence gap | n/a / n/a / n/a | gemini-3.5-flash: artificialAnalysisCodingAgents effort 'high' structured_variant_not_matched | agentic-implementation |
-| evidence gap | n/a / n/a / n/a | gemini-3.5-flash: artificialAnalysisComponents effort 'low' alias_not_configured | mechanical, quick, triage |
-| evidence gap | n/a / n/a / n/a | gemini-3.5-flash: liveBench effort 'low' alias_not_configured | mechanical, quick, triage |
-| evidence gap | n/a / n/a / n/a | gemini-3.5-flash: liveBench effort 'medium' alias_not_configured | default-development, review, visual-ui |
-| evidence gap | n/a / n/a / n/a | gemini-3.6-flash: artificialAnalysis effort 'low' alias_not_configured | quick, triage |
-| evidence gap | n/a / n/a / n/a | gemini-3.6-flash: artificialAnalysis effort 'medium' alias_not_configured | default-development, review, visual-ui |
-| evidence gap | n/a / n/a / n/a | gemini-3.6-flash: artificialAnalysisCodingAgents effort 'high' structured_variant_not_matched | agentic-implementation |
-| evidence gap | n/a / n/a / n/a | gemini-3.6-flash: artificialAnalysisComponents effort 'low' alias_not_configured | mechanical, quick, triage |
-| evidence gap | n/a / n/a / n/a | gemini-3.6-flash: artificialAnalysisComponents effort 'medium' alias_not_configured | default-development, review, visual-ui |
-| evidence gap | n/a / n/a / n/a | gemini-3.6-flash: artificialAnalysisComponents.enterpriseOpsGym 'gemini-3-6-flash' score_missing_or_invalid | agentic-implementation, orchestrator |
-| evidence gap | n/a / n/a / n/a | gemini-3.6-flash: artificialAnalysisComponents.ifbench 'gemini-3-6-flash' score_missing_or_invalid | default-development, orchestrator |
-| evidence gap | n/a / n/a / n/a | gemini-3.6-flash: liveBench effort 'low' alias_not_configured | mechanical, quick, triage |
-| evidence gap | n/a / n/a / n/a | gemini-3.6-flash: liveBench effort 'medium' alias_not_configured | default-development, review, visual-ui |
 | evidence gap | n/a / n/a / n/a | gemini-3.7-flash: artificialAnalysisCodingAgents effort 'high' structured_variant_not_matched | agentic-implementation |
 | evidence gap | n/a / n/a / n/a | gemini-3.7-flash: artificialAnalysisComponents.automationBench 'gemini-3-7-flash-low' score_missing_or_invalid | mechanical |
+| evidence gap | n/a / n/a / n/a | gemini-3.7-flash: artificialAnalysisComponents.automationBench 'gemini-3-7-flash' score_missing_or_invalid | agentic-implementation, orchestrator |
 | evidence gap | n/a / n/a / n/a | gemini-3.7-flash: artificialAnalysisComponents.enterpriseOpsGym 'gemini-3-7-flash-low' score_missing_or_invalid | mechanical |
 | evidence gap | n/a / n/a / n/a | gemini-3.7-flash: artificialAnalysisComponents.enterpriseOpsGym 'gemini-3-7-flash' score_missing_or_invalid | agentic-implementation, orchestrator |
 | evidence gap | n/a / n/a / n/a | gemini-3.7-flash: artificialAnalysisComponents.ifbench 'gemini-3-7-flash-low' score_missing_or_invalid | mechanical, quick, triage |
 | evidence gap | n/a / n/a / n/a | gemini-3.7-flash: artificialAnalysisComponents.ifbench 'gemini-3-7-flash-medium' score_missing_or_invalid | default-development |
 | evidence gap | n/a / n/a / n/a | gemini-3.7-flash: artificialAnalysisComponents.ifbench 'gemini-3-7-flash' score_missing_or_invalid | default-development, orchestrator |
+| evidence gap | n/a / n/a / n/a | gemini-3.7-flash: artificialAnalysisComponents.lcr 'gemini-3-7-flash-medium' score_missing_or_invalid | review |
+| evidence gap | n/a / n/a / n/a | gemini-3.7-flash: artificialAnalysisComponents.lcr 'gemini-3-7-flash' score_missing_or_invalid | deep-reasoning, orchestrator, review |
+| evidence gap | n/a / n/a / n/a | gemini-3.7-flash: artificialAnalysisComponents.mmmuPro 'gemini-3-7-flash-medium' score_missing_or_invalid | visual-ui |
+| evidence gap | n/a / n/a / n/a | gemini-3.7-flash: artificialAnalysisComponents.mmmuPro 'gemini-3-7-flash' score_missing_or_invalid | visual-ui |
 | evidence gap | n/a / n/a / n/a | gemini-3.7-flash: liveBench effort 'low' alias_not_configured | mechanical, quick, triage |
 | evidence gap | n/a / n/a / n/a | gemini-3.7-flash: liveBench effort 'medium' alias_not_configured | default-development, review, visual-ui |
+| evidence gap | n/a / n/a / n/a | gemini-3.8-flash: artificialAnalysisComponents.automationBench 'gemini-3-8-flash-low' score_missing_or_invalid | mechanical |
+| evidence gap | n/a / n/a / n/a | gemini-3.8-flash: artificialAnalysisComponents.automationBench 'gemini-3-8-flash' score_missing_or_invalid | agentic-implementation, orchestrator |
 | evidence gap | n/a / n/a / n/a | gemini-3.8-flash: artificialAnalysisComponents.enterpriseOpsGym 'gemini-3-8-flash-low' score_missing_or_invalid | mechanical |
 | evidence gap | n/a / n/a / n/a | gemini-3.8-flash: artificialAnalysisComponents.enterpriseOpsGym 'gemini-3-8-flash' score_missing_or_invalid | agentic-implementation, orchestrator |
 | evidence gap | n/a / n/a / n/a | gemini-3.8-flash: artificialAnalysisComponents.ifbench 'gemini-3-8-flash-low' score_missing_or_invalid | mechanical, quick, triage |
 | evidence gap | n/a / n/a / n/a | gemini-3.8-flash: artificialAnalysisComponents.ifbench 'gemini-3-8-flash-medium' score_missing_or_invalid | default-development |
 | evidence gap | n/a / n/a / n/a | gemini-3.8-flash: artificialAnalysisComponents.ifbench 'gemini-3-8-flash' score_missing_or_invalid | default-development, orchestrator |
+| evidence gap | n/a / n/a / n/a | gemini-3.8-flash: artificialAnalysisComponents.lcr 'gemini-3-8-flash-medium' score_missing_or_invalid | review |
+| evidence gap | n/a / n/a / n/a | gemini-3.8-flash: artificialAnalysisComponents.lcr 'gemini-3-8-flash' score_missing_or_invalid | deep-reasoning, orchestrator, review |
+| evidence gap | n/a / n/a / n/a | gemini-3.8-flash: artificialAnalysisComponents.mmmuPro 'gemini-3-8-flash-medium' score_missing_or_invalid | visual-ui |
+| evidence gap | n/a / n/a / n/a | gemini-3.8-flash: artificialAnalysisComponents.mmmuPro 'gemini-3-8-flash' score_missing_or_invalid | visual-ui |
 | evidence gap | n/a / n/a / n/a | gemini-3.8-flash: liveBench effort 'low' alias_not_configured | mechanical, quick, triage |
 | evidence gap | n/a / n/a / n/a | gemini-3.8-flash: liveBench effort 'medium' alias_not_configured | default-development, review, visual-ui |
 | evidence gap | n/a / n/a / n/a | gpt-5-mini: no supported effort within the configured range | agentic-implementation, deep-reasoning, default-development, mechanical, orchestrator, quick, review, triage, visual-ui |
@@ -322,6 +312,7 @@ Confirmation uses metric-scoped observations, not the raw page fingerprint. Suit
 | evidence gap | n/a / n/a / n/a | gpt-5.3-codex: artificialAnalysisComponents effort 'medium' alias_not_configured | default-development, review, visual-ui |
 | evidence gap | n/a / n/a / n/a | gpt-5.3-codex: artificialAnalysisComponents.automationBench 'gpt-5-3-codex' score_missing_or_invalid | agentic-implementation |
 | evidence gap | n/a / n/a / n/a | gpt-5.3-codex: artificialAnalysisComponents.enterpriseOpsGym 'gpt-5-3-codex' score_missing_or_invalid | agentic-implementation |
+| evidence gap | n/a / n/a / n/a | gpt-5.3-codex: artificialAnalysisComponents.lcr 'gpt-5-3-codex' score_missing_or_invalid | deep-reasoning |
 | evidence gap | n/a / n/a / n/a | gpt-5.3-codex: liveBench effort 'high' alias_not_configured | agentic-implementation, deep-reasoning, default-development, orchestrator, review, visual-ui |
 | evidence gap | n/a / n/a / n/a | gpt-5.3-codex: liveBench effort 'low' alias_not_configured | mechanical, quick, triage |
 | evidence gap | n/a / n/a / n/a | gpt-5.3-codex: liveBench effort 'medium' alias_not_configured | default-development, review, visual-ui |
@@ -333,6 +324,12 @@ Confirmation uses metric-scoped observations, not the raw page fingerprint. Suit
 | evidence gap | n/a / n/a / n/a | gpt-5.4-mini: artificialAnalysisCodingAgents effort 'xhigh' structured_variant_not_matched | agentic-implementation |
 | evidence gap | n/a / n/a / n/a | gpt-5.4-mini: artificialAnalysisComponents effort 'high' alias_not_configured | agentic-implementation, deep-reasoning, default-development, orchestrator, review, visual-ui |
 | evidence gap | n/a / n/a / n/a | gpt-5.4-mini: artificialAnalysisComponents effort 'low' alias_not_configured | mechanical, quick, triage |
+| evidence gap | n/a / n/a / n/a | gpt-5.4-mini: artificialAnalysisComponents.automationBench 'gpt-5-4-mini' score_missing_or_invalid | agentic-implementation |
+| evidence gap | n/a / n/a / n/a | gpt-5.4-mini: artificialAnalysisComponents.enterpriseOpsGym 'gpt-5-4-mini' score_missing_or_invalid | agentic-implementation |
+| evidence gap | n/a / n/a / n/a | gpt-5.4-mini: artificialAnalysisComponents.ifbench 'gpt-5-4-mini-medium' score_missing_or_invalid | default-development |
+| evidence gap | n/a / n/a / n/a | gpt-5.4-mini: artificialAnalysisComponents.lcr 'gpt-5-4-mini-medium' score_missing_or_invalid | review |
+| evidence gap | n/a / n/a / n/a | gpt-5.4-mini: artificialAnalysisComponents.lcr 'gpt-5-4-mini' score_missing_or_invalid | deep-reasoning |
+| evidence gap | n/a / n/a / n/a | gpt-5.4-mini: artificialAnalysisComponents.mmmuPro 'gpt-5-4-mini-medium' score_missing_or_invalid | visual-ui |
 | evidence gap | n/a / n/a / n/a | gpt-5.4-mini: liveBench effort 'high' alias_not_configured | agentic-implementation, deep-reasoning, default-development, orchestrator, review, visual-ui |
 | evidence gap | n/a / n/a / n/a | gpt-5.4-mini: liveBench effort 'low' alias_not_configured | mechanical, quick, triage |
 | evidence gap | n/a / n/a / n/a | gpt-5.4-mini: liveBench effort 'medium' alias_not_configured | default-development, review, visual-ui |
@@ -347,34 +344,72 @@ Confirmation uses metric-scoped observations, not the raw page fingerprint. Suit
 | evidence gap | n/a / n/a / n/a | gpt-5.4: artificialAnalysisComponents.automationBench 'gpt-5-4' score_missing_or_invalid | agentic-implementation |
 | evidence gap | n/a / n/a / n/a | gpt-5.4: artificialAnalysisComponents.enterpriseOpsGym 'gpt-5-4-low' score_missing_or_invalid | mechanical |
 | evidence gap | n/a / n/a / n/a | gpt-5.4: artificialAnalysisComponents.enterpriseOpsGym 'gpt-5-4' score_missing_or_invalid | agentic-implementation |
+| evidence gap | n/a / n/a / n/a | gpt-5.4: artificialAnalysisComponents.ifbench 'gpt-5-4-low' score_missing_or_invalid | mechanical, quick, triage |
+| evidence gap | n/a / n/a / n/a | gpt-5.4: artificialAnalysisComponents.lcr 'gpt-5-4' score_missing_or_invalid | deep-reasoning |
 | evidence gap | n/a / n/a / n/a | gpt-5.4: liveBench effort 'high' alias_not_configured | agentic-implementation, deep-reasoning, default-development, orchestrator, review, visual-ui |
 | evidence gap | n/a / n/a / n/a | gpt-5.4: liveBench effort 'low' alias_not_configured | mechanical, quick, triage |
 | evidence gap | n/a / n/a / n/a | gpt-5.4: liveBench effort 'medium' alias_not_configured | default-development, review, visual-ui |
 | evidence gap | n/a / n/a / n/a | gpt-5.5: artificialAnalysisCodingAgents effort 'high' structured_variant_not_matched | agentic-implementation |
 | evidence gap | n/a / n/a / n/a | gpt-5.5: artificialAnalysisCodingAgents effort 'xhigh' structured_variant_not_matched | agentic-implementation |
+| evidence gap | n/a / n/a / n/a | gpt-5.5: artificialAnalysisComponents.automationBench 'gpt-5-5-high' score_missing_or_invalid | agentic-implementation, orchestrator |
 | evidence gap | n/a / n/a / n/a | gpt-5.5: artificialAnalysisComponents.automationBench 'gpt-5-5-low' score_missing_or_invalid | mechanical |
+| evidence gap | n/a / n/a / n/a | gpt-5.5: artificialAnalysisComponents.automationBench 'gpt-5-5' score_missing_or_invalid | agentic-implementation |
 | evidence gap | n/a / n/a / n/a | gpt-5.5: artificialAnalysisComponents.enterpriseOpsGym 'gpt-5-5-high' score_missing_or_invalid | agentic-implementation, orchestrator |
 | evidence gap | n/a / n/a / n/a | gpt-5.5: artificialAnalysisComponents.enterpriseOpsGym 'gpt-5-5-low' score_missing_or_invalid | mechanical |
+| evidence gap | n/a / n/a / n/a | gpt-5.5: artificialAnalysisComponents.enterpriseOpsGym 'gpt-5-5' score_missing_or_invalid | agentic-implementation |
+| evidence gap | n/a / n/a / n/a | gpt-5.5: artificialAnalysisComponents.ifbench 'gpt-5-5-high' score_missing_or_invalid | default-development, orchestrator |
+| evidence gap | n/a / n/a / n/a | gpt-5.5: artificialAnalysisComponents.ifbench 'gpt-5-5-low' score_missing_or_invalid | mechanical, quick, triage |
+| evidence gap | n/a / n/a / n/a | gpt-5.5: artificialAnalysisComponents.ifbench 'gpt-5-5-medium' score_missing_or_invalid | default-development |
+| evidence gap | n/a / n/a / n/a | gpt-5.5: artificialAnalysisComponents.lcr 'gpt-5-5-high' score_missing_or_invalid | deep-reasoning, orchestrator, review |
+| evidence gap | n/a / n/a / n/a | gpt-5.5: artificialAnalysisComponents.lcr 'gpt-5-5-medium' score_missing_or_invalid | review |
+| evidence gap | n/a / n/a / n/a | gpt-5.5: artificialAnalysisComponents.lcr 'gpt-5-5' score_missing_or_invalid | deep-reasoning |
+| evidence gap | n/a / n/a / n/a | gpt-5.5: artificialAnalysisComponents.mmmuPro 'gpt-5-5-high' score_missing_or_invalid | visual-ui |
+| evidence gap | n/a / n/a / n/a | gpt-5.5: artificialAnalysisComponents.mmmuPro 'gpt-5-5-medium' score_missing_or_invalid | visual-ui |
 | evidence gap | n/a / n/a / n/a | gpt-5.5: liveBench effort 'high' alias_not_configured | agentic-implementation, deep-reasoning, default-development, orchestrator, review, visual-ui |
 | evidence gap | n/a / n/a / n/a | gpt-5.5: liveBench effort 'low' alias_not_configured | mechanical, quick, triage |
 | evidence gap | n/a / n/a / n/a | gpt-5.5: liveBench effort 'medium' alias_not_configured | default-development, review, visual-ui |
 | evidence gap | n/a / n/a / n/a | gpt-5.6-luna: artificialAnalysisCodingAgents effort 'high' structured_variant_not_matched | agentic-implementation |
 | evidence gap | n/a / n/a / n/a | gpt-5.6-luna: artificialAnalysisCodingAgents effort 'xhigh' structured_variant_not_matched | agentic-implementation |
+| evidence gap | n/a / n/a / n/a | gpt-5.6-luna: artificialAnalysisComponents.automationBench 'gpt-5-6-luna-high' score_missing_or_invalid | agentic-implementation, orchestrator |
+| evidence gap | n/a / n/a / n/a | gpt-5.6-luna: artificialAnalysisComponents.automationBench 'gpt-5-6-luna-low' score_missing_or_invalid | mechanical |
+| evidence gap | n/a / n/a / n/a | gpt-5.6-luna: artificialAnalysisComponents.automationBench 'gpt-5-6-luna-xhigh' score_missing_or_invalid | agentic-implementation |
+| evidence gap | n/a / n/a / n/a | gpt-5.6-luna: artificialAnalysisComponents.automationBench 'gpt-5-6-luna' score_missing_or_invalid | agentic-implementation |
 | evidence gap | n/a / n/a / n/a | gpt-5.6-luna: artificialAnalysisComponents.enterpriseOpsGym 'gpt-5-6-luna-high' score_missing_or_invalid | agentic-implementation, orchestrator |
 | evidence gap | n/a / n/a / n/a | gpt-5.6-luna: artificialAnalysisComponents.enterpriseOpsGym 'gpt-5-6-luna-low' score_missing_or_invalid | mechanical |
 | evidence gap | n/a / n/a / n/a | gpt-5.6-luna: artificialAnalysisComponents.enterpriseOpsGym 'gpt-5-6-luna-xhigh' score_missing_or_invalid | agentic-implementation |
+| evidence gap | n/a / n/a / n/a | gpt-5.6-luna: artificialAnalysisComponents.enterpriseOpsGym 'gpt-5-6-luna' score_missing_or_invalid | agentic-implementation |
 | evidence gap | n/a / n/a / n/a | gpt-5.6-luna: artificialAnalysisComponents.ifbench 'gpt-5-6-luna-high' score_missing_or_invalid | default-development, orchestrator |
 | evidence gap | n/a / n/a / n/a | gpt-5.6-luna: artificialAnalysisComponents.ifbench 'gpt-5-6-luna-low' score_missing_or_invalid | mechanical, quick, triage |
 | evidence gap | n/a / n/a / n/a | gpt-5.6-luna: artificialAnalysisComponents.ifbench 'gpt-5-6-luna-medium' score_missing_or_invalid | default-development |
+| evidence gap | n/a / n/a / n/a | gpt-5.6-luna: artificialAnalysisComponents.lcr 'gpt-5-6-luna-high' score_missing_or_invalid | deep-reasoning, orchestrator, review |
+| evidence gap | n/a / n/a / n/a | gpt-5.6-luna: artificialAnalysisComponents.lcr 'gpt-5-6-luna-medium' score_missing_or_invalid | review |
+| evidence gap | n/a / n/a / n/a | gpt-5.6-luna: artificialAnalysisComponents.lcr 'gpt-5-6-luna-xhigh' score_missing_or_invalid | deep-reasoning |
+| evidence gap | n/a / n/a / n/a | gpt-5.6-luna: artificialAnalysisComponents.lcr 'gpt-5-6-luna' score_missing_or_invalid | deep-reasoning |
+| evidence gap | n/a / n/a / n/a | gpt-5.6-luna: artificialAnalysisComponents.mmmuPro 'gpt-5-6-luna-high' score_missing_or_invalid | visual-ui |
+| evidence gap | n/a / n/a / n/a | gpt-5.6-luna: artificialAnalysisComponents.mmmuPro 'gpt-5-6-luna-medium' score_missing_or_invalid | visual-ui |
 | evidence gap | n/a / n/a / n/a | gpt-5.6-luna: liveBench effort 'high' alias_not_configured | agentic-implementation, deep-reasoning, default-development, orchestrator, review, visual-ui |
 | evidence gap | n/a / n/a / n/a | gpt-5.6-luna: liveBench effort 'low' alias_not_configured | mechanical, quick, triage |
 | evidence gap | n/a / n/a / n/a | gpt-5.6-luna: liveBench effort 'medium' alias_not_configured | default-development, review, visual-ui |
 | evidence gap | n/a / n/a / n/a | gpt-5.6-luna: liveBench effort 'xhigh' alias_not_configured | agentic-implementation, deep-reasoning |
 | evidence gap | n/a / n/a / n/a | gpt-5.6-sol: artificialAnalysisCodingAgents effort 'high' structured_variant_not_matched | agentic-implementation |
 | evidence gap | n/a / n/a / n/a | gpt-5.6-sol: artificialAnalysisCodingAgents effort 'xhigh' structured_variant_not_matched | agentic-implementation |
+| evidence gap | n/a / n/a / n/a | gpt-5.6-sol: artificialAnalysisComponents.automationBench 'gpt-5-6-sol-high' score_missing_or_invalid | agentic-implementation, orchestrator |
+| evidence gap | n/a / n/a / n/a | gpt-5.6-sol: artificialAnalysisComponents.automationBench 'gpt-5-6-sol-low' score_missing_or_invalid | mechanical |
+| evidence gap | n/a / n/a / n/a | gpt-5.6-sol: artificialAnalysisComponents.automationBench 'gpt-5-6-sol-xhigh' score_missing_or_invalid | agentic-implementation |
+| evidence gap | n/a / n/a / n/a | gpt-5.6-sol: artificialAnalysisComponents.automationBench 'gpt-5-6-sol' score_missing_or_invalid | agentic-implementation |
 | evidence gap | n/a / n/a / n/a | gpt-5.6-sol: artificialAnalysisComponents.enterpriseOpsGym 'gpt-5-6-sol-high' score_missing_or_invalid | agentic-implementation, orchestrator |
 | evidence gap | n/a / n/a / n/a | gpt-5.6-sol: artificialAnalysisComponents.enterpriseOpsGym 'gpt-5-6-sol-low' score_missing_or_invalid | mechanical |
 | evidence gap | n/a / n/a / n/a | gpt-5.6-sol: artificialAnalysisComponents.enterpriseOpsGym 'gpt-5-6-sol-xhigh' score_missing_or_invalid | agentic-implementation |
+| evidence gap | n/a / n/a / n/a | gpt-5.6-sol: artificialAnalysisComponents.enterpriseOpsGym 'gpt-5-6-sol' score_missing_or_invalid | agentic-implementation |
+| evidence gap | n/a / n/a / n/a | gpt-5.6-sol: artificialAnalysisComponents.ifbench 'gpt-5-6-sol-high' score_missing_or_invalid | default-development, orchestrator |
+| evidence gap | n/a / n/a / n/a | gpt-5.6-sol: artificialAnalysisComponents.ifbench 'gpt-5-6-sol-low' score_missing_or_invalid | mechanical, quick, triage |
+| evidence gap | n/a / n/a / n/a | gpt-5.6-sol: artificialAnalysisComponents.ifbench 'gpt-5-6-sol-medium' score_missing_or_invalid | default-development |
+| evidence gap | n/a / n/a / n/a | gpt-5.6-sol: artificialAnalysisComponents.lcr 'gpt-5-6-sol-high' score_missing_or_invalid | deep-reasoning, orchestrator, review |
+| evidence gap | n/a / n/a / n/a | gpt-5.6-sol: artificialAnalysisComponents.lcr 'gpt-5-6-sol-medium' score_missing_or_invalid | review |
+| evidence gap | n/a / n/a / n/a | gpt-5.6-sol: artificialAnalysisComponents.lcr 'gpt-5-6-sol-xhigh' score_missing_or_invalid | deep-reasoning |
+| evidence gap | n/a / n/a / n/a | gpt-5.6-sol: artificialAnalysisComponents.lcr 'gpt-5-6-sol' score_missing_or_invalid | deep-reasoning |
+| evidence gap | n/a / n/a / n/a | gpt-5.6-sol: artificialAnalysisComponents.mmmuPro 'gpt-5-6-sol-high' score_missing_or_invalid | visual-ui |
+| evidence gap | n/a / n/a / n/a | gpt-5.6-sol: artificialAnalysisComponents.mmmuPro 'gpt-5-6-sol-medium' score_missing_or_invalid | visual-ui |
 | evidence gap | n/a / n/a / n/a | gpt-5.6-sol: liveBench effort 'high' alias_not_configured | agentic-implementation, deep-reasoning, default-development, orchestrator, review, visual-ui |
 | evidence gap | n/a / n/a / n/a | gpt-5.6-sol: liveBench effort 'low' alias_not_configured | mechanical, quick, triage |
 | evidence gap | n/a / n/a / n/a | gpt-5.6-sol: liveBench effort 'medium' alias_not_configured | default-development, review, visual-ui |
@@ -382,15 +417,32 @@ Confirmation uses metric-scoped observations, not the raw page fingerprint. Suit
 | evidence gap | n/a / n/a / n/a | gpt-5.6-terra: artificialAnalysisCodingAgents effort 'high' structured_variant_not_matched | agentic-implementation |
 | evidence gap | n/a / n/a / n/a | gpt-5.6-terra: artificialAnalysisCodingAgents effort 'max' structured_variant_not_matched | agentic-implementation |
 | evidence gap | n/a / n/a / n/a | gpt-5.6-terra: artificialAnalysisCodingAgents effort 'xhigh' structured_variant_not_matched | agentic-implementation |
+| evidence gap | n/a / n/a / n/a | gpt-5.6-terra: artificialAnalysisComponents.automationBench 'gpt-5-6-terra-high' score_missing_or_invalid | agentic-implementation, orchestrator |
+| evidence gap | n/a / n/a / n/a | gpt-5.6-terra: artificialAnalysisComponents.automationBench 'gpt-5-6-terra-low' score_missing_or_invalid | mechanical |
+| evidence gap | n/a / n/a / n/a | gpt-5.6-terra: artificialAnalysisComponents.automationBench 'gpt-5-6-terra-xhigh' score_missing_or_invalid | agentic-implementation |
+| evidence gap | n/a / n/a / n/a | gpt-5.6-terra: artificialAnalysisComponents.automationBench 'gpt-5-6-terra' score_missing_or_invalid | agentic-implementation |
 | evidence gap | n/a / n/a / n/a | gpt-5.6-terra: artificialAnalysisComponents.enterpriseOpsGym 'gpt-5-6-terra-high' score_missing_or_invalid | agentic-implementation, orchestrator |
 | evidence gap | n/a / n/a / n/a | gpt-5.6-terra: artificialAnalysisComponents.enterpriseOpsGym 'gpt-5-6-terra-low' score_missing_or_invalid | mechanical |
 | evidence gap | n/a / n/a / n/a | gpt-5.6-terra: artificialAnalysisComponents.enterpriseOpsGym 'gpt-5-6-terra-xhigh' score_missing_or_invalid | agentic-implementation |
+| evidence gap | n/a / n/a / n/a | gpt-5.6-terra: artificialAnalysisComponents.enterpriseOpsGym 'gpt-5-6-terra' score_missing_or_invalid | agentic-implementation |
+| evidence gap | n/a / n/a / n/a | gpt-5.6-terra: artificialAnalysisComponents.ifbench 'gpt-5-6-terra-high' score_missing_or_invalid | default-development, orchestrator |
+| evidence gap | n/a / n/a / n/a | gpt-5.6-terra: artificialAnalysisComponents.ifbench 'gpt-5-6-terra-low' score_missing_or_invalid | mechanical, quick, triage |
+| evidence gap | n/a / n/a / n/a | gpt-5.6-terra: artificialAnalysisComponents.ifbench 'gpt-5-6-terra-medium' score_missing_or_invalid | default-development |
+| evidence gap | n/a / n/a / n/a | gpt-5.6-terra: artificialAnalysisComponents.lcr 'gpt-5-6-terra-high' score_missing_or_invalid | deep-reasoning, orchestrator, review |
+| evidence gap | n/a / n/a / n/a | gpt-5.6-terra: artificialAnalysisComponents.lcr 'gpt-5-6-terra-medium' score_missing_or_invalid | review |
+| evidence gap | n/a / n/a / n/a | gpt-5.6-terra: artificialAnalysisComponents.lcr 'gpt-5-6-terra-xhigh' score_missing_or_invalid | deep-reasoning |
+| evidence gap | n/a / n/a / n/a | gpt-5.6-terra: artificialAnalysisComponents.lcr 'gpt-5-6-terra' score_missing_or_invalid | deep-reasoning |
+| evidence gap | n/a / n/a / n/a | gpt-5.6-terra: artificialAnalysisComponents.mmmuPro 'gpt-5-6-terra-high' score_missing_or_invalid | visual-ui |
+| evidence gap | n/a / n/a / n/a | gpt-5.6-terra: artificialAnalysisComponents.mmmuPro 'gpt-5-6-terra-medium' score_missing_or_invalid | visual-ui |
 | evidence gap | n/a / n/a / n/a | gpt-5.6-terra: liveBench effort 'high' alias_not_configured | agentic-implementation, deep-reasoning, default-development, orchestrator, review, visual-ui |
 | evidence gap | n/a / n/a / n/a | gpt-5.6-terra: liveBench effort 'low' alias_not_configured | mechanical, quick, triage |
 | evidence gap | n/a / n/a / n/a | gpt-5.6-terra: liveBench effort 'medium' alias_not_configured | default-development, review, visual-ui |
 | evidence gap | n/a / n/a / n/a | gpt-5.6-terra: liveBench effort 'xhigh' alias_not_configured | agentic-implementation, deep-reasoning |
 | evidence gap | n/a / n/a / n/a | gpt-6-astra: artificialAnalysisCodingAgents effort 'high' structured_variant_not_matched | agentic-implementation |
 | evidence gap | n/a / n/a / n/a | gpt-6-astra: artificialAnalysisCodingAgents effort 'xhigh' structured_variant_not_matched | agentic-implementation |
+| evidence gap | n/a / n/a / n/a | gpt-6-astra: artificialAnalysisComponents.automationBench 'gpt-6-astra-high' score_missing_or_invalid | agentic-implementation, orchestrator |
+| evidence gap | n/a / n/a / n/a | gpt-6-astra: artificialAnalysisComponents.automationBench 'gpt-6-astra-low' score_missing_or_invalid | mechanical |
+| evidence gap | n/a / n/a / n/a | gpt-6-astra: artificialAnalysisComponents.automationBench 'gpt-6-astra-xhigh' score_missing_or_invalid | agentic-implementation |
 | evidence gap | n/a / n/a / n/a | gpt-6-astra: artificialAnalysisComponents.enterpriseOpsGym 'gpt-6-astra-high' score_missing_or_invalid | agentic-implementation, orchestrator |
 | evidence gap | n/a / n/a / n/a | gpt-6-astra: artificialAnalysisComponents.enterpriseOpsGym 'gpt-6-astra-low' score_missing_or_invalid | mechanical |
 | evidence gap | n/a / n/a / n/a | gpt-6-astra: artificialAnalysisComponents.enterpriseOpsGym 'gpt-6-astra-xhigh' score_missing_or_invalid | agentic-implementation |
@@ -398,6 +450,11 @@ Confirmation uses metric-scoped observations, not the raw page fingerprint. Suit
 | evidence gap | n/a / n/a / n/a | gpt-6-astra: artificialAnalysisComponents.ifbench 'gpt-6-astra-high' score_missing_or_invalid | default-development, orchestrator |
 | evidence gap | n/a / n/a / n/a | gpt-6-astra: artificialAnalysisComponents.ifbench 'gpt-6-astra-low' score_missing_or_invalid | mechanical, quick, triage |
 | evidence gap | n/a / n/a / n/a | gpt-6-astra: artificialAnalysisComponents.ifbench 'gpt-6-astra-medium' score_missing_or_invalid | default-development |
+| evidence gap | n/a / n/a / n/a | gpt-6-astra: artificialAnalysisComponents.lcr 'gpt-6-astra-high' score_missing_or_invalid | deep-reasoning, orchestrator, review |
+| evidence gap | n/a / n/a / n/a | gpt-6-astra: artificialAnalysisComponents.lcr 'gpt-6-astra-medium' score_missing_or_invalid | review |
+| evidence gap | n/a / n/a / n/a | gpt-6-astra: artificialAnalysisComponents.lcr 'gpt-6-astra-xhigh' score_missing_or_invalid | deep-reasoning |
+| evidence gap | n/a / n/a / n/a | gpt-6-astra: artificialAnalysisComponents.mmmuPro 'gpt-6-astra-high' score_missing_or_invalid | visual-ui |
+| evidence gap | n/a / n/a / n/a | gpt-6-astra: artificialAnalysisComponents.mmmuPro 'gpt-6-astra-medium' score_missing_or_invalid | visual-ui |
 | evidence gap | n/a / n/a / n/a | gpt-6-astra: liveBench effort 'high' alias_not_configured | agentic-implementation, deep-reasoning, default-development, orchestrator, review, visual-ui |
 | evidence gap | n/a / n/a / n/a | gpt-6-astra: liveBench effort 'low' alias_not_configured | mechanical, quick, triage |
 | evidence gap | n/a / n/a / n/a | gpt-6-astra: liveBench effort 'medium' alias_not_configured | default-development, review, visual-ui |
@@ -407,6 +464,10 @@ Confirmation uses metric-scoped observations, not the raw page fingerprint. Suit
 | evidence gap | n/a / n/a / n/a | gpt-6-luna: artificialAnalysis.codingIndex 'gpt-6-luna-medium' score_missing_or_invalid | default-development, review, visual-ui |
 | evidence gap | n/a / n/a / n/a | gpt-6-luna: artificialAnalysisCodingAgents effort 'high' structured_variant_not_matched | agentic-implementation |
 | evidence gap | n/a / n/a / n/a | gpt-6-luna: artificialAnalysisCodingAgents effort 'xhigh' structured_variant_not_matched | agentic-implementation |
+| evidence gap | n/a / n/a / n/a | gpt-6-luna: artificialAnalysisComponents.automationBench 'gpt-6-luna-high' score_missing_or_invalid | agentic-implementation, orchestrator |
+| evidence gap | n/a / n/a / n/a | gpt-6-luna: artificialAnalysisComponents.automationBench 'gpt-6-luna-low' score_missing_or_invalid | mechanical |
+| evidence gap | n/a / n/a / n/a | gpt-6-luna: artificialAnalysisComponents.automationBench 'gpt-6-luna-xhigh' score_missing_or_invalid | agentic-implementation |
+| evidence gap | n/a / n/a / n/a | gpt-6-luna: artificialAnalysisComponents.automationBench 'gpt-6-luna' score_missing_or_invalid | agentic-implementation |
 | evidence gap | n/a / n/a / n/a | gpt-6-luna: artificialAnalysisComponents.enterpriseOpsGym 'gpt-6-luna-high' score_missing_or_invalid | agentic-implementation, orchestrator |
 | evidence gap | n/a / n/a / n/a | gpt-6-luna: artificialAnalysisComponents.enterpriseOpsGym 'gpt-6-luna-low' score_missing_or_invalid | mechanical |
 | evidence gap | n/a / n/a / n/a | gpt-6-luna: artificialAnalysisComponents.enterpriseOpsGym 'gpt-6-luna-xhigh' score_missing_or_invalid | agentic-implementation |
@@ -414,6 +475,12 @@ Confirmation uses metric-scoped observations, not the raw page fingerprint. Suit
 | evidence gap | n/a / n/a / n/a | gpt-6-luna: artificialAnalysisComponents.ifbench 'gpt-6-luna-high' score_missing_or_invalid | default-development, orchestrator |
 | evidence gap | n/a / n/a / n/a | gpt-6-luna: artificialAnalysisComponents.ifbench 'gpt-6-luna-low' score_missing_or_invalid | mechanical, quick, triage |
 | evidence gap | n/a / n/a / n/a | gpt-6-luna: artificialAnalysisComponents.ifbench 'gpt-6-luna-medium' score_missing_or_invalid | default-development |
+| evidence gap | n/a / n/a / n/a | gpt-6-luna: artificialAnalysisComponents.lcr 'gpt-6-luna-high' score_missing_or_invalid | deep-reasoning, orchestrator, review |
+| evidence gap | n/a / n/a / n/a | gpt-6-luna: artificialAnalysisComponents.lcr 'gpt-6-luna-medium' score_missing_or_invalid | review |
+| evidence gap | n/a / n/a / n/a | gpt-6-luna: artificialAnalysisComponents.lcr 'gpt-6-luna-xhigh' score_missing_or_invalid | deep-reasoning |
+| evidence gap | n/a / n/a / n/a | gpt-6-luna: artificialAnalysisComponents.lcr 'gpt-6-luna' score_missing_or_invalid | deep-reasoning |
+| evidence gap | n/a / n/a / n/a | gpt-6-luna: artificialAnalysisComponents.mmmuPro 'gpt-6-luna-high' score_missing_or_invalid | visual-ui |
+| evidence gap | n/a / n/a / n/a | gpt-6-luna: artificialAnalysisComponents.mmmuPro 'gpt-6-luna-medium' score_missing_or_invalid | visual-ui |
 | evidence gap | n/a / n/a / n/a | gpt-6-luna: liveBench effort 'high' alias_not_configured | agentic-implementation, deep-reasoning, default-development, orchestrator, review, visual-ui |
 | evidence gap | n/a / n/a / n/a | gpt-6-luna: liveBench effort 'low' alias_not_configured | mechanical, quick, triage |
 | evidence gap | n/a / n/a / n/a | gpt-6-luna: liveBench effort 'medium' alias_not_configured | default-development, review, visual-ui |
@@ -423,6 +490,10 @@ Confirmation uses metric-scoped observations, not the raw page fingerprint. Suit
 | evidence gap | n/a / n/a / n/a | gpt-6-sol: artificialAnalysis.codingIndex 'gpt-6-sol-medium' score_missing_or_invalid | default-development, review, visual-ui |
 | evidence gap | n/a / n/a / n/a | gpt-6-sol: artificialAnalysisCodingAgents effort 'high' structured_variant_not_matched | agentic-implementation |
 | evidence gap | n/a / n/a / n/a | gpt-6-sol: artificialAnalysisCodingAgents effort 'xhigh' structured_variant_not_matched | agentic-implementation |
+| evidence gap | n/a / n/a / n/a | gpt-6-sol: artificialAnalysisComponents.automationBench 'gpt-6-sol-high' score_missing_or_invalid | agentic-implementation, orchestrator |
+| evidence gap | n/a / n/a / n/a | gpt-6-sol: artificialAnalysisComponents.automationBench 'gpt-6-sol-low' score_missing_or_invalid | mechanical |
+| evidence gap | n/a / n/a / n/a | gpt-6-sol: artificialAnalysisComponents.automationBench 'gpt-6-sol-xhigh' score_missing_or_invalid | agentic-implementation |
+| evidence gap | n/a / n/a / n/a | gpt-6-sol: artificialAnalysisComponents.automationBench 'gpt-6-sol' score_missing_or_invalid | agentic-implementation |
 | evidence gap | n/a / n/a / n/a | gpt-6-sol: artificialAnalysisComponents.enterpriseOpsGym 'gpt-6-sol-high' score_missing_or_invalid | agentic-implementation, orchestrator |
 | evidence gap | n/a / n/a / n/a | gpt-6-sol: artificialAnalysisComponents.enterpriseOpsGym 'gpt-6-sol-low' score_missing_or_invalid | mechanical |
 | evidence gap | n/a / n/a / n/a | gpt-6-sol: artificialAnalysisComponents.enterpriseOpsGym 'gpt-6-sol-xhigh' score_missing_or_invalid | agentic-implementation |
@@ -430,6 +501,12 @@ Confirmation uses metric-scoped observations, not the raw page fingerprint. Suit
 | evidence gap | n/a / n/a / n/a | gpt-6-sol: artificialAnalysisComponents.ifbench 'gpt-6-sol-high' score_missing_or_invalid | default-development, orchestrator |
 | evidence gap | n/a / n/a / n/a | gpt-6-sol: artificialAnalysisComponents.ifbench 'gpt-6-sol-low' score_missing_or_invalid | mechanical, quick, triage |
 | evidence gap | n/a / n/a / n/a | gpt-6-sol: artificialAnalysisComponents.ifbench 'gpt-6-sol-medium' score_missing_or_invalid | default-development |
+| evidence gap | n/a / n/a / n/a | gpt-6-sol: artificialAnalysisComponents.lcr 'gpt-6-sol-high' score_missing_or_invalid | deep-reasoning, orchestrator, review |
+| evidence gap | n/a / n/a / n/a | gpt-6-sol: artificialAnalysisComponents.lcr 'gpt-6-sol-medium' score_missing_or_invalid | review |
+| evidence gap | n/a / n/a / n/a | gpt-6-sol: artificialAnalysisComponents.lcr 'gpt-6-sol-xhigh' score_missing_or_invalid | deep-reasoning |
+| evidence gap | n/a / n/a / n/a | gpt-6-sol: artificialAnalysisComponents.lcr 'gpt-6-sol' score_missing_or_invalid | deep-reasoning |
+| evidence gap | n/a / n/a / n/a | gpt-6-sol: artificialAnalysisComponents.mmmuPro 'gpt-6-sol-high' score_missing_or_invalid | visual-ui |
+| evidence gap | n/a / n/a / n/a | gpt-6-sol: artificialAnalysisComponents.mmmuPro 'gpt-6-sol-medium' score_missing_or_invalid | visual-ui |
 | evidence gap | n/a / n/a / n/a | gpt-6-sol: liveBench effort 'high' alias_not_configured | agentic-implementation, deep-reasoning, default-development, orchestrator, review, visual-ui |
 | evidence gap | n/a / n/a / n/a | gpt-6-sol: liveBench effort 'low' alias_not_configured | mechanical, quick, triage |
 | evidence gap | n/a / n/a / n/a | gpt-6-sol: liveBench effort 'medium' alias_not_configured | default-development, review, visual-ui |
@@ -439,6 +516,9 @@ Confirmation uses metric-scoped observations, not the raw page fingerprint. Suit
 | evidence gap | n/a / n/a / n/a | gpt-6.1-sol: artificialAnalysis.codingIndex 'gpt-6-1-sol-medium' score_missing_or_invalid | default-development, review, visual-ui |
 | evidence gap | n/a / n/a / n/a | gpt-6.1-sol: artificialAnalysisCodingAgents effort 'low' not_in_requested_configurations | agentic-implementation |
 | evidence gap | n/a / n/a / n/a | gpt-6.1-sol: artificialAnalysisCodingAgents effort 'medium' not_in_requested_configurations | agentic-implementation |
+| evidence gap | n/a / n/a / n/a | gpt-6.1-sol: artificialAnalysisComponents.automationBench 'gpt-6-1-sol-high' score_missing_or_invalid | agentic-implementation, orchestrator |
+| evidence gap | n/a / n/a / n/a | gpt-6.1-sol: artificialAnalysisComponents.automationBench 'gpt-6-1-sol-low' score_missing_or_invalid | mechanical |
+| evidence gap | n/a / n/a / n/a | gpt-6.1-sol: artificialAnalysisComponents.automationBench 'gpt-6-1-sol-xhigh' score_missing_or_invalid | agentic-implementation |
 | evidence gap | n/a / n/a / n/a | gpt-6.1-sol: artificialAnalysisComponents.enterpriseOpsGym 'gpt-6-1-sol-high' score_missing_or_invalid | agentic-implementation, orchestrator |
 | evidence gap | n/a / n/a / n/a | gpt-6.1-sol: artificialAnalysisComponents.enterpriseOpsGym 'gpt-6-1-sol-low' score_missing_or_invalid | mechanical |
 | evidence gap | n/a / n/a / n/a | gpt-6.1-sol: artificialAnalysisComponents.enterpriseOpsGym 'gpt-6-1-sol-xhigh' score_missing_or_invalid | agentic-implementation |
@@ -446,6 +526,11 @@ Confirmation uses metric-scoped observations, not the raw page fingerprint. Suit
 | evidence gap | n/a / n/a / n/a | gpt-6.1-sol: artificialAnalysisComponents.ifbench 'gpt-6-1-sol-high' score_missing_or_invalid | default-development, orchestrator |
 | evidence gap | n/a / n/a / n/a | gpt-6.1-sol: artificialAnalysisComponents.ifbench 'gpt-6-1-sol-low' score_missing_or_invalid | mechanical, quick, triage |
 | evidence gap | n/a / n/a / n/a | gpt-6.1-sol: artificialAnalysisComponents.ifbench 'gpt-6-1-sol-medium' score_missing_or_invalid | default-development |
+| evidence gap | n/a / n/a / n/a | gpt-6.1-sol: artificialAnalysisComponents.lcr 'gpt-6-1-sol-high' score_missing_or_invalid | deep-reasoning, orchestrator, review |
+| evidence gap | n/a / n/a / n/a | gpt-6.1-sol: artificialAnalysisComponents.lcr 'gpt-6-1-sol-medium' score_missing_or_invalid | review |
+| evidence gap | n/a / n/a / n/a | gpt-6.1-sol: artificialAnalysisComponents.lcr 'gpt-6-1-sol-xhigh' score_missing_or_invalid | deep-reasoning |
+| evidence gap | n/a / n/a / n/a | gpt-6.1-sol: artificialAnalysisComponents.mmmuPro 'gpt-6-1-sol-high' score_missing_or_invalid | visual-ui |
+| evidence gap | n/a / n/a / n/a | gpt-6.1-sol: artificialAnalysisComponents.mmmuPro 'gpt-6-1-sol-medium' score_missing_or_invalid | visual-ui |
 | evidence gap | n/a / n/a / n/a | gpt-6.1-sol: liveBench effort 'high' alias_not_configured | agentic-implementation, deep-reasoning, default-development, orchestrator, review, visual-ui |
 | evidence gap | n/a / n/a / n/a | gpt-6.1-sol: liveBench effort 'low' alias_not_configured | mechanical, quick, triage |
 | evidence gap | n/a / n/a / n/a | gpt-6.1-sol: liveBench effort 'medium' alias_not_configured | default-development, review, visual-ui |
@@ -454,14 +539,36 @@ Confirmation uses metric-scoped observations, not the raw page fingerprint. Suit
 | evidence gap | n/a / n/a / n/a | grok-4.5: artificialAnalysisCodingAgents effort 'high' structured_variant_not_matched | agentic-implementation |
 | evidence gap | n/a / n/a / n/a | grok-4.5: artificialAnalysisComponents effort 'low' alias_not_configured | mechanical, quick, triage |
 | evidence gap | n/a / n/a / n/a | grok-4.5: artificialAnalysisComponents effort 'medium' alias_not_configured | default-development, review, visual-ui |
+| evidence gap | n/a / n/a / n/a | grok-4.5: artificialAnalysisComponents.automationBench 'grok-4-5' score_missing_or_invalid | agentic-implementation, orchestrator |
+| evidence gap | n/a / n/a / n/a | grok-4.5: artificialAnalysisComponents.enterpriseOpsGym 'grok-4-5' score_missing_or_invalid | agentic-implementation, orchestrator |
 | evidence gap | n/a / n/a / n/a | grok-4.5: artificialAnalysisComponents.ifbench 'grok-4-5' score_missing_or_invalid | default-development, orchestrator |
+| evidence gap | n/a / n/a / n/a | grok-4.5: artificialAnalysisComponents.lcr 'grok-4-5' score_missing_or_invalid | deep-reasoning, orchestrator, review |
+| evidence gap | n/a / n/a / n/a | grok-4.5: artificialAnalysisComponents.mmmuPro 'grok-4-5' score_missing_or_invalid | visual-ui |
 | evidence gap | n/a / n/a / n/a | grok-4.5: liveBench effort 'high' alias_not_configured | agentic-implementation, deep-reasoning, default-development, orchestrator, review, visual-ui |
 | evidence gap | n/a / n/a / n/a | grok-4.5: liveBench effort 'low' alias_not_configured | mechanical, quick, triage |
 | evidence gap | n/a / n/a / n/a | grok-4.5: liveBench effort 'medium' alias_not_configured | default-development, review, visual-ui |
-| evidence gap | n/a / n/a / n/a | grok-4.6: artificialAnalysisCodingAgents effort 'xhigh' not_in_requested_configurations | agentic-implementation |
+| evidence gap | n/a / n/a / n/a | grok-4.6: artificialAnalysisCodingAgents effort 'high' structured_variant_not_matched | agentic-implementation |
+| evidence gap | n/a / n/a / n/a | grok-4.6: artificialAnalysisComponents.automationBench 'grok-4-6-low' score_missing_or_invalid | mechanical |
+| evidence gap | n/a / n/a / n/a | grok-4.6: artificialAnalysisComponents.automationBench 'grok-4-6-xhigh' score_missing_or_invalid | agentic-implementation |
+| evidence gap | n/a / n/a / n/a | grok-4.6: artificialAnalysisComponents.automationBench 'grok-4-6' score_missing_or_invalid | agentic-implementation, orchestrator |
+| evidence gap | n/a / n/a / n/a | grok-4.6: artificialAnalysisComponents.enterpriseOpsGym 'grok-4-6-low' score_missing_or_invalid | mechanical |
+| evidence gap | n/a / n/a / n/a | grok-4.6: artificialAnalysisComponents.enterpriseOpsGym 'grok-4-6-xhigh' score_missing_or_invalid | agentic-implementation |
+| evidence gap | n/a / n/a / n/a | grok-4.6: artificialAnalysisComponents.enterpriseOpsGym 'grok-4-6' score_missing_or_invalid | agentic-implementation, orchestrator |
+| evidence gap | n/a / n/a / n/a | grok-4.6: artificialAnalysisComponents.ifbench 'grok-4-6-low' score_missing_or_invalid | mechanical, quick, triage |
+| evidence gap | n/a / n/a / n/a | grok-4.6: artificialAnalysisComponents.ifbench 'grok-4-6-medium' score_missing_or_invalid | default-development |
+| evidence gap | n/a / n/a / n/a | grok-4.6: artificialAnalysisComponents.ifbench 'grok-4-6' score_missing_or_invalid | default-development, orchestrator |
+| evidence gap | n/a / n/a / n/a | grok-4.6: artificialAnalysisComponents.lcr 'grok-4-6-medium' score_missing_or_invalid | review |
+| evidence gap | n/a / n/a / n/a | grok-4.6: artificialAnalysisComponents.lcr 'grok-4-6-xhigh' score_missing_or_invalid | deep-reasoning |
+| evidence gap | n/a / n/a / n/a | grok-4.6: artificialAnalysisComponents.lcr 'grok-4-6' score_missing_or_invalid | deep-reasoning, orchestrator, review |
+| evidence gap | n/a / n/a / n/a | grok-4.6: artificialAnalysisComponents.mmmuPro 'grok-4-6-medium' score_missing_or_invalid | visual-ui |
+| evidence gap | n/a / n/a / n/a | grok-4.6: artificialAnalysisComponents.mmmuPro 'grok-4-6' score_missing_or_invalid | visual-ui |
+| evidence gap | n/a / n/a / n/a | grok-4.6: liveBench effort 'high' alias_not_configured | agentic-implementation, deep-reasoning, default-development, orchestrator, review, visual-ui |
+| evidence gap | n/a / n/a / n/a | grok-4.6: liveBench effort 'low' alias_not_configured | mechanical, quick, triage |
+| evidence gap | n/a / n/a / n/a | grok-4.6: liveBench effort 'medium' alias_not_configured | default-development, review, visual-ui |
+| evidence gap | n/a / n/a / n/a | grok-4.6: liveBench effort 'xhigh' alias_not_configured | agentic-implementation, deep-reasoning |
 | evidence gap | n/a / n/a / n/a | instruction-following: artificialAnalysisComponents.ifbench: insufficient_comparison_models (1/2) | mechanical, triage |
-| evidence gap | n/a / n/a / n/a | kimi-k2.7-code: configuration capabilities_missing | agentic-implementation, deep-reasoning, default-development, mechanical, orchestrator, quick, review, triage, visual-ui |
 | evidence gap | n/a / n/a / n/a | kimi-k3: configuration capabilities_missing | agentic-implementation, deep-reasoning, default-development, mechanical, orchestrator, quick, review, triage, visual-ui |
+| evidence gap | n/a / n/a / n/a | long-context: artificialAnalysisComponents.lcr: insufficient_comparison_models (1/2) | deep-reasoning, orchestrator, review |
 | evidence gap | n/a / n/a / n/a | mai-code-1.1-flash: artificialAnalysis effort 'high' alias_not_configured | deep-reasoning, default-development, review, visual-ui |
 | evidence gap | n/a / n/a / n/a | mai-code-1.1-flash: artificialAnalysis effort 'low' alias_not_configured | quick, triage |
 | evidence gap | n/a / n/a / n/a | mai-code-1.1-flash: artificialAnalysis effort 'medium' alias_not_configured | default-development, review, visual-ui |
@@ -472,23 +579,8 @@ Confirmation uses metric-scoped observations, not the raw page fingerprint. Suit
 | evidence gap | n/a / n/a / n/a | mai-code-1.1-flash: liveBench effort 'high' alias_not_configured | agentic-implementation, deep-reasoning, default-development, orchestrator, review, visual-ui |
 | evidence gap | n/a / n/a / n/a | mai-code-1.1-flash: liveBench effort 'low' alias_not_configured | mechanical, quick, triage |
 | evidence gap | n/a / n/a / n/a | mai-code-1.1-flash: liveBench effort 'medium' alias_not_configured | default-development, review, visual-ui |
+| evidence gap | n/a / n/a / n/a | visual-understanding: artificialAnalysisComponents.mmmuPro: insufficient_comparison_models (1/2) | visual-ui |
 | exclusion | claude-haiku-4.5 / none / long_context | context_unsupported | deep-reasoning |
-| exclusion | claude-opus-4.7 / high / default | capabilities_stale | agentic-implementation, default-development, orchestrator, review, visual-ui |
-| exclusion | claude-opus-4.7 / high / default | pricing_input_exceeds_ceiling | default-development, orchestrator |
-| exclusion | claude-opus-4.7 / high / default | pricing_output_exceeds_ceiling | default-development, orchestrator |
-| exclusion | claude-opus-4.7 / high / default | vision_unknown | visual-ui |
-| exclusion | claude-opus-4.7 / high / long_context | capabilities_stale | deep-reasoning |
-| exclusion | claude-opus-4.7 / low / default | capabilities_stale | mechanical, quick, triage |
-| exclusion | claude-opus-4.7 / low / default | pricing_input_exceeds_ceiling | mechanical, quick, triage |
-| exclusion | claude-opus-4.7 / low / default | pricing_output_exceeds_ceiling | mechanical, quick, triage |
-| exclusion | claude-opus-4.7 / max / default | capabilities_stale | agentic-implementation |
-| exclusion | claude-opus-4.7 / max / long_context | capabilities_stale | deep-reasoning |
-| exclusion | claude-opus-4.7 / medium / default | capabilities_stale | default-development, review, visual-ui |
-| exclusion | claude-opus-4.7 / medium / default | pricing_input_exceeds_ceiling | default-development |
-| exclusion | claude-opus-4.7 / medium / default | pricing_output_exceeds_ceiling | default-development |
-| exclusion | claude-opus-4.7 / medium / default | vision_unknown | visual-ui |
-| exclusion | claude-opus-4.7 / xhigh / default | capabilities_stale | agentic-implementation |
-| exclusion | claude-opus-4.7 / xhigh / long_context | capabilities_stale | deep-reasoning |
 | exclusion | claude-opus-4.8-fast / high / default | pricing_input_exceeds_ceiling | default-development, orchestrator, review, visual-ui |
 | exclusion | claude-opus-4.8-fast / high / default | pricing_output_exceeds_ceiling | default-development, orchestrator, review, visual-ui |
 | exclusion | claude-opus-4.8-fast / high / long_context | pricing_output_exceeds_ceiling | deep-reasoning |
@@ -522,14 +614,6 @@ Confirmation uses metric-scoped observations, not the raw page fingerprint. Suit
 | exclusion | claude-sonnet-4.6 / max / default | capabilities_stale | agentic-implementation |
 | exclusion | claude-sonnet-4.6 / max / long_context | capabilities_stale | deep-reasoning |
 | exclusion | claude-sonnet-4.6 / medium / default | capabilities_stale | default-development, review, visual-ui |
-| exclusion | gemini-3.5-flash / high / default | capabilities_stale | agentic-implementation, default-development, orchestrator, review, visual-ui |
-| exclusion | gemini-3.5-flash / high / default | vision_unknown | visual-ui |
-| exclusion | gemini-3.5-flash / high / long_context | capabilities_stale | deep-reasoning |
-| exclusion | gemini-3.5-flash / low / default | capabilities_stale | mechanical, quick, triage |
-| exclusion | gemini-3.5-flash / medium / default | capabilities_stale | default-development, review, visual-ui |
-| exclusion | gemini-3.5-flash / medium / default | vision_unknown | visual-ui |
-| exclusion | gemini-3.6-flash / high / default | vision_unknown | visual-ui |
-| exclusion | gemini-3.6-flash / medium / default | vision_unknown | visual-ui |
 | exclusion | gemini-3.7-flash / high / default | vision_unknown | visual-ui |
 | exclusion | gemini-3.7-flash / medium / default | vision_unknown | visual-ui |
 | exclusion | gpt-5.3-codex / high / default | vision_unknown | visual-ui |
@@ -574,31 +658,27 @@ Confirmation uses metric-scoped observations, not the raw page fingerprint. Suit
 
 ### orchestrator
 
-Budget: **hard**, input 3 / output 15 USD per million. Deciding source: artificialAnalysisComponents.
-Quality leader before hard-budget exclusions: gpt-6-astra / high / default. Family fallback (informational, not a winner): claude-sonnet-5.5.
+Budget: **hard**, input 3 / output 15 USD per million. Deciding source: n/a.
+Quality leader before hard-budget exclusions: n/a. Family fallback (informational, not a winner): claude-sonnet-5.5.
 Strategy: **value_balanced**.
 Authorized deciding routes, strongest first: **AutomationBench-AA > EnterpriseOps-Gym-AA**. Supporting metrics are informational only.
 Task fit: external-harness proxy, not a measurement of Copilot CLI task success.
-Decision status: **budget_constrained_choice**. Deciding metric: artificialAnalysisComponents.automationBench.
+Decision status: **retained_insufficient_role_evidence**. Deciding metric: n/a.
 Incumbent selection basis (applied/current after run): artificialAnalysisComponents.automationBench.
 AutomationBench-AA (guardrail-adjusted objective fraction): Workflow/tool-use proxy; clarifying questions prohibited. Not interactive orchestration or conversation-memory evidence.
 EnterpriseOps-Gym-AA (strict pass@1 fraction): AA oracle-tool workflow harness; tools supplied. Not tool-discovery evidence or the original paper's scores.
 Configuration selection: **automatic bounded effort**; authorized efforts: high. Models without effort controls use their native configuration; context remains fixed.
-Reference usage: candidate **112.5 AIC**; incumbent **112.5 AIC**.
+Reference usage: candidate **n/a AIC**; incumbent **112.5 AIC**.
 Reference AIC uses a fixed token basket, not measured consumption. Effort-related changes in token usage, task cost and latency are unknown; equal reference AIC does not establish equal task cost.
-Eligible quality reference: gpt-6.1-sol / high / default (0.644952373218). Candidate gap: **0.0246774440131 / 0.03** absolute automationBench score points.
-Lowest reference cost among configurations passing every required band wins; equal-cost model ties prefer the newest verified release. Reference usage: candidate **112.5 AIC**; incumbent **112.5 AIC** (1 AIC = USD 0.01).
-Candidate cost change: **0%** (informational, not an incumbent-relative limit). Fixed hard ceilings authorize spending; they never rise automatically. A percentage is n/a when incumbent cost is unknown or a free incumbent would become paid.
-Matched incumbent score in this deciding-source observation: **0.620274929205**.
 
-**Role qualification:** qualified. Every required dimension must pass independently; then the cheapest qualified configuration wins. At least 2 distinct eligible models are required per comparison, not per surviving intersection.
+**Role qualification:** retained_insufficient_role_evidence. Every required dimension must pass independently; then the cheapest qualified configuration wins. At least 2 distinct eligible models are required per comparison, not per surviving intersection.
 References are fixed before intersecting dimensions. Missing evidence is not zero or a pass; no cross-benchmark or cross-effort score substitution. These are proxy-based policy tolerances, not statistical equivalence or direct task-success measurements.
 
 | Required dimension | Selected metric | Comparison models | Reference configuration | Reference score | Allowed gap | Minimum score | Cached | Results published |
 |---|---|---|---|---|---|---|---|---|
-| primary | artificialAnalysisComponents.automationBench | 10 | gpt-6.1-sol / high / default | 0.644952373218 | 0.03 | 0.614952373218 | False | n/a |
-| long-context | artificialAnalysisComponents.lcr | 11 | gpt-6-sol / high / default | 0.836666666667 | 0.05 | 0.786666666667 | False | n/a |
-| instruction-following | liveBench.instructionFollowing | 3 | gemini-3.8-flash / high / default | 81.4125 | 3 | 78.4125 | False | n/a |
+| primary | n/a | 0 | n/a | n/a | n/a | n/a | n/a | n/a |
+| long-context | n/a | 0 | n/a | n/a | n/a | n/a | n/a | n/a |
+| instruction-following | liveBench.instructionFollowing | 2 | gemini-3.8-flash / high / default | 81.4125 | 3 | 78.4125 | False | n/a |
 
 primary routes: AutomationBench-AA > EnterpriseOps-Gym-AA.
 AutomationBench-AA: Workflow/tool-use proxy; clarifying questions prohibited. Not interactive orchestration or conversation-memory evidence.
@@ -613,22 +693,24 @@ IFBench (AA): Single-turn instruction following, not multi-turn retention.
 
 | Budget/capability-eligible configuration | Role qualified | Required evidence checks |
 |---|---|---|
-| gpt-5.6-luna / high / default | False | primary: 0.355879429306 (outside_quality_band); long-context: 0.803333333333 (passed); instruction-following: n/a (exact_configuration_evidence_missing) |
-| gemini-3.6-flash / high / default | False | primary: 0.530166949151 (outside_quality_band); long-context: 0.8 (passed); instruction-following: 75.36675 (outside_quality_band) |
-| claude-haiku-4.5 / none / default | False | primary: n/a (exact_configuration_evidence_missing); long-context: 0.496666666667 (outside_quality_band); instruction-following: n/a (exact_configuration_evidence_missing) |
-| gpt-5.3-codex / high / default | False | primary: n/a (exact_configuration_evidence_missing); long-context: n/a (exact_configuration_evidence_missing); instruction-following: n/a (exact_configuration_evidence_missing) |
-| grok-4.5 / high / default | False | primary: 0.579348603508 (outside_quality_band); long-context: 0.793333333333 (passed); instruction-following: n/a (exact_configuration_evidence_missing) |
-| mai-code-1.1-flash / high / default | False | primary: n/a (exact_configuration_evidence_missing); long-context: n/a (exact_configuration_evidence_missing); instruction-following: n/a (exact_configuration_evidence_missing) |
-| gemini-3.8-flash / high / default | False | primary: 0.599300943212 (outside_quality_band); long-context: 0.813333333333 (passed); instruction-following: 81.4125 (passed) |
-| claude-sonnet-5 / high / default | False | primary: 0.320966388144 (outside_quality_band); long-context: 0.766666666667 (outside_quality_band); instruction-following: n/a (exact_configuration_evidence_missing) |
-| gpt-5.4 / high / default | False | primary: n/a (exact_configuration_evidence_missing); long-context: n/a (exact_configuration_evidence_missing); instruction-following: n/a (exact_configuration_evidence_missing) |
-| gpt-6.1-sol / high / default | False | primary: 0.644952373218 (passed); long-context: 0.823333333333 (passed); instruction-following: n/a (exact_configuration_evidence_missing) |
-| gpt-6-sol / high / default | False | primary: 0.601258409113 (outside_quality_band); long-context: 0.836666666667 (passed); instruction-following: n/a (exact_configuration_evidence_missing) |
-| gemini-3.7-flash / high / default | True | primary: 0.620274929205 (passed); long-context: 0.816666666667 (passed); instruction-following: 79.92525 (passed) |
-| gpt-5.6-terra / high / default | False | primary: 0.420203829518 (outside_quality_band); long-context: 0.776666666667 (outside_quality_band); instruction-following: n/a (exact_configuration_evidence_missing) |
-| claude-sonnet-5.5 / high / default | False | primary: n/a (exact_configuration_evidence_missing); long-context: n/a (exact_configuration_evidence_missing); instruction-following: n/a (exact_configuration_evidence_missing) |
-| gpt-6-luna / high / default | False | primary: 0.478244913992 (outside_quality_band); long-context: 0.793333333333 (passed); instruction-following: n/a (exact_configuration_evidence_missing) |
-| gpt-5.4-mini / high / default | False | primary: n/a (exact_configuration_evidence_missing); long-context: n/a (exact_configuration_evidence_missing); instruction-following: n/a (exact_configuration_evidence_missing) |
+| grok-4.6 / high / default | False | primary: n/a (insufficient_comparison_evidence); long-context: n/a (insufficient_comparison_evidence); instruction-following: n/a (exact_configuration_evidence_missing) |
+| gpt-5.6-luna / high / default | False | primary: n/a (insufficient_comparison_evidence); long-context: n/a (insufficient_comparison_evidence); instruction-following: n/a (exact_configuration_evidence_missing) |
+| claude-haiku-4.5 / none / default | False | primary: n/a (insufficient_comparison_evidence); long-context: n/a (insufficient_comparison_evidence); instruction-following: n/a (exact_configuration_evidence_missing) |
+| gpt-5.3-codex / high / default | False | primary: n/a (insufficient_comparison_evidence); long-context: n/a (insufficient_comparison_evidence); instruction-following: n/a (exact_configuration_evidence_missing) |
+| grok-4.5 / high / default | False | primary: n/a (insufficient_comparison_evidence); long-context: n/a (insufficient_comparison_evidence); instruction-following: n/a (exact_configuration_evidence_missing) |
+| mai-code-1.1-flash / high / default | False | primary: n/a (insufficient_comparison_evidence); long-context: n/a (insufficient_comparison_evidence); instruction-following: n/a (exact_configuration_evidence_missing) |
+| gemini-3.8-flash / high / default | False | primary: n/a (insufficient_comparison_evidence); long-context: n/a (insufficient_comparison_evidence); instruction-following: 81.4125 (passed) |
+| claude-sonnet-5 / high / default | False | primary: n/a (insufficient_comparison_evidence); long-context: n/a (insufficient_comparison_evidence); instruction-following: n/a (exact_configuration_evidence_missing) |
+| gpt-5.4 / high / default | False | primary: n/a (insufficient_comparison_evidence); long-context: n/a (insufficient_comparison_evidence); instruction-following: n/a (exact_configuration_evidence_missing) |
+| gpt-6.1-sol / high / default | False | primary: n/a (insufficient_comparison_evidence); long-context: n/a (insufficient_comparison_evidence); instruction-following: n/a (exact_configuration_evidence_missing) |
+| gpt-6-sol / high / default | False | primary: n/a (insufficient_comparison_evidence); long-context: n/a (insufficient_comparison_evidence); instruction-following: n/a (exact_configuration_evidence_missing) |
+| gemini-3.7-flash / high / default | False | primary: n/a (insufficient_comparison_evidence); long-context: n/a (insufficient_comparison_evidence); instruction-following: 79.92525 (passed) |
+| gpt-5.6-terra / high / default | False | primary: n/a (insufficient_comparison_evidence); long-context: n/a (insufficient_comparison_evidence); instruction-following: n/a (exact_configuration_evidence_missing) |
+| claude-sonnet-5.5 / high / default | False | primary: n/a (insufficient_comparison_evidence); long-context: n/a (insufficient_comparison_evidence); instruction-following: n/a (exact_configuration_evidence_missing) |
+| gpt-6-luna / high / default | False | primary: n/a (insufficient_comparison_evidence); long-context: n/a (insufficient_comparison_evidence); instruction-following: n/a (exact_configuration_evidence_missing) |
+| gpt-5.4-mini / high / default | False | primary: n/a (insufficient_comparison_evidence); long-context: n/a (insufficient_comparison_evidence); instruction-following: n/a (exact_configuration_evidence_missing) |
+
+**Current configuration retained, not certified:** no role-qualified recommendation is available. No requirements are relaxed to fill the profile, and force cannot bypass missing coverage or an empty intersection.
 
 **Supporting evidence** (informational only; for the recommended configuration, not necessarily the applied configuration):
 None: the configured role dimensions are binding qualification requirements.
@@ -638,77 +720,37 @@ None: the configured role dimensions are binding qualification requirements.
 
 | Configuration (model / effort / context) | Budget/capability eligible | Exclusions | Advisory warnings | Price tier | Input / output USD per M | Price verified | Capability as-of |
 |---|---|---|---|---|---|---|---|
-| claude-haiku-4.5 / none / default | True | n/a | n/a | default | 1 / 5 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| claude-opus-4.7 / high / default | False | capabilities_stale, pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-10-01T14:12:07.5067231Z | 2026-07-30 |
-| claude-opus-4.8 / high / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| claude-opus-4.8-fast / high / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| claude-opus-5 / high / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| claude-opus-5.5 / high / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 4 / 20 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| claude-sonnet-4.6 / high / default | False | capabilities_stale | n/a | default | 3 / 15 | 2026-10-06T06:44:11.6577346Z | 2026-07-30 |
-| claude-sonnet-5 / high / default | True | n/a | n/a | default | 2 / 10 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| claude-sonnet-5.5 / high / default | True | n/a | n/a | default | 2 / 10 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gemini-3.5-flash / high / default | False | capabilities_stale | n/a | default | 1.5 / 9 | 2026-10-01T14:12:07.5067231Z | 2026-07-30 |
-| gemini-3.6-flash / high / default | True | n/a | n/a | default | 0.75 / 3.75 | 2026-10-01T14:12:07.5067231Z | 2026-09-08 |
-| gemini-3.7-flash / high / default | True | n/a | n/a | default | 0.75 / 3.75 | 2026-10-06T06:44:11.6577346Z | 2026-09-08 |
-| gemini-3.8-flash / high / default | True | n/a | n/a | default | 0.75 / 3.75 | 2026-10-06T06:44:11.6577346Z | 2026-09-08 |
-| gpt-5.3-codex / high / default | True | n/a | n/a | default | 1.75 / 14 | 2026-10-06T06:44:11.6577346Z | 2026-09-08 |
-| gpt-5.4 / high / default | True | n/a | n/a | default | 2.5 / 15 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-5.4-mini / high / default | True | n/a | n/a | default | 0.75 / 4.5 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-5.5 / high / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 30 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-5.6-luna / high / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-5.6-sol / high / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 4 / 20 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-5.6-terra / high / default | True | n/a | n/a | default | 2 / 12 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-6-astra / high / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-6-luna / high / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-6-sol / high / default | True | n/a | n/a | default | 2 / 10 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-6.1-sol / high / default | True | n/a | n/a | default | 2 / 10 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| grok-4.5 / high / default | True | n/a | n/a | default | 2 / 6 | 2026-10-06T06:44:11.6577346Z | 2026-09-08 |
-| mai-code-1.1-flash / high / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
+| claude-haiku-4.5 / none / default | True | n/a | n/a | default | 1 / 5 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| claude-opus-4.8 / high / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| claude-opus-4.8-fast / high / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| claude-opus-5 / high / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| claude-opus-5.5 / high / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 4 / 20 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| claude-sonnet-4.6 / high / default | False | capabilities_stale | n/a | default | 3 / 15 | 2026-10-07T12:25:32.5835199Z | 2026-07-30 |
+| claude-sonnet-5 / high / default | True | n/a | n/a | default | 2 / 10 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| claude-sonnet-5.5 / high / default | True | n/a | n/a | default | 2 / 10 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gemini-3.7-flash / high / default | True | n/a | n/a | default | 0.75 / 3.75 | 2026-10-07T12:25:32.5835199Z | 2026-09-08 |
+| gemini-3.8-flash / high / default | True | n/a | n/a | default | 0.75 / 3.75 | 2026-10-07T12:25:32.5835199Z | 2026-09-08 |
+| gpt-5.3-codex / high / default | True | n/a | n/a | default | 1.75 / 14 | 2026-10-07T12:25:32.5835199Z | 2026-09-08 |
+| gpt-5.4 / high / default | True | n/a | n/a | default | 2.5 / 15 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-5.4-mini / high / default | True | n/a | n/a | default | 0.75 / 4.5 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-5.5 / high / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 30 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-5.6-luna / high / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-5.6-sol / high / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 4 / 20 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-5.6-terra / high / default | True | n/a | n/a | default | 2 / 12 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-6-astra / high / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-6-luna / high / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-6-sol / high / default | True | n/a | n/a | default | 2 / 10 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-6.1-sol / high / default | True | n/a | n/a | default | 2 / 10 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| grok-4.5 / high / default | True | n/a | n/a | default | 2 / 6 | 2026-10-07T12:25:32.5835199Z | 2026-09-08 |
+| grok-4.6 / high / default | True | n/a | n/a | default | 2 / 6 | 2026-10-07T12:25:32.5835199Z | 2026-09-08 |
+| mai-code-1.1-flash / high / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
 
 | Model | Source | Exact alias / source label | Effort | Metric | Score | Publication age unknown | Cached | Harness | Role |
 |---|---|---|---|---|---|---|---|---|---|
-| claude-opus-5 | artificialAnalysisComponents | claude-opus-5-high | high | automationBench | 0.535640105154 | True | False | source benchmark harness, not Copilot CLI | deciding |
-| claude-sonnet-5 | artificialAnalysisComponents | claude-sonnet-5-high | high | automationBench | 0.320966388144 | True | False | source benchmark harness, not Copilot CLI | deciding |
-| gemini-3.5-flash | artificialAnalysisComponents | gemini-3-5-flash | high | automationBench | 0.420797356565 | True | False | source benchmark harness, not Copilot CLI | deciding |
-| gemini-3.6-flash | artificialAnalysisComponents | gemini-3-6-flash | high | automationBench | 0.530166949151 | True | False | source benchmark harness, not Copilot CLI | deciding |
-| gemini-3.7-flash | artificialAnalysisComponents | gemini-3-7-flash | high | automationBench | 0.620274929205 | True | False | source benchmark harness, not Copilot CLI | deciding |
-| gemini-3.8-flash | artificialAnalysisComponents | gemini-3-8-flash | high | automationBench | 0.599300943212 | True | False | source benchmark harness, not Copilot CLI | deciding |
-| gpt-5.5 | artificialAnalysisComponents | gpt-5-5-high | high | automationBench | 0.443461632322 | True | False | source benchmark harness, not Copilot CLI | deciding |
-| gpt-5.6-luna | artificialAnalysisComponents | gpt-5-6-luna-high | high | automationBench | 0.355879429306 | True | False | source benchmark harness, not Copilot CLI | deciding |
-| gpt-5.6-sol | artificialAnalysisComponents | gpt-5-6-sol-high | high | automationBench | 0.553122035739 | True | False | source benchmark harness, not Copilot CLI | deciding |
-| gpt-5.6-terra | artificialAnalysisComponents | gpt-5-6-terra-high | high | automationBench | 0.420203829518 | True | False | source benchmark harness, not Copilot CLI | deciding |
-| gpt-6-astra | artificialAnalysisComponents | gpt-6-astra-high | high | automationBench | 0.666122174975 | True | False | source benchmark harness, not Copilot CLI | deciding |
-| gpt-6-luna | artificialAnalysisComponents | gpt-6-luna-high | high | automationBench | 0.478244913992 | True | False | source benchmark harness, not Copilot CLI | deciding |
-| gpt-6-sol | artificialAnalysisComponents | gpt-6-sol-high | high | automationBench | 0.601258409113 | True | False | source benchmark harness, not Copilot CLI | deciding |
-| gpt-6.1-sol | artificialAnalysisComponents | gpt-6-1-sol-high | high | automationBench | 0.644952373218 | True | False | source benchmark harness, not Copilot CLI | deciding |
-| grok-4.5 | artificialAnalysisComponents | grok-4-5 | high | automationBench | 0.579348603508 | True | False | source benchmark harness, not Copilot CLI | deciding |
-| gemini-3.5-flash | artificialAnalysisComponents | gemini-3-5-flash | high | enterpriseOpsGym | 0.500746045956 | True | False | source benchmark harness, not Copilot CLI | authorized fallback |
-| grok-4.5 | artificialAnalysisComponents | grok-4-5 | high | enterpriseOpsGym | 0.408236347359 | True | False | source benchmark harness, not Copilot CLI | authorized fallback |
 | claude-haiku-4.5 | artificialAnalysisComponents | claude-4-5-haiku | none | lcr | 0.496666666667 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| claude-opus-5 | artificialAnalysisComponents | claude-opus-5-high | high | lcr | 0.79 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| claude-sonnet-5 | artificialAnalysisComponents | claude-sonnet-5-high | high | lcr | 0.766666666667 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| gemini-3.5-flash | artificialAnalysisComponents | gemini-3-5-flash | high | lcr | 0.733333333333 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| gemini-3.6-flash | artificialAnalysisComponents | gemini-3-6-flash | high | lcr | 0.8 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| gemini-3.7-flash | artificialAnalysisComponents | gemini-3-7-flash | high | lcr | 0.816666666667 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| gemini-3.8-flash | artificialAnalysisComponents | gemini-3-8-flash | high | lcr | 0.813333333333 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| gpt-5.5 | artificialAnalysisComponents | gpt-5-5-high | high | lcr | 0.843333333333 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| gpt-5.6-luna | artificialAnalysisComponents | gpt-5-6-luna-high | high | lcr | 0.803333333333 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| gpt-5.6-sol | artificialAnalysisComponents | gpt-5-6-sol-high | high | lcr | 0.816666666667 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| gpt-5.6-terra | artificialAnalysisComponents | gpt-5-6-terra-high | high | lcr | 0.776666666667 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| gpt-6-astra | artificialAnalysisComponents | gpt-6-astra-high | high | lcr | 0.8 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| gpt-6-luna | artificialAnalysisComponents | gpt-6-luna-high | high | lcr | 0.793333333333 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| gpt-6-sol | artificialAnalysisComponents | gpt-6-sol-high | high | lcr | 0.836666666667 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| gpt-6.1-sol | artificialAnalysisComponents | gpt-6-1-sol-high | high | lcr | 0.823333333333 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| grok-4.5 | artificialAnalysisComponents | grok-4-5 | high | lcr | 0.793333333333 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| gemini-3.5-flash | liveBench | gemini-3.5-flash-high | high | instructionFollowing | 75.6 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| gemini-3.6-flash | liveBench | gemini-3.6-flash-high | high | instructionFollowing | 75.36675 | True | False | source benchmark harness, not Copilot CLI | qualification route |
 | gemini-3.7-flash | liveBench | gemini-3.7-flash-high | high | instructionFollowing | 79.92525 | True | False | source benchmark harness, not Copilot CLI | qualification route |
 | gemini-3.8-flash | liveBench | gemini-3.8-flash-high | high | instructionFollowing | 81.4125 | True | False | source benchmark harness, not Copilot CLI | qualification route |
 | claude-haiku-4.5 | artificialAnalysisComponents | claude-4-5-haiku | none | ifbench | 0.420408163265 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| gemini-3.5-flash | artificialAnalysisComponents | gemini-3-5-flash | high | ifbench | 0.763265306122 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| gpt-5.5 | artificialAnalysisComponents | gpt-5-5-high | high | ifbench | 0.716326530612 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| gpt-5.6-sol | artificialAnalysisComponents | gpt-5-6-sol-high | high | ifbench | 0.691836734694 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| gpt-5.6-terra | artificialAnalysisComponents | gpt-5-6-terra-high | high | ifbench | 0.644217687075 | True | False | source benchmark harness, not Copilot CLI | qualification route |
 
 Evidence gaps are grouped by affected profile in [Coverage and exclusions](#coverage-and-exclusions).
 
@@ -730,12 +772,12 @@ Reference usage: candidate **112.5 AIC**; incumbent **112.5 AIC**.
 Reference AIC uses a fixed token basket, not measured consumption. Effort-related changes in token usage, task cost and latency are unknown; equal reference AIC does not establish equal task cost.
 Eligible quality reference: gemini-3.8-flash / low / default (73.5). Candidate gap: **0 / 3** absolute codingIndex score points.
 Lowest reference cost among configurations passing every required band wins; equal-cost model ties prefer the newest verified release. Reference usage: candidate **112.5 AIC**; incumbent **112.5 AIC** (1 AIC = USD 0.01).
-**Equal-cost tie:** Newest verified release day wins, even when qualified scores differ within their bands. Effort variants are not different model releases.
+**Equal-cost tie:** Recency unavailable for at least one contender; use the exact incumbent configuration, then primary score and deterministic IDs. Unknown dates are not treated as older. Effort variants are not different model releases.
 
 | Model | Verified release day | Recency status | Release metadata |
 |---|---|---|---|
-| gemini-3.7-flash | 2026-08-13 | verified | [AA model page](https://artificialanalysis.ai/models/gemini-3-7-flash) |
-| gemini-3.8-flash | 2026-09-02 | verified | [AA model page](https://artificialanalysis.ai/models/gemini-3-8-flash) |
+| gemini-3.7-flash | n/a | missing | n/a |
+| gemini-3.8-flash | n/a | missing | n/a |
 
 Release dates are separate from benchmark publication/retrieval dates and do not count as new confirmation observations.
 Candidate cost change: **0%** (informational, not an incumbent-relative limit). Fixed hard ceilings authorize spending; they never rise automatically. A percentage is n/a when incumbent cost is unknown or a free incumbent would become paid.
@@ -746,7 +788,7 @@ References are fixed before intersecting dimensions. Missing evidence is not zer
 
 | Required dimension | Selected metric | Comparison models | Reference configuration | Reference score | Allowed gap | Minimum score | Cached | Results published |
 |---|---|---|---|---|---|---|---|---|
-| primary | artificialAnalysis.codingIndex | 3 | gemini-3.8-flash / low / default | 73.5 | 3 | 70.5 | False | n/a |
+| primary | artificialAnalysis.codingIndex | 4 | gemini-3.8-flash / low / default | 73.5 | 3 | 70.5 | False | n/a |
 
 primary routes: AA Coding Index > LiveBench Coding.
 AA Coding Index: Coding aggregate; not direct evidence of review or UI implementation quality.
@@ -761,8 +803,8 @@ LiveBench Coding: Coding proxy, not direct review or UI implementation evidence.
 | gpt-5.6-luna / low / default | False | primary: 44.2 (outside_quality_band) |
 | claude-sonnet-5 / low / default | False | primary: n/a (exact_configuration_evidence_missing) |
 | gemini-3.7-flash / low / default | True | primary: 71 (passed) |
-| gemini-3.6-flash / low / default | False | primary: n/a (exact_configuration_evidence_missing) |
 | grok-4.5 / low / default | False | primary: n/a (exact_configuration_evidence_missing) |
+| grok-4.6 / low / default | False | primary: 66.3 (outside_quality_band) |
 | gpt-5.4-mini / low / default | False | primary: n/a (exact_configuration_evidence_missing) |
 | gemini-3.8-flash / low / default | True | primary: 73.5 (passed) |
 | gpt-6-sol / low / default | False | primary: n/a (exact_configuration_evidence_missing) |
@@ -784,32 +826,30 @@ LiveBench Instruction Following: Instruction following, not end-to-end workflow 
 
 | Configuration (model / effort / context) | Budget/capability eligible | Exclusions | Advisory warnings | Price tier | Input / output USD per M | Price verified | Capability as-of |
 |---|---|---|---|---|---|---|---|
-| claude-haiku-4.5 / none / default | True | n/a | n/a | default | 1 / 5 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| claude-opus-4.7 / low / default | False | capabilities_stale, pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-10-01T14:12:07.5067231Z | 2026-07-30 |
-| claude-opus-4.8 / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| claude-opus-4.8-fast / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| claude-opus-5 / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| claude-opus-5.5 / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 4 / 20 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| claude-sonnet-4.6 / low / default | False | capabilities_stale, pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 3 / 15 | 2026-10-06T06:44:11.6577346Z | 2026-07-30 |
-| claude-sonnet-5 / low / default | True | n/a | n/a | default | 2 / 10 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| claude-sonnet-5.5 / low / default | True | n/a | n/a | default | 2 / 10 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gemini-3.5-flash / low / default | False | capabilities_stale | n/a | default | 1.5 / 9 | 2026-10-01T14:12:07.5067231Z | 2026-07-30 |
-| gemini-3.6-flash / low / default | True | n/a | n/a | default | 0.75 / 3.75 | 2026-10-01T14:12:07.5067231Z | 2026-09-08 |
-| gemini-3.7-flash / low / default | True | n/a | n/a | default | 0.75 / 3.75 | 2026-10-06T06:44:11.6577346Z | 2026-09-08 |
-| gemini-3.8-flash / low / default | True | n/a | n/a | default | 0.75 / 3.75 | 2026-10-06T06:44:11.6577346Z | 2026-09-08 |
-| gpt-5.3-codex / low / default | False | pricing_output_exceeds_ceiling | n/a | default | 1.75 / 14 | 2026-10-06T06:44:11.6577346Z | 2026-09-08 |
-| gpt-5.4 / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 2.5 / 15 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-5.4-mini / low / default | True | n/a | n/a | default | 0.75 / 4.5 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-5.5 / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 30 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-5.6-luna / low / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-5.6-sol / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 4 / 20 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-5.6-terra / low / default | False | pricing_output_exceeds_ceiling | n/a | default | 2 / 12 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-6-astra / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-6-luna / low / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-6-sol / low / default | True | n/a | n/a | default | 2 / 10 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-6.1-sol / low / default | True | n/a | n/a | default | 2 / 10 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| grok-4.5 / low / default | True | n/a | n/a | default | 2 / 6 | 2026-10-06T06:44:11.6577346Z | 2026-09-08 |
-| mai-code-1.1-flash / low / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
+| claude-haiku-4.5 / none / default | True | n/a | n/a | default | 1 / 5 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| claude-opus-4.8 / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| claude-opus-4.8-fast / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| claude-opus-5 / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| claude-opus-5.5 / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 4 / 20 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| claude-sonnet-4.6 / low / default | False | capabilities_stale, pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 3 / 15 | 2026-10-07T12:25:32.5835199Z | 2026-07-30 |
+| claude-sonnet-5 / low / default | True | n/a | n/a | default | 2 / 10 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| claude-sonnet-5.5 / low / default | True | n/a | n/a | default | 2 / 10 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gemini-3.7-flash / low / default | True | n/a | n/a | default | 0.75 / 3.75 | 2026-10-07T12:25:32.5835199Z | 2026-09-08 |
+| gemini-3.8-flash / low / default | True | n/a | n/a | default | 0.75 / 3.75 | 2026-10-07T12:25:32.5835199Z | 2026-09-08 |
+| gpt-5.3-codex / low / default | False | pricing_output_exceeds_ceiling | n/a | default | 1.75 / 14 | 2026-10-07T12:25:32.5835199Z | 2026-09-08 |
+| gpt-5.4 / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 2.5 / 15 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-5.4-mini / low / default | True | n/a | n/a | default | 0.75 / 4.5 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-5.5 / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 30 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-5.6-luna / low / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-5.6-sol / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 4 / 20 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-5.6-terra / low / default | False | pricing_output_exceeds_ceiling | n/a | default | 2 / 12 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-6-astra / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-6-luna / low / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-6-sol / low / default | True | n/a | n/a | default | 2 / 10 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-6.1-sol / low / default | True | n/a | n/a | default | 2 / 10 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| grok-4.5 / low / default | True | n/a | n/a | default | 2 / 6 | 2026-10-07T12:25:32.5835199Z | 2026-09-08 |
+| grok-4.6 / low / default | True | n/a | n/a | default | 2 / 6 | 2026-10-07T12:25:32.5835199Z | 2026-09-08 |
+| mai-code-1.1-flash / low / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
 
 | Model | Source | Exact alias / source label | Effort | Metric | Score | Publication age unknown | Cached | Harness | Role |
 |---|---|---|---|---|---|---|---|---|---|
@@ -821,11 +861,8 @@ LiveBench Instruction Following: Instruction following, not end-to-end workflow 
 | gpt-5.6-sol | artificialAnalysis | gpt-5-6-sol-low | low | codingIndex | 69.7 | True | False | source benchmark harness, not Copilot CLI | deciding |
 | gpt-5.6-terra | artificialAnalysis | gpt-5-6-terra-low | low | codingIndex | 58.1 | True | False | source benchmark harness, not Copilot CLI | deciding |
 | gpt-6-astra | artificialAnalysis | gpt-6-astra-low | low | codingIndex | 75.7 | True | False | source benchmark harness, not Copilot CLI | deciding |
+| grok-4.6 | artificialAnalysis | grok-4-6-low | low | codingIndex | 66.3 | True | False | source benchmark harness, not Copilot CLI | deciding |
 | claude-haiku-4.5 | artificialAnalysisComponents | claude-4-5-haiku | none | ifbench | 0.420408163265 | True | False | source benchmark harness, not Copilot CLI | supporting only |
-| gpt-5.4 | artificialAnalysisComponents | gpt-5-4-low | low | ifbench | 0.659183673469 | True | False | source benchmark harness, not Copilot CLI | supporting only |
-| gpt-5.5 | artificialAnalysisComponents | gpt-5-5-low | low | ifbench | 0.643537414966 | True | False | source benchmark harness, not Copilot CLI | supporting only |
-| gpt-5.6-sol | artificialAnalysisComponents | gpt-5-6-sol-low | low | ifbench | 0.665306122449 | True | False | source benchmark harness, not Copilot CLI | supporting only |
-| gpt-5.6-terra | artificialAnalysisComponents | gpt-5-6-terra-low | low | ifbench | 0.596598639456 | True | False | source benchmark harness, not Copilot CLI | supporting only |
 
 Evidence gaps are grouped by affected profile in [Coverage and exclusions](#coverage-and-exclusions).
 
@@ -847,12 +884,12 @@ Reference usage: candidate **112.5 AIC**; incumbent **112.5 AIC**.
 Reference AIC uses a fixed token basket, not measured consumption. Effort-related changes in token usage, task cost and latency are unknown; equal reference AIC does not establish equal task cost.
 Eligible quality reference: gpt-5.6-sol / high / default (77.2). Candidate gap: **0.9 / 3** absolute codingIndex score points.
 Lowest reference cost among configurations passing every required band wins; equal-cost model ties prefer the newest verified release. Reference usage: candidate **112.5 AIC**; incumbent **112.5 AIC** (1 AIC = USD 0.01).
-**Equal-cost tie:** Newest verified release day wins, even when qualified scores differ within their bands. Effort variants are not different model releases.
+**Equal-cost tie:** Recency unavailable for at least one contender; use the exact incumbent configuration, then primary score and deterministic IDs. Unknown dates are not treated as older. Effort variants are not different model releases.
 
 | Model | Verified release day | Recency status | Release metadata |
 |---|---|---|---|
-| gemini-3.7-flash | 2026-08-13 | verified | [AA model page](https://artificialanalysis.ai/models/gemini-3-7-flash) |
-| gemini-3.8-flash | 2026-09-02 | verified | [AA model page](https://artificialanalysis.ai/models/gemini-3-8-flash) |
+| gemini-3.7-flash | n/a | missing | n/a |
+| gemini-3.8-flash | n/a | missing | n/a |
 
 Release dates are separate from benchmark publication/retrieval dates and do not count as new confirmation observations.
 Candidate cost change: **0%** (informational, not an incumbent-relative limit). Fixed hard ceilings authorize spending; they never rise automatically. A percentage is n/a when incumbent cost is unknown or a free incumbent would become paid.
@@ -865,7 +902,7 @@ References are fixed before intersecting dimensions. Missing evidence is not zer
 | Required dimension | Selected metric | Comparison models | Reference configuration | Reference score | Allowed gap | Minimum score | Cached | Results published |
 |---|---|---|---|---|---|---|---|---|
 | primary | artificialAnalysis.codingIndex | 7 | gpt-5.6-sol / high / default | 77.2 | 3 | 74.2 | False | n/a |
-| instruction-following | liveBench.instructionFollowing | 3 | gemini-3.8-flash / high / default | 81.4125 | 3 | 78.4125 | False | n/a |
+| instruction-following | liveBench.instructionFollowing | 2 | gemini-3.8-flash / high / default | 81.4125 | 3 | 78.4125 | False | n/a |
 
 primary routes: AA Coding Index > LiveBench Coding.
 AA Coding Index: Coding aggregate; not direct evidence of review or UI implementation quality.
@@ -877,12 +914,12 @@ IFBench (AA): Single-turn instruction following, not multi-turn retention.
 
 | Budget/capability-eligible configuration | Role qualified | Required evidence checks |
 |---|---|---|
+| grok-4.6 / high / default | False | primary: 76.8 (passed); instruction-following: n/a (exact_configuration_evidence_missing) |
 | gpt-6-sol / medium / default | False | primary: n/a (exact_configuration_evidence_missing); instruction-following: n/a (exact_configuration_evidence_missing) |
 | claude-sonnet-5 / medium / default | False | primary: n/a (exact_configuration_evidence_missing); instruction-following: n/a (exact_configuration_evidence_missing) |
 | gemini-3.8-flash / medium / default | False | primary: 74.1 (outside_quality_band); instruction-following: n/a (exact_configuration_evidence_missing) |
 | claude-opus-5.5 / medium / default | False | primary: n/a (exact_configuration_evidence_missing); instruction-following: n/a (exact_configuration_evidence_missing) |
 | gpt-5.6-luna / high / default | False | primary: 63.3 (outside_quality_band); instruction-following: n/a (exact_configuration_evidence_missing) |
-| gemini-3.6-flash / high / default | False | primary: 69.2 (outside_quality_band); instruction-following: 75.36675 (outside_quality_band) |
 | gpt-5.6-sol / medium / default | False | primary: 76.3 (passed); instruction-following: n/a (exact_configuration_evidence_missing) |
 | grok-4.5 / medium / default | False | primary: n/a (exact_configuration_evidence_missing); instruction-following: n/a (exact_configuration_evidence_missing) |
 | claude-haiku-4.5 / none / default | False | primary: n/a (exact_configuration_evidence_missing); instruction-following: n/a (exact_configuration_evidence_missing) |
@@ -895,12 +932,12 @@ IFBench (AA): Single-turn instruction following, not multi-turn retention.
 | claude-sonnet-5.5 / medium / default | False | primary: n/a (exact_configuration_evidence_missing); instruction-following: n/a (exact_configuration_evidence_missing) |
 | gpt-5.6-sol / high / default | False | primary: 77.2 (passed); instruction-following: n/a (exact_configuration_evidence_missing) |
 | gpt-6-luna / medium / default | False | primary: n/a (exact_configuration_evidence_missing); instruction-following: n/a (exact_configuration_evidence_missing) |
+| grok-4.6 / medium / default | False | primary: 74.4 (passed); instruction-following: n/a (exact_configuration_evidence_missing) |
 | claude-sonnet-5 / high / default | False | primary: n/a (exact_configuration_evidence_missing); instruction-following: n/a (exact_configuration_evidence_missing) |
 | claude-opus-5.5 / high / default | False | primary: n/a (exact_configuration_evidence_missing); instruction-following: n/a (exact_configuration_evidence_missing) |
 | gpt-6.1-sol / medium / default | False | primary: n/a (exact_configuration_evidence_missing); instruction-following: n/a (exact_configuration_evidence_missing) |
 | gpt-5.4 / medium / default | False | primary: n/a (exact_configuration_evidence_missing); instruction-following: n/a (exact_configuration_evidence_missing) |
 | mai-code-1.1-flash / medium / default | False | primary: n/a (exact_configuration_evidence_missing); instruction-following: n/a (exact_configuration_evidence_missing) |
-| gemini-3.6-flash / medium / default | False | primary: n/a (exact_configuration_evidence_missing); instruction-following: n/a (exact_configuration_evidence_missing) |
 | gpt-5.4 / high / default | False | primary: n/a (exact_configuration_evidence_missing); instruction-following: n/a (exact_configuration_evidence_missing) |
 | gpt-5.6-luna / medium / default | False | primary: 50.7 (outside_quality_band); instruction-following: n/a (exact_configuration_evidence_missing) |
 | gpt-6.1-sol / high / default | False | primary: n/a (exact_configuration_evidence_missing); instruction-following: n/a (exact_configuration_evidence_missing) |
@@ -921,64 +958,58 @@ None: the configured role dimensions are binding qualification requirements.
 
 | Configuration (model / effort / context) | Budget/capability eligible | Exclusions | Advisory warnings | Price tier | Input / output USD per M | Price verified | Capability as-of |
 |---|---|---|---|---|---|---|---|
-| claude-haiku-4.5 / none / default | True | n/a | n/a | default | 1 / 5 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| claude-opus-4.7 / high / default | False | capabilities_stale, pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-10-01T14:12:07.5067231Z | 2026-07-30 |
-| claude-opus-4.7 / medium / default | False | capabilities_stale, pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-10-01T14:12:07.5067231Z | 2026-07-30 |
-| claude-opus-4.8 / high / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| claude-opus-4.8 / medium / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| claude-opus-4.8-fast / high / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| claude-opus-4.8-fast / medium / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| claude-opus-5 / high / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| claude-opus-5 / medium / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| claude-opus-5.5 / high / default | True | n/a | n/a | default | 4 / 20 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| claude-opus-5.5 / medium / default | True | n/a | n/a | default | 4 / 20 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| claude-sonnet-4.6 / high / default | False | capabilities_stale | n/a | default | 3 / 15 | 2026-10-06T06:44:11.6577346Z | 2026-07-30 |
-| claude-sonnet-4.6 / medium / default | False | capabilities_stale | n/a | default | 3 / 15 | 2026-10-06T06:44:11.6577346Z | 2026-07-30 |
-| claude-sonnet-5 / high / default | True | n/a | n/a | default | 2 / 10 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| claude-sonnet-5 / medium / default | True | n/a | n/a | default | 2 / 10 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| claude-sonnet-5.5 / high / default | True | n/a | n/a | default | 2 / 10 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| claude-sonnet-5.5 / medium / default | True | n/a | n/a | default | 2 / 10 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gemini-3.5-flash / high / default | False | capabilities_stale | n/a | default | 1.5 / 9 | 2026-10-01T14:12:07.5067231Z | 2026-07-30 |
-| gemini-3.5-flash / medium / default | False | capabilities_stale | n/a | default | 1.5 / 9 | 2026-10-01T14:12:07.5067231Z | 2026-07-30 |
-| gemini-3.6-flash / high / default | True | n/a | n/a | default | 0.75 / 3.75 | 2026-10-01T14:12:07.5067231Z | 2026-09-08 |
-| gemini-3.6-flash / medium / default | True | n/a | n/a | default | 0.75 / 3.75 | 2026-10-01T14:12:07.5067231Z | 2026-09-08 |
-| gemini-3.7-flash / high / default | True | n/a | n/a | default | 0.75 / 3.75 | 2026-10-06T06:44:11.6577346Z | 2026-09-08 |
-| gemini-3.7-flash / medium / default | True | n/a | n/a | default | 0.75 / 3.75 | 2026-10-06T06:44:11.6577346Z | 2026-09-08 |
-| gemini-3.8-flash / high / default | True | n/a | n/a | default | 0.75 / 3.75 | 2026-10-06T06:44:11.6577346Z | 2026-09-08 |
-| gemini-3.8-flash / medium / default | True | n/a | n/a | default | 0.75 / 3.75 | 2026-10-06T06:44:11.6577346Z | 2026-09-08 |
-| gpt-5.3-codex / high / default | True | n/a | n/a | default | 1.75 / 14 | 2026-10-06T06:44:11.6577346Z | 2026-09-08 |
-| gpt-5.3-codex / medium / default | True | n/a | n/a | default | 1.75 / 14 | 2026-10-06T06:44:11.6577346Z | 2026-09-08 |
-| gpt-5.4 / high / default | True | n/a | n/a | default | 2.5 / 15 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-5.4 / medium / default | True | n/a | n/a | default | 2.5 / 15 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-5.4-mini / high / default | True | n/a | n/a | default | 0.75 / 4.5 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-5.4-mini / medium / default | True | n/a | n/a | default | 0.75 / 4.5 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-5.5 / high / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 30 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-5.5 / medium / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 30 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-5.6-luna / high / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-5.6-luna / medium / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-5.6-sol / high / default | True | n/a | n/a | default | 4 / 20 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-5.6-sol / medium / default | True | n/a | n/a | default | 4 / 20 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-5.6-terra / high / default | True | n/a | n/a | default | 2 / 12 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-5.6-terra / medium / default | True | n/a | n/a | default | 2 / 12 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-6-astra / high / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-6-astra / medium / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-6-luna / high / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-6-luna / medium / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-6-sol / high / default | True | n/a | n/a | default | 2 / 10 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-6-sol / medium / default | True | n/a | n/a | default | 2 / 10 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-6.1-sol / high / default | True | n/a | n/a | default | 2 / 10 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-6.1-sol / medium / default | True | n/a | n/a | default | 2 / 10 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| grok-4.5 / high / default | True | n/a | n/a | default | 2 / 6 | 2026-10-06T06:44:11.6577346Z | 2026-09-08 |
-| grok-4.5 / medium / default | True | n/a | n/a | default | 2 / 6 | 2026-10-06T06:44:11.6577346Z | 2026-09-08 |
-| mai-code-1.1-flash / high / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| mai-code-1.1-flash / medium / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
+| claude-haiku-4.5 / none / default | True | n/a | n/a | default | 1 / 5 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| claude-opus-4.8 / high / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| claude-opus-4.8 / medium / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| claude-opus-4.8-fast / high / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| claude-opus-4.8-fast / medium / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| claude-opus-5 / high / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| claude-opus-5 / medium / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| claude-opus-5.5 / high / default | True | n/a | n/a | default | 4 / 20 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| claude-opus-5.5 / medium / default | True | n/a | n/a | default | 4 / 20 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| claude-sonnet-4.6 / high / default | False | capabilities_stale | n/a | default | 3 / 15 | 2026-10-07T12:25:32.5835199Z | 2026-07-30 |
+| claude-sonnet-4.6 / medium / default | False | capabilities_stale | n/a | default | 3 / 15 | 2026-10-07T12:25:32.5835199Z | 2026-07-30 |
+| claude-sonnet-5 / high / default | True | n/a | n/a | default | 2 / 10 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| claude-sonnet-5 / medium / default | True | n/a | n/a | default | 2 / 10 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| claude-sonnet-5.5 / high / default | True | n/a | n/a | default | 2 / 10 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| claude-sonnet-5.5 / medium / default | True | n/a | n/a | default | 2 / 10 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gemini-3.7-flash / high / default | True | n/a | n/a | default | 0.75 / 3.75 | 2026-10-07T12:25:32.5835199Z | 2026-09-08 |
+| gemini-3.7-flash / medium / default | True | n/a | n/a | default | 0.75 / 3.75 | 2026-10-07T12:25:32.5835199Z | 2026-09-08 |
+| gemini-3.8-flash / high / default | True | n/a | n/a | default | 0.75 / 3.75 | 2026-10-07T12:25:32.5835199Z | 2026-09-08 |
+| gemini-3.8-flash / medium / default | True | n/a | n/a | default | 0.75 / 3.75 | 2026-10-07T12:25:32.5835199Z | 2026-09-08 |
+| gpt-5.3-codex / high / default | True | n/a | n/a | default | 1.75 / 14 | 2026-10-07T12:25:32.5835199Z | 2026-09-08 |
+| gpt-5.3-codex / medium / default | True | n/a | n/a | default | 1.75 / 14 | 2026-10-07T12:25:32.5835199Z | 2026-09-08 |
+| gpt-5.4 / high / default | True | n/a | n/a | default | 2.5 / 15 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-5.4 / medium / default | True | n/a | n/a | default | 2.5 / 15 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-5.4-mini / high / default | True | n/a | n/a | default | 0.75 / 4.5 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-5.4-mini / medium / default | True | n/a | n/a | default | 0.75 / 4.5 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-5.5 / high / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 30 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-5.5 / medium / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 30 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-5.6-luna / high / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-5.6-luna / medium / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-5.6-sol / high / default | True | n/a | n/a | default | 4 / 20 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-5.6-sol / medium / default | True | n/a | n/a | default | 4 / 20 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-5.6-terra / high / default | True | n/a | n/a | default | 2 / 12 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-5.6-terra / medium / default | True | n/a | n/a | default | 2 / 12 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-6-astra / high / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-6-astra / medium / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-6-luna / high / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-6-luna / medium / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-6-sol / high / default | True | n/a | n/a | default | 2 / 10 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-6-sol / medium / default | True | n/a | n/a | default | 2 / 10 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-6.1-sol / high / default | True | n/a | n/a | default | 2 / 10 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-6.1-sol / medium / default | True | n/a | n/a | default | 2 / 10 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| grok-4.5 / high / default | True | n/a | n/a | default | 2 / 6 | 2026-10-07T12:25:32.5835199Z | 2026-09-08 |
+| grok-4.5 / medium / default | True | n/a | n/a | default | 2 / 6 | 2026-10-07T12:25:32.5835199Z | 2026-09-08 |
+| grok-4.6 / high / default | True | n/a | n/a | default | 2 / 6 | 2026-10-07T12:25:32.5835199Z | 2026-09-08 |
+| grok-4.6 / medium / default | True | n/a | n/a | default | 2 / 6 | 2026-10-07T12:25:32.5835199Z | 2026-09-08 |
+| mai-code-1.1-flash / high / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| mai-code-1.1-flash / medium / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
 
 | Model | Source | Exact alias / source label | Effort | Metric | Score | Publication age unknown | Cached | Harness | Role |
 |---|---|---|---|---|---|---|---|---|---|
 | claude-opus-5 | artificialAnalysis | claude-opus-5-high | high | codingIndex | 76.5 | True | False | source benchmark harness, not Copilot CLI | deciding |
 | claude-opus-5 | artificialAnalysis | claude-opus-5-medium | medium | codingIndex | 74.3 | True | False | source benchmark harness, not Copilot CLI | deciding |
-| gemini-3.5-flash | artificialAnalysis | gemini-3-5-flash | high | codingIndex | 70.1 | True | False | source benchmark harness, not Copilot CLI | deciding |
-| gemini-3.6-flash | artificialAnalysis | gemini-3-6-flash | high | codingIndex | 69.2 | True | False | source benchmark harness, not Copilot CLI | deciding |
 | gemini-3.7-flash | artificialAnalysis | gemini-3-7-flash | high | codingIndex | 76.1 | True | False | source benchmark harness, not Copilot CLI | deciding |
 | gemini-3.7-flash | artificialAnalysis | gemini-3-7-flash-medium | medium | codingIndex | 71.5 | True | False | source benchmark harness, not Copilot CLI | deciding |
 | gemini-3.8-flash | artificialAnalysis | gemini-3-8-flash | high | codingIndex | 76.3 | True | False | source benchmark harness, not Copilot CLI | deciding |
@@ -994,26 +1025,15 @@ None: the configured role dimensions are binding qualification requirements.
 | gpt-6-astra | artificialAnalysis | gpt-6-astra-high | high | codingIndex | 77.1 | True | False | source benchmark harness, not Copilot CLI | deciding |
 | gpt-6-astra | artificialAnalysis | gpt-6-astra-medium | medium | codingIndex | 76.7 | True | False | source benchmark harness, not Copilot CLI | deciding |
 | grok-4.5 | artificialAnalysis | grok-4-5 | high | codingIndex | 72.4 | True | False | source benchmark harness, not Copilot CLI | deciding |
+| grok-4.6 | artificialAnalysis | grok-4-6 | high | codingIndex | 76.8 | True | False | source benchmark harness, not Copilot CLI | deciding |
+| grok-4.6 | artificialAnalysis | grok-4-6-medium | medium | codingIndex | 74.4 | True | False | source benchmark harness, not Copilot CLI | deciding |
 | claude-sonnet-4.6 | liveBench | claude-sonnet-4-6-thinking-auto-medium-effort | medium | coding | 79.2715 | True | False | source benchmark harness, not Copilot CLI | authorized fallback |
-| gemini-3.5-flash | liveBench | gemini-3.5-flash-high | high | coding | 78.1845 | True | False | source benchmark harness, not Copilot CLI | authorized fallback |
-| gemini-3.6-flash | liveBench | gemini-3.6-flash-high | high | coding | 77.863 | True | False | source benchmark harness, not Copilot CLI | authorized fallback |
 | gemini-3.7-flash | liveBench | gemini-3.7-flash-high | high | coding | 78.8885 | True | False | source benchmark harness, not Copilot CLI | authorized fallback |
 | gemini-3.8-flash | liveBench | gemini-3.8-flash-high | high | coding | 72.489 | True | False | source benchmark harness, not Copilot CLI | authorized fallback |
 | claude-sonnet-4.6 | liveBench | claude-sonnet-4-6-thinking-auto-medium-effort | medium | instructionFollowing | 63.22075 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| gemini-3.5-flash | liveBench | gemini-3.5-flash-high | high | instructionFollowing | 75.6 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| gemini-3.6-flash | liveBench | gemini-3.6-flash-high | high | instructionFollowing | 75.36675 | True | False | source benchmark harness, not Copilot CLI | qualification route |
 | gemini-3.7-flash | liveBench | gemini-3.7-flash-high | high | instructionFollowing | 79.92525 | True | False | source benchmark harness, not Copilot CLI | qualification route |
 | gemini-3.8-flash | liveBench | gemini-3.8-flash-high | high | instructionFollowing | 81.4125 | True | False | source benchmark harness, not Copilot CLI | qualification route |
 | claude-haiku-4.5 | artificialAnalysisComponents | claude-4-5-haiku | none | ifbench | 0.420408163265 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| gemini-3.5-flash | artificialAnalysisComponents | gemini-3-5-flash | high | ifbench | 0.763265306122 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| gemini-3.5-flash | artificialAnalysisComponents | gemini-3-5-flash-medium | medium | ifbench | 0.745578231293 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| gpt-5.4-mini | artificialAnalysisComponents | gpt-5-4-mini-medium | medium | ifbench | 0.647619047619 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| gpt-5.5 | artificialAnalysisComponents | gpt-5-5-high | high | ifbench | 0.716326530612 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| gpt-5.5 | artificialAnalysisComponents | gpt-5-5-medium | medium | ifbench | 0.709523809524 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| gpt-5.6-sol | artificialAnalysisComponents | gpt-5-6-sol-high | high | ifbench | 0.691836734694 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| gpt-5.6-sol | artificialAnalysisComponents | gpt-5-6-sol-medium | medium | ifbench | 0.695918367347 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| gpt-5.6-terra | artificialAnalysisComponents | gpt-5-6-terra-high | high | ifbench | 0.644217687075 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| gpt-5.6-terra | artificialAnalysisComponents | gpt-5-6-terra-medium | medium | ifbench | 0.621768707483 | True | False | source benchmark harness, not Copilot CLI | qualification route |
 
 Evidence gaps are grouped by affected profile in [Coverage and exclusions](#coverage-and-exclusions).
 
@@ -1044,7 +1064,7 @@ References are fixed before intersecting dimensions. Missing evidence is not zer
 
 | Required dimension | Selected metric | Comparison models | Reference configuration | Reference score | Allowed gap | Minimum score | Cached | Results published |
 |---|---|---|---|---|---|---|---|---|
-| primary | artificialAnalysisCodingAgents.codingAgentIndex | 10 | claude-sonnet-5.5 / max / default | 0.683578337375 | 0.03 | 0.653578337375 | False | n/a |
+| primary | artificialAnalysisCodingAgents.codingAgentIndex | 11 | claude-sonnet-5.5 / max / default | 0.683578337375 | 0.03 | 0.653578337375 | False | n/a |
 
 primary routes: AA Coding Agent Index > LiveBench Agentic Coding.
 AA Coding Agent Index: External coding-agent harness, not Copilot CLI.
@@ -1052,14 +1072,15 @@ LiveBench Agentic Coding: External agentic coding evaluation, not the local orch
 
 | Budget/capability-eligible configuration | Role qualified | Required evidence checks |
 |---|---|---|
+| grok-4.6 / high / default | False | primary: n/a (exact_configuration_evidence_missing) |
 | gpt-6-astra / high / default | False | primary: n/a (exact_configuration_evidence_missing) |
 | claude-opus-5.5 / max / default | True | primary: 0.659885802549 (passed) |
 | claude-opus-5 / high / default | False | primary: n/a (exact_configuration_evidence_missing) |
 | gpt-5.6-luna / xhigh / default | False | primary: n/a (exact_configuration_evidence_missing) |
 | claude-sonnet-5.5 / xhigh / default | False | primary: 0.628713868151 (outside_quality_band) |
 | claude-sonnet-5.5 / max / default | True | primary: 0.683578337375 (passed) |
+| grok-4.6 / xhigh / default | False | primary: 0.469689520574 (outside_quality_band) |
 | gpt-5.6-luna / high / default | False | primary: n/a (exact_configuration_evidence_missing) |
-| gemini-3.6-flash / high / default | False | primary: n/a (exact_configuration_evidence_missing) |
 | gpt-6.1-sol / xhigh / default | False | primary: 0.629077673682 (outside_quality_band) |
 | claude-opus-4.8-fast / max / default | False | primary: n/a (exact_configuration_evidence_missing) |
 | gpt-5.6-sol / xhigh / default | False | primary: n/a (exact_configuration_evidence_missing) |
@@ -1122,65 +1143,62 @@ EnterpriseOps-Gym-AA: AA oracle-tool workflow harness; tools supplied. Not tool-
 
 | Configuration (model / effort / context) | Budget/capability eligible | Exclusions | Advisory warnings | Price tier | Input / output USD per M | Price verified | Capability as-of |
 |---|---|---|---|---|---|---|---|
-| claude-haiku-4.5 / none / default | True | n/a | n/a | default | 1 / 5 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| claude-opus-4.7 / high / default | False | capabilities_stale | n/a | default | 5 / 25 | 2026-10-01T14:12:07.5067231Z | 2026-07-30 |
-| claude-opus-4.7 / max / default | False | capabilities_stale | n/a | default | 5 / 25 | 2026-10-01T14:12:07.5067231Z | 2026-07-30 |
-| claude-opus-4.7 / xhigh / default | False | capabilities_stale | n/a | default | 5 / 25 | 2026-10-01T14:12:07.5067231Z | 2026-07-30 |
-| claude-opus-4.8 / high / default | True | n/a | n/a | default | 5 / 25 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| claude-opus-4.8 / max / default | True | n/a | n/a | default | 5 / 25 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| claude-opus-4.8 / xhigh / default | True | n/a | n/a | default | 5 / 25 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| claude-opus-4.8-fast / high / default | True | n/a | n/a | default | 10 / 50 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| claude-opus-4.8-fast / max / default | True | n/a | n/a | default | 10 / 50 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| claude-opus-4.8-fast / xhigh / default | True | n/a | n/a | default | 10 / 50 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| claude-opus-5 / high / default | True | n/a | n/a | default | 5 / 25 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| claude-opus-5 / max / default | True | n/a | n/a | default | 5 / 25 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| claude-opus-5 / xhigh / default | True | n/a | n/a | default | 5 / 25 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| claude-opus-5.5 / high / default | True | n/a | n/a | default | 4 / 20 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| claude-opus-5.5 / max / default | True | n/a | n/a | default | 4 / 20 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| claude-opus-5.5 / xhigh / default | True | n/a | n/a | default | 4 / 20 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| claude-sonnet-4.6 / high / default | False | capabilities_stale | n/a | default | 3 / 15 | 2026-10-06T06:44:11.6577346Z | 2026-07-30 |
-| claude-sonnet-4.6 / max / default | False | capabilities_stale | n/a | default | 3 / 15 | 2026-10-06T06:44:11.6577346Z | 2026-07-30 |
-| claude-sonnet-5 / high / default | True | n/a | n/a | default | 2 / 10 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| claude-sonnet-5 / max / default | True | n/a | n/a | default | 2 / 10 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| claude-sonnet-5 / xhigh / default | True | n/a | n/a | default | 2 / 10 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| claude-sonnet-5.5 / high / default | True | n/a | n/a | default | 2 / 10 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| claude-sonnet-5.5 / max / default | True | n/a | n/a | default | 2 / 10 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| claude-sonnet-5.5 / xhigh / default | True | n/a | n/a | default | 2 / 10 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gemini-3.5-flash / high / default | False | capabilities_stale | n/a | default | 1.5 / 9 | 2026-10-01T14:12:07.5067231Z | 2026-07-30 |
-| gemini-3.6-flash / high / default | True | n/a | n/a | default | 0.75 / 3.75 | 2026-10-01T14:12:07.5067231Z | 2026-09-08 |
-| gemini-3.7-flash / high / default | True | n/a | n/a | default | 0.75 / 3.75 | 2026-10-06T06:44:11.6577346Z | 2026-09-08 |
-| gemini-3.8-flash / high / default | True | n/a | n/a | default | 0.75 / 3.75 | 2026-10-06T06:44:11.6577346Z | 2026-09-08 |
-| gpt-5.3-codex / high / default | True | n/a | n/a | default | 1.75 / 14 | 2026-10-06T06:44:11.6577346Z | 2026-09-08 |
-| gpt-5.3-codex / xhigh / default | True | n/a | n/a | default | 1.75 / 14 | 2026-10-06T06:44:11.6577346Z | 2026-09-08 |
-| gpt-5.4 / high / default | True | n/a | n/a | default | 2.5 / 15 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-5.4 / xhigh / default | True | n/a | n/a | default | 2.5 / 15 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-5.4-mini / high / default | True | n/a | n/a | default | 0.75 / 4.5 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-5.4-mini / xhigh / default | True | n/a | n/a | default | 0.75 / 4.5 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-5.5 / high / default | True | n/a | n/a | default | 5 / 30 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-5.5 / xhigh / default | True | n/a | n/a | default | 5 / 30 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-5.6-luna / high / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-5.6-luna / max / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-5.6-luna / xhigh / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-5.6-sol / high / default | True | n/a | n/a | default | 4 / 20 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-5.6-sol / max / default | True | n/a | n/a | default | 4 / 20 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-5.6-sol / xhigh / default | True | n/a | n/a | default | 4 / 20 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-5.6-terra / high / default | True | n/a | n/a | default | 2 / 12 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-5.6-terra / max / default | True | n/a | n/a | default | 2 / 12 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-5.6-terra / xhigh / default | True | n/a | n/a | default | 2 / 12 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-6-astra / high / default | True | n/a | n/a | default | 10 / 50 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-6-astra / max / default | True | n/a | n/a | default | 10 / 50 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-6-astra / xhigh / default | True | n/a | n/a | default | 10 / 50 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-6-luna / high / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-6-luna / max / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-6-luna / xhigh / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-6-sol / high / default | True | n/a | n/a | default | 2 / 10 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-6-sol / max / default | True | n/a | n/a | default | 2 / 10 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-6-sol / xhigh / default | True | n/a | n/a | default | 2 / 10 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-6.1-sol / high / default | True | n/a | n/a | default | 2 / 10 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-6.1-sol / max / default | True | n/a | n/a | default | 2 / 10 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-6.1-sol / xhigh / default | True | n/a | n/a | default | 2 / 10 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| grok-4.5 / high / default | True | n/a | n/a | default | 2 / 6 | 2026-10-06T06:44:11.6577346Z | 2026-09-08 |
-| mai-code-1.1-flash / high / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
+| claude-haiku-4.5 / none / default | True | n/a | n/a | default | 1 / 5 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| claude-opus-4.8 / high / default | True | n/a | n/a | default | 5 / 25 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| claude-opus-4.8 / max / default | True | n/a | n/a | default | 5 / 25 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| claude-opus-4.8 / xhigh / default | True | n/a | n/a | default | 5 / 25 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| claude-opus-4.8-fast / high / default | True | n/a | n/a | default | 10 / 50 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| claude-opus-4.8-fast / max / default | True | n/a | n/a | default | 10 / 50 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| claude-opus-4.8-fast / xhigh / default | True | n/a | n/a | default | 10 / 50 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| claude-opus-5 / high / default | True | n/a | n/a | default | 5 / 25 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| claude-opus-5 / max / default | True | n/a | n/a | default | 5 / 25 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| claude-opus-5 / xhigh / default | True | n/a | n/a | default | 5 / 25 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| claude-opus-5.5 / high / default | True | n/a | n/a | default | 4 / 20 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| claude-opus-5.5 / max / default | True | n/a | n/a | default | 4 / 20 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| claude-opus-5.5 / xhigh / default | True | n/a | n/a | default | 4 / 20 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| claude-sonnet-4.6 / high / default | False | capabilities_stale | n/a | default | 3 / 15 | 2026-10-07T12:25:32.5835199Z | 2026-07-30 |
+| claude-sonnet-4.6 / max / default | False | capabilities_stale | n/a | default | 3 / 15 | 2026-10-07T12:25:32.5835199Z | 2026-07-30 |
+| claude-sonnet-5 / high / default | True | n/a | n/a | default | 2 / 10 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| claude-sonnet-5 / max / default | True | n/a | n/a | default | 2 / 10 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| claude-sonnet-5 / xhigh / default | True | n/a | n/a | default | 2 / 10 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| claude-sonnet-5.5 / high / default | True | n/a | n/a | default | 2 / 10 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| claude-sonnet-5.5 / max / default | True | n/a | n/a | default | 2 / 10 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| claude-sonnet-5.5 / xhigh / default | True | n/a | n/a | default | 2 / 10 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gemini-3.7-flash / high / default | True | n/a | n/a | default | 0.75 / 3.75 | 2026-10-07T12:25:32.5835199Z | 2026-09-08 |
+| gemini-3.8-flash / high / default | True | n/a | n/a | default | 0.75 / 3.75 | 2026-10-07T12:25:32.5835199Z | 2026-09-08 |
+| gpt-5.3-codex / high / default | True | n/a | n/a | default | 1.75 / 14 | 2026-10-07T12:25:32.5835199Z | 2026-09-08 |
+| gpt-5.3-codex / xhigh / default | True | n/a | n/a | default | 1.75 / 14 | 2026-10-07T12:25:32.5835199Z | 2026-09-08 |
+| gpt-5.4 / high / default | True | n/a | n/a | default | 2.5 / 15 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-5.4 / xhigh / default | True | n/a | n/a | default | 2.5 / 15 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-5.4-mini / high / default | True | n/a | n/a | default | 0.75 / 4.5 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-5.4-mini / xhigh / default | True | n/a | n/a | default | 0.75 / 4.5 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-5.5 / high / default | True | n/a | n/a | default | 5 / 30 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-5.5 / xhigh / default | True | n/a | n/a | default | 5 / 30 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-5.6-luna / high / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-5.6-luna / max / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-5.6-luna / xhigh / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-5.6-sol / high / default | True | n/a | n/a | default | 4 / 20 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-5.6-sol / max / default | True | n/a | n/a | default | 4 / 20 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-5.6-sol / xhigh / default | True | n/a | n/a | default | 4 / 20 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-5.6-terra / high / default | True | n/a | n/a | default | 2 / 12 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-5.6-terra / max / default | True | n/a | n/a | default | 2 / 12 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-5.6-terra / xhigh / default | True | n/a | n/a | default | 2 / 12 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-6-astra / high / default | True | n/a | n/a | default | 10 / 50 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-6-astra / max / default | True | n/a | n/a | default | 10 / 50 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-6-astra / xhigh / default | True | n/a | n/a | default | 10 / 50 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-6-luna / high / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-6-luna / max / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-6-luna / xhigh / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-6-sol / high / default | True | n/a | n/a | default | 2 / 10 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-6-sol / max / default | True | n/a | n/a | default | 2 / 10 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-6-sol / xhigh / default | True | n/a | n/a | default | 2 / 10 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-6.1-sol / high / default | True | n/a | n/a | default | 2 / 10 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-6.1-sol / max / default | True | n/a | n/a | default | 2 / 10 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-6.1-sol / xhigh / default | True | n/a | n/a | default | 2 / 10 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| grok-4.5 / high / default | True | n/a | n/a | default | 2 / 6 | 2026-10-07T12:25:32.5835199Z | 2026-09-08 |
+| grok-4.6 / high / default | True | n/a | n/a | default | 2 / 6 | 2026-10-07T12:25:32.5835199Z | 2026-09-08 |
+| grok-4.6 / xhigh / default | True | n/a | n/a | default | 2 / 6 | 2026-10-07T12:25:32.5835199Z | 2026-09-08 |
+| mai-code-1.1-flash / high / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
 
 | Model | Source | Exact alias / source label | Effort | Metric | Score | Publication age unknown | Cached | Harness | Role |
 |---|---|---|---|---|---|---|---|---|---|
@@ -1198,7 +1216,7 @@ EnterpriseOps-Gym-AA: AA oracle-tool workflow harness; tools supplied. Not tool-
 | gpt-6.1-sol | artificialAnalysisCodingAgents | Codex - GPT-6.1 Sol (high) ({'reasoning_effort': 'high'}) | high | codingAgentIndex | 0.601492371618 | True | False | Codex; variant 4aee8aa2d4a0bad6068644f40edae235; external agent harness, not Copilot CLI | deciding |
 | gpt-6.1-sol | artificialAnalysisCodingAgents | Codex - GPT-6.1 Sol (max) | max | codingAgentIndex | 0.60147507043 | True | False | Codex; variant ea296ce785422d3b97cfff4427f2e0d2; external agent harness, not Copilot CLI | deciding |
 | gpt-6.1-sol | artificialAnalysisCodingAgents | Codex - GPT-6.1 Sol (xhigh) ({'reasoning_effort': 'xhigh'}) | xhigh | codingAgentIndex | 0.629077673682 | True | False | Codex; variant ed8c1d0b0a2fe4560bbfa0a9f47e8941; external agent harness, not Copilot CLI | deciding |
-| claude-opus-4.7 | liveBench | claude-opus-4-7-xhigh-effort | xhigh | agenticCoding | 50.6563333333 | True | False | source benchmark harness, not Copilot CLI | authorized fallback |
+| grok-4.6 | artificialAnalysisCodingAgents | Grok Build - Grok 4.6 (xhigh) | xhigh | codingAgentIndex | 0.469689520574 | True | False | Grok Build; variant 70a5d300021b9986f77d4198272ef1a5; external agent harness, not Copilot CLI | deciding |
 | claude-opus-4.8 | liveBench | claude-opus-4-8-max-effort | max | agenticCoding | 50.505 | True | False | source benchmark harness, not Copilot CLI | authorized fallback |
 | claude-opus-5 | liveBench | claude-opus-5-max-effort | max | agenticCoding | 65.202 | True | False | source benchmark harness, not Copilot CLI | authorized fallback |
 | claude-opus-5.5 | liveBench | claude-opus-5-5-max-effort | max | agenticCoding | 71.717 | True | False | source benchmark harness, not Copilot CLI | authorized fallback |
@@ -1206,8 +1224,6 @@ EnterpriseOps-Gym-AA: AA oracle-tool workflow harness; tools supplied. Not tool-
 | claude-sonnet-5 | liveBench | claude-sonnet-5-xhigh-effort | xhigh | agenticCoding | 59.394 | True | False | source benchmark harness, not Copilot CLI | authorized fallback |
 | claude-sonnet-5.5 | liveBench | claude-sonnet-5-5-max-effort | max | agenticCoding | 56.3133333333 | True | False | source benchmark harness, not Copilot CLI | authorized fallback |
 | claude-sonnet-5.5 | liveBench | claude-sonnet-5-5-xhigh-effort | xhigh | agenticCoding | 39.3436666667 | True | False | source benchmark harness, not Copilot CLI | authorized fallback |
-| gemini-3.5-flash | liveBench | gemini-3.5-flash-high | high | agenticCoding | 48.9896666667 | True | False | source benchmark harness, not Copilot CLI | authorized fallback |
-| gemini-3.6-flash | liveBench | gemini-3.6-flash-high | high | agenticCoding | 43.4343333333 | True | False | source benchmark harness, not Copilot CLI | authorized fallback |
 | gemini-3.7-flash | liveBench | gemini-3.7-flash-high | high | agenticCoding | 58.283 | True | False | source benchmark harness, not Copilot CLI | authorized fallback |
 | gemini-3.8-flash | liveBench | gemini-3.8-flash-high | high | agenticCoding | 54.2423333333 | True | False | source benchmark harness, not Copilot CLI | authorized fallback |
 | gpt-5.4 | liveBench | gpt-5.4-xhigh | xhigh | agenticCoding | 53.8383333333 | True | False | source benchmark harness, not Copilot CLI | authorized fallback |
@@ -1221,54 +1237,8 @@ EnterpriseOps-Gym-AA: AA oracle-tool workflow harness; tools supplied. Not tool-
 | gpt-6-sol | liveBench | gpt-6-sol-max | max | agenticCoding | 52.8786666667 | True | False | source benchmark harness, not Copilot CLI | authorized fallback |
 | gpt-6.1-sol | liveBench | gpt-6.1-sol-max | max | agenticCoding | 54.5453333333 | True | False | source benchmark harness, not Copilot CLI | authorized fallback |
 | gpt-6.1-sol | liveBench | gpt-6.1-sol-xhigh | xhigh | agenticCoding | 56.7676666667 | True | False | source benchmark harness, not Copilot CLI | authorized fallback |
-| claude-opus-4.8 | artificialAnalysisComponents | claude-opus-4-8 | max | automationBench | 0.455934369153 | True | False | source benchmark harness, not Copilot CLI | supporting only |
-| claude-opus-5 | artificialAnalysisComponents | claude-opus-5-high | high | automationBench | 0.535640105154 | True | False | source benchmark harness, not Copilot CLI | supporting only |
-| claude-opus-5 | artificialAnalysisComponents | claude-opus-5 | max | automationBench | 0.565735557649 | True | False | source benchmark harness, not Copilot CLI | supporting only |
-| claude-opus-5 | artificialAnalysisComponents | claude-opus-5-xhigh | xhigh | automationBench | 0.532191921095 | True | False | source benchmark harness, not Copilot CLI | supporting only |
-| claude-sonnet-4.6 | artificialAnalysisComponents | claude-sonnet-4-6-adaptive | max | automationBench | 0.200980736645 | True | False | source benchmark harness, not Copilot CLI | supporting only |
-| claude-sonnet-5 | artificialAnalysisComponents | claude-sonnet-5-high | high | automationBench | 0.320966388144 | True | False | source benchmark harness, not Copilot CLI | supporting only |
-| claude-sonnet-5 | artificialAnalysisComponents | claude-sonnet-5 | max | automationBench | 0.36512675717 | True | False | source benchmark harness, not Copilot CLI | supporting only |
-| claude-sonnet-5 | artificialAnalysisComponents | claude-sonnet-5-xhigh | xhigh | automationBench | 0.344762688906 | True | False | source benchmark harness, not Copilot CLI | supporting only |
-| gemini-3.5-flash | artificialAnalysisComponents | gemini-3-5-flash | high | automationBench | 0.420797356565 | True | False | source benchmark harness, not Copilot CLI | supporting only |
-| gemini-3.6-flash | artificialAnalysisComponents | gemini-3-6-flash | high | automationBench | 0.530166949151 | True | False | source benchmark harness, not Copilot CLI | supporting only |
-| gemini-3.7-flash | artificialAnalysisComponents | gemini-3-7-flash | high | automationBench | 0.620274929205 | True | False | source benchmark harness, not Copilot CLI | supporting only |
-| gemini-3.8-flash | artificialAnalysisComponents | gemini-3-8-flash | high | automationBench | 0.599300943212 | True | False | source benchmark harness, not Copilot CLI | supporting only |
-| gpt-5.4-mini | artificialAnalysisComponents | gpt-5-4-mini | xhigh | automationBench | 0.262048872257 | True | False | source benchmark harness, not Copilot CLI | supporting only |
-| gpt-5.5 | artificialAnalysisComponents | gpt-5-5-high | high | automationBench | 0.443461632322 | True | False | source benchmark harness, not Copilot CLI | supporting only |
-| gpt-5.5 | artificialAnalysisComponents | gpt-5-5 | xhigh | automationBench | 0.473005658729 | True | False | source benchmark harness, not Copilot CLI | supporting only |
-| gpt-5.6-luna | artificialAnalysisComponents | gpt-5-6-luna-high | high | automationBench | 0.355879429306 | True | False | source benchmark harness, not Copilot CLI | supporting only |
-| gpt-5.6-luna | artificialAnalysisComponents | gpt-5-6-luna | max | automationBench | 0.502086176376 | True | False | source benchmark harness, not Copilot CLI | supporting only |
-| gpt-5.6-luna | artificialAnalysisComponents | gpt-5-6-luna-xhigh | xhigh | automationBench | 0.425977673743 | True | False | source benchmark harness, not Copilot CLI | supporting only |
-| gpt-5.6-sol | artificialAnalysisComponents | gpt-5-6-sol-high | high | automationBench | 0.553122035739 | True | False | source benchmark harness, not Copilot CLI | supporting only |
-| gpt-5.6-sol | artificialAnalysisComponents | gpt-5-6-sol | max | automationBench | 0.600811499628 | True | False | source benchmark harness, not Copilot CLI | supporting only |
-| gpt-5.6-sol | artificialAnalysisComponents | gpt-5-6-sol-xhigh | xhigh | automationBench | 0.553116726933 | True | False | source benchmark harness, not Copilot CLI | supporting only |
-| gpt-5.6-terra | artificialAnalysisComponents | gpt-5-6-terra-high | high | automationBench | 0.420203829518 | True | False | source benchmark harness, not Copilot CLI | supporting only |
-| gpt-5.6-terra | artificialAnalysisComponents | gpt-5-6-terra | max | automationBench | 0.596499580253 | True | False | source benchmark harness, not Copilot CLI | supporting only |
-| gpt-5.6-terra | artificialAnalysisComponents | gpt-5-6-terra-xhigh | xhigh | automationBench | 0.47136313406 | True | False | source benchmark harness, not Copilot CLI | supporting only |
-| gpt-6-astra | artificialAnalysisComponents | gpt-6-astra-high | high | automationBench | 0.666122174975 | True | False | source benchmark harness, not Copilot CLI | supporting only |
 | gpt-6-astra | artificialAnalysisComponents | gpt-6-astra | max | automationBench | 0.684917480669 | True | False | source benchmark harness, not Copilot CLI | supporting only |
-| gpt-6-astra | artificialAnalysisComponents | gpt-6-astra-xhigh | xhigh | automationBench | 0.671777802022 | True | False | source benchmark harness, not Copilot CLI | supporting only |
-| gpt-6-luna | artificialAnalysisComponents | gpt-6-luna-high | high | automationBench | 0.478244913992 | True | False | source benchmark harness, not Copilot CLI | supporting only |
-| gpt-6-luna | artificialAnalysisComponents | gpt-6-luna | max | automationBench | 0.531681403448 | True | False | source benchmark harness, not Copilot CLI | supporting only |
-| gpt-6-luna | artificialAnalysisComponents | gpt-6-luna-xhigh | xhigh | automationBench | 0.478006867676 | True | False | source benchmark harness, not Copilot CLI | supporting only |
-| gpt-6-sol | artificialAnalysisComponents | gpt-6-sol-high | high | automationBench | 0.601258409113 | True | False | source benchmark harness, not Copilot CLI | supporting only |
-| gpt-6-sol | artificialAnalysisComponents | gpt-6-sol | max | automationBench | 0.616336929596 | True | False | source benchmark harness, not Copilot CLI | supporting only |
-| gpt-6-sol | artificialAnalysisComponents | gpt-6-sol-xhigh | xhigh | automationBench | 0.616942351159 | True | False | source benchmark harness, not Copilot CLI | supporting only |
-| gpt-6.1-sol | artificialAnalysisComponents | gpt-6-1-sol-high | high | automationBench | 0.644952373218 | True | False | source benchmark harness, not Copilot CLI | supporting only |
 | gpt-6.1-sol | artificialAnalysisComponents | gpt-6-1-sol | max | automationBench | 0.64868448824 | True | False | source benchmark harness, not Copilot CLI | supporting only |
-| gpt-6.1-sol | artificialAnalysisComponents | gpt-6-1-sol-xhigh | xhigh | automationBench | 0.665737214136 | True | False | source benchmark harness, not Copilot CLI | supporting only |
-| grok-4.5 | artificialAnalysisComponents | grok-4-5 | high | automationBench | 0.579348603508 | True | False | source benchmark harness, not Copilot CLI | supporting only |
-| claude-opus-4.8 | artificialAnalysisComponents | claude-opus-4-8 | max | enterpriseOpsGym | 0.439570277529 | True | False | source benchmark harness, not Copilot CLI | supporting only |
-| claude-opus-5 | artificialAnalysisComponents | claude-opus-5 | max | enterpriseOpsGym | 0.474783646673 | True | False | source benchmark harness, not Copilot CLI | supporting only |
-| claude-sonnet-5 | artificialAnalysisComponents | claude-sonnet-5 | max | enterpriseOpsGym | 0.446732318711 | True | False | source benchmark harness, not Copilot CLI | supporting only |
-| claude-sonnet-5 | artificialAnalysisComponents | claude-sonnet-5-xhigh | xhigh | enterpriseOpsGym | 0.438675022381 | True | False | source benchmark harness, not Copilot CLI | supporting only |
-| gemini-3.5-flash | artificialAnalysisComponents | gemini-3-5-flash | high | enterpriseOpsGym | 0.500746045956 | True | False | source benchmark harness, not Copilot CLI | supporting only |
-| gpt-5.4-mini | artificialAnalysisComponents | gpt-5-4-mini | xhigh | enterpriseOpsGym | 0.346165323784 | True | False | source benchmark harness, not Copilot CLI | supporting only |
-| gpt-5.5 | artificialAnalysisComponents | gpt-5-5 | xhigh | enterpriseOpsGym | 0.466427931961 | True | False | source benchmark harness, not Copilot CLI | supporting only |
-| gpt-5.6-luna | artificialAnalysisComponents | gpt-5-6-luna | max | enterpriseOpsGym | 0.408236347359 | True | False | source benchmark harness, not Copilot CLI | supporting only |
-| gpt-5.6-sol | artificialAnalysisComponents | gpt-5-6-sol | max | enterpriseOpsGym | 0.429125634139 | True | False | source benchmark harness, not Copilot CLI | supporting only |
-| gpt-5.6-terra | artificialAnalysisComponents | gpt-5-6-terra | max | enterpriseOpsGym | 0.384959713518 | True | False | source benchmark harness, not Copilot CLI | supporting only |
-| grok-4.5 | artificialAnalysisComponents | grok-4-5 | high | enterpriseOpsGym | 0.408236347359 | True | False | source benchmark harness, not Copilot CLI | supporting only |
 
 Evidence gaps are grouped by affected profile in [Coverage and exclusions](#coverage-and-exclusions).
 
@@ -1276,30 +1246,26 @@ Evidence gaps are grouped by affected profile in [Coverage and exclusions](#cove
 
 ### deep-reasoning
 
-Budget: **hard**, input 10 / output 45 USD per million. Deciding source: artificialAnalysis.
-Quality leader before hard-budget exclusions: gpt-6-astra / max / long_context. Family fallback (informational, not a winner): claude-opus-5.5.
+Budget: **hard**, input 10 / output 45 USD per million. Deciding source: n/a.
+Quality leader before hard-budget exclusions: n/a. Family fallback (informational, not a winner): claude-opus-5.5.
 Strategy: **value_balanced**.
 Authorized deciding routes, strongest first: **AA Intelligence Index > LiveBench Reasoning**. Supporting metrics are informational only.
 Task fit: external-harness proxy, not a measurement of Copilot CLI task success.
-Decision status: **budget_constrained_choice**. Deciding metric: artificialAnalysis.intelligenceIndex.
+Decision status: **retained_insufficient_role_evidence**. Deciding metric: n/a.
 Incumbent selection basis (applied/current after run): artificialAnalysis.intelligenceIndex.
 AA Intelligence Index (index points): General reasoning proxy; overlaps component benchmarks, not independent corroboration.
 LiveBench Reasoning (percentage points): Reasoning proxy; does not establish interactive triage skill.
 Configuration selection: **automatic bounded effort**; authorized efforts: high, xhigh, max. Models without effort controls use their native configuration; context remains fixed.
-Reference usage: candidate **550 AIC**; incumbent **550 AIC**.
+Reference usage: candidate **n/a AIC**; incumbent **550 AIC**.
 Reference AIC uses a fixed token basket, not measured consumption. Effort-related changes in token usage, task cost and latency are unknown; equal reference AIC does not establish equal task cost.
-Eligible quality reference: gpt-6.1-sol / max / long_context (51.8). Candidate gap: **0 / 3** absolute intelligenceIndex score points.
-Lowest reference cost among configurations passing every required band wins; equal-cost model ties prefer the newest verified release. Reference usage: candidate **550 AIC**; incumbent **550 AIC** (1 AIC = USD 0.01).
-Candidate cost change: **0%** (informational, not an incumbent-relative limit). Fixed hard ceilings authorize spending; they never rise automatically. A percentage is n/a when incumbent cost is unknown or a free incumbent would become paid.
-Matched incumbent score in this deciding-source observation: **51.8**.
 
-**Role qualification:** qualified. Every required dimension must pass independently; then the cheapest qualified configuration wins. At least 2 distinct eligible models are required per comparison, not per surviving intersection.
+**Role qualification:** retained_insufficient_role_evidence. Every required dimension must pass independently; then the cheapest qualified configuration wins. At least 2 distinct eligible models are required per comparison, not per surviving intersection.
 References are fixed before intersecting dimensions. Missing evidence is not zero or a pass; no cross-benchmark or cross-effort score substitution. These are proxy-based policy tolerances, not statistical equivalence or direct task-success measurements.
 
 | Required dimension | Selected metric | Comparison models | Reference configuration | Reference score | Allowed gap | Minimum score | Cached | Results published |
 |---|---|---|---|---|---|---|---|---|
 | primary | artificialAnalysis.intelligenceIndex | 15 | gpt-6.1-sol / max / long_context | 51.8 | 3 | 48.8 | False | n/a |
-| long-context | artificialAnalysisComponents.lcr | 15 | gpt-5.5 / high / long_context | 0.843333333333 | 0.05 | 0.793333333333 | False | n/a |
+| long-context | n/a | 0 | n/a | n/a | n/a | n/a | n/a | n/a |
 
 primary routes: AA Intelligence Index > LiveBench Reasoning.
 AA Intelligence Index: General reasoning proxy; overlaps component benchmarks, not independent corroboration.
@@ -1310,47 +1276,50 @@ AA-LCR: Long-document reasoning, not conversational retention.
 
 | Budget/capability-eligible configuration | Role qualified | Required evidence checks |
 |---|---|---|
-| gpt-5.6-terra / xhigh / long_context | False | primary: 38 (outside_quality_band); long-context: 0.79 (outside_quality_band) |
-| claude-sonnet-5 / xhigh / long_context | False | primary: 34.4 (outside_quality_band); long-context: 0.766666666667 (outside_quality_band) |
-| gemini-3.7-flash / high / long_context | False | primary: 39.1 (outside_quality_band); long-context: 0.816666666667 (passed) |
-| claude-opus-5.5 / xhigh / long_context | False | primary: n/a (exact_configuration_evidence_missing); long-context: n/a (exact_configuration_evidence_missing) |
-| claude-sonnet-5.5 / xhigh / long_context | False | primary: n/a (exact_configuration_evidence_missing); long-context: n/a (exact_configuration_evidence_missing) |
-| gpt-5.6-luna / high / long_context | False | primary: 32.1 (outside_quality_band); long-context: 0.803333333333 (passed) |
-| gpt-6.1-sol / high / long_context | True | primary: 50.2 (passed); long-context: 0.823333333333 (passed) |
-| gpt-5.5 / high / long_context | False | primary: 37 (outside_quality_band); long-context: 0.843333333333 (passed) |
-| gpt-6-sol / high / long_context | False | primary: 42.4 (outside_quality_band); long-context: 0.836666666667 (passed) |
-| claude-opus-5 / max / long_context | True | primary: 50.8 (passed); long-context: 0.793333333333 (passed) |
-| gpt-5.6-sol / high / long_context | False | primary: 42.3 (outside_quality_band); long-context: 0.816666666667 (passed) |
-| claude-sonnet-5 / high / long_context | False | primary: 31.7 (outside_quality_band); long-context: 0.766666666667 (outside_quality_band) |
-| gpt-5.4 / xhigh / long_context | False | primary: 39 (outside_quality_band); long-context: 0.82 (passed) |
-| grok-4.5 / high / long_context | False | primary: 38.8 (outside_quality_band); long-context: 0.793333333333 (passed) |
-| gpt-5.6-sol / xhigh / long_context | False | primary: 44 (outside_quality_band); long-context: 0.823333333333 (passed) |
-| gpt-5.6-luna / xhigh / long_context | False | primary: 34.6 (outside_quality_band); long-context: 0.816666666667 (passed) |
-| gpt-5.4 / high / long_context | False | primary: n/a (exact_configuration_evidence_missing); long-context: n/a (exact_configuration_evidence_missing) |
-| gpt-6-luna / max / long_context | False | primary: 38.1 (outside_quality_band); long-context: 0.833333333333 (passed) |
-| claude-sonnet-5.5 / high / long_context | False | primary: n/a (exact_configuration_evidence_missing); long-context: n/a (exact_configuration_evidence_missing) |
-| claude-opus-4.8 / xhigh / long_context | False | primary: n/a (exact_configuration_evidence_missing); long-context: n/a (exact_configuration_evidence_missing) |
-| gemini-3.6-flash / high / long_context | False | primary: 34 (outside_quality_band); long-context: 0.8 (passed) |
-| gpt-5.6-terra / high / long_context | False | primary: 34.2 (outside_quality_band); long-context: 0.776666666667 (outside_quality_band) |
-| gpt-5.5 / xhigh / long_context | False | primary: 38.4 (outside_quality_band); long-context: 0.843333333333 (passed) |
-| gpt-6.1-sol / max / long_context | True | primary: 51.8 (passed); long-context: 0.83 (passed) |
-| claude-opus-4.8 / high / long_context | False | primary: n/a (exact_configuration_evidence_missing); long-context: n/a (exact_configuration_evidence_missing) |
-| claude-opus-5.5 / max / long_context | False | primary: n/a (exact_configuration_evidence_missing); long-context: n/a (exact_configuration_evidence_missing) |
-| gpt-5.6-luna / max / long_context | False | primary: 37.3 (outside_quality_band); long-context: 0.836666666667 (passed) |
-| gpt-6-luna / xhigh / long_context | False | primary: 34.6 (outside_quality_band); long-context: 0.8 (passed) |
-| claude-sonnet-5 / max / long_context | False | primary: 38.2 (outside_quality_band); long-context: 0.82 (passed) |
-| claude-sonnet-5.5 / max / long_context | False | primary: n/a (exact_configuration_evidence_missing); long-context: n/a (exact_configuration_evidence_missing) |
-| claude-opus-5 / high / long_context | False | primary: 48.1 (outside_quality_band); long-context: 0.79 (outside_quality_band) |
-| gpt-6-sol / max / long_context | False | primary: 47.6 (outside_quality_band); long-context: 0.836666666667 (passed) |
-| claude-opus-4.8 / max / long_context | False | primary: 41.8 (outside_quality_band); long-context: 0.776666666667 (outside_quality_band) |
-| gemini-3.8-flash / high / long_context | False | primary: 40.9 (outside_quality_band); long-context: 0.813333333333 (passed) |
-| claude-opus-5 / xhigh / long_context | True | primary: 49.7 (passed); long-context: 0.803333333333 (passed) |
-| gpt-6.1-sol / xhigh / long_context | True | primary: 51 (passed); long-context: 0.796666666667 (passed) |
-| claude-opus-5.5 / high / long_context | False | primary: n/a (exact_configuration_evidence_missing); long-context: n/a (exact_configuration_evidence_missing) |
-| gpt-5.6-terra / max / long_context | False | primary: 42.1 (outside_quality_band); long-context: 0.83 (passed) |
-| gpt-5.6-sol / max / long_context | False | primary: 47 (outside_quality_band); long-context: 0.84 (passed) |
-| gpt-6-luna / high / long_context | False | primary: 32.9 (outside_quality_band); long-context: 0.793333333333 (passed) |
-| gpt-6-sol / xhigh / long_context | False | primary: 44.2 (outside_quality_band); long-context: 0.813333333333 (passed) |
+| gpt-5.6-terra / xhigh / long_context | False | primary: 38 (outside_quality_band); long-context: n/a (insufficient_comparison_evidence) |
+| claude-sonnet-5 / xhigh / long_context | False | primary: 34.4 (outside_quality_band); long-context: n/a (insufficient_comparison_evidence) |
+| gemini-3.7-flash / high / long_context | False | primary: 39.1 (outside_quality_band); long-context: n/a (insufficient_comparison_evidence) |
+| claude-opus-5.5 / xhigh / long_context | False | primary: n/a (exact_configuration_evidence_missing); long-context: n/a (insufficient_comparison_evidence) |
+| claude-sonnet-5.5 / xhigh / long_context | False | primary: n/a (exact_configuration_evidence_missing); long-context: n/a (insufficient_comparison_evidence) |
+| gpt-5.6-luna / high / long_context | False | primary: 32.1 (outside_quality_band); long-context: n/a (insufficient_comparison_evidence) |
+| gpt-6.1-sol / high / long_context | False | primary: 50.2 (passed); long-context: n/a (insufficient_comparison_evidence) |
+| gpt-5.5 / high / long_context | False | primary: 37 (outside_quality_band); long-context: n/a (insufficient_comparison_evidence) |
+| gpt-6-sol / high / long_context | False | primary: 42.4 (outside_quality_band); long-context: n/a (insufficient_comparison_evidence) |
+| claude-opus-5 / max / long_context | False | primary: 50.8 (passed); long-context: n/a (insufficient_comparison_evidence) |
+| gpt-5.6-sol / high / long_context | False | primary: 42.3 (outside_quality_band); long-context: n/a (insufficient_comparison_evidence) |
+| claude-sonnet-5 / high / long_context | False | primary: 31.7 (outside_quality_band); long-context: n/a (insufficient_comparison_evidence) |
+| gpt-5.4 / xhigh / long_context | False | primary: 39 (outside_quality_band); long-context: n/a (insufficient_comparison_evidence) |
+| grok-4.5 / high / long_context | False | primary: 38.8 (outside_quality_band); long-context: n/a (insufficient_comparison_evidence) |
+| gpt-5.6-sol / xhigh / long_context | False | primary: 44 (outside_quality_band); long-context: n/a (insufficient_comparison_evidence) |
+| gpt-5.6-luna / xhigh / long_context | False | primary: 34.6 (outside_quality_band); long-context: n/a (insufficient_comparison_evidence) |
+| gpt-5.4 / high / long_context | False | primary: n/a (exact_configuration_evidence_missing); long-context: n/a (insufficient_comparison_evidence) |
+| gpt-6-luna / max / long_context | False | primary: 38.1 (outside_quality_band); long-context: n/a (insufficient_comparison_evidence) |
+| claude-sonnet-5.5 / high / long_context | False | primary: n/a (exact_configuration_evidence_missing); long-context: n/a (insufficient_comparison_evidence) |
+| claude-opus-4.8 / xhigh / long_context | False | primary: n/a (exact_configuration_evidence_missing); long-context: n/a (insufficient_comparison_evidence) |
+| gpt-5.6-terra / high / long_context | False | primary: 34.2 (outside_quality_band); long-context: n/a (insufficient_comparison_evidence) |
+| gpt-5.5 / xhigh / long_context | False | primary: 38.4 (outside_quality_band); long-context: n/a (insufficient_comparison_evidence) |
+| gpt-6.1-sol / max / long_context | False | primary: 51.8 (passed); long-context: n/a (insufficient_comparison_evidence) |
+| claude-opus-4.8 / high / long_context | False | primary: n/a (exact_configuration_evidence_missing); long-context: n/a (insufficient_comparison_evidence) |
+| claude-opus-5.5 / max / long_context | False | primary: n/a (exact_configuration_evidence_missing); long-context: n/a (insufficient_comparison_evidence) |
+| gpt-5.6-luna / max / long_context | False | primary: 37.3 (outside_quality_band); long-context: n/a (insufficient_comparison_evidence) |
+| gpt-6-luna / xhigh / long_context | False | primary: 34.6 (outside_quality_band); long-context: n/a (insufficient_comparison_evidence) |
+| grok-4.6 / xhigh / long_context | False | primary: 44.2 (outside_quality_band); long-context: n/a (insufficient_comparison_evidence) |
+| grok-4.6 / high / long_context | False | primary: 44.3 (outside_quality_band); long-context: n/a (insufficient_comparison_evidence) |
+| claude-sonnet-5 / max / long_context | False | primary: 38.2 (outside_quality_band); long-context: n/a (insufficient_comparison_evidence) |
+| claude-sonnet-5.5 / max / long_context | False | primary: n/a (exact_configuration_evidence_missing); long-context: n/a (insufficient_comparison_evidence) |
+| claude-opus-5 / high / long_context | False | primary: 48.1 (outside_quality_band); long-context: n/a (insufficient_comparison_evidence) |
+| gpt-6-sol / max / long_context | False | primary: 47.6 (outside_quality_band); long-context: n/a (insufficient_comparison_evidence) |
+| claude-opus-4.8 / max / long_context | False | primary: 41.8 (outside_quality_band); long-context: n/a (insufficient_comparison_evidence) |
+| gemini-3.8-flash / high / long_context | False | primary: 40.9 (outside_quality_band); long-context: n/a (insufficient_comparison_evidence) |
+| claude-opus-5 / xhigh / long_context | False | primary: 49.7 (passed); long-context: n/a (insufficient_comparison_evidence) |
+| gpt-6.1-sol / xhigh / long_context | False | primary: 51 (passed); long-context: n/a (insufficient_comparison_evidence) |
+| claude-opus-5.5 / high / long_context | False | primary: n/a (exact_configuration_evidence_missing); long-context: n/a (insufficient_comparison_evidence) |
+| gpt-5.6-terra / max / long_context | False | primary: 42.1 (outside_quality_band); long-context: n/a (insufficient_comparison_evidence) |
+| gpt-5.6-sol / max / long_context | False | primary: 47 (outside_quality_band); long-context: n/a (insufficient_comparison_evidence) |
+| gpt-6-luna / high / long_context | False | primary: 32.9 (outside_quality_band); long-context: n/a (insufficient_comparison_evidence) |
+| gpt-6-sol / xhigh / long_context | False | primary: 44.2 (outside_quality_band); long-context: n/a (insufficient_comparison_evidence) |
+
+**Current configuration retained, not certified:** no role-qualified recommendation is available. No requirements are relaxed to fill the profile, and force cannot bypass missing coverage or an empty intersection.
 
 **Supporting evidence** (informational only; for the recommended configuration, not necessarily the applied configuration):
 None: the configured role dimensions are binding qualification requirements.
@@ -1360,110 +1329,105 @@ None: the configured role dimensions are binding qualification requirements.
 
 | Configuration (model / effort / context) | Budget/capability eligible | Exclusions | Advisory warnings | Price tier | Input / output USD per M | Price verified | Capability as-of |
 |---|---|---|---|---|---|---|---|
-| claude-haiku-4.5 / none / long_context | False | context_unsupported | n/a | default | 1 / 5 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| claude-opus-4.7 / high / long_context | False | capabilities_stale | n/a | default | 5 / 25 | 2026-10-01T14:12:07.5067231Z | 2026-07-30 |
-| claude-opus-4.7 / max / long_context | False | capabilities_stale | n/a | default | 5 / 25 | 2026-10-01T14:12:07.5067231Z | 2026-07-30 |
-| claude-opus-4.7 / xhigh / long_context | False | capabilities_stale | n/a | default | 5 / 25 | 2026-10-01T14:12:07.5067231Z | 2026-07-30 |
-| claude-opus-4.8 / high / long_context | True | n/a | n/a | default | 5 / 25 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| claude-opus-4.8 / max / long_context | True | n/a | n/a | default | 5 / 25 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| claude-opus-4.8 / xhigh / long_context | True | n/a | n/a | default | 5 / 25 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| claude-opus-4.8-fast / high / long_context | False | pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| claude-opus-4.8-fast / max / long_context | False | pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| claude-opus-4.8-fast / xhigh / long_context | False | pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| claude-opus-5 / high / long_context | True | n/a | n/a | default | 5 / 25 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| claude-opus-5 / max / long_context | True | n/a | n/a | default | 5 / 25 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| claude-opus-5 / xhigh / long_context | True | n/a | n/a | default | 5 / 25 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| claude-opus-5.5 / high / long_context | True | n/a | n/a | default | 4 / 20 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| claude-opus-5.5 / max / long_context | True | n/a | n/a | default | 4 / 20 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| claude-opus-5.5 / xhigh / long_context | True | n/a | n/a | default | 4 / 20 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| claude-sonnet-4.6 / high / long_context | False | capabilities_stale | n/a | default | 3 / 15 | 2026-10-06T06:44:11.6577346Z | 2026-07-30 |
-| claude-sonnet-4.6 / max / long_context | False | capabilities_stale | n/a | default | 3 / 15 | 2026-10-06T06:44:11.6577346Z | 2026-07-30 |
-| claude-sonnet-5 / high / long_context | True | n/a | n/a | default | 2 / 10 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| claude-sonnet-5 / max / long_context | True | n/a | n/a | default | 2 / 10 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| claude-sonnet-5 / xhigh / long_context | True | n/a | n/a | default | 2 / 10 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| claude-sonnet-5.5 / high / long_context | True | n/a | n/a | default | 2 / 10 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| claude-sonnet-5.5 / max / long_context | True | n/a | n/a | default | 2 / 10 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| claude-sonnet-5.5 / xhigh / long_context | True | n/a | n/a | default | 2 / 10 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gemini-3.5-flash / high / long_context | False | capabilities_stale | n/a | default | 1.5 / 9 | 2026-10-01T14:12:07.5067231Z | 2026-07-30 |
-| gemini-3.6-flash / high / long_context | True | n/a | n/a | default | 0.75 / 3.75 | 2026-10-01T14:12:07.5067231Z | 2026-09-08 |
-| gemini-3.7-flash / high / long_context | True | n/a | n/a | default | 0.75 / 3.75 | 2026-10-06T06:44:11.6577346Z | 2026-09-08 |
-| gemini-3.8-flash / high / long_context | True | n/a | n/a | default | 0.75 / 3.75 | 2026-10-06T06:44:11.6577346Z | 2026-09-08 |
-| gpt-5.3-codex / high / long_context | False | context_unsupported | n/a | default | 1.75 / 14 | 2026-10-06T06:44:11.6577346Z | 2026-09-08 |
-| gpt-5.3-codex / xhigh / long_context | False | context_unsupported | n/a | default | 1.75 / 14 | 2026-10-06T06:44:11.6577346Z | 2026-09-08 |
-| gpt-5.4 / high / long_context | True | n/a | n/a | long_context | 5 / 22.5 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-5.4 / xhigh / long_context | True | n/a | n/a | long_context | 5 / 22.5 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-5.4-mini / high / long_context | False | context_unsupported | n/a | default | 0.75 / 4.5 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-5.4-mini / xhigh / long_context | False | context_unsupported | n/a | default | 0.75 / 4.5 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-5.5 / high / long_context | True | n/a | n/a | long_context | 10 / 45 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-5.5 / xhigh / long_context | True | n/a | n/a | long_context | 10 / 45 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-5.6-luna / high / long_context | True | n/a | n/a | long_context | 0.4 / 1.8 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-5.6-luna / max / long_context | True | n/a | n/a | long_context | 0.4 / 1.8 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-5.6-luna / xhigh / long_context | True | n/a | n/a | long_context | 0.4 / 1.8 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-5.6-sol / high / long_context | True | n/a | n/a | long_context | 8 / 30 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-5.6-sol / max / long_context | True | n/a | n/a | long_context | 8 / 30 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-5.6-sol / xhigh / long_context | True | n/a | n/a | long_context | 8 / 30 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-5.6-terra / high / long_context | True | n/a | n/a | long_context | 4 / 18 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-5.6-terra / max / long_context | True | n/a | n/a | long_context | 4 / 18 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-5.6-terra / xhigh / long_context | True | n/a | n/a | long_context | 4 / 18 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-6-astra / high / long_context | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | long_context | 20 / 75 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-6-astra / max / long_context | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | long_context | 20 / 75 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-6-astra / xhigh / long_context | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | long_context | 20 / 75 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-6-luna / high / long_context | True | n/a | n/a | long_context | 0.2 / 0.75 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-6-luna / max / long_context | True | n/a | n/a | long_context | 0.2 / 0.75 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-6-luna / xhigh / long_context | True | n/a | n/a | long_context | 0.2 / 0.75 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-6-sol / high / long_context | True | n/a | n/a | long_context | 4 / 15 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-6-sol / max / long_context | True | n/a | n/a | long_context | 4 / 15 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-6-sol / xhigh / long_context | True | n/a | n/a | long_context | 4 / 15 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-6.1-sol / high / long_context | True | n/a | n/a | long_context | 4 / 15 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-6.1-sol / max / long_context | True | n/a | n/a | long_context | 4 / 15 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-6.1-sol / xhigh / long_context | True | n/a | n/a | long_context | 4 / 15 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| grok-4.5 / high / long_context | True | n/a | n/a | long_context | 4 / 12 | 2026-10-06T06:44:11.6577346Z | 2026-09-08 |
-| mai-code-1.1-flash / high / long_context | False | context_unsupported | n/a | default | 0.2 / 1.2 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
+| claude-haiku-4.5 / none / long_context | False | context_unsupported | n/a | default | 1 / 5 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| claude-opus-4.8 / high / long_context | True | n/a | n/a | default | 5 / 25 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| claude-opus-4.8 / max / long_context | True | n/a | n/a | default | 5 / 25 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| claude-opus-4.8 / xhigh / long_context | True | n/a | n/a | default | 5 / 25 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| claude-opus-4.8-fast / high / long_context | False | pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| claude-opus-4.8-fast / max / long_context | False | pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| claude-opus-4.8-fast / xhigh / long_context | False | pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| claude-opus-5 / high / long_context | True | n/a | n/a | default | 5 / 25 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| claude-opus-5 / max / long_context | True | n/a | n/a | default | 5 / 25 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| claude-opus-5 / xhigh / long_context | True | n/a | n/a | default | 5 / 25 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| claude-opus-5.5 / high / long_context | True | n/a | n/a | default | 4 / 20 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| claude-opus-5.5 / max / long_context | True | n/a | n/a | default | 4 / 20 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| claude-opus-5.5 / xhigh / long_context | True | n/a | n/a | default | 4 / 20 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| claude-sonnet-4.6 / high / long_context | False | capabilities_stale | n/a | default | 3 / 15 | 2026-10-07T12:25:32.5835199Z | 2026-07-30 |
+| claude-sonnet-4.6 / max / long_context | False | capabilities_stale | n/a | default | 3 / 15 | 2026-10-07T12:25:32.5835199Z | 2026-07-30 |
+| claude-sonnet-5 / high / long_context | True | n/a | n/a | default | 2 / 10 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| claude-sonnet-5 / max / long_context | True | n/a | n/a | default | 2 / 10 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| claude-sonnet-5 / xhigh / long_context | True | n/a | n/a | default | 2 / 10 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| claude-sonnet-5.5 / high / long_context | True | n/a | n/a | default | 2 / 10 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| claude-sonnet-5.5 / max / long_context | True | n/a | n/a | default | 2 / 10 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| claude-sonnet-5.5 / xhigh / long_context | True | n/a | n/a | default | 2 / 10 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gemini-3.7-flash / high / long_context | True | n/a | n/a | default | 0.75 / 3.75 | 2026-10-07T12:25:32.5835199Z | 2026-09-08 |
+| gemini-3.8-flash / high / long_context | True | n/a | n/a | default | 0.75 / 3.75 | 2026-10-07T12:25:32.5835199Z | 2026-09-08 |
+| gpt-5.3-codex / high / long_context | False | context_unsupported | n/a | default | 1.75 / 14 | 2026-10-07T12:25:32.5835199Z | 2026-09-08 |
+| gpt-5.3-codex / xhigh / long_context | False | context_unsupported | n/a | default | 1.75 / 14 | 2026-10-07T12:25:32.5835199Z | 2026-09-08 |
+| gpt-5.4 / high / long_context | True | n/a | n/a | long_context | 5 / 22.5 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-5.4 / xhigh / long_context | True | n/a | n/a | long_context | 5 / 22.5 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-5.4-mini / high / long_context | False | context_unsupported | n/a | default | 0.75 / 4.5 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-5.4-mini / xhigh / long_context | False | context_unsupported | n/a | default | 0.75 / 4.5 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-5.5 / high / long_context | True | n/a | n/a | long_context | 10 / 45 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-5.5 / xhigh / long_context | True | n/a | n/a | long_context | 10 / 45 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-5.6-luna / high / long_context | True | n/a | n/a | long_context | 0.4 / 1.8 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-5.6-luna / max / long_context | True | n/a | n/a | long_context | 0.4 / 1.8 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-5.6-luna / xhigh / long_context | True | n/a | n/a | long_context | 0.4 / 1.8 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-5.6-sol / high / long_context | True | n/a | n/a | long_context | 8 / 30 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-5.6-sol / max / long_context | True | n/a | n/a | long_context | 8 / 30 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-5.6-sol / xhigh / long_context | True | n/a | n/a | long_context | 8 / 30 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-5.6-terra / high / long_context | True | n/a | n/a | long_context | 4 / 18 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-5.6-terra / max / long_context | True | n/a | n/a | long_context | 4 / 18 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-5.6-terra / xhigh / long_context | True | n/a | n/a | long_context | 4 / 18 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-6-astra / high / long_context | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | long_context | 20 / 75 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-6-astra / max / long_context | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | long_context | 20 / 75 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-6-astra / xhigh / long_context | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | long_context | 20 / 75 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-6-luna / high / long_context | True | n/a | n/a | long_context | 0.2 / 0.75 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-6-luna / max / long_context | True | n/a | n/a | long_context | 0.2 / 0.75 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-6-luna / xhigh / long_context | True | n/a | n/a | long_context | 0.2 / 0.75 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-6-sol / high / long_context | True | n/a | n/a | long_context | 4 / 15 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-6-sol / max / long_context | True | n/a | n/a | long_context | 4 / 15 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-6-sol / xhigh / long_context | True | n/a | n/a | long_context | 4 / 15 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-6.1-sol / high / long_context | True | n/a | n/a | long_context | 4 / 15 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-6.1-sol / max / long_context | True | n/a | n/a | long_context | 4 / 15 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-6.1-sol / xhigh / long_context | True | n/a | n/a | long_context | 4 / 15 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| grok-4.5 / high / long_context | True | n/a | n/a | long_context | 4 / 12 | 2026-10-07T12:25:32.5835199Z | 2026-09-08 |
+| grok-4.6 / high / long_context | True | n/a | n/a | long_context | 4 / 12 | 2026-10-07T12:25:32.5835199Z | 2026-09-08 |
+| grok-4.6 / xhigh / long_context | True | n/a | n/a | long_context | 4 / 12 | 2026-10-07T12:25:32.5835199Z | 2026-09-08 |
+| mai-code-1.1-flash / high / long_context | False | context_unsupported | n/a | default | 0.2 / 1.2 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
 
 | Model | Source | Exact alias / source label | Effort | Metric | Score | Publication age unknown | Cached | Harness | Role |
 |---|---|---|---|---|---|---|---|---|---|
-| claude-haiku-4.5 | artificialAnalysis | claude-4-5-haiku | none | intelligenceIndex | 15.4 | True | False | source benchmark harness, not Copilot CLI | deciding |
-| claude-opus-4.7 | artificialAnalysis | claude-opus-4-7 | max | intelligenceIndex | 40.7 | True | False | source benchmark harness, not Copilot CLI | deciding |
-| claude-opus-4.8 | artificialAnalysis | claude-opus-4-8 | max | intelligenceIndex | 41.8 | True | False | source benchmark harness, not Copilot CLI | deciding |
-| claude-opus-5 | artificialAnalysis | claude-opus-5-high | high | intelligenceIndex | 48.1 | True | False | source benchmark harness, not Copilot CLI | deciding |
-| claude-opus-5 | artificialAnalysis | claude-opus-5 | max | intelligenceIndex | 50.8 | True | False | source benchmark harness, not Copilot CLI | deciding |
-| claude-opus-5 | artificialAnalysis | claude-opus-5-xhigh | xhigh | intelligenceIndex | 49.7 | True | False | source benchmark harness, not Copilot CLI | deciding |
-| claude-sonnet-4.6 | artificialAnalysis | claude-sonnet-4-6-adaptive | max | intelligenceIndex | 30.1 | True | False | source benchmark harness, not Copilot CLI | deciding |
-| claude-sonnet-5 | artificialAnalysis | claude-sonnet-5-high | high | intelligenceIndex | 31.7 | True | False | source benchmark harness, not Copilot CLI | deciding |
-| claude-sonnet-5 | artificialAnalysis | claude-sonnet-5 | max | intelligenceIndex | 38.2 | True | False | source benchmark harness, not Copilot CLI | deciding |
-| claude-sonnet-5 | artificialAnalysis | claude-sonnet-5-xhigh | xhigh | intelligenceIndex | 34.4 | True | False | source benchmark harness, not Copilot CLI | deciding |
-| gemini-3.5-flash | artificialAnalysis | gemini-3-5-flash | high | intelligenceIndex | 32.6 | True | False | source benchmark harness, not Copilot CLI | deciding |
-| gemini-3.6-flash | artificialAnalysis | gemini-3-6-flash | high | intelligenceIndex | 34 | True | False | source benchmark harness, not Copilot CLI | deciding |
-| gemini-3.7-flash | artificialAnalysis | gemini-3-7-flash | high | intelligenceIndex | 39.1 | True | False | source benchmark harness, not Copilot CLI | deciding |
-| gemini-3.8-flash | artificialAnalysis | gemini-3-8-flash | high | intelligenceIndex | 40.9 | True | False | source benchmark harness, not Copilot CLI | deciding |
-| gpt-5.3-codex | artificialAnalysis | gpt-5-3-codex | xhigh | intelligenceIndex | 32.5 | True | False | source benchmark harness, not Copilot CLI | deciding |
-| gpt-5.4 | artificialAnalysis | gpt-5-4 | xhigh | intelligenceIndex | 39 | True | False | source benchmark harness, not Copilot CLI | deciding |
-| gpt-5.4-mini | artificialAnalysis | gpt-5-4-mini | xhigh | intelligenceIndex | 24.1 | True | False | source benchmark harness, not Copilot CLI | deciding |
-| gpt-5.5 | artificialAnalysis | gpt-5-5-high | high | intelligenceIndex | 37 | True | False | source benchmark harness, not Copilot CLI | deciding |
-| gpt-5.5 | artificialAnalysis | gpt-5-5 | xhigh | intelligenceIndex | 38.4 | True | False | source benchmark harness, not Copilot CLI | deciding |
-| gpt-5.6-luna | artificialAnalysis | gpt-5-6-luna-high | high | intelligenceIndex | 32.1 | True | False | source benchmark harness, not Copilot CLI | deciding |
-| gpt-5.6-luna | artificialAnalysis | gpt-5-6-luna | max | intelligenceIndex | 37.3 | True | False | source benchmark harness, not Copilot CLI | deciding |
-| gpt-5.6-luna | artificialAnalysis | gpt-5-6-luna-xhigh | xhigh | intelligenceIndex | 34.6 | True | False | source benchmark harness, not Copilot CLI | deciding |
-| gpt-5.6-sol | artificialAnalysis | gpt-5-6-sol-high | high | intelligenceIndex | 42.3 | True | False | source benchmark harness, not Copilot CLI | deciding |
-| gpt-5.6-sol | artificialAnalysis | gpt-5-6-sol | max | intelligenceIndex | 47 | True | False | source benchmark harness, not Copilot CLI | deciding |
-| gpt-5.6-sol | artificialAnalysis | gpt-5-6-sol-xhigh | xhigh | intelligenceIndex | 44 | True | False | source benchmark harness, not Copilot CLI | deciding |
-| gpt-5.6-terra | artificialAnalysis | gpt-5-6-terra-high | high | intelligenceIndex | 34.2 | True | False | source benchmark harness, not Copilot CLI | deciding |
-| gpt-5.6-terra | artificialAnalysis | gpt-5-6-terra | max | intelligenceIndex | 42.1 | True | False | source benchmark harness, not Copilot CLI | deciding |
-| gpt-5.6-terra | artificialAnalysis | gpt-5-6-terra-xhigh | xhigh | intelligenceIndex | 38 | True | False | source benchmark harness, not Copilot CLI | deciding |
-| gpt-6-astra | artificialAnalysis | gpt-6-astra-high | high | intelligenceIndex | 50.9 | True | False | source benchmark harness, not Copilot CLI | deciding |
-| gpt-6-astra | artificialAnalysis | gpt-6-astra | max | intelligenceIndex | 52.7 | True | False | source benchmark harness, not Copilot CLI | deciding |
-| gpt-6-astra | artificialAnalysis | gpt-6-astra-xhigh | xhigh | intelligenceIndex | 52.4 | True | False | source benchmark harness, not Copilot CLI | deciding |
-| gpt-6-luna | artificialAnalysis | gpt-6-luna-high | high | intelligenceIndex | 32.9 | True | False | source benchmark harness, not Copilot CLI | deciding |
-| gpt-6-luna | artificialAnalysis | gpt-6-luna | max | intelligenceIndex | 38.1 | True | False | source benchmark harness, not Copilot CLI | deciding |
-| gpt-6-luna | artificialAnalysis | gpt-6-luna-xhigh | xhigh | intelligenceIndex | 34.6 | True | False | source benchmark harness, not Copilot CLI | deciding |
-| gpt-6-sol | artificialAnalysis | gpt-6-sol-high | high | intelligenceIndex | 42.4 | True | False | source benchmark harness, not Copilot CLI | deciding |
-| gpt-6-sol | artificialAnalysis | gpt-6-sol | max | intelligenceIndex | 47.6 | True | False | source benchmark harness, not Copilot CLI | deciding |
-| gpt-6-sol | artificialAnalysis | gpt-6-sol-xhigh | xhigh | intelligenceIndex | 44.2 | True | False | source benchmark harness, not Copilot CLI | deciding |
-| gpt-6.1-sol | artificialAnalysis | gpt-6-1-sol-high | high | intelligenceIndex | 50.2 | True | False | source benchmark harness, not Copilot CLI | deciding |
-| gpt-6.1-sol | artificialAnalysis | gpt-6-1-sol | max | intelligenceIndex | 51.8 | True | False | source benchmark harness, not Copilot CLI | deciding |
-| gpt-6.1-sol | artificialAnalysis | gpt-6-1-sol-xhigh | xhigh | intelligenceIndex | 51 | True | False | source benchmark harness, not Copilot CLI | deciding |
-| grok-4.5 | artificialAnalysis | grok-4-5 | high | intelligenceIndex | 38.8 | True | False | source benchmark harness, not Copilot CLI | deciding |
-| claude-opus-4.7 | liveBench | claude-opus-4-7-xhigh-effort | xhigh | reasoning | 87.19225 | True | False | source benchmark harness, not Copilot CLI | authorized fallback |
+| claude-haiku-4.5 | artificialAnalysis | claude-4-5-haiku | none | intelligenceIndex | 15.4 | True | False | source benchmark harness, not Copilot CLI | authorized fallback |
+| claude-opus-4.8 | artificialAnalysis | claude-opus-4-8 | max | intelligenceIndex | 41.8 | True | False | source benchmark harness, not Copilot CLI | authorized fallback |
+| claude-opus-5 | artificialAnalysis | claude-opus-5-high | high | intelligenceIndex | 48.1 | True | False | source benchmark harness, not Copilot CLI | authorized fallback |
+| claude-opus-5 | artificialAnalysis | claude-opus-5 | max | intelligenceIndex | 50.8 | True | False | source benchmark harness, not Copilot CLI | authorized fallback |
+| claude-opus-5 | artificialAnalysis | claude-opus-5-xhigh | xhigh | intelligenceIndex | 49.7 | True | False | source benchmark harness, not Copilot CLI | authorized fallback |
+| claude-sonnet-4.6 | artificialAnalysis | claude-sonnet-4-6-adaptive | max | intelligenceIndex | 30.1 | True | False | source benchmark harness, not Copilot CLI | authorized fallback |
+| claude-sonnet-5 | artificialAnalysis | claude-sonnet-5-high | high | intelligenceIndex | 31.7 | True | False | source benchmark harness, not Copilot CLI | authorized fallback |
+| claude-sonnet-5 | artificialAnalysis | claude-sonnet-5 | max | intelligenceIndex | 38.2 | True | False | source benchmark harness, not Copilot CLI | authorized fallback |
+| claude-sonnet-5 | artificialAnalysis | claude-sonnet-5-xhigh | xhigh | intelligenceIndex | 34.4 | True | False | source benchmark harness, not Copilot CLI | authorized fallback |
+| gemini-3.7-flash | artificialAnalysis | gemini-3-7-flash | high | intelligenceIndex | 39.1 | True | False | source benchmark harness, not Copilot CLI | authorized fallback |
+| gemini-3.8-flash | artificialAnalysis | gemini-3-8-flash | high | intelligenceIndex | 40.9 | True | False | source benchmark harness, not Copilot CLI | authorized fallback |
+| gpt-5.3-codex | artificialAnalysis | gpt-5-3-codex | xhigh | intelligenceIndex | 32.5 | True | False | source benchmark harness, not Copilot CLI | authorized fallback |
+| gpt-5.4 | artificialAnalysis | gpt-5-4 | xhigh | intelligenceIndex | 39 | True | False | source benchmark harness, not Copilot CLI | authorized fallback |
+| gpt-5.4-mini | artificialAnalysis | gpt-5-4-mini | xhigh | intelligenceIndex | 24.1 | True | False | source benchmark harness, not Copilot CLI | authorized fallback |
+| gpt-5.5 | artificialAnalysis | gpt-5-5-high | high | intelligenceIndex | 37 | True | False | source benchmark harness, not Copilot CLI | authorized fallback |
+| gpt-5.5 | artificialAnalysis | gpt-5-5 | xhigh | intelligenceIndex | 38.4 | True | False | source benchmark harness, not Copilot CLI | authorized fallback |
+| gpt-5.6-luna | artificialAnalysis | gpt-5-6-luna-high | high | intelligenceIndex | 32.1 | True | False | source benchmark harness, not Copilot CLI | authorized fallback |
+| gpt-5.6-luna | artificialAnalysis | gpt-5-6-luna | max | intelligenceIndex | 37.3 | True | False | source benchmark harness, not Copilot CLI | authorized fallback |
+| gpt-5.6-luna | artificialAnalysis | gpt-5-6-luna-xhigh | xhigh | intelligenceIndex | 34.6 | True | False | source benchmark harness, not Copilot CLI | authorized fallback |
+| gpt-5.6-sol | artificialAnalysis | gpt-5-6-sol-high | high | intelligenceIndex | 42.3 | True | False | source benchmark harness, not Copilot CLI | authorized fallback |
+| gpt-5.6-sol | artificialAnalysis | gpt-5-6-sol | max | intelligenceIndex | 47 | True | False | source benchmark harness, not Copilot CLI | authorized fallback |
+| gpt-5.6-sol | artificialAnalysis | gpt-5-6-sol-xhigh | xhigh | intelligenceIndex | 44 | True | False | source benchmark harness, not Copilot CLI | authorized fallback |
+| gpt-5.6-terra | artificialAnalysis | gpt-5-6-terra-high | high | intelligenceIndex | 34.2 | True | False | source benchmark harness, not Copilot CLI | authorized fallback |
+| gpt-5.6-terra | artificialAnalysis | gpt-5-6-terra | max | intelligenceIndex | 42.1 | True | False | source benchmark harness, not Copilot CLI | authorized fallback |
+| gpt-5.6-terra | artificialAnalysis | gpt-5-6-terra-xhigh | xhigh | intelligenceIndex | 38 | True | False | source benchmark harness, not Copilot CLI | authorized fallback |
+| gpt-6-astra | artificialAnalysis | gpt-6-astra-high | high | intelligenceIndex | 50.9 | True | False | source benchmark harness, not Copilot CLI | authorized fallback |
+| gpt-6-astra | artificialAnalysis | gpt-6-astra | max | intelligenceIndex | 52.7 | True | False | source benchmark harness, not Copilot CLI | authorized fallback |
+| gpt-6-astra | artificialAnalysis | gpt-6-astra-xhigh | xhigh | intelligenceIndex | 52.4 | True | False | source benchmark harness, not Copilot CLI | authorized fallback |
+| gpt-6-luna | artificialAnalysis | gpt-6-luna-high | high | intelligenceIndex | 32.9 | True | False | source benchmark harness, not Copilot CLI | authorized fallback |
+| gpt-6-luna | artificialAnalysis | gpt-6-luna | max | intelligenceIndex | 38.1 | True | False | source benchmark harness, not Copilot CLI | authorized fallback |
+| gpt-6-luna | artificialAnalysis | gpt-6-luna-xhigh | xhigh | intelligenceIndex | 34.6 | True | False | source benchmark harness, not Copilot CLI | authorized fallback |
+| gpt-6-sol | artificialAnalysis | gpt-6-sol-high | high | intelligenceIndex | 42.4 | True | False | source benchmark harness, not Copilot CLI | authorized fallback |
+| gpt-6-sol | artificialAnalysis | gpt-6-sol | max | intelligenceIndex | 47.6 | True | False | source benchmark harness, not Copilot CLI | authorized fallback |
+| gpt-6-sol | artificialAnalysis | gpt-6-sol-xhigh | xhigh | intelligenceIndex | 44.2 | True | False | source benchmark harness, not Copilot CLI | authorized fallback |
+| gpt-6.1-sol | artificialAnalysis | gpt-6-1-sol-high | high | intelligenceIndex | 50.2 | True | False | source benchmark harness, not Copilot CLI | authorized fallback |
+| gpt-6.1-sol | artificialAnalysis | gpt-6-1-sol | max | intelligenceIndex | 51.8 | True | False | source benchmark harness, not Copilot CLI | authorized fallback |
+| gpt-6.1-sol | artificialAnalysis | gpt-6-1-sol-xhigh | xhigh | intelligenceIndex | 51 | True | False | source benchmark harness, not Copilot CLI | authorized fallback |
+| grok-4.5 | artificialAnalysis | grok-4-5 | high | intelligenceIndex | 38.8 | True | False | source benchmark harness, not Copilot CLI | authorized fallback |
+| grok-4.6 | artificialAnalysis | grok-4-6 | high | intelligenceIndex | 44.3 | True | False | source benchmark harness, not Copilot CLI | authorized fallback |
+| grok-4.6 | artificialAnalysis | grok-4-6-xhigh | xhigh | intelligenceIndex | 44.2 | True | False | source benchmark harness, not Copilot CLI | authorized fallback |
 | claude-opus-4.8 | liveBench | claude-opus-4-8-max-effort | max | reasoning | 89.19225 | True | False | source benchmark harness, not Copilot CLI | authorized fallback |
 | claude-opus-5 | liveBench | claude-opus-5-max-effort | max | reasoning | 91.2115 | True | False | source benchmark harness, not Copilot CLI | authorized fallback |
 | claude-opus-5.5 | liveBench | claude-opus-5-5-max-effort | max | reasoning | 92.15375 | True | False | source benchmark harness, not Copilot CLI | authorized fallback |
@@ -1471,8 +1435,6 @@ None: the configured role dimensions are binding qualification requirements.
 | claude-sonnet-5 | liveBench | claude-sonnet-5-xhigh-effort | xhigh | reasoning | 88.69225 | True | False | source benchmark harness, not Copilot CLI | authorized fallback |
 | claude-sonnet-5.5 | liveBench | claude-sonnet-5-5-max-effort | max | reasoning | 91.6345 | True | False | source benchmark harness, not Copilot CLI | authorized fallback |
 | claude-sonnet-5.5 | liveBench | claude-sonnet-5-5-xhigh-effort | xhigh | reasoning | 86.80775 | True | False | source benchmark harness, not Copilot CLI | authorized fallback |
-| gemini-3.5-flash | liveBench | gemini-3.5-flash-high | high | reasoning | 82.00475 | True | False | source benchmark harness, not Copilot CLI | authorized fallback |
-| gemini-3.6-flash | liveBench | gemini-3.6-flash-high | high | reasoning | 85.149 | True | False | source benchmark harness, not Copilot CLI | authorized fallback |
 | gemini-3.7-flash | liveBench | gemini-3.7-flash-high | high | reasoning | 87.798 | True | False | source benchmark harness, not Copilot CLI | authorized fallback |
 | gemini-3.8-flash | liveBench | gemini-3.8-flash-high | high | reasoning | 89.29325 | True | False | source benchmark harness, not Copilot CLI | authorized fallback |
 | gpt-5.4 | liveBench | gpt-5.4-xhigh | xhigh | reasoning | 88.1155 | True | False | source benchmark harness, not Copilot CLI | authorized fallback |
@@ -1487,46 +1449,8 @@ None: the configured role dimensions are binding qualification requirements.
 | gpt-6.1-sol | liveBench | gpt-6.1-sol-max | max | reasoning | 92.6345 | True | False | source benchmark harness, not Copilot CLI | authorized fallback |
 | gpt-6.1-sol | liveBench | gpt-6.1-sol-xhigh | xhigh | reasoning | 91.6345 | True | False | source benchmark harness, not Copilot CLI | authorized fallback |
 | claude-haiku-4.5 | artificialAnalysisComponents | claude-4-5-haiku | none | lcr | 0.496666666667 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| claude-opus-4.7 | artificialAnalysisComponents | claude-opus-4-7 | max | lcr | 0.786666666667 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| claude-opus-4.8 | artificialAnalysisComponents | claude-opus-4-8 | max | lcr | 0.776666666667 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| claude-opus-5 | artificialAnalysisComponents | claude-opus-5-high | high | lcr | 0.79 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| claude-opus-5 | artificialAnalysisComponents | claude-opus-5 | max | lcr | 0.793333333333 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| claude-opus-5 | artificialAnalysisComponents | claude-opus-5-xhigh | xhigh | lcr | 0.803333333333 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| claude-sonnet-4.6 | artificialAnalysisComponents | claude-sonnet-4-6-adaptive | max | lcr | 0.8 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| claude-sonnet-5 | artificialAnalysisComponents | claude-sonnet-5-high | high | lcr | 0.766666666667 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| claude-sonnet-5 | artificialAnalysisComponents | claude-sonnet-5 | max | lcr | 0.82 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| claude-sonnet-5 | artificialAnalysisComponents | claude-sonnet-5-xhigh | xhigh | lcr | 0.766666666667 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| gemini-3.5-flash | artificialAnalysisComponents | gemini-3-5-flash | high | lcr | 0.733333333333 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| gemini-3.6-flash | artificialAnalysisComponents | gemini-3-6-flash | high | lcr | 0.8 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| gemini-3.7-flash | artificialAnalysisComponents | gemini-3-7-flash | high | lcr | 0.816666666667 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| gemini-3.8-flash | artificialAnalysisComponents | gemini-3-8-flash | high | lcr | 0.813333333333 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| gpt-5.3-codex | artificialAnalysisComponents | gpt-5-3-codex | xhigh | lcr | 0.833333333333 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| gpt-5.4 | artificialAnalysisComponents | gpt-5-4 | xhigh | lcr | 0.82 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| gpt-5.4-mini | artificialAnalysisComponents | gpt-5-4-mini | xhigh | lcr | 0.77 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| gpt-5.5 | artificialAnalysisComponents | gpt-5-5-high | high | lcr | 0.843333333333 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| gpt-5.5 | artificialAnalysisComponents | gpt-5-5 | xhigh | lcr | 0.843333333333 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| gpt-5.6-luna | artificialAnalysisComponents | gpt-5-6-luna-high | high | lcr | 0.803333333333 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| gpt-5.6-luna | artificialAnalysisComponents | gpt-5-6-luna | max | lcr | 0.836666666667 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| gpt-5.6-luna | artificialAnalysisComponents | gpt-5-6-luna-xhigh | xhigh | lcr | 0.816666666667 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| gpt-5.6-sol | artificialAnalysisComponents | gpt-5-6-sol-high | high | lcr | 0.816666666667 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| gpt-5.6-sol | artificialAnalysisComponents | gpt-5-6-sol | max | lcr | 0.84 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| gpt-5.6-sol | artificialAnalysisComponents | gpt-5-6-sol-xhigh | xhigh | lcr | 0.823333333333 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| gpt-5.6-terra | artificialAnalysisComponents | gpt-5-6-terra-high | high | lcr | 0.776666666667 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| gpt-5.6-terra | artificialAnalysisComponents | gpt-5-6-terra | max | lcr | 0.83 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| gpt-5.6-terra | artificialAnalysisComponents | gpt-5-6-terra-xhigh | xhigh | lcr | 0.79 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| gpt-6-astra | artificialAnalysisComponents | gpt-6-astra-high | high | lcr | 0.8 | True | False | source benchmark harness, not Copilot CLI | qualification route |
 | gpt-6-astra | artificialAnalysisComponents | gpt-6-astra | max | lcr | 0.806666666667 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| gpt-6-astra | artificialAnalysisComponents | gpt-6-astra-xhigh | xhigh | lcr | 0.8 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| gpt-6-luna | artificialAnalysisComponents | gpt-6-luna-high | high | lcr | 0.793333333333 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| gpt-6-luna | artificialAnalysisComponents | gpt-6-luna | max | lcr | 0.833333333333 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| gpt-6-luna | artificialAnalysisComponents | gpt-6-luna-xhigh | xhigh | lcr | 0.8 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| gpt-6-sol | artificialAnalysisComponents | gpt-6-sol-high | high | lcr | 0.836666666667 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| gpt-6-sol | artificialAnalysisComponents | gpt-6-sol | max | lcr | 0.836666666667 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| gpt-6-sol | artificialAnalysisComponents | gpt-6-sol-xhigh | xhigh | lcr | 0.813333333333 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| gpt-6.1-sol | artificialAnalysisComponents | gpt-6-1-sol-high | high | lcr | 0.823333333333 | True | False | source benchmark harness, not Copilot CLI | qualification route |
 | gpt-6.1-sol | artificialAnalysisComponents | gpt-6-1-sol | max | lcr | 0.83 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| gpt-6.1-sol | artificialAnalysisComponents | gpt-6-1-sol-xhigh | xhigh | lcr | 0.796666666667 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| grok-4.5 | artificialAnalysisComponents | grok-4-5 | high | lcr | 0.793333333333 | True | False | source benchmark harness, not Copilot CLI | qualification route |
 
 Evidence gaps are grouped by affected profile in [Coverage and exclusions](#coverage-and-exclusions).
 
@@ -1539,7 +1463,7 @@ Quality leader before hard-budget exclusions: n/a. Family fallback (informationa
 Strategy: **value_balanced**.
 Authorized deciding routes, strongest first: **AA Coding Index > LiveBench Coding**. Supporting metrics are informational only.
 Task fit: external-harness proxy, not a measurement of Copilot CLI task success.
-Decision status: **retained_no_role_qualified_candidate**. Deciding metric: n/a.
+Decision status: **retained_insufficient_role_evidence**. Deciding metric: n/a.
 Incumbent selection basis (applied/current after run): artificialAnalysis.codingIndex.
 AA Coding Index (index points): Coding aggregate; not direct evidence of review or UI implementation quality.
 LiveBench Coding (percentage points): Coding proxy, not direct review or UI implementation evidence.
@@ -1547,14 +1471,14 @@ Configuration selection: **automatic bounded effort**; authorized efforts: mediu
 Reference usage: candidate **n/a AIC**; incumbent **112.5 AIC**.
 Reference AIC uses a fixed token basket, not measured consumption. Effort-related changes in token usage, task cost and latency are unknown; equal reference AIC does not establish equal task cost.
 
-**Role qualification:** retained_no_role_qualified_candidate. Every required dimension must pass independently; then the cheapest qualified configuration wins. At least 2 distinct eligible models are required per comparison, not per surviving intersection.
+**Role qualification:** retained_insufficient_role_evidence. Every required dimension must pass independently; then the cheapest qualified configuration wins. At least 2 distinct eligible models are required per comparison, not per surviving intersection.
 References are fixed before intersecting dimensions. Missing evidence is not zero or a pass; no cross-benchmark or cross-effort score substitution. These are proxy-based policy tolerances, not statistical equivalence or direct task-success measurements.
 
 | Required dimension | Selected metric | Comparison models | Reference configuration | Reference score | Allowed gap | Minimum score | Cached | Results published |
 |---|---|---|---|---|---|---|---|---|
 | primary | artificialAnalysis.codingIndex | 9 | gpt-5.6-sol / high / default | 77.2 | 3 | 74.2 | False | n/a |
 | reasoning | artificialAnalysis.intelligenceIndex | 15 | gpt-6.1-sol / high / default | 50.2 | 3 | 47.2 | False | n/a |
-| long-context | artificialAnalysisComponents.lcr | 15 | gpt-5.5 / high / default | 0.843333333333 | 0.05 | 0.793333333333 | False | n/a |
+| long-context | n/a | 0 | n/a | n/a | n/a | n/a | n/a | n/a |
 
 primary routes: AA Coding Index > LiveBench Coding.
 AA Coding Index: Coding aggregate; not direct evidence of review or UI implementation quality.
@@ -1569,47 +1493,47 @@ AA-LCR: Long-document reasoning, not conversational retention.
 
 | Budget/capability-eligible configuration | Role qualified | Required evidence checks |
 |---|---|---|
-| gpt-6-sol / medium / default | False | primary: n/a (exact_configuration_evidence_missing); reasoning: 39.8 (outside_quality_band); long-context: 0.823333333333 (passed) |
-| claude-sonnet-5 / medium / default | False | primary: n/a (exact_configuration_evidence_missing); reasoning: 28.1 (outside_quality_band); long-context: 0.736666666667 (outside_quality_band) |
-| gemini-3.8-flash / medium / default | False | primary: 74.1 (outside_quality_band); reasoning: 39.8 (outside_quality_band); long-context: 0.84 (passed) |
-| claude-opus-5 / high / default | False | primary: 76.5 (passed); reasoning: 48.1 (passed); long-context: 0.79 (outside_quality_band) |
-| claude-opus-5.5 / medium / default | False | primary: n/a (exact_configuration_evidence_missing); reasoning: n/a (exact_configuration_evidence_missing); long-context: n/a (exact_configuration_evidence_missing) |
-| claude-opus-4.8 / medium / default | False | primary: n/a (exact_configuration_evidence_missing); reasoning: n/a (exact_configuration_evidence_missing); long-context: n/a (exact_configuration_evidence_missing) |
-| gpt-5.6-luna / high / default | False | primary: 63.3 (outside_quality_band); reasoning: 32.1 (outside_quality_band); long-context: 0.803333333333 (passed) |
-| gemini-3.6-flash / high / default | False | primary: 69.2 (outside_quality_band); reasoning: 34 (outside_quality_band); long-context: 0.8 (passed) |
-| gpt-5.6-sol / medium / default | False | primary: 76.3 (passed); reasoning: 39.2 (outside_quality_band); long-context: 0.803333333333 (passed) |
-| grok-4.5 / medium / default | False | primary: n/a (exact_configuration_evidence_missing); reasoning: n/a (exact_configuration_evidence_missing); long-context: n/a (exact_configuration_evidence_missing) |
-| gpt-5.5 / high / default | False | primary: 71.6 (outside_quality_band); reasoning: 37 (outside_quality_band); long-context: 0.843333333333 (passed) |
-| claude-haiku-4.5 / none / default | False | primary: n/a (exact_configuration_evidence_missing); reasoning: 15.4 (outside_quality_band); long-context: 0.496666666667 (outside_quality_band) |
-| claude-opus-4.8 / high / default | False | primary: n/a (exact_configuration_evidence_missing); reasoning: n/a (exact_configuration_evidence_missing); long-context: n/a (exact_configuration_evidence_missing) |
-| gpt-5.3-codex / high / default | False | primary: n/a (exact_configuration_evidence_missing); reasoning: n/a (exact_configuration_evidence_missing); long-context: n/a (exact_configuration_evidence_missing) |
-| grok-4.5 / high / default | False | primary: 72.4 (outside_quality_band); reasoning: 38.8 (outside_quality_band); long-context: 0.793333333333 (passed) |
-| mai-code-1.1-flash / high / default | False | primary: n/a (exact_configuration_evidence_missing); reasoning: n/a (exact_configuration_evidence_missing); long-context: n/a (exact_configuration_evidence_missing) |
-| gemini-3.8-flash / high / default | False | primary: 76.3 (passed); reasoning: 40.9 (outside_quality_band); long-context: 0.813333333333 (passed) |
-| gpt-5.5 / medium / default | False | primary: 71.5 (outside_quality_band); reasoning: 33.8 (outside_quality_band); long-context: 0.83 (passed) |
-| gpt-5.4-mini / medium / default | False | primary: n/a (exact_configuration_evidence_missing); reasoning: 19.7 (outside_quality_band); long-context: 0.67 (outside_quality_band) |
-| gpt-5.6-terra / medium / default | False | primary: 64.7 (outside_quality_band); reasoning: 30.1 (outside_quality_band); long-context: 0.74 (outside_quality_band) |
-| claude-sonnet-5.5 / medium / default | False | primary: n/a (exact_configuration_evidence_missing); reasoning: n/a (exact_configuration_evidence_missing); long-context: n/a (exact_configuration_evidence_missing) |
-| gpt-5.6-sol / high / default | False | primary: 77.2 (passed); reasoning: 42.3 (outside_quality_band); long-context: 0.816666666667 (passed) |
-| gpt-6-luna / medium / default | False | primary: n/a (exact_configuration_evidence_missing); reasoning: 29.9 (outside_quality_band); long-context: 0.783333333333 (outside_quality_band) |
-| claude-sonnet-5 / high / default | False | primary: n/a (exact_configuration_evidence_missing); reasoning: 31.7 (outside_quality_band); long-context: 0.766666666667 (outside_quality_band) |
-| claude-opus-5.5 / high / default | False | primary: n/a (exact_configuration_evidence_missing); reasoning: n/a (exact_configuration_evidence_missing); long-context: n/a (exact_configuration_evidence_missing) |
-| gpt-6.1-sol / medium / default | False | primary: n/a (exact_configuration_evidence_missing); reasoning: 47.8 (passed); long-context: 0.833333333333 (passed) |
-| gpt-5.4 / medium / default | False | primary: n/a (exact_configuration_evidence_missing); reasoning: n/a (exact_configuration_evidence_missing); long-context: n/a (exact_configuration_evidence_missing) |
-| mai-code-1.1-flash / medium / default | False | primary: n/a (exact_configuration_evidence_missing); reasoning: n/a (exact_configuration_evidence_missing); long-context: n/a (exact_configuration_evidence_missing) |
-| gemini-3.6-flash / medium / default | False | primary: n/a (exact_configuration_evidence_missing); reasoning: n/a (exact_configuration_evidence_missing); long-context: n/a (exact_configuration_evidence_missing) |
-| gpt-5.4 / high / default | False | primary: n/a (exact_configuration_evidence_missing); reasoning: n/a (exact_configuration_evidence_missing); long-context: n/a (exact_configuration_evidence_missing) |
-| gpt-5.6-luna / medium / default | False | primary: 50.7 (outside_quality_band); reasoning: 25 (outside_quality_band); long-context: 0.75 (outside_quality_band) |
-| gpt-6.1-sol / high / default | False | primary: n/a (exact_configuration_evidence_missing); reasoning: 50.2 (passed); long-context: 0.823333333333 (passed) |
-| gpt-5.3-codex / medium / default | False | primary: n/a (exact_configuration_evidence_missing); reasoning: n/a (exact_configuration_evidence_missing); long-context: n/a (exact_configuration_evidence_missing) |
-| gpt-6-sol / high / default | False | primary: n/a (exact_configuration_evidence_missing); reasoning: 42.4 (outside_quality_band); long-context: 0.836666666667 (passed) |
-| gemini-3.7-flash / high / default | False | primary: 76.1 (passed); reasoning: 39.1 (outside_quality_band); long-context: 0.816666666667 (passed) |
-| gpt-5.6-terra / high / default | False | primary: 67.1 (outside_quality_band); reasoning: 34.2 (outside_quality_band); long-context: 0.776666666667 (outside_quality_band) |
-| claude-opus-5 / medium / default | False | primary: 74.3 (passed); reasoning: 44.8 (outside_quality_band); long-context: 0.82 (passed) |
-| claude-sonnet-5.5 / high / default | False | primary: n/a (exact_configuration_evidence_missing); reasoning: n/a (exact_configuration_evidence_missing); long-context: n/a (exact_configuration_evidence_missing) |
-| gemini-3.7-flash / medium / default | False | primary: 71.5 (outside_quality_band); reasoning: 39.6 (outside_quality_band); long-context: 0.83 (passed) |
-| gpt-6-luna / high / default | False | primary: n/a (exact_configuration_evidence_missing); reasoning: 32.9 (outside_quality_band); long-context: 0.793333333333 (passed) |
-| gpt-5.4-mini / high / default | False | primary: n/a (exact_configuration_evidence_missing); reasoning: n/a (exact_configuration_evidence_missing); long-context: n/a (exact_configuration_evidence_missing) |
+| grok-4.6 / high / default | False | primary: 76.8 (passed); reasoning: 44.3 (outside_quality_band); long-context: n/a (insufficient_comparison_evidence) |
+| gpt-6-sol / medium / default | False | primary: n/a (exact_configuration_evidence_missing); reasoning: 39.8 (outside_quality_band); long-context: n/a (insufficient_comparison_evidence) |
+| claude-sonnet-5 / medium / default | False | primary: n/a (exact_configuration_evidence_missing); reasoning: 28.1 (outside_quality_band); long-context: n/a (insufficient_comparison_evidence) |
+| gemini-3.8-flash / medium / default | False | primary: 74.1 (outside_quality_band); reasoning: 39.8 (outside_quality_band); long-context: n/a (insufficient_comparison_evidence) |
+| claude-opus-5 / high / default | False | primary: 76.5 (passed); reasoning: 48.1 (passed); long-context: n/a (insufficient_comparison_evidence) |
+| claude-opus-5.5 / medium / default | False | primary: n/a (exact_configuration_evidence_missing); reasoning: n/a (exact_configuration_evidence_missing); long-context: n/a (insufficient_comparison_evidence) |
+| claude-opus-4.8 / medium / default | False | primary: n/a (exact_configuration_evidence_missing); reasoning: n/a (exact_configuration_evidence_missing); long-context: n/a (insufficient_comparison_evidence) |
+| gpt-5.6-luna / high / default | False | primary: 63.3 (outside_quality_band); reasoning: 32.1 (outside_quality_band); long-context: n/a (insufficient_comparison_evidence) |
+| gpt-5.6-sol / medium / default | False | primary: 76.3 (passed); reasoning: 39.2 (outside_quality_band); long-context: n/a (insufficient_comparison_evidence) |
+| grok-4.5 / medium / default | False | primary: n/a (exact_configuration_evidence_missing); reasoning: n/a (exact_configuration_evidence_missing); long-context: n/a (insufficient_comparison_evidence) |
+| gpt-5.5 / high / default | False | primary: 71.6 (outside_quality_band); reasoning: 37 (outside_quality_band); long-context: n/a (insufficient_comparison_evidence) |
+| claude-haiku-4.5 / none / default | False | primary: n/a (exact_configuration_evidence_missing); reasoning: 15.4 (outside_quality_band); long-context: n/a (insufficient_comparison_evidence) |
+| claude-opus-4.8 / high / default | False | primary: n/a (exact_configuration_evidence_missing); reasoning: n/a (exact_configuration_evidence_missing); long-context: n/a (insufficient_comparison_evidence) |
+| gpt-5.3-codex / high / default | False | primary: n/a (exact_configuration_evidence_missing); reasoning: n/a (exact_configuration_evidence_missing); long-context: n/a (insufficient_comparison_evidence) |
+| grok-4.5 / high / default | False | primary: 72.4 (outside_quality_band); reasoning: 38.8 (outside_quality_band); long-context: n/a (insufficient_comparison_evidence) |
+| mai-code-1.1-flash / high / default | False | primary: n/a (exact_configuration_evidence_missing); reasoning: n/a (exact_configuration_evidence_missing); long-context: n/a (insufficient_comparison_evidence) |
+| gemini-3.8-flash / high / default | False | primary: 76.3 (passed); reasoning: 40.9 (outside_quality_band); long-context: n/a (insufficient_comparison_evidence) |
+| gpt-5.5 / medium / default | False | primary: 71.5 (outside_quality_band); reasoning: 33.8 (outside_quality_band); long-context: n/a (insufficient_comparison_evidence) |
+| gpt-5.4-mini / medium / default | False | primary: n/a (exact_configuration_evidence_missing); reasoning: 19.7 (outside_quality_band); long-context: n/a (insufficient_comparison_evidence) |
+| gpt-5.6-terra / medium / default | False | primary: 64.7 (outside_quality_band); reasoning: 30.1 (outside_quality_band); long-context: n/a (insufficient_comparison_evidence) |
+| claude-sonnet-5.5 / medium / default | False | primary: n/a (exact_configuration_evidence_missing); reasoning: n/a (exact_configuration_evidence_missing); long-context: n/a (insufficient_comparison_evidence) |
+| gpt-5.6-sol / high / default | False | primary: 77.2 (passed); reasoning: 42.3 (outside_quality_band); long-context: n/a (insufficient_comparison_evidence) |
+| gpt-6-luna / medium / default | False | primary: n/a (exact_configuration_evidence_missing); reasoning: 29.9 (outside_quality_band); long-context: n/a (insufficient_comparison_evidence) |
+| grok-4.6 / medium / default | False | primary: 74.4 (passed); reasoning: 42.8 (outside_quality_band); long-context: n/a (insufficient_comparison_evidence) |
+| claude-sonnet-5 / high / default | False | primary: n/a (exact_configuration_evidence_missing); reasoning: 31.7 (outside_quality_band); long-context: n/a (insufficient_comparison_evidence) |
+| claude-opus-5.5 / high / default | False | primary: n/a (exact_configuration_evidence_missing); reasoning: n/a (exact_configuration_evidence_missing); long-context: n/a (insufficient_comparison_evidence) |
+| gpt-6.1-sol / medium / default | False | primary: n/a (exact_configuration_evidence_missing); reasoning: 47.8 (passed); long-context: n/a (insufficient_comparison_evidence) |
+| gpt-5.4 / medium / default | False | primary: n/a (exact_configuration_evidence_missing); reasoning: n/a (exact_configuration_evidence_missing); long-context: n/a (insufficient_comparison_evidence) |
+| mai-code-1.1-flash / medium / default | False | primary: n/a (exact_configuration_evidence_missing); reasoning: n/a (exact_configuration_evidence_missing); long-context: n/a (insufficient_comparison_evidence) |
+| gpt-5.4 / high / default | False | primary: n/a (exact_configuration_evidence_missing); reasoning: n/a (exact_configuration_evidence_missing); long-context: n/a (insufficient_comparison_evidence) |
+| gpt-5.6-luna / medium / default | False | primary: 50.7 (outside_quality_band); reasoning: 25 (outside_quality_band); long-context: n/a (insufficient_comparison_evidence) |
+| gpt-6.1-sol / high / default | False | primary: n/a (exact_configuration_evidence_missing); reasoning: 50.2 (passed); long-context: n/a (insufficient_comparison_evidence) |
+| gpt-5.3-codex / medium / default | False | primary: n/a (exact_configuration_evidence_missing); reasoning: n/a (exact_configuration_evidence_missing); long-context: n/a (insufficient_comparison_evidence) |
+| gpt-6-sol / high / default | False | primary: n/a (exact_configuration_evidence_missing); reasoning: 42.4 (outside_quality_band); long-context: n/a (insufficient_comparison_evidence) |
+| gemini-3.7-flash / high / default | False | primary: 76.1 (passed); reasoning: 39.1 (outside_quality_band); long-context: n/a (insufficient_comparison_evidence) |
+| gpt-5.6-terra / high / default | False | primary: 67.1 (outside_quality_band); reasoning: 34.2 (outside_quality_band); long-context: n/a (insufficient_comparison_evidence) |
+| claude-opus-5 / medium / default | False | primary: 74.3 (passed); reasoning: 44.8 (outside_quality_band); long-context: n/a (insufficient_comparison_evidence) |
+| claude-sonnet-5.5 / high / default | False | primary: n/a (exact_configuration_evidence_missing); reasoning: n/a (exact_configuration_evidence_missing); long-context: n/a (insufficient_comparison_evidence) |
+| gemini-3.7-flash / medium / default | False | primary: 71.5 (outside_quality_band); reasoning: 39.6 (outside_quality_band); long-context: n/a (insufficient_comparison_evidence) |
+| gpt-6-luna / high / default | False | primary: n/a (exact_configuration_evidence_missing); reasoning: 32.9 (outside_quality_band); long-context: n/a (insufficient_comparison_evidence) |
+| gpt-5.4-mini / high / default | False | primary: n/a (exact_configuration_evidence_missing); reasoning: n/a (exact_configuration_evidence_missing); long-context: n/a (insufficient_comparison_evidence) |
 
 **Current configuration retained, not certified:** no role-qualified recommendation is available. No requirements are relaxed to fill the profile, and force cannot bypass missing coverage or an empty intersection.
 
@@ -1621,64 +1545,58 @@ None: the configured role dimensions are binding qualification requirements.
 
 | Configuration (model / effort / context) | Budget/capability eligible | Exclusions | Advisory warnings | Price tier | Input / output USD per M | Price verified | Capability as-of |
 |---|---|---|---|---|---|---|---|
-| claude-haiku-4.5 / none / default | True | n/a | n/a | default | 1 / 5 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| claude-opus-4.7 / high / default | False | capabilities_stale | n/a | default | 5 / 25 | 2026-10-01T14:12:07.5067231Z | 2026-07-30 |
-| claude-opus-4.7 / medium / default | False | capabilities_stale | n/a | default | 5 / 25 | 2026-10-01T14:12:07.5067231Z | 2026-07-30 |
-| claude-opus-4.8 / high / default | True | n/a | n/a | default | 5 / 25 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| claude-opus-4.8 / medium / default | True | n/a | n/a | default | 5 / 25 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| claude-opus-4.8-fast / high / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| claude-opus-4.8-fast / medium / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| claude-opus-5 / high / default | True | n/a | n/a | default | 5 / 25 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| claude-opus-5 / medium / default | True | n/a | n/a | default | 5 / 25 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| claude-opus-5.5 / high / default | True | n/a | n/a | default | 4 / 20 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| claude-opus-5.5 / medium / default | True | n/a | n/a | default | 4 / 20 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| claude-sonnet-4.6 / high / default | False | capabilities_stale | n/a | default | 3 / 15 | 2026-10-06T06:44:11.6577346Z | 2026-07-30 |
-| claude-sonnet-4.6 / medium / default | False | capabilities_stale | n/a | default | 3 / 15 | 2026-10-06T06:44:11.6577346Z | 2026-07-30 |
-| claude-sonnet-5 / high / default | True | n/a | n/a | default | 2 / 10 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| claude-sonnet-5 / medium / default | True | n/a | n/a | default | 2 / 10 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| claude-sonnet-5.5 / high / default | True | n/a | n/a | default | 2 / 10 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| claude-sonnet-5.5 / medium / default | True | n/a | n/a | default | 2 / 10 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gemini-3.5-flash / high / default | False | capabilities_stale | n/a | default | 1.5 / 9 | 2026-10-01T14:12:07.5067231Z | 2026-07-30 |
-| gemini-3.5-flash / medium / default | False | capabilities_stale | n/a | default | 1.5 / 9 | 2026-10-01T14:12:07.5067231Z | 2026-07-30 |
-| gemini-3.6-flash / high / default | True | n/a | n/a | default | 0.75 / 3.75 | 2026-10-01T14:12:07.5067231Z | 2026-09-08 |
-| gemini-3.6-flash / medium / default | True | n/a | n/a | default | 0.75 / 3.75 | 2026-10-01T14:12:07.5067231Z | 2026-09-08 |
-| gemini-3.7-flash / high / default | True | n/a | n/a | default | 0.75 / 3.75 | 2026-10-06T06:44:11.6577346Z | 2026-09-08 |
-| gemini-3.7-flash / medium / default | True | n/a | n/a | default | 0.75 / 3.75 | 2026-10-06T06:44:11.6577346Z | 2026-09-08 |
-| gemini-3.8-flash / high / default | True | n/a | n/a | default | 0.75 / 3.75 | 2026-10-06T06:44:11.6577346Z | 2026-09-08 |
-| gemini-3.8-flash / medium / default | True | n/a | n/a | default | 0.75 / 3.75 | 2026-10-06T06:44:11.6577346Z | 2026-09-08 |
-| gpt-5.3-codex / high / default | True | n/a | n/a | default | 1.75 / 14 | 2026-10-06T06:44:11.6577346Z | 2026-09-08 |
-| gpt-5.3-codex / medium / default | True | n/a | n/a | default | 1.75 / 14 | 2026-10-06T06:44:11.6577346Z | 2026-09-08 |
-| gpt-5.4 / high / default | True | n/a | n/a | default | 2.5 / 15 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-5.4 / medium / default | True | n/a | n/a | default | 2.5 / 15 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-5.4-mini / high / default | True | n/a | n/a | default | 0.75 / 4.5 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-5.4-mini / medium / default | True | n/a | n/a | default | 0.75 / 4.5 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-5.5 / high / default | True | n/a | n/a | default | 5 / 30 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-5.5 / medium / default | True | n/a | n/a | default | 5 / 30 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-5.6-luna / high / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-5.6-luna / medium / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-5.6-sol / high / default | True | n/a | n/a | default | 4 / 20 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-5.6-sol / medium / default | True | n/a | n/a | default | 4 / 20 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-5.6-terra / high / default | True | n/a | n/a | default | 2 / 12 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-5.6-terra / medium / default | True | n/a | n/a | default | 2 / 12 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-6-astra / high / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-6-astra / medium / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-6-luna / high / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-6-luna / medium / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-6-sol / high / default | True | n/a | n/a | default | 2 / 10 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-6-sol / medium / default | True | n/a | n/a | default | 2 / 10 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-6.1-sol / high / default | True | n/a | n/a | default | 2 / 10 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-6.1-sol / medium / default | True | n/a | n/a | default | 2 / 10 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| grok-4.5 / high / default | True | n/a | n/a | default | 2 / 6 | 2026-10-06T06:44:11.6577346Z | 2026-09-08 |
-| grok-4.5 / medium / default | True | n/a | n/a | default | 2 / 6 | 2026-10-06T06:44:11.6577346Z | 2026-09-08 |
-| mai-code-1.1-flash / high / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| mai-code-1.1-flash / medium / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
+| claude-haiku-4.5 / none / default | True | n/a | n/a | default | 1 / 5 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| claude-opus-4.8 / high / default | True | n/a | n/a | default | 5 / 25 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| claude-opus-4.8 / medium / default | True | n/a | n/a | default | 5 / 25 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| claude-opus-4.8-fast / high / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| claude-opus-4.8-fast / medium / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| claude-opus-5 / high / default | True | n/a | n/a | default | 5 / 25 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| claude-opus-5 / medium / default | True | n/a | n/a | default | 5 / 25 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| claude-opus-5.5 / high / default | True | n/a | n/a | default | 4 / 20 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| claude-opus-5.5 / medium / default | True | n/a | n/a | default | 4 / 20 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| claude-sonnet-4.6 / high / default | False | capabilities_stale | n/a | default | 3 / 15 | 2026-10-07T12:25:32.5835199Z | 2026-07-30 |
+| claude-sonnet-4.6 / medium / default | False | capabilities_stale | n/a | default | 3 / 15 | 2026-10-07T12:25:32.5835199Z | 2026-07-30 |
+| claude-sonnet-5 / high / default | True | n/a | n/a | default | 2 / 10 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| claude-sonnet-5 / medium / default | True | n/a | n/a | default | 2 / 10 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| claude-sonnet-5.5 / high / default | True | n/a | n/a | default | 2 / 10 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| claude-sonnet-5.5 / medium / default | True | n/a | n/a | default | 2 / 10 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gemini-3.7-flash / high / default | True | n/a | n/a | default | 0.75 / 3.75 | 2026-10-07T12:25:32.5835199Z | 2026-09-08 |
+| gemini-3.7-flash / medium / default | True | n/a | n/a | default | 0.75 / 3.75 | 2026-10-07T12:25:32.5835199Z | 2026-09-08 |
+| gemini-3.8-flash / high / default | True | n/a | n/a | default | 0.75 / 3.75 | 2026-10-07T12:25:32.5835199Z | 2026-09-08 |
+| gemini-3.8-flash / medium / default | True | n/a | n/a | default | 0.75 / 3.75 | 2026-10-07T12:25:32.5835199Z | 2026-09-08 |
+| gpt-5.3-codex / high / default | True | n/a | n/a | default | 1.75 / 14 | 2026-10-07T12:25:32.5835199Z | 2026-09-08 |
+| gpt-5.3-codex / medium / default | True | n/a | n/a | default | 1.75 / 14 | 2026-10-07T12:25:32.5835199Z | 2026-09-08 |
+| gpt-5.4 / high / default | True | n/a | n/a | default | 2.5 / 15 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-5.4 / medium / default | True | n/a | n/a | default | 2.5 / 15 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-5.4-mini / high / default | True | n/a | n/a | default | 0.75 / 4.5 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-5.4-mini / medium / default | True | n/a | n/a | default | 0.75 / 4.5 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-5.5 / high / default | True | n/a | n/a | default | 5 / 30 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-5.5 / medium / default | True | n/a | n/a | default | 5 / 30 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-5.6-luna / high / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-5.6-luna / medium / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-5.6-sol / high / default | True | n/a | n/a | default | 4 / 20 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-5.6-sol / medium / default | True | n/a | n/a | default | 4 / 20 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-5.6-terra / high / default | True | n/a | n/a | default | 2 / 12 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-5.6-terra / medium / default | True | n/a | n/a | default | 2 / 12 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-6-astra / high / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-6-astra / medium / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-6-luna / high / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-6-luna / medium / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-6-sol / high / default | True | n/a | n/a | default | 2 / 10 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-6-sol / medium / default | True | n/a | n/a | default | 2 / 10 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-6.1-sol / high / default | True | n/a | n/a | default | 2 / 10 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-6.1-sol / medium / default | True | n/a | n/a | default | 2 / 10 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| grok-4.5 / high / default | True | n/a | n/a | default | 2 / 6 | 2026-10-07T12:25:32.5835199Z | 2026-09-08 |
+| grok-4.5 / medium / default | True | n/a | n/a | default | 2 / 6 | 2026-10-07T12:25:32.5835199Z | 2026-09-08 |
+| grok-4.6 / high / default | True | n/a | n/a | default | 2 / 6 | 2026-10-07T12:25:32.5835199Z | 2026-09-08 |
+| grok-4.6 / medium / default | True | n/a | n/a | default | 2 / 6 | 2026-10-07T12:25:32.5835199Z | 2026-09-08 |
+| mai-code-1.1-flash / high / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| mai-code-1.1-flash / medium / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
 
 | Model | Source | Exact alias / source label | Effort | Metric | Score | Publication age unknown | Cached | Harness | Role |
 |---|---|---|---|---|---|---|---|---|---|
 | claude-opus-5 | artificialAnalysis | claude-opus-5-high | high | codingIndex | 76.5 | True | False | source benchmark harness, not Copilot CLI | authorized fallback |
 | claude-opus-5 | artificialAnalysis | claude-opus-5-medium | medium | codingIndex | 74.3 | True | False | source benchmark harness, not Copilot CLI | authorized fallback |
-| gemini-3.5-flash | artificialAnalysis | gemini-3-5-flash | high | codingIndex | 70.1 | True | False | source benchmark harness, not Copilot CLI | authorized fallback |
-| gemini-3.6-flash | artificialAnalysis | gemini-3-6-flash | high | codingIndex | 69.2 | True | False | source benchmark harness, not Copilot CLI | authorized fallback |
 | gemini-3.7-flash | artificialAnalysis | gemini-3-7-flash | high | codingIndex | 76.1 | True | False | source benchmark harness, not Copilot CLI | authorized fallback |
 | gemini-3.7-flash | artificialAnalysis | gemini-3-7-flash-medium | medium | codingIndex | 71.5 | True | False | source benchmark harness, not Copilot CLI | authorized fallback |
 | gemini-3.8-flash | artificialAnalysis | gemini-3-8-flash | high | codingIndex | 76.3 | True | False | source benchmark harness, not Copilot CLI | authorized fallback |
@@ -1694,9 +1612,9 @@ None: the configured role dimensions are binding qualification requirements.
 | gpt-6-astra | artificialAnalysis | gpt-6-astra-high | high | codingIndex | 77.1 | True | False | source benchmark harness, not Copilot CLI | authorized fallback |
 | gpt-6-astra | artificialAnalysis | gpt-6-astra-medium | medium | codingIndex | 76.7 | True | False | source benchmark harness, not Copilot CLI | authorized fallback |
 | grok-4.5 | artificialAnalysis | grok-4-5 | high | codingIndex | 72.4 | True | False | source benchmark harness, not Copilot CLI | authorized fallback |
+| grok-4.6 | artificialAnalysis | grok-4-6 | high | codingIndex | 76.8 | True | False | source benchmark harness, not Copilot CLI | authorized fallback |
+| grok-4.6 | artificialAnalysis | grok-4-6-medium | medium | codingIndex | 74.4 | True | False | source benchmark harness, not Copilot CLI | authorized fallback |
 | claude-sonnet-4.6 | liveBench | claude-sonnet-4-6-thinking-auto-medium-effort | medium | coding | 79.2715 | True | False | source benchmark harness, not Copilot CLI | authorized fallback |
-| gemini-3.5-flash | liveBench | gemini-3.5-flash-high | high | coding | 78.1845 | True | False | source benchmark harness, not Copilot CLI | authorized fallback |
-| gemini-3.6-flash | liveBench | gemini-3.6-flash-high | high | coding | 77.863 | True | False | source benchmark harness, not Copilot CLI | authorized fallback |
 | gemini-3.7-flash | liveBench | gemini-3.7-flash-high | high | coding | 78.8885 | True | False | source benchmark harness, not Copilot CLI | authorized fallback |
 | gemini-3.8-flash | liveBench | gemini-3.8-flash-high | high | coding | 72.489 | True | False | source benchmark harness, not Copilot CLI | authorized fallback |
 | claude-haiku-4.5 | artificialAnalysis | claude-4-5-haiku | none | intelligenceIndex | 15.4 | True | False | source benchmark harness, not Copilot CLI | qualification route |
@@ -1704,9 +1622,6 @@ None: the configured role dimensions are binding qualification requirements.
 | claude-opus-5 | artificialAnalysis | claude-opus-5-medium | medium | intelligenceIndex | 44.8 | True | False | source benchmark harness, not Copilot CLI | qualification route |
 | claude-sonnet-5 | artificialAnalysis | claude-sonnet-5-high | high | intelligenceIndex | 31.7 | True | False | source benchmark harness, not Copilot CLI | qualification route |
 | claude-sonnet-5 | artificialAnalysis | claude-sonnet-5-medium | medium | intelligenceIndex | 28.1 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| gemini-3.5-flash | artificialAnalysis | gemini-3-5-flash | high | intelligenceIndex | 32.6 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| gemini-3.5-flash | artificialAnalysis | gemini-3-5-flash-medium | medium | intelligenceIndex | 33.6 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| gemini-3.6-flash | artificialAnalysis | gemini-3-6-flash | high | intelligenceIndex | 34 | True | False | source benchmark harness, not Copilot CLI | qualification route |
 | gemini-3.7-flash | artificialAnalysis | gemini-3-7-flash | high | intelligenceIndex | 39.1 | True | False | source benchmark harness, not Copilot CLI | qualification route |
 | gemini-3.7-flash | artificialAnalysis | gemini-3-7-flash-medium | medium | intelligenceIndex | 39.6 | True | False | source benchmark harness, not Copilot CLI | qualification route |
 | gemini-3.8-flash | artificialAnalysis | gemini-3-8-flash | high | intelligenceIndex | 40.9 | True | False | source benchmark harness, not Copilot CLI | qualification route |
@@ -1729,41 +1644,12 @@ None: the configured role dimensions are binding qualification requirements.
 | gpt-6.1-sol | artificialAnalysis | gpt-6-1-sol-high | high | intelligenceIndex | 50.2 | True | False | source benchmark harness, not Copilot CLI | qualification route |
 | gpt-6.1-sol | artificialAnalysis | gpt-6-1-sol-medium | medium | intelligenceIndex | 47.8 | True | False | source benchmark harness, not Copilot CLI | qualification route |
 | grok-4.5 | artificialAnalysis | grok-4-5 | high | intelligenceIndex | 38.8 | True | False | source benchmark harness, not Copilot CLI | qualification route |
+| grok-4.6 | artificialAnalysis | grok-4-6 | high | intelligenceIndex | 44.3 | True | False | source benchmark harness, not Copilot CLI | qualification route |
+| grok-4.6 | artificialAnalysis | grok-4-6-medium | medium | intelligenceIndex | 42.8 | True | False | source benchmark harness, not Copilot CLI | qualification route |
 | claude-sonnet-4.6 | liveBench | claude-sonnet-4-6-thinking-auto-medium-effort | medium | reasoning | 84.76925 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| gemini-3.5-flash | liveBench | gemini-3.5-flash-high | high | reasoning | 82.00475 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| gemini-3.6-flash | liveBench | gemini-3.6-flash-high | high | reasoning | 85.149 | True | False | source benchmark harness, not Copilot CLI | qualification route |
 | gemini-3.7-flash | liveBench | gemini-3.7-flash-high | high | reasoning | 87.798 | True | False | source benchmark harness, not Copilot CLI | qualification route |
 | gemini-3.8-flash | liveBench | gemini-3.8-flash-high | high | reasoning | 89.29325 | True | False | source benchmark harness, not Copilot CLI | qualification route |
 | claude-haiku-4.5 | artificialAnalysisComponents | claude-4-5-haiku | none | lcr | 0.496666666667 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| claude-opus-5 | artificialAnalysisComponents | claude-opus-5-high | high | lcr | 0.79 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| claude-opus-5 | artificialAnalysisComponents | claude-opus-5-medium | medium | lcr | 0.82 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| claude-sonnet-5 | artificialAnalysisComponents | claude-sonnet-5-high | high | lcr | 0.766666666667 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| claude-sonnet-5 | artificialAnalysisComponents | claude-sonnet-5-medium | medium | lcr | 0.736666666667 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| gemini-3.5-flash | artificialAnalysisComponents | gemini-3-5-flash | high | lcr | 0.733333333333 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| gemini-3.5-flash | artificialAnalysisComponents | gemini-3-5-flash-medium | medium | lcr | 0.743333333333 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| gemini-3.6-flash | artificialAnalysisComponents | gemini-3-6-flash | high | lcr | 0.8 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| gemini-3.7-flash | artificialAnalysisComponents | gemini-3-7-flash | high | lcr | 0.816666666667 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| gemini-3.7-flash | artificialAnalysisComponents | gemini-3-7-flash-medium | medium | lcr | 0.83 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| gemini-3.8-flash | artificialAnalysisComponents | gemini-3-8-flash | high | lcr | 0.813333333333 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| gemini-3.8-flash | artificialAnalysisComponents | gemini-3-8-flash-medium | medium | lcr | 0.84 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| gpt-5.4-mini | artificialAnalysisComponents | gpt-5-4-mini-medium | medium | lcr | 0.67 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| gpt-5.5 | artificialAnalysisComponents | gpt-5-5-high | high | lcr | 0.843333333333 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| gpt-5.5 | artificialAnalysisComponents | gpt-5-5-medium | medium | lcr | 0.83 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| gpt-5.6-luna | artificialAnalysisComponents | gpt-5-6-luna-high | high | lcr | 0.803333333333 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| gpt-5.6-luna | artificialAnalysisComponents | gpt-5-6-luna-medium | medium | lcr | 0.75 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| gpt-5.6-sol | artificialAnalysisComponents | gpt-5-6-sol-high | high | lcr | 0.816666666667 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| gpt-5.6-sol | artificialAnalysisComponents | gpt-5-6-sol-medium | medium | lcr | 0.803333333333 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| gpt-5.6-terra | artificialAnalysisComponents | gpt-5-6-terra-high | high | lcr | 0.776666666667 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| gpt-5.6-terra | artificialAnalysisComponents | gpt-5-6-terra-medium | medium | lcr | 0.74 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| gpt-6-astra | artificialAnalysisComponents | gpt-6-astra-high | high | lcr | 0.8 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| gpt-6-astra | artificialAnalysisComponents | gpt-6-astra-medium | medium | lcr | 0.796666666667 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| gpt-6-luna | artificialAnalysisComponents | gpt-6-luna-high | high | lcr | 0.793333333333 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| gpt-6-luna | artificialAnalysisComponents | gpt-6-luna-medium | medium | lcr | 0.783333333333 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| gpt-6-sol | artificialAnalysisComponents | gpt-6-sol-high | high | lcr | 0.836666666667 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| gpt-6-sol | artificialAnalysisComponents | gpt-6-sol-medium | medium | lcr | 0.823333333333 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| gpt-6.1-sol | artificialAnalysisComponents | gpt-6-1-sol-high | high | lcr | 0.823333333333 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| gpt-6.1-sol | artificialAnalysisComponents | gpt-6-1-sol-medium | medium | lcr | 0.833333333333 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| grok-4.5 | artificialAnalysisComponents | grok-4-5 | high | lcr | 0.793333333333 | True | False | source benchmark harness, not Copilot CLI | qualification route |
 
 Evidence gaps are grouped by affected profile in [Coverage and exclusions](#coverage-and-exclusions).
 
@@ -1771,30 +1657,26 @@ Evidence gaps are grouped by affected profile in [Coverage and exclusions](#cove
 
 ### visual-ui
 
-Budget: **hard**, input 5 / output 25 USD per million. Deciding source: artificialAnalysis.
-Quality leader before hard-budget exclusions: gpt-5.6-sol / high / default. Family fallback (informational, not a winner): claude-sonnet-5.5.
+Budget: **hard**, input 5 / output 25 USD per million. Deciding source: n/a.
+Quality leader before hard-budget exclusions: n/a. Family fallback (informational, not a winner): claude-sonnet-5.5.
 Strategy: **value_balanced**.
 Authorized deciding routes, strongest first: **AA Coding Index > LiveBench Coding**. Supporting metrics are informational only.
 Task fit: external-harness proxy, not a measurement of Copilot CLI task success.
-Decision status: **value_balanced_choice**. Deciding metric: artificialAnalysis.codingIndex.
+Decision status: **retained_insufficient_role_evidence**. Deciding metric: n/a.
 Incumbent selection basis (applied/current after run): artificialAnalysis.codingIndex.
 AA Coding Index (index points): Coding aggregate; not direct evidence of review or UI implementation quality.
 LiveBench Coding (percentage points): Coding proxy, not direct review or UI implementation evidence.
 Configuration selection: **automatic bounded effort**; authorized efforts: medium, high. Models without effort controls use their native configuration; context remains fixed.
-Reference usage: candidate **112.5 AIC**; incumbent **112.5 AIC**.
+Reference usage: candidate **n/a AIC**; incumbent **112.5 AIC**.
 Reference AIC uses a fixed token basket, not measured consumption. Effort-related changes in token usage, task cost and latency are unknown; equal reference AIC does not establish equal task cost.
-Eligible quality reference: gpt-5.6-sol / high / default (77.2). Candidate gap: **0.9 / 3** absolute codingIndex score points.
-Lowest reference cost among configurations passing every required band wins; equal-cost model ties prefer the newest verified release. Reference usage: candidate **112.5 AIC**; incumbent **112.5 AIC** (1 AIC = USD 0.01).
-Candidate cost change: **0%** (informational, not an incumbent-relative limit). Fixed hard ceilings authorize spending; they never rise automatically. A percentage is n/a when incumbent cost is unknown or a free incumbent would become paid.
-Matched incumbent score in this deciding-source observation: **76.3**.
 
-**Role qualification:** qualified. Every required dimension must pass independently; then the cheapest qualified configuration wins. At least 2 distinct eligible models are required per comparison, not per surviving intersection.
+**Role qualification:** retained_insufficient_role_evidence. Every required dimension must pass independently; then the cheapest qualified configuration wins. At least 2 distinct eligible models are required per comparison, not per surviving intersection.
 References are fixed before intersecting dimensions. Missing evidence is not zero or a pass; no cross-benchmark or cross-effort score substitution. These are proxy-based policy tolerances, not statistical equivalence or direct task-success measurements.
 
 | Required dimension | Selected metric | Comparison models | Reference configuration | Reference score | Allowed gap | Minimum score | Cached | Results published |
 |---|---|---|---|---|---|---|---|---|
-| primary | artificialAnalysis.codingIndex | 5 | gpt-5.6-sol / high / default | 77.2 | 3 | 74.2 | False | n/a |
-| visual-understanding | artificialAnalysisComponents.mmmuPro | 10 | gemini-3.8-flash / high / default | 0.856069364162 | 0.03 | 0.826069364162 | False | n/a |
+| primary | artificialAnalysis.codingIndex | 6 | gpt-5.6-sol / high / default | 77.2 | 3 | 74.2 | False | n/a |
+| visual-understanding | n/a | 0 | n/a | n/a | n/a | n/a | n/a | n/a |
 
 primary routes: AA Coding Index > LiveBench Coding.
 AA Coding Index: Coding aggregate; not direct evidence of review or UI implementation quality.
@@ -1805,37 +1687,41 @@ MMMU Pro (AA): Visual understanding, not UI implementation fidelity.
 
 | Budget/capability-eligible configuration | Role qualified | Required evidence checks |
 |---|---|---|
-| gpt-6-sol / medium / default | False | primary: n/a (exact_configuration_evidence_missing); visual-understanding: 0.804046242775 (outside_quality_band) |
-| claude-sonnet-5 / medium / default | False | primary: n/a (exact_configuration_evidence_missing); visual-understanding: n/a (exact_configuration_evidence_missing) |
-| gemini-3.8-flash / medium / default | False | primary: 74.1 (outside_quality_band); visual-understanding: 0.842196531792 (passed) |
-| claude-opus-5 / high / default | False | primary: 76.5 (passed); visual-understanding: 0.824277456647 (outside_quality_band) |
-| claude-opus-5.5 / medium / default | False | primary: n/a (exact_configuration_evidence_missing); visual-understanding: n/a (exact_configuration_evidence_missing) |
-| claude-opus-4.8 / medium / default | False | primary: n/a (exact_configuration_evidence_missing); visual-understanding: n/a (exact_configuration_evidence_missing) |
-| gpt-5.6-luna / high / default | False | primary: 63.3 (outside_quality_band); visual-understanding: 0.775722543353 (outside_quality_band) |
-| gpt-5.6-sol / medium / default | False | primary: 76.3 (passed); visual-understanding: 0.81387283237 (outside_quality_band) |
-| claude-haiku-4.5 / none / default | False | primary: n/a (exact_configuration_evidence_missing); visual-understanding: 0.551445086705 (outside_quality_band) |
-| claude-opus-4.8 / high / default | False | primary: n/a (exact_configuration_evidence_missing); visual-understanding: n/a (exact_configuration_evidence_missing) |
-| mai-code-1.1-flash / high / default | False | primary: n/a (exact_configuration_evidence_missing); visual-understanding: n/a (exact_configuration_evidence_missing) |
-| gemini-3.8-flash / high / default | True | primary: 76.3 (passed); visual-understanding: 0.856069364162 (passed) |
-| gpt-5.4-mini / medium / default | False | primary: n/a (exact_configuration_evidence_missing); visual-understanding: 0.711560693642 (outside_quality_band) |
-| gpt-5.6-terra / medium / default | False | primary: 64.7 (outside_quality_band); visual-understanding: 0.767630057803 (outside_quality_band) |
-| claude-sonnet-5.5 / medium / default | False | primary: n/a (exact_configuration_evidence_missing); visual-understanding: n/a (exact_configuration_evidence_missing) |
-| gpt-5.6-sol / high / default | False | primary: 77.2 (passed); visual-understanding: 0.818497109827 (outside_quality_band) |
-| gpt-6-luna / medium / default | False | primary: n/a (exact_configuration_evidence_missing); visual-understanding: 0.778612716763 (outside_quality_band) |
-| claude-sonnet-5 / high / default | False | primary: n/a (exact_configuration_evidence_missing); visual-understanding: n/a (exact_configuration_evidence_missing) |
-| claude-opus-5.5 / high / default | False | primary: n/a (exact_configuration_evidence_missing); visual-understanding: n/a (exact_configuration_evidence_missing) |
-| gpt-6.1-sol / medium / default | False | primary: n/a (exact_configuration_evidence_missing); visual-understanding: 0.839306358382 (passed) |
-| gpt-5.4 / medium / default | False | primary: n/a (exact_configuration_evidence_missing); visual-understanding: n/a (exact_configuration_evidence_missing) |
-| mai-code-1.1-flash / medium / default | False | primary: n/a (exact_configuration_evidence_missing); visual-understanding: n/a (exact_configuration_evidence_missing) |
-| gpt-5.4 / high / default | False | primary: n/a (exact_configuration_evidence_missing); visual-understanding: n/a (exact_configuration_evidence_missing) |
-| gpt-5.6-luna / medium / default | False | primary: 50.7 (outside_quality_band); visual-understanding: 0.75838150289 (outside_quality_band) |
-| gpt-6.1-sol / high / default | False | primary: n/a (exact_configuration_evidence_missing); visual-understanding: 0.849132947977 (passed) |
-| gpt-6-sol / high / default | False | primary: n/a (exact_configuration_evidence_missing); visual-understanding: 0.819653179191 (outside_quality_band) |
-| gpt-5.6-terra / high / default | False | primary: 67.1 (outside_quality_band); visual-understanding: 0.790751445087 (outside_quality_band) |
-| claude-opus-5 / medium / default | False | primary: 74.3 (passed); visual-understanding: 0.816184971098 (outside_quality_band) |
-| claude-sonnet-5.5 / high / default | False | primary: n/a (exact_configuration_evidence_missing); visual-understanding: n/a (exact_configuration_evidence_missing) |
-| gpt-6-luna / high / default | False | primary: n/a (exact_configuration_evidence_missing); visual-understanding: 0.775144508671 (outside_quality_band) |
-| gpt-5.4-mini / high / default | False | primary: n/a (exact_configuration_evidence_missing); visual-understanding: n/a (exact_configuration_evidence_missing) |
+| grok-4.6 / high / default | False | primary: 76.8 (passed); visual-understanding: n/a (insufficient_comparison_evidence) |
+| gpt-6-sol / medium / default | False | primary: n/a (exact_configuration_evidence_missing); visual-understanding: n/a (insufficient_comparison_evidence) |
+| claude-sonnet-5 / medium / default | False | primary: n/a (exact_configuration_evidence_missing); visual-understanding: n/a (insufficient_comparison_evidence) |
+| gemini-3.8-flash / medium / default | False | primary: 74.1 (outside_quality_band); visual-understanding: n/a (insufficient_comparison_evidence) |
+| claude-opus-5 / high / default | False | primary: 76.5 (passed); visual-understanding: n/a (insufficient_comparison_evidence) |
+| claude-opus-5.5 / medium / default | False | primary: n/a (exact_configuration_evidence_missing); visual-understanding: n/a (insufficient_comparison_evidence) |
+| claude-opus-4.8 / medium / default | False | primary: n/a (exact_configuration_evidence_missing); visual-understanding: n/a (insufficient_comparison_evidence) |
+| gpt-5.6-luna / high / default | False | primary: 63.3 (outside_quality_band); visual-understanding: n/a (insufficient_comparison_evidence) |
+| gpt-5.6-sol / medium / default | False | primary: 76.3 (passed); visual-understanding: n/a (insufficient_comparison_evidence) |
+| claude-haiku-4.5 / none / default | False | primary: n/a (exact_configuration_evidence_missing); visual-understanding: n/a (insufficient_comparison_evidence) |
+| claude-opus-4.8 / high / default | False | primary: n/a (exact_configuration_evidence_missing); visual-understanding: n/a (insufficient_comparison_evidence) |
+| mai-code-1.1-flash / high / default | False | primary: n/a (exact_configuration_evidence_missing); visual-understanding: n/a (insufficient_comparison_evidence) |
+| gemini-3.8-flash / high / default | False | primary: 76.3 (passed); visual-understanding: n/a (insufficient_comparison_evidence) |
+| gpt-5.4-mini / medium / default | False | primary: n/a (exact_configuration_evidence_missing); visual-understanding: n/a (insufficient_comparison_evidence) |
+| gpt-5.6-terra / medium / default | False | primary: 64.7 (outside_quality_band); visual-understanding: n/a (insufficient_comparison_evidence) |
+| claude-sonnet-5.5 / medium / default | False | primary: n/a (exact_configuration_evidence_missing); visual-understanding: n/a (insufficient_comparison_evidence) |
+| gpt-5.6-sol / high / default | False | primary: 77.2 (passed); visual-understanding: n/a (insufficient_comparison_evidence) |
+| gpt-6-luna / medium / default | False | primary: n/a (exact_configuration_evidence_missing); visual-understanding: n/a (insufficient_comparison_evidence) |
+| grok-4.6 / medium / default | False | primary: 74.4 (passed); visual-understanding: n/a (insufficient_comparison_evidence) |
+| claude-sonnet-5 / high / default | False | primary: n/a (exact_configuration_evidence_missing); visual-understanding: n/a (insufficient_comparison_evidence) |
+| claude-opus-5.5 / high / default | False | primary: n/a (exact_configuration_evidence_missing); visual-understanding: n/a (insufficient_comparison_evidence) |
+| gpt-6.1-sol / medium / default | False | primary: n/a (exact_configuration_evidence_missing); visual-understanding: n/a (insufficient_comparison_evidence) |
+| gpt-5.4 / medium / default | False | primary: n/a (exact_configuration_evidence_missing); visual-understanding: n/a (insufficient_comparison_evidence) |
+| mai-code-1.1-flash / medium / default | False | primary: n/a (exact_configuration_evidence_missing); visual-understanding: n/a (insufficient_comparison_evidence) |
+| gpt-5.4 / high / default | False | primary: n/a (exact_configuration_evidence_missing); visual-understanding: n/a (insufficient_comparison_evidence) |
+| gpt-5.6-luna / medium / default | False | primary: 50.7 (outside_quality_band); visual-understanding: n/a (insufficient_comparison_evidence) |
+| gpt-6.1-sol / high / default | False | primary: n/a (exact_configuration_evidence_missing); visual-understanding: n/a (insufficient_comparison_evidence) |
+| gpt-6-sol / high / default | False | primary: n/a (exact_configuration_evidence_missing); visual-understanding: n/a (insufficient_comparison_evidence) |
+| gpt-5.6-terra / high / default | False | primary: 67.1 (outside_quality_band); visual-understanding: n/a (insufficient_comparison_evidence) |
+| claude-opus-5 / medium / default | False | primary: 74.3 (passed); visual-understanding: n/a (insufficient_comparison_evidence) |
+| claude-sonnet-5.5 / high / default | False | primary: n/a (exact_configuration_evidence_missing); visual-understanding: n/a (insufficient_comparison_evidence) |
+| gpt-6-luna / high / default | False | primary: n/a (exact_configuration_evidence_missing); visual-understanding: n/a (insufficient_comparison_evidence) |
+| gpt-5.4-mini / high / default | False | primary: n/a (exact_configuration_evidence_missing); visual-understanding: n/a (insufficient_comparison_evidence) |
+
+**Current configuration retained, not certified:** no role-qualified recommendation is available. No requirements are relaxed to fill the profile, and force cannot bypass missing coverage or an empty intersection.
 
 **Supporting evidence** (informational only; for the recommended configuration, not necessarily the applied configuration):
 None: the configured role dimensions are binding qualification requirements.
@@ -1845,112 +1731,79 @@ None: the configured role dimensions are binding qualification requirements.
 
 | Configuration (model / effort / context) | Budget/capability eligible | Exclusions | Advisory warnings | Price tier | Input / output USD per M | Price verified | Capability as-of |
 |---|---|---|---|---|---|---|---|
-| claude-haiku-4.5 / none / default | True | n/a | n/a | default | 1 / 5 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| claude-opus-4.7 / high / default | False | capabilities_stale, vision_unknown | n/a | default | 5 / 25 | 2026-10-01T14:12:07.5067231Z | 2026-07-30 |
-| claude-opus-4.7 / medium / default | False | capabilities_stale, vision_unknown | n/a | default | 5 / 25 | 2026-10-01T14:12:07.5067231Z | 2026-07-30 |
-| claude-opus-4.8 / high / default | True | n/a | n/a | default | 5 / 25 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| claude-opus-4.8 / medium / default | True | n/a | n/a | default | 5 / 25 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| claude-opus-4.8-fast / high / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| claude-opus-4.8-fast / medium / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| claude-opus-5 / high / default | True | n/a | n/a | default | 5 / 25 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| claude-opus-5 / medium / default | True | n/a | n/a | default | 5 / 25 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| claude-opus-5.5 / high / default | True | n/a | n/a | default | 4 / 20 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| claude-opus-5.5 / medium / default | True | n/a | n/a | default | 4 / 20 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| claude-sonnet-4.6 / high / default | False | capabilities_stale | n/a | default | 3 / 15 | 2026-10-06T06:44:11.6577346Z | 2026-07-30 |
-| claude-sonnet-4.6 / medium / default | False | capabilities_stale | n/a | default | 3 / 15 | 2026-10-06T06:44:11.6577346Z | 2026-07-30 |
-| claude-sonnet-5 / high / default | True | n/a | n/a | default | 2 / 10 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| claude-sonnet-5 / medium / default | True | n/a | n/a | default | 2 / 10 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| claude-sonnet-5.5 / high / default | True | n/a | n/a | default | 2 / 10 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| claude-sonnet-5.5 / medium / default | True | n/a | n/a | default | 2 / 10 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gemini-3.5-flash / high / default | False | capabilities_stale, vision_unknown | n/a | default | 1.5 / 9 | 2026-10-01T14:12:07.5067231Z | 2026-07-30 |
-| gemini-3.5-flash / medium / default | False | capabilities_stale, vision_unknown | n/a | default | 1.5 / 9 | 2026-10-01T14:12:07.5067231Z | 2026-07-30 |
-| gemini-3.6-flash / high / default | False | vision_unknown | n/a | default | 0.75 / 3.75 | 2026-10-01T14:12:07.5067231Z | 2026-09-08 |
-| gemini-3.6-flash / medium / default | False | vision_unknown | n/a | default | 0.75 / 3.75 | 2026-10-01T14:12:07.5067231Z | 2026-09-08 |
-| gemini-3.7-flash / high / default | False | vision_unknown | n/a | default | 0.75 / 3.75 | 2026-10-06T06:44:11.6577346Z | 2026-09-08 |
-| gemini-3.7-flash / medium / default | False | vision_unknown | n/a | default | 0.75 / 3.75 | 2026-10-06T06:44:11.6577346Z | 2026-09-08 |
-| gemini-3.8-flash / high / default | True | n/a | n/a | default | 0.75 / 3.75 | 2026-10-06T06:44:11.6577346Z | 2026-09-08 |
-| gemini-3.8-flash / medium / default | True | n/a | n/a | default | 0.75 / 3.75 | 2026-10-06T06:44:11.6577346Z | 2026-09-08 |
-| gpt-5.3-codex / high / default | False | vision_unknown | n/a | default | 1.75 / 14 | 2026-10-06T06:44:11.6577346Z | 2026-09-08 |
-| gpt-5.3-codex / medium / default | False | vision_unknown | n/a | default | 1.75 / 14 | 2026-10-06T06:44:11.6577346Z | 2026-09-08 |
-| gpt-5.4 / high / default | True | n/a | n/a | default | 2.5 / 15 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-5.4 / medium / default | True | n/a | n/a | default | 2.5 / 15 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-5.4-mini / high / default | True | n/a | n/a | default | 0.75 / 4.5 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-5.4-mini / medium / default | True | n/a | n/a | default | 0.75 / 4.5 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-5.5 / high / default | False | pricing_output_exceeds_ceiling | n/a | default | 5 / 30 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-5.5 / medium / default | False | pricing_output_exceeds_ceiling | n/a | default | 5 / 30 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-5.6-luna / high / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-5.6-luna / medium / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-5.6-sol / high / default | True | n/a | n/a | default | 4 / 20 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-5.6-sol / medium / default | True | n/a | n/a | default | 4 / 20 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-5.6-terra / high / default | True | n/a | n/a | default | 2 / 12 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-5.6-terra / medium / default | True | n/a | n/a | default | 2 / 12 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-6-astra / high / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-6-astra / medium / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-6-luna / high / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-6-luna / medium / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-6-sol / high / default | True | n/a | n/a | default | 2 / 10 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-6-sol / medium / default | True | n/a | n/a | default | 2 / 10 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-6.1-sol / high / default | True | n/a | n/a | default | 2 / 10 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-6.1-sol / medium / default | True | n/a | n/a | default | 2 / 10 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| grok-4.5 / high / default | False | vision_unknown | n/a | default | 2 / 6 | 2026-10-06T06:44:11.6577346Z | 2026-09-08 |
-| grok-4.5 / medium / default | False | vision_unknown | n/a | default | 2 / 6 | 2026-10-06T06:44:11.6577346Z | 2026-09-08 |
-| mai-code-1.1-flash / high / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| mai-code-1.1-flash / medium / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
+| claude-haiku-4.5 / none / default | True | n/a | n/a | default | 1 / 5 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| claude-opus-4.8 / high / default | True | n/a | n/a | default | 5 / 25 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| claude-opus-4.8 / medium / default | True | n/a | n/a | default | 5 / 25 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| claude-opus-4.8-fast / high / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| claude-opus-4.8-fast / medium / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| claude-opus-5 / high / default | True | n/a | n/a | default | 5 / 25 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| claude-opus-5 / medium / default | True | n/a | n/a | default | 5 / 25 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| claude-opus-5.5 / high / default | True | n/a | n/a | default | 4 / 20 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| claude-opus-5.5 / medium / default | True | n/a | n/a | default | 4 / 20 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| claude-sonnet-4.6 / high / default | False | capabilities_stale | n/a | default | 3 / 15 | 2026-10-07T12:25:32.5835199Z | 2026-07-30 |
+| claude-sonnet-4.6 / medium / default | False | capabilities_stale | n/a | default | 3 / 15 | 2026-10-07T12:25:32.5835199Z | 2026-07-30 |
+| claude-sonnet-5 / high / default | True | n/a | n/a | default | 2 / 10 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| claude-sonnet-5 / medium / default | True | n/a | n/a | default | 2 / 10 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| claude-sonnet-5.5 / high / default | True | n/a | n/a | default | 2 / 10 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| claude-sonnet-5.5 / medium / default | True | n/a | n/a | default | 2 / 10 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gemini-3.7-flash / high / default | False | vision_unknown | n/a | default | 0.75 / 3.75 | 2026-10-07T12:25:32.5835199Z | 2026-09-08 |
+| gemini-3.7-flash / medium / default | False | vision_unknown | n/a | default | 0.75 / 3.75 | 2026-10-07T12:25:32.5835199Z | 2026-09-08 |
+| gemini-3.8-flash / high / default | True | n/a | n/a | default | 0.75 / 3.75 | 2026-10-07T12:25:32.5835199Z | 2026-09-08 |
+| gemini-3.8-flash / medium / default | True | n/a | n/a | default | 0.75 / 3.75 | 2026-10-07T12:25:32.5835199Z | 2026-09-08 |
+| gpt-5.3-codex / high / default | False | vision_unknown | n/a | default | 1.75 / 14 | 2026-10-07T12:25:32.5835199Z | 2026-09-08 |
+| gpt-5.3-codex / medium / default | False | vision_unknown | n/a | default | 1.75 / 14 | 2026-10-07T12:25:32.5835199Z | 2026-09-08 |
+| gpt-5.4 / high / default | True | n/a | n/a | default | 2.5 / 15 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-5.4 / medium / default | True | n/a | n/a | default | 2.5 / 15 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-5.4-mini / high / default | True | n/a | n/a | default | 0.75 / 4.5 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-5.4-mini / medium / default | True | n/a | n/a | default | 0.75 / 4.5 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-5.5 / high / default | False | pricing_output_exceeds_ceiling | n/a | default | 5 / 30 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-5.5 / medium / default | False | pricing_output_exceeds_ceiling | n/a | default | 5 / 30 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-5.6-luna / high / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-5.6-luna / medium / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-5.6-sol / high / default | True | n/a | n/a | default | 4 / 20 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-5.6-sol / medium / default | True | n/a | n/a | default | 4 / 20 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-5.6-terra / high / default | True | n/a | n/a | default | 2 / 12 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-5.6-terra / medium / default | True | n/a | n/a | default | 2 / 12 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-6-astra / high / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-6-astra / medium / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-6-luna / high / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-6-luna / medium / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-6-sol / high / default | True | n/a | n/a | default | 2 / 10 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-6-sol / medium / default | True | n/a | n/a | default | 2 / 10 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-6.1-sol / high / default | True | n/a | n/a | default | 2 / 10 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-6.1-sol / medium / default | True | n/a | n/a | default | 2 / 10 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| grok-4.5 / high / default | False | vision_unknown | n/a | default | 2 / 6 | 2026-10-07T12:25:32.5835199Z | 2026-09-08 |
+| grok-4.5 / medium / default | False | vision_unknown | n/a | default | 2 / 6 | 2026-10-07T12:25:32.5835199Z | 2026-09-08 |
+| grok-4.6 / high / default | True | n/a | n/a | default | 2 / 6 | 2026-10-07T12:25:32.5835199Z | 2026-09-08 |
+| grok-4.6 / medium / default | True | n/a | n/a | default | 2 / 6 | 2026-10-07T12:25:32.5835199Z | 2026-09-08 |
+| mai-code-1.1-flash / high / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| mai-code-1.1-flash / medium / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
 
 | Model | Source | Exact alias / source label | Effort | Metric | Score | Publication age unknown | Cached | Harness | Role |
 |---|---|---|---|---|---|---|---|---|---|
-| claude-opus-5 | artificialAnalysis | claude-opus-5-high | high | codingIndex | 76.5 | True | False | source benchmark harness, not Copilot CLI | deciding |
-| claude-opus-5 | artificialAnalysis | claude-opus-5-medium | medium | codingIndex | 74.3 | True | False | source benchmark harness, not Copilot CLI | deciding |
-| gemini-3.5-flash | artificialAnalysis | gemini-3-5-flash | high | codingIndex | 70.1 | True | False | source benchmark harness, not Copilot CLI | deciding |
-| gemini-3.6-flash | artificialAnalysis | gemini-3-6-flash | high | codingIndex | 69.2 | True | False | source benchmark harness, not Copilot CLI | deciding |
-| gemini-3.7-flash | artificialAnalysis | gemini-3-7-flash | high | codingIndex | 76.1 | True | False | source benchmark harness, not Copilot CLI | deciding |
-| gemini-3.7-flash | artificialAnalysis | gemini-3-7-flash-medium | medium | codingIndex | 71.5 | True | False | source benchmark harness, not Copilot CLI | deciding |
-| gemini-3.8-flash | artificialAnalysis | gemini-3-8-flash | high | codingIndex | 76.3 | True | False | source benchmark harness, not Copilot CLI | deciding |
-| gemini-3.8-flash | artificialAnalysis | gemini-3-8-flash-medium | medium | codingIndex | 74.1 | True | False | source benchmark harness, not Copilot CLI | deciding |
-| gpt-5.5 | artificialAnalysis | gpt-5-5-high | high | codingIndex | 71.6 | True | False | source benchmark harness, not Copilot CLI | deciding |
-| gpt-5.5 | artificialAnalysis | gpt-5-5-medium | medium | codingIndex | 71.5 | True | False | source benchmark harness, not Copilot CLI | deciding |
-| gpt-5.6-luna | artificialAnalysis | gpt-5-6-luna-high | high | codingIndex | 63.3 | True | False | source benchmark harness, not Copilot CLI | deciding |
-| gpt-5.6-luna | artificialAnalysis | gpt-5-6-luna-medium | medium | codingIndex | 50.7 | True | False | source benchmark harness, not Copilot CLI | deciding |
-| gpt-5.6-sol | artificialAnalysis | gpt-5-6-sol-high | high | codingIndex | 77.2 | True | False | source benchmark harness, not Copilot CLI | deciding |
-| gpt-5.6-sol | artificialAnalysis | gpt-5-6-sol-medium | medium | codingIndex | 76.3 | True | False | source benchmark harness, not Copilot CLI | deciding |
-| gpt-5.6-terra | artificialAnalysis | gpt-5-6-terra-high | high | codingIndex | 67.1 | True | False | source benchmark harness, not Copilot CLI | deciding |
-| gpt-5.6-terra | artificialAnalysis | gpt-5-6-terra-medium | medium | codingIndex | 64.7 | True | False | source benchmark harness, not Copilot CLI | deciding |
-| gpt-6-astra | artificialAnalysis | gpt-6-astra-high | high | codingIndex | 77.1 | True | False | source benchmark harness, not Copilot CLI | deciding |
-| gpt-6-astra | artificialAnalysis | gpt-6-astra-medium | medium | codingIndex | 76.7 | True | False | source benchmark harness, not Copilot CLI | deciding |
-| grok-4.5 | artificialAnalysis | grok-4-5 | high | codingIndex | 72.4 | True | False | source benchmark harness, not Copilot CLI | deciding |
+| claude-opus-5 | artificialAnalysis | claude-opus-5-high | high | codingIndex | 76.5 | True | False | source benchmark harness, not Copilot CLI | authorized fallback |
+| claude-opus-5 | artificialAnalysis | claude-opus-5-medium | medium | codingIndex | 74.3 | True | False | source benchmark harness, not Copilot CLI | authorized fallback |
+| gemini-3.7-flash | artificialAnalysis | gemini-3-7-flash | high | codingIndex | 76.1 | True | False | source benchmark harness, not Copilot CLI | authorized fallback |
+| gemini-3.7-flash | artificialAnalysis | gemini-3-7-flash-medium | medium | codingIndex | 71.5 | True | False | source benchmark harness, not Copilot CLI | authorized fallback |
+| gemini-3.8-flash | artificialAnalysis | gemini-3-8-flash | high | codingIndex | 76.3 | True | False | source benchmark harness, not Copilot CLI | authorized fallback |
+| gemini-3.8-flash | artificialAnalysis | gemini-3-8-flash-medium | medium | codingIndex | 74.1 | True | False | source benchmark harness, not Copilot CLI | authorized fallback |
+| gpt-5.5 | artificialAnalysis | gpt-5-5-high | high | codingIndex | 71.6 | True | False | source benchmark harness, not Copilot CLI | authorized fallback |
+| gpt-5.5 | artificialAnalysis | gpt-5-5-medium | medium | codingIndex | 71.5 | True | False | source benchmark harness, not Copilot CLI | authorized fallback |
+| gpt-5.6-luna | artificialAnalysis | gpt-5-6-luna-high | high | codingIndex | 63.3 | True | False | source benchmark harness, not Copilot CLI | authorized fallback |
+| gpt-5.6-luna | artificialAnalysis | gpt-5-6-luna-medium | medium | codingIndex | 50.7 | True | False | source benchmark harness, not Copilot CLI | authorized fallback |
+| gpt-5.6-sol | artificialAnalysis | gpt-5-6-sol-high | high | codingIndex | 77.2 | True | False | source benchmark harness, not Copilot CLI | authorized fallback |
+| gpt-5.6-sol | artificialAnalysis | gpt-5-6-sol-medium | medium | codingIndex | 76.3 | True | False | source benchmark harness, not Copilot CLI | authorized fallback |
+| gpt-5.6-terra | artificialAnalysis | gpt-5-6-terra-high | high | codingIndex | 67.1 | True | False | source benchmark harness, not Copilot CLI | authorized fallback |
+| gpt-5.6-terra | artificialAnalysis | gpt-5-6-terra-medium | medium | codingIndex | 64.7 | True | False | source benchmark harness, not Copilot CLI | authorized fallback |
+| gpt-6-astra | artificialAnalysis | gpt-6-astra-high | high | codingIndex | 77.1 | True | False | source benchmark harness, not Copilot CLI | authorized fallback |
+| gpt-6-astra | artificialAnalysis | gpt-6-astra-medium | medium | codingIndex | 76.7 | True | False | source benchmark harness, not Copilot CLI | authorized fallback |
+| grok-4.5 | artificialAnalysis | grok-4-5 | high | codingIndex | 72.4 | True | False | source benchmark harness, not Copilot CLI | authorized fallback |
+| grok-4.6 | artificialAnalysis | grok-4-6 | high | codingIndex | 76.8 | True | False | source benchmark harness, not Copilot CLI | authorized fallback |
+| grok-4.6 | artificialAnalysis | grok-4-6-medium | medium | codingIndex | 74.4 | True | False | source benchmark harness, not Copilot CLI | authorized fallback |
 | claude-sonnet-4.6 | liveBench | claude-sonnet-4-6-thinking-auto-medium-effort | medium | coding | 79.2715 | True | False | source benchmark harness, not Copilot CLI | authorized fallback |
-| gemini-3.5-flash | liveBench | gemini-3.5-flash-high | high | coding | 78.1845 | True | False | source benchmark harness, not Copilot CLI | authorized fallback |
-| gemini-3.6-flash | liveBench | gemini-3.6-flash-high | high | coding | 77.863 | True | False | source benchmark harness, not Copilot CLI | authorized fallback |
 | gemini-3.7-flash | liveBench | gemini-3.7-flash-high | high | coding | 78.8885 | True | False | source benchmark harness, not Copilot CLI | authorized fallback |
 | gemini-3.8-flash | liveBench | gemini-3.8-flash-high | high | coding | 72.489 | True | False | source benchmark harness, not Copilot CLI | authorized fallback |
 | claude-haiku-4.5 | artificialAnalysisComponents | claude-4-5-haiku | none | mmmuPro | 0.551445086705 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| claude-opus-5 | artificialAnalysisComponents | claude-opus-5-high | high | mmmuPro | 0.824277456647 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| claude-opus-5 | artificialAnalysisComponents | claude-opus-5-medium | medium | mmmuPro | 0.816184971098 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| gemini-3.5-flash | artificialAnalysisComponents | gemini-3-5-flash | high | mmmuPro | 0.842774566474 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| gemini-3.5-flash | artificialAnalysisComponents | gemini-3-5-flash-medium | medium | mmmuPro | 0.838728323699 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| gemini-3.6-flash | artificialAnalysisComponents | gemini-3-6-flash | high | mmmuPro | 0.832369942197 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| gemini-3.7-flash | artificialAnalysisComponents | gemini-3-7-flash | high | mmmuPro | 0.854913294798 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| gemini-3.7-flash | artificialAnalysisComponents | gemini-3-7-flash-medium | medium | mmmuPro | 0.847398843931 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| gemini-3.8-flash | artificialAnalysisComponents | gemini-3-8-flash | high | mmmuPro | 0.856069364162 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| gemini-3.8-flash | artificialAnalysisComponents | gemini-3-8-flash-medium | medium | mmmuPro | 0.842196531792 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| gpt-5.4-mini | artificialAnalysisComponents | gpt-5-4-mini-medium | medium | mmmuPro | 0.711560693642 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| gpt-5.5 | artificialAnalysisComponents | gpt-5-5-high | high | mmmuPro | 0.81098265896 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| gpt-5.5 | artificialAnalysisComponents | gpt-5-5-medium | medium | mmmuPro | 0.811560693642 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| gpt-5.6-luna | artificialAnalysisComponents | gpt-5-6-luna-high | high | mmmuPro | 0.775722543353 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| gpt-5.6-luna | artificialAnalysisComponents | gpt-5-6-luna-medium | medium | mmmuPro | 0.75838150289 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| gpt-5.6-sol | artificialAnalysisComponents | gpt-5-6-sol-high | high | mmmuPro | 0.818497109827 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| gpt-5.6-sol | artificialAnalysisComponents | gpt-5-6-sol-medium | medium | mmmuPro | 0.81387283237 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| gpt-5.6-terra | artificialAnalysisComponents | gpt-5-6-terra-high | high | mmmuPro | 0.790751445087 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| gpt-5.6-terra | artificialAnalysisComponents | gpt-5-6-terra-medium | medium | mmmuPro | 0.767630057803 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| gpt-6-astra | artificialAnalysisComponents | gpt-6-astra-high | high | mmmuPro | 0.864161849711 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| gpt-6-astra | artificialAnalysisComponents | gpt-6-astra-medium | medium | mmmuPro | 0.850867052023 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| gpt-6-luna | artificialAnalysisComponents | gpt-6-luna-high | high | mmmuPro | 0.775144508671 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| gpt-6-luna | artificialAnalysisComponents | gpt-6-luna-medium | medium | mmmuPro | 0.778612716763 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| gpt-6-sol | artificialAnalysisComponents | gpt-6-sol-high | high | mmmuPro | 0.819653179191 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| gpt-6-sol | artificialAnalysisComponents | gpt-6-sol-medium | medium | mmmuPro | 0.804046242775 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| gpt-6.1-sol | artificialAnalysisComponents | gpt-6-1-sol-high | high | mmmuPro | 0.849132947977 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| gpt-6.1-sol | artificialAnalysisComponents | gpt-6-1-sol-medium | medium | mmmuPro | 0.839306358382 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| grok-4.5 | artificialAnalysisComponents | grok-4-5 | high | mmmuPro | 0.804046242775 | True | False | source benchmark harness, not Copilot CLI | qualification route |
 
 Evidence gaps are grouped by affected profile in [Coverage and exclusions](#coverage-and-exclusions).
 
@@ -1976,7 +1829,7 @@ References are fixed before intersecting dimensions. Missing evidence is not zer
 
 | Required dimension | Selected metric | Comparison models | Reference configuration | Reference score | Allowed gap | Minimum score | Cached | Results published |
 |---|---|---|---|---|---|---|---|---|
-| primary | artificialAnalysisComponents.automationBench | 6 | gpt-6-sol / low / default | 0.538899927847 | 0 | 0.538899927847 | False | n/a |
+| primary | n/a | 0 | n/a | n/a | n/a | n/a | n/a | n/a |
 | instruction-following | n/a | 0 | n/a | n/a | n/a | n/a | n/a | n/a |
 
 primary routes: AutomationBench-AA > EnterpriseOps-Gym-AA.
@@ -1989,19 +1842,19 @@ LiveBench Instruction Following: Instruction following, not end-to-end workflow 
 
 | Budget/capability-eligible configuration | Role qualified | Required evidence checks |
 |---|---|---|
-| mai-code-1.1-flash / low / default | False | primary: n/a (exact_configuration_evidence_missing); instruction-following: n/a (insufficient_comparison_evidence) |
-| claude-haiku-4.5 / none / default | False | primary: n/a (exact_configuration_evidence_missing); instruction-following: n/a (insufficient_comparison_evidence) |
-| gpt-6-luna / low / default | False | primary: 0.120491872727 (outside_quality_band); instruction-following: n/a (insufficient_comparison_evidence) |
-| gpt-6.1-sol / low / default | False | primary: 0.525708896475 (outside_quality_band); instruction-following: n/a (insufficient_comparison_evidence) |
-| gpt-5.6-luna / low / default | False | primary: 0.116921622583 (outside_quality_band); instruction-following: n/a (insufficient_comparison_evidence) |
-| claude-sonnet-5 / low / default | False | primary: 0.19901936569 (outside_quality_band); instruction-following: n/a (insufficient_comparison_evidence) |
-| gemini-3.7-flash / low / default | False | primary: n/a (exact_configuration_evidence_missing); instruction-following: n/a (insufficient_comparison_evidence) |
-| gemini-3.6-flash / low / default | False | primary: n/a (exact_configuration_evidence_missing); instruction-following: n/a (insufficient_comparison_evidence) |
-| grok-4.5 / low / default | False | primary: n/a (exact_configuration_evidence_missing); instruction-following: n/a (insufficient_comparison_evidence) |
-| gpt-5.4-mini / low / default | False | primary: n/a (exact_configuration_evidence_missing); instruction-following: n/a (insufficient_comparison_evidence) |
-| gemini-3.8-flash / low / default | False | primary: 0.365094046149 (outside_quality_band); instruction-following: n/a (insufficient_comparison_evidence) |
-| gpt-6-sol / low / default | False | primary: 0.538899927847 (passed); instruction-following: n/a (insufficient_comparison_evidence) |
-| claude-sonnet-5.5 / low / default | False | primary: n/a (exact_configuration_evidence_missing); instruction-following: n/a (insufficient_comparison_evidence) |
+| mai-code-1.1-flash / low / default | False | primary: n/a (insufficient_comparison_evidence); instruction-following: n/a (insufficient_comparison_evidence) |
+| claude-haiku-4.5 / none / default | False | primary: n/a (insufficient_comparison_evidence); instruction-following: n/a (insufficient_comparison_evidence) |
+| gpt-6-luna / low / default | False | primary: n/a (insufficient_comparison_evidence); instruction-following: n/a (insufficient_comparison_evidence) |
+| gpt-6.1-sol / low / default | False | primary: n/a (insufficient_comparison_evidence); instruction-following: n/a (insufficient_comparison_evidence) |
+| gpt-5.6-luna / low / default | False | primary: n/a (insufficient_comparison_evidence); instruction-following: n/a (insufficient_comparison_evidence) |
+| claude-sonnet-5 / low / default | False | primary: n/a (insufficient_comparison_evidence); instruction-following: n/a (insufficient_comparison_evidence) |
+| gemini-3.7-flash / low / default | False | primary: n/a (insufficient_comparison_evidence); instruction-following: n/a (insufficient_comparison_evidence) |
+| grok-4.5 / low / default | False | primary: n/a (insufficient_comparison_evidence); instruction-following: n/a (insufficient_comparison_evidence) |
+| grok-4.6 / low / default | False | primary: n/a (insufficient_comparison_evidence); instruction-following: n/a (insufficient_comparison_evidence) |
+| gpt-5.4-mini / low / default | False | primary: n/a (insufficient_comparison_evidence); instruction-following: n/a (insufficient_comparison_evidence) |
+| gemini-3.8-flash / low / default | False | primary: n/a (insufficient_comparison_evidence); instruction-following: n/a (insufficient_comparison_evidence) |
+| gpt-6-sol / low / default | False | primary: n/a (insufficient_comparison_evidence); instruction-following: n/a (insufficient_comparison_evidence) |
+| claude-sonnet-5.5 / low / default | False | primary: n/a (insufficient_comparison_evidence); instruction-following: n/a (insufficient_comparison_evidence) |
 
 **Current configuration retained, not certified:** no role-qualified recommendation is available. No requirements are relaxed to fill the profile, and force cannot bypass missing coverage or an empty intersection.
 
@@ -2013,50 +1866,34 @@ None: the configured role dimensions are binding qualification requirements.
 
 | Configuration (model / effort / context) | Budget/capability eligible | Exclusions | Advisory warnings | Price tier | Input / output USD per M | Price verified | Capability as-of |
 |---|---|---|---|---|---|---|---|
-| claude-haiku-4.5 / none / default | True | n/a | n/a | default | 1 / 5 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| claude-opus-4.7 / low / default | False | capabilities_stale, pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-10-01T14:12:07.5067231Z | 2026-07-30 |
-| claude-opus-4.8 / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| claude-opus-4.8-fast / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| claude-opus-5 / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| claude-opus-5.5 / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 4 / 20 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| claude-sonnet-4.6 / low / default | False | capabilities_stale, pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 3 / 15 | 2026-10-06T06:44:11.6577346Z | 2026-07-30 |
-| claude-sonnet-5 / low / default | True | n/a | n/a | default | 2 / 10 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| claude-sonnet-5.5 / low / default | True | n/a | n/a | default | 2 / 10 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gemini-3.5-flash / low / default | False | capabilities_stale | n/a | default | 1.5 / 9 | 2026-10-01T14:12:07.5067231Z | 2026-07-30 |
-| gemini-3.6-flash / low / default | True | n/a | n/a | default | 0.75 / 3.75 | 2026-10-01T14:12:07.5067231Z | 2026-09-08 |
-| gemini-3.7-flash / low / default | True | n/a | n/a | default | 0.75 / 3.75 | 2026-10-06T06:44:11.6577346Z | 2026-09-08 |
-| gemini-3.8-flash / low / default | True | n/a | n/a | default | 0.75 / 3.75 | 2026-10-06T06:44:11.6577346Z | 2026-09-08 |
-| gpt-5.3-codex / low / default | False | pricing_output_exceeds_ceiling | n/a | default | 1.75 / 14 | 2026-10-06T06:44:11.6577346Z | 2026-09-08 |
-| gpt-5.4 / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 2.5 / 15 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-5.4-mini / low / default | True | n/a | n/a | default | 0.75 / 4.5 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-5.5 / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 30 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-5.6-luna / low / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-5.6-sol / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 4 / 20 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-5.6-terra / low / default | False | pricing_output_exceeds_ceiling | n/a | default | 2 / 12 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-6-astra / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-6-luna / low / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-6-sol / low / default | True | n/a | n/a | default | 2 / 10 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-6.1-sol / low / default | True | n/a | n/a | default | 2 / 10 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| grok-4.5 / low / default | True | n/a | n/a | default | 2 / 6 | 2026-10-06T06:44:11.6577346Z | 2026-09-08 |
-| mai-code-1.1-flash / low / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
+| claude-haiku-4.5 / none / default | True | n/a | n/a | default | 1 / 5 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| claude-opus-4.8 / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| claude-opus-4.8-fast / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| claude-opus-5 / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| claude-opus-5.5 / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 4 / 20 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| claude-sonnet-4.6 / low / default | False | capabilities_stale, pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 3 / 15 | 2026-10-07T12:25:32.5835199Z | 2026-07-30 |
+| claude-sonnet-5 / low / default | True | n/a | n/a | default | 2 / 10 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| claude-sonnet-5.5 / low / default | True | n/a | n/a | default | 2 / 10 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gemini-3.7-flash / low / default | True | n/a | n/a | default | 0.75 / 3.75 | 2026-10-07T12:25:32.5835199Z | 2026-09-08 |
+| gemini-3.8-flash / low / default | True | n/a | n/a | default | 0.75 / 3.75 | 2026-10-07T12:25:32.5835199Z | 2026-09-08 |
+| gpt-5.3-codex / low / default | False | pricing_output_exceeds_ceiling | n/a | default | 1.75 / 14 | 2026-10-07T12:25:32.5835199Z | 2026-09-08 |
+| gpt-5.4 / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 2.5 / 15 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-5.4-mini / low / default | True | n/a | n/a | default | 0.75 / 4.5 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-5.5 / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 30 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-5.6-luna / low / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-5.6-sol / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 4 / 20 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-5.6-terra / low / default | False | pricing_output_exceeds_ceiling | n/a | default | 2 / 12 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-6-astra / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-6-luna / low / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-6-sol / low / default | True | n/a | n/a | default | 2 / 10 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-6.1-sol / low / default | True | n/a | n/a | default | 2 / 10 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| grok-4.5 / low / default | True | n/a | n/a | default | 2 / 6 | 2026-10-07T12:25:32.5835199Z | 2026-09-08 |
+| grok-4.6 / low / default | True | n/a | n/a | default | 2 / 6 | 2026-10-07T12:25:32.5835199Z | 2026-09-08 |
+| mai-code-1.1-flash / low / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
 
 | Model | Source | Exact alias / source label | Effort | Metric | Score | Publication age unknown | Cached | Harness | Role |
 |---|---|---|---|---|---|---|---|---|---|
-| claude-opus-5 | artificialAnalysisComponents | claude-opus-5-low | low | automationBench | 0.51790662987 | True | False | source benchmark harness, not Copilot CLI | authorized fallback |
-| claude-sonnet-5 | artificialAnalysisComponents | claude-sonnet-5-low | low | automationBench | 0.19901936569 | True | False | source benchmark harness, not Copilot CLI | authorized fallback |
-| gemini-3.8-flash | artificialAnalysisComponents | gemini-3-8-flash-low | low | automationBench | 0.365094046149 | True | False | source benchmark harness, not Copilot CLI | authorized fallback |
-| gpt-5.6-luna | artificialAnalysisComponents | gpt-5-6-luna-low | low | automationBench | 0.116921622583 | True | False | source benchmark harness, not Copilot CLI | authorized fallback |
-| gpt-5.6-sol | artificialAnalysisComponents | gpt-5-6-sol-low | low | automationBench | 0.409856701134 | True | False | source benchmark harness, not Copilot CLI | authorized fallback |
-| gpt-5.6-terra | artificialAnalysisComponents | gpt-5-6-terra-low | low | automationBench | 0.29106376138 | True | False | source benchmark harness, not Copilot CLI | authorized fallback |
-| gpt-6-astra | artificialAnalysisComponents | gpt-6-astra-low | low | automationBench | 0.590967261045 | True | False | source benchmark harness, not Copilot CLI | authorized fallback |
-| gpt-6-luna | artificialAnalysisComponents | gpt-6-luna-low | low | automationBench | 0.120491872727 | True | False | source benchmark harness, not Copilot CLI | authorized fallback |
-| gpt-6-sol | artificialAnalysisComponents | gpt-6-sol-low | low | automationBench | 0.538899927847 | True | False | source benchmark harness, not Copilot CLI | authorized fallback |
-| gpt-6.1-sol | artificialAnalysisComponents | gpt-6-1-sol-low | low | automationBench | 0.525708896475 | True | False | source benchmark harness, not Copilot CLI | authorized fallback |
 | claude-haiku-4.5 | artificialAnalysisComponents | claude-4-5-haiku | none | ifbench | 0.420408163265 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| gpt-5.4 | artificialAnalysisComponents | gpt-5-4-low | low | ifbench | 0.659183673469 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| gpt-5.5 | artificialAnalysisComponents | gpt-5-5-low | low | ifbench | 0.643537414966 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| gpt-5.6-sol | artificialAnalysisComponents | gpt-5-6-sol-low | low | ifbench | 0.665306122449 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| gpt-5.6-terra | artificialAnalysisComponents | gpt-5-6-terra-low | low | ifbench | 0.596598639456 | True | False | source benchmark harness, not Copilot CLI | qualification route |
 
 Evidence gaps are grouped by affected profile in [Coverage and exclusions](#coverage-and-exclusions).
 
@@ -2082,7 +1919,7 @@ References are fixed before intersecting dimensions. Missing evidence is not zer
 
 | Required dimension | Selected metric | Comparison models | Reference configuration | Reference score | Allowed gap | Minimum score | Cached | Results published |
 |---|---|---|---|---|---|---|---|---|
-| primary | artificialAnalysis.intelligenceIndex | 8 | gpt-6.1-sol / low / default | 42.1 | 3 | 39.1 | False | n/a |
+| primary | artificialAnalysis.intelligenceIndex | 9 | gpt-6.1-sol / low / default | 42.1 | 3 | 39.1 | False | n/a |
 | instruction-following | n/a | 0 | n/a | n/a | n/a | n/a | n/a | n/a |
 
 primary routes: AA Intelligence Index > LiveBench Reasoning.
@@ -2102,8 +1939,8 @@ LiveBench Instruction Following: Instruction following, not end-to-end workflow 
 | gpt-5.6-luna / low / default | False | primary: 21 (outside_quality_band); instruction-following: n/a (insufficient_comparison_evidence) |
 | claude-sonnet-5 / low / default | False | primary: 24.3 (outside_quality_band); instruction-following: n/a (insufficient_comparison_evidence) |
 | gemini-3.7-flash / low / default | False | primary: 36.9 (outside_quality_band); instruction-following: n/a (insufficient_comparison_evidence) |
-| gemini-3.6-flash / low / default | False | primary: n/a (exact_configuration_evidence_missing); instruction-following: n/a (insufficient_comparison_evidence) |
 | grok-4.5 / low / default | False | primary: n/a (exact_configuration_evidence_missing); instruction-following: n/a (insufficient_comparison_evidence) |
+| grok-4.6 / low / default | False | primary: 35.1 (outside_quality_band); instruction-following: n/a (insufficient_comparison_evidence) |
 | gpt-5.4-mini / low / default | False | primary: n/a (exact_configuration_evidence_missing); instruction-following: n/a (insufficient_comparison_evidence) |
 | gemini-3.8-flash / low / default | False | primary: 33.5 (outside_quality_band); instruction-following: n/a (insufficient_comparison_evidence) |
 | gpt-6-sol / low / default | False | primary: 34.2 (outside_quality_band); instruction-following: n/a (insufficient_comparison_evidence) |
@@ -2119,32 +1956,30 @@ None: the configured role dimensions are binding qualification requirements.
 
 | Configuration (model / effort / context) | Budget/capability eligible | Exclusions | Advisory warnings | Price tier | Input / output USD per M | Price verified | Capability as-of |
 |---|---|---|---|---|---|---|---|
-| claude-haiku-4.5 / none / default | True | n/a | n/a | default | 1 / 5 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| claude-opus-4.7 / low / default | False | capabilities_stale, pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-10-01T14:12:07.5067231Z | 2026-07-30 |
-| claude-opus-4.8 / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| claude-opus-4.8-fast / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| claude-opus-5 / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| claude-opus-5.5 / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 4 / 20 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| claude-sonnet-4.6 / low / default | False | capabilities_stale, pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 3 / 15 | 2026-10-06T06:44:11.6577346Z | 2026-07-30 |
-| claude-sonnet-5 / low / default | True | n/a | n/a | default | 2 / 10 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| claude-sonnet-5.5 / low / default | True | n/a | n/a | default | 2 / 10 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gemini-3.5-flash / low / default | False | capabilities_stale | n/a | default | 1.5 / 9 | 2026-10-01T14:12:07.5067231Z | 2026-07-30 |
-| gemini-3.6-flash / low / default | True | n/a | n/a | default | 0.75 / 3.75 | 2026-10-01T14:12:07.5067231Z | 2026-09-08 |
-| gemini-3.7-flash / low / default | True | n/a | n/a | default | 0.75 / 3.75 | 2026-10-06T06:44:11.6577346Z | 2026-09-08 |
-| gemini-3.8-flash / low / default | True | n/a | n/a | default | 0.75 / 3.75 | 2026-10-06T06:44:11.6577346Z | 2026-09-08 |
-| gpt-5.3-codex / low / default | False | pricing_output_exceeds_ceiling | n/a | default | 1.75 / 14 | 2026-10-06T06:44:11.6577346Z | 2026-09-08 |
-| gpt-5.4 / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 2.5 / 15 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-5.4-mini / low / default | True | n/a | n/a | default | 0.75 / 4.5 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-5.5 / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 30 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-5.6-luna / low / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-5.6-sol / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 4 / 20 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-5.6-terra / low / default | False | pricing_output_exceeds_ceiling | n/a | default | 2 / 12 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-6-astra / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-6-luna / low / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-6-sol / low / default | True | n/a | n/a | default | 2 / 10 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| gpt-6.1-sol / low / default | True | n/a | n/a | default | 2 / 10 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
-| grok-4.5 / low / default | True | n/a | n/a | default | 2 / 6 | 2026-10-06T06:44:11.6577346Z | 2026-09-08 |
-| mai-code-1.1-flash / low / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-10-06T06:44:11.6577346Z | 2026-09-30T07:49:55.357Z |
+| claude-haiku-4.5 / none / default | True | n/a | n/a | default | 1 / 5 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| claude-opus-4.8 / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| claude-opus-4.8-fast / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| claude-opus-5 / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| claude-opus-5.5 / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 4 / 20 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| claude-sonnet-4.6 / low / default | False | capabilities_stale, pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 3 / 15 | 2026-10-07T12:25:32.5835199Z | 2026-07-30 |
+| claude-sonnet-5 / low / default | True | n/a | n/a | default | 2 / 10 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| claude-sonnet-5.5 / low / default | True | n/a | n/a | default | 2 / 10 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gemini-3.7-flash / low / default | True | n/a | n/a | default | 0.75 / 3.75 | 2026-10-07T12:25:32.5835199Z | 2026-09-08 |
+| gemini-3.8-flash / low / default | True | n/a | n/a | default | 0.75 / 3.75 | 2026-10-07T12:25:32.5835199Z | 2026-09-08 |
+| gpt-5.3-codex / low / default | False | pricing_output_exceeds_ceiling | n/a | default | 1.75 / 14 | 2026-10-07T12:25:32.5835199Z | 2026-09-08 |
+| gpt-5.4 / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 2.5 / 15 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-5.4-mini / low / default | True | n/a | n/a | default | 0.75 / 4.5 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-5.5 / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 30 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-5.6-luna / low / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-5.6-sol / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 4 / 20 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-5.6-terra / low / default | False | pricing_output_exceeds_ceiling | n/a | default | 2 / 12 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-6-astra / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-6-luna / low / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-6-sol / low / default | True | n/a | n/a | default | 2 / 10 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| gpt-6.1-sol / low / default | True | n/a | n/a | default | 2 / 10 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
+| grok-4.5 / low / default | True | n/a | n/a | default | 2 / 6 | 2026-10-07T12:25:32.5835199Z | 2026-09-08 |
+| grok-4.6 / low / default | True | n/a | n/a | default | 2 / 6 | 2026-10-07T12:25:32.5835199Z | 2026-09-08 |
+| mai-code-1.1-flash / low / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-10-07T12:25:32.5835199Z | 2026-10-07T12:21:37.186Z |
 
 | Model | Source | Exact alias / source label | Effort | Metric | Score | Publication age unknown | Cached | Harness | Role |
 |---|---|---|---|---|---|---|---|---|---|
@@ -2162,11 +1997,8 @@ None: the configured role dimensions are binding qualification requirements.
 | gpt-6-luna | artificialAnalysis | gpt-6-luna-low | low | intelligenceIndex | 21.5 | True | False | source benchmark harness, not Copilot CLI | authorized fallback |
 | gpt-6-sol | artificialAnalysis | gpt-6-sol-low | low | intelligenceIndex | 34.2 | True | False | source benchmark harness, not Copilot CLI | authorized fallback |
 | gpt-6.1-sol | artificialAnalysis | gpt-6-1-sol-low | low | intelligenceIndex | 42.1 | True | False | source benchmark harness, not Copilot CLI | authorized fallback |
+| grok-4.6 | artificialAnalysis | grok-4-6-low | low | intelligenceIndex | 35.1 | True | False | source benchmark harness, not Copilot CLI | authorized fallback |
 | claude-haiku-4.5 | artificialAnalysisComponents | claude-4-5-haiku | none | ifbench | 0.420408163265 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| gpt-5.4 | artificialAnalysisComponents | gpt-5-4-low | low | ifbench | 0.659183673469 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| gpt-5.5 | artificialAnalysisComponents | gpt-5-5-low | low | ifbench | 0.643537414966 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| gpt-5.6-sol | artificialAnalysisComponents | gpt-5-6-sol-low | low | ifbench | 0.665306122449 | True | False | source benchmark harness, not Copilot CLI | qualification route |
-| gpt-5.6-terra | artificialAnalysisComponents | gpt-5-6-terra-low | low | ifbench | 0.596598639456 | True | False | source benchmark harness, not Copilot CLI | qualification route |
 
 Evidence gaps are grouped by affected profile in [Coverage and exclusions](#coverage-and-exclusions).
 
