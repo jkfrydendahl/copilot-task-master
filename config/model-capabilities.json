@@ -1,6 +1,6 @@
 {
   "freshnessThresholdDays": 60,
-  "generatedDate": "2026-09-30",
+  "generatedDate": "2026-10-07",
   "models": {
     "claude-fable-5": {
       "asOf": "2026-07-30",
@@ -10,14 +10,14 @@
       "vision": null
     },
     "claude-haiku-4.5": {
-      "capabilitySource": "copilot-sdk models.list; authenticated runtime 1.0.85",
+      "vision": true,
       "visionSource": "copilot-sdk models.list; authenticated runtime 1.0.85",
+      "capabilitySource": "copilot-sdk models.list; authenticated runtime 1.0.85",
       "supportedEfforts": [],
-      "asOf": "2026-09-30T07:49:55.357Z",
+      "asOf": "2026-10-07T12:21:37.186Z",
       "supportedContexts": [
         "default"
       ],
-      "vision": true,
       "effortMode": "unsupported"
     },
     "claude-opus-4.5": {
@@ -69,8 +69,9 @@
       "vision": null
     },
     "claude-opus-4.8": {
-      "capabilitySource": "copilot-sdk models.list; authenticated runtime 1.0.85",
+      "vision": true,
       "visionSource": "copilot-sdk models.list; authenticated runtime 1.0.85",
+      "capabilitySource": "copilot-sdk models.list; authenticated runtime 1.0.85",
       "supportedEfforts": [
         "low",
         "medium",
@@ -78,17 +79,17 @@
         "xhigh",
         "max"
       ],
-      "asOf": "2026-09-30T07:49:55.357Z",
+      "asOf": "2026-10-07T12:21:37.186Z",
       "supportedContexts": [
         "default",
         "long_context"
       ],
-      "vision": true,
       "effortMode": "supported"
     },
     "claude-opus-4.8-fast": {
-      "capabilitySource": "copilot-sdk models.list; authenticated runtime 1.0.85",
+      "vision": true,
       "visionSource": "copilot-sdk models.list; authenticated runtime 1.0.85",
+      "capabilitySource": "copilot-sdk models.list; authenticated runtime 1.0.85",
       "supportedEfforts": [
         "low",
         "medium",
@@ -96,17 +97,17 @@
         "xhigh",
         "max"
       ],
-      "asOf": "2026-09-30T07:49:55.357Z",
+      "asOf": "2026-10-07T12:21:37.186Z",
       "supportedContexts": [
         "default",
         "long_context"
       ],
-      "vision": true,
       "effortMode": "supported"
     },
     "claude-opus-5": {
-      "capabilitySource": "copilot-sdk models.list; authenticated runtime 1.0.85",
+      "vision": true,
       "visionSource": "copilot-sdk models.list; authenticated runtime 1.0.85",
+      "capabilitySource": "copilot-sdk models.list; authenticated runtime 1.0.85",
       "supportedEfforts": [
         "low",
         "medium",
@@ -114,17 +115,17 @@
         "xhigh",
         "max"
       ],
-      "asOf": "2026-09-30T07:49:55.357Z",
+      "asOf": "2026-10-07T12:21:37.186Z",
       "supportedContexts": [
         "default",
         "long_context"
       ],
-      "vision": true,
       "effortMode": "supported"
     },
     "claude-opus-5.5": {
-      "capabilitySource": "copilot-sdk models.list; authenticated runtime 1.0.85",
+      "vision": true,
       "visionSource": "copilot-sdk models.list; authenticated runtime 1.0.85",
+      "capabilitySource": "copilot-sdk models.list; authenticated runtime 1.0.85",
       "supportedEfforts": [
         "low",
         "medium",
@@ -132,12 +133,11 @@
         "xhigh",
         "max"
       ],
-      "asOf": "2026-09-30T07:49:55.357Z",
+      "asOf": "2026-10-07T12:21:37.186Z",
       "supportedContexts": [
         "default",
         "long_context"
       ],
-      "vision": true,
       "effortMode": "supported"
     },
     "claude-sonnet-4.5": {
@@ -164,8 +164,9 @@
       "visionSource": "Previously verified GitHub Copilot visuals guidance."
     },
     "claude-sonnet-5": {
-      "capabilitySource": "copilot-sdk models.list; authenticated runtime 1.0.85",
+      "vision": true,
       "visionSource": "copilot-sdk models.list; authenticated runtime 1.0.85",
+      "capabilitySource": "copilot-sdk models.list; authenticated runtime 1.0.85",
       "supportedEfforts": [
         "low",
         "medium",
@@ -173,12 +174,29 @@
         "xhigh",
         "max"
       ],
-      "asOf": "2026-09-30T07:49:55.357Z",
+      "asOf": "2026-10-07T12:21:37.186Z",
       "supportedContexts": [
         "default",
         "long_context"
       ],
+      "effortMode": "supported"
+    },
+    "claude-sonnet-5.5": {
       "vision": true,
+      "visionSource": "copilot-sdk models.list; authenticated runtime 1.0.85",
+      "capabilitySource": "copilot-sdk models.list; authenticated runtime 1.0.85",
+      "supportedEfforts": [
+        "low",
+        "medium",
+        "high",
+        "xhigh",
+        "max"
+      ],
+      "asOf": "2026-10-07T12:21:37.186Z",
+      "supportedContexts": [
+        "default",
+        "long_context"
+      ],
       "effortMode": "supported"
     },
     "gemini-3.1-pro-preview": {
@@ -292,8 +310,9 @@
       "vision": null
     },
     "gpt-5.4": {
-      "capabilitySource": "copilot-sdk models.list; authenticated runtime 1.0.85",
+      "vision": true,
       "visionSource": "copilot-sdk models.list; authenticated runtime 1.0.85",
+      "capabilitySource": "copilot-sdk models.list; authenticated runtime 1.0.85",
       "supportedEfforts": [
         "none",
         "low",
@@ -301,17 +320,17 @@
         "high",
         "xhigh"
       ],
-      "asOf": "2026-09-30T07:49:55.357Z",
+      "asOf": "2026-10-07T12:21:37.186Z",
       "supportedContexts": [
         "default",
         "long_context"
       ],
-      "vision": true,
       "effortMode": "supported"
     },
     "gpt-5.4-mini": {
-      "capabilitySource": "copilot-sdk models.list; authenticated runtime 1.0.85",
+      "vision": true,
       "visionSource": "copilot-sdk models.list; authenticated runtime 1.0.85",
+      "capabilitySource": "copilot-sdk models.list; authenticated runtime 1.0.85",
       "supportedEfforts": [
         "none",
         "low",
@@ -319,16 +338,16 @@
         "high",
         "xhigh"
       ],
-      "asOf": "2026-09-30T07:49:55.357Z",
+      "asOf": "2026-10-07T12:21:37.186Z",
       "supportedContexts": [
         "default"
       ],
-      "vision": true,
       "effortMode": "supported"
     },
     "gpt-5.5": {
-      "capabilitySource": "copilot-sdk models.list; authenticated runtime 1.0.85",
+      "vision": true,
       "visionSource": "copilot-sdk models.list; authenticated runtime 1.0.85",
+      "capabilitySource": "copilot-sdk models.list; authenticated runtime 1.0.85",
       "supportedEfforts": [
         "none",
         "low",
@@ -336,17 +355,17 @@
         "high",
         "xhigh"
       ],
-      "asOf": "2026-09-30T07:49:55.357Z",
+      "asOf": "2026-10-07T12:21:37.186Z",
       "supportedContexts": [
         "default",
         "long_context"
       ],
-      "vision": true,
       "effortMode": "supported"
     },
     "gpt-5.6-luna": {
-      "capabilitySource": "copilot-sdk models.list; authenticated runtime 1.0.85",
+      "vision": true,
       "visionSource": "copilot-sdk models.list; authenticated runtime 1.0.85",
+      "capabilitySource": "copilot-sdk models.list; authenticated runtime 1.0.85",
       "supportedEfforts": [
         "none",
         "low",
@@ -355,17 +374,17 @@
         "xhigh",
         "max"
       ],
-      "asOf": "2026-09-30T07:49:55.357Z",
+      "asOf": "2026-10-07T12:21:37.186Z",
       "supportedContexts": [
         "default",
         "long_context"
       ],
-      "vision": true,
       "effortMode": "supported"
     },
     "gpt-5.6-sol": {
-      "capabilitySource": "copilot-sdk models.list; authenticated runtime 1.0.85",
+      "vision": true,
       "visionSource": "copilot-sdk models.list; authenticated runtime 1.0.85",
+      "capabilitySource": "copilot-sdk models.list; authenticated runtime 1.0.85",
       "supportedEfforts": [
         "none",
         "low",
@@ -374,17 +393,17 @@
         "xhigh",
         "max"
       ],
-      "asOf": "2026-09-30T07:49:55.357Z",
+      "asOf": "2026-10-07T12:21:37.186Z",
       "supportedContexts": [
         "default",
         "long_context"
       ],
-      "vision": true,
       "effortMode": "supported"
     },
     "gpt-5.6-terra": {
-      "capabilitySource": "copilot-sdk models.list; authenticated runtime 1.0.85",
+      "vision": true,
       "visionSource": "copilot-sdk models.list; authenticated runtime 1.0.85",
+      "capabilitySource": "copilot-sdk models.list; authenticated runtime 1.0.85",
       "supportedEfforts": [
         "none",
         "low",
@@ -393,17 +412,17 @@
         "xhigh",
         "max"
       ],
-      "asOf": "2026-09-30T07:49:55.357Z",
+      "asOf": "2026-10-07T12:21:37.186Z",
       "supportedContexts": [
         "default",
         "long_context"
       ],
-      "vision": true,
       "effortMode": "supported"
     },
     "gpt-6-astra": {
-      "capabilitySource": "copilot-sdk models.list; authenticated runtime 1.0.85",
+      "vision": true,
       "visionSource": "copilot-sdk models.list; authenticated runtime 1.0.85",
+      "capabilitySource": "copilot-sdk models.list; authenticated runtime 1.0.85",
       "supportedEfforts": [
         "low",
         "medium",
@@ -411,17 +430,17 @@
         "xhigh",
         "max"
       ],
-      "asOf": "2026-09-30T07:49:55.357Z",
+      "asOf": "2026-10-07T12:21:37.186Z",
       "supportedContexts": [
         "default",
         "long_context"
       ],
-      "vision": true,
       "effortMode": "supported"
     },
     "gpt-6-luna": {
-      "capabilitySource": "copilot-sdk models.list; authenticated runtime 1.0.85",
+      "vision": true,
       "visionSource": "copilot-sdk models.list; authenticated runtime 1.0.85",
+      "capabilitySource": "copilot-sdk models.list; authenticated runtime 1.0.85",
       "supportedEfforts": [
         "none",
         "low",
@@ -430,17 +449,17 @@
         "xhigh",
         "max"
       ],
-      "asOf": "2026-09-30T07:49:55.357Z",
+      "asOf": "2026-10-07T12:21:37.186Z",
       "supportedContexts": [
         "default",
         "long_context"
       ],
-      "vision": true,
       "effortMode": "supported"
     },
     "gpt-6-sol": {
-      "capabilitySource": "copilot-sdk models.list; authenticated runtime 1.0.85",
+      "vision": true,
       "visionSource": "copilot-sdk models.list; authenticated runtime 1.0.85",
+      "capabilitySource": "copilot-sdk models.list; authenticated runtime 1.0.85",
       "supportedEfforts": [
         "none",
         "low",
@@ -449,12 +468,30 @@
         "xhigh",
         "max"
       ],
-      "asOf": "2026-09-30T07:49:55.357Z",
+      "asOf": "2026-10-07T12:21:37.186Z",
       "supportedContexts": [
         "default",
         "long_context"
       ],
+      "effortMode": "supported"
+    },
+    "gpt-6.1-sol": {
       "vision": true,
+      "visionSource": "copilot-sdk models.list; authenticated runtime 1.0.85",
+      "capabilitySource": "copilot-sdk models.list; authenticated runtime 1.0.85",
+      "supportedEfforts": [
+        "none",
+        "low",
+        "medium",
+        "high",
+        "xhigh",
+        "max"
+      ],
+      "asOf": "2026-10-07T12:21:37.186Z",
+      "supportedContexts": [
+        "default",
+        "long_context"
+      ],
       "effortMode": "supported"
     },
     "grok-4.5": {
@@ -501,55 +538,18 @@
       "vision": null
     },
     "mai-code-1.1-flash": {
-      "capabilitySource": "copilot-sdk models.list; authenticated runtime 1.0.85",
+      "vision": true,
       "visionSource": "copilot-sdk models.list; authenticated runtime 1.0.85",
+      "capabilitySource": "copilot-sdk models.list; authenticated runtime 1.0.85",
       "supportedEfforts": [
         "low",
         "medium",
         "high"
       ],
-      "asOf": "2026-09-30T07:49:55.357Z",
+      "asOf": "2026-10-07T12:21:37.186Z",
       "supportedContexts": [
         "default"
       ],
-      "vision": true,
-      "effortMode": "supported"
-    },
-    "claude-sonnet-5.5": {
-      "capabilitySource": "copilot-sdk models.list; authenticated runtime 1.0.85",
-      "visionSource": "copilot-sdk models.list; authenticated runtime 1.0.85",
-      "supportedEfforts": [
-        "low",
-        "medium",
-        "high",
-        "xhigh",
-        "max"
-      ],
-      "asOf": "2026-09-30T07:49:55.357Z",
-      "supportedContexts": [
-        "default",
-        "long_context"
-      ],
-      "vision": true,
-      "effortMode": "supported"
-    },
-    "gpt-6.1-sol": {
-      "capabilitySource": "copilot-sdk models.list; authenticated runtime 1.0.85",
-      "visionSource": "copilot-sdk models.list; authenticated runtime 1.0.85",
-      "supportedEfforts": [
-        "none",
-        "low",
-        "medium",
-        "high",
-        "xhigh",
-        "max"
-      ],
-      "asOf": "2026-09-30T07:49:55.357Z",
-      "supportedContexts": [
-        "default",
-        "long_context"
-      ],
-      "vision": true,
       "effortMode": "supported"
     }
   },
