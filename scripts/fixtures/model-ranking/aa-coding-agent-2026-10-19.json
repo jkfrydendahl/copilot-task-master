@@ -1,0 +1,48 @@
+{
+  "id": "4aee8aa2d4a0bad6068644f40edae235",
+  "agentName": "Codex",
+  "provider": "openai",
+  "display": {
+    "agent": "Codex",
+    "model": "GPT-6.1 Sol (high)"
+  },
+  "displayLabel": "Codex - GPT-6.1 Sol (high) ({'reasoning_effort': 'high'})",
+  "isUnavailable": false,
+  "indexComponentCount": 3,
+  "evalCount": 3,
+  "indexScore": 0.6014923716179784,
+  "evals": [
+    {
+      "datasetIndexName": "deep-swe-v1.1",
+      "refDatasetName": "datacurve/deep-swe-1-1@1",
+      "weight": 0.333333333333333,
+      "mean": { "reward": 0.705014749262537 }
+    },
+    {
+      "datasetIndexName": "swe-atlas-qna",
+      "refDatasetName": "datasets/swe-atlas-qna",
+      "weight": 0.333333333333333,
+      "mean": { "reward": 0.599462365591398 }
+    },
+    {
+      "datasetIndexName": "terminal-bench-v4",
+      "refDatasetName": "terminal-bench/terminal-bench@sha256:39d9f44b40420cde8fdcc087579c0d72a7e14fa3656d603c3f0d22fb35e27732",
+      "weight": 0.333333333333333,
+      "mean": { "reward": 0.5 }
+    }
+  ],
+  "versions": {
+    "deep-swe-v1.1": {
+      "min": { "version": "0.154.0", "dateReleased": null },
+      "max": { "version": "0.154.0", "dateReleased": null }
+    },
+    "swe-atlas-qna": {
+      "min": { "version": "0.154.0", "dateReleased": null },
+      "max": { "version": "0.154.0", "dateReleased": null }
+    },
+    "terminal-bench-v4": {
+      "min": { "version": "0.154.0", "dateReleased": null },
+      "max": { "version": "0.154.0", "dateReleased": null }
+    }
+  }
+}

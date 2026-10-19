@@ -50,7 +50,37 @@ Run-Test "Missing AA key and rate limiting produce explicit errors" {
 Run-Test "Structured coding agent records preserve identity and reject malformed HTML" {
     $valid=Parse-ArtificialAnalysisCodingAgentIndexFromHtml (Fixture "aa-coding-agents-valid.html")
     Assert-True ($valid.status -eq "ok" -and $valid.models["opus-xhigh"].label -eq "Claude Code - Opus 5 (xhigh)") "Harness identity"
+    Assert-True ($valid.models["opus-xhigh"].hostModelSlug -eq "anthropic_opus") "Published host metadata lost"
     Assert-True ((Parse-ArtificialAnalysisCodingAgentIndexFromHtml (Fixture "aa-coding-agents-malformed.html")).status -eq "unavailable") "Bad harness accepted"
+}
+Run-Test "Current AA coding agents retain exact identity without unpublished host metadata" {
+    . (Join-Path $PSScriptRoot "model-agent-identity.ps1")
+    $row=ConvertFrom-JsonAsHashtableCompat (Fixture "aa-coding-agent-2026-10-19.json")
+    $result=Get-ArtificialAnalysisCodingAgentIndexData -FetchText {
+        param($u) @{status="ok";content=(ConvertTo-AgentFixtureHtml @() @($row))}
+    }
+    Assert-True ($result.status -eq "ok" -and $result.models.Count -eq 1 -and $result.sourceVersion) "Current upstream record rejected"
+    $record=$result.models[$row.id]
+    Assert-True ($null -eq $record.hostModelSlug -and $record.provider -eq "openai" -and
+        $record.publishedModel -eq "GPT-6.1 Sol (high)" -and $record.harness -eq "Codex") "Identity lost or host slug invented"
+    Assert-True ($record.codingAgentIndex -eq $row.indexScore -and $record.components.Count -eq 3 -and
+        $record.versions["terminal-bench-v4"].min.version -eq "0.154.0") "Score, component coverage or harness versions lost"
+    $identity=Resolve-AgentModelIdentities -Records $result.models -KnownModels @("gpt-6.1-sol")
+    Assert-True ($identity.records.Count -eq 1 -and $identity.records[0].model -eq "gpt-6.1-sol" -and
+        $identity.records[0].effort -eq "high") "Exact model/effort resolution depended on optional host metadata"
+    foreach ($change in @(
+        {param($r) $r.display.Remove("model")},
+        {param($r) $r.Remove("provider")},
+        {param($r) $r.Remove("agentName")},
+        {param($r) $r.evalCount=2},
+        {param($r) $r.hostModelSlug=42},
+        {param($r) $r.hostModelSlug=" "}
+    )) {
+        $bad=ConvertFrom-JsonAsHashtableCompat (Fixture "aa-coding-agent-2026-10-19.json")
+        & $change $bad
+        $invalid=Parse-ArtificialAnalysisCodingAgentIndexFromHtml (ConvertTo-AgentFixtureHtml @($bad))
+        Assert-True ($invalid.status -eq "unavailable" -and $invalid.diagnostics.Count) "Missing identity, coverage or malformed host metadata accepted"
+    }
 }
 Run-Test "Agent parser includes non-highlighted variants, deduplicates rows and fingerprints identity" {
     $one=New-AgentFixtureRow one "GPT-one (high)" 0.6
@@ -113,6 +143,111 @@ Run-Test "Agent parser rejects incomplete, ambiguous and legacy evidence without
         Assert-True ((Parse-ArtificialAnalysisCodingAgentIndexFromHtml $html).status -eq "unavailable") "Malformed/legacy data accepted"
     }
 }
+Run-Test "LiveBench default GitHub catalog transport uses the Action token" {
+    $oldToken=[Environment]::GetEnvironmentVariable("GH_TOKEN","Process")
+    $script:liveBenchRequests=@()
+    function Invoke-RestMethod {
+        param([uri]$Uri,[int]$TimeoutSec,[hashtable]$Headers,[int]$MaximumRedirection)
+        $script:liveBenchRequests+=@(@{uri=$Uri;headers=$Headers;redirects=$(if ($PSBoundParameters.ContainsKey("MaximumRedirection")) { $MaximumRedirection } else { $null })})
+        return @(@{name="table_2026_06_25.csv";download_url="table";html_url="https://example.test/lb"})
+    }
+    try {
+        [Environment]::SetEnvironmentVariable("GH_TOKEN","fixture-github-token","Process")
+        $result=Get-LiveBenchData -FetchText {param($u) @{status="ok";content=(Fixture "livebench-valid.csv")}}
+        Assert-True ($result.status -eq "ok" -and $script:liveBenchRequests.Count -eq 1) "Default catalog transport failed"
+        foreach ($request in $script:liveBenchRequests) {
+            Assert-True ($request.uri.Host -eq "api.github.com" -and $request.headers.Authorization -eq "Bearer fixture-github-token") "Action token not used"
+            Assert-True ($request.uri.AbsolutePath -eq "/repos/LiveBench/livebench.github.io/contents/public") "Unavailable repository still used"
+            Assert-True ($null -ne $request.redirects -and $request.redirects -eq 0) "Authenticated request permits redirects"
+        }
+    } finally { [Environment]::SetEnvironmentVariable("GH_TOKEN",$oldToken,"Process") }
+}
+Run-Test "LiveBench rejects untrusted API targets before sending credentials" {
+    $oldToken=[Environment]::GetEnvironmentVariable("GH_TOKEN","Process")
+    function Invoke-RestMethod { throw "Untrusted target reached the network" }
+    try {
+        [Environment]::SetEnvironmentVariable("GH_TOKEN","fixture-github-token","Process")
+        foreach ($url in @("http://api.github.com/repos/one/two", "https://api.github.com.example.test/repos/one/two",
+            "https://api.github.com:444/repos/one/two", "https://user:password@api.github.com/repos/one/two",
+            "https://artificialanalysis.ai/models", "not a URL")) {
+            $result=Invoke-LiveBenchJsonFetch -Url $url
+            Assert-True ($result.status -eq "error" -and $result.error -match "https://api.github.com" -and
+                $result.error -notmatch "reached the network") "Untrusted URL was fetched: $url"
+        }
+    } finally { [Environment]::SetEnvironmentVariable("GH_TOKEN",$oldToken,"Process") }
+}
+Run-Test "LiveBench supports public unauthenticated access and exposes sanitized failures without retrying" {
+    $oldToken=[Environment]::GetEnvironmentVariable("GH_TOKEN","Process")
+    $script:liveBenchRequests=@()
+    $script:liveBenchFetchError=$null
+    function Invoke-RestMethod {
+        param([uri]$Uri,[int]$TimeoutSec,[hashtable]$Headers,[int]$MaximumRedirection)
+        $script:liveBenchRequests+=@($Headers)
+        if ($script:liveBenchFetchError) { throw $script:liveBenchFetchError }
+        return @{ok=$true}
+    }
+    try {
+        [Environment]::SetEnvironmentVariable("GH_TOKEN","","Process")
+        $public=Invoke-LiveBenchJsonFetch -Url $script:LiveBenchContentsApiUrl
+        Assert-True ($public.status -eq "ok" -and -not $script:liveBenchRequests[0].ContainsKey("Authorization")) "Local public access requires a token"
+        [Environment]::SetEnvironmentVariable("GH_TOKEN","fixture-github-token","Process")
+        foreach ($failure in @("HTTP401: fixture-github-token", "HTTP403: rate limit exceeded", "Redirect refused: fixture-github-token")) {
+            $before=$script:liveBenchRequests.Count
+            $script:liveBenchFetchError=$failure
+            $result=Get-LiveBenchData
+            Assert-True ($result.status -eq "error" -and $result.models.Count -eq 0 -and
+                $result.message -match "LiveBench directory listing fetch failed") "Fetch failure became successful or fabricated data"
+            Assert-True ($result.message -notmatch "fixture-github-token" -and
+                $script:liveBenchRequests.Count -eq ($before+1)) "Token leaked or authenticated failure silently retried"
+        }
+    } finally { [Environment]::SetEnvironmentVariable("GH_TOKEN",$oldToken,"Process") }
+}
+Run-Test "Generic JSON and text transports never attach the GitHub token" {
+    $oldToken=[Environment]::GetEnvironmentVariable("GH_TOKEN","Process")
+    function Invoke-RestMethod {
+        param($Uri,$TimeoutSec,$Headers)
+        Assert-True (-not $Headers.ContainsKey("Authorization")) "GitHub token attached to generic JSON fetch"
+        return @{ok=$true}
+    }
+    function Invoke-WebRequest {
+        param($Uri,$TimeoutSec,$Headers)
+        Assert-True (-not $Headers.ContainsKey("Authorization")) "GitHub token attached to generic text fetch"
+        return @{Content="public data";Headers=@{"Last-Modified"="Sun, 18 Oct 2026 18:54:26 GMT"}}
+    }
+    try {
+        [Environment]::SetEnvironmentVariable("GH_TOKEN","fixture-github-token","Process")
+        Assert-True ((Invoke-JsonFetch -Url "https://example.test/data").status -eq "ok") "Generic JSON transport changed"
+        $text=Invoke-TextFetch -Url "https://artificialanalysis.ai/agents/coding-agents"
+        Assert-True ($text.status -eq "ok" -and $text.lastModified -eq "Sun, 18 Oct 2026 18:54:26 GMT") "Text content or artifact metadata lost"
+    } finally { [Environment]::SetEnvironmentVariable("GH_TOKEN",$oldToken,"Process") }
+}
+Run-Test "LiveBench uses the published v1 files rather than stale repository copies or v2 scores" {
+    $listing=@(
+        @{name="table_2026_06_25.csv";download_url="https://example.test/stale-table";html_url="https://example.test/stale-table"}
+        @{name="categories_2026_06_25.json";download_url="https://example.test/stale-categories"}
+    )
+    $script:liveBenchTextRequests=@()
+    $result=Get-LiveBenchData -FetchJson {param($u) @{status="ok";value=$listing}} -FetchText {
+        param($u)
+        $script:liveBenchTextRequests+=@($u)
+        switch ($u) {
+            "https://livebench.ai/v1/table_2026_06_25.csv" {
+                @{status="ok";content=(Fixture "livebench-valid.csv");lastModified="Sun, 18 Oct 2026 18:54:26 GMT"}
+            }
+            "https://livebench.ai/v1/categories_2026_06_25.json" {
+                @{status="ok";content=(Fixture "livebench-categories-valid.json")}
+            }
+            "https://livebench.ai/v1/cost_2026_06_25.csv" { @{status="error";error="HTTP503"} }
+            default { throw "Unexpected data URL: $u" }
+        }
+    }
+    Assert-True ($result.status -eq "ok" -and $script:liveBenchTextRequests.Count -eq 3) "Published v1 acquisition failed"
+    Assert-True ($result.sourceUrl -eq "https://livebench.ai/v1/table_2026_06_25.csv" -and
+        $result.datasetVersion -eq "2026-06-25") "Actual data provenance or suite label lost"
+    Assert-True ([datetime]$result.artifactPublishedAtUtc -eq [datetime]"2026-10-18T18:54:26Z" -and
+        $null -eq $result.sourceDate -and $null -eq $result.artifactCommit) "Artifact update became evaluation publication or a fabricated Git commit"
+    Assert-True ($result.costStatus -ne "ok" -and $result.sourceVersion) "Optional cost failure discarded quality evidence"
+}
 Run-Test "LiveBench categories and cost data remain separately usable" {
     $invalid = Parse-LiveBenchData -CsvText (Fixture "livebench-malformed.csv")
     Assert-True ($invalid.status -eq "unavailable") "Missing model column accepted"
@@ -134,8 +269,8 @@ Run-Test "LiveBench missing or failed cost fetch does not discard benchmark data
         $p=Get-LiveBenchData -FetchJson {param($u) @{status="ok";value=$listing}} -FetchText {
             param($u)
             switch ($u) {
-                "table" {@{status="ok";content=(Fixture "livebench-valid.csv")}}
-                "categories" {@{status="ok";content=(Fixture "livebench-categories-valid.json")}}
+                "https://livebench.ai/v1/table_2026_06_25.csv" {@{status="ok";content=(Fixture "livebench-valid.csv")}}
+                "https://livebench.ai/v1/categories_2026_06_25.json" {@{status="ok";content=(Fixture "livebench-categories-valid.json")}}
                 default {@{status="error";error="HTTP503"}}
             }
         }
@@ -219,12 +354,24 @@ Run-Test "LiveBench rejects incomplete or invalid category scores without droppi
 Run-Test "LiveBench separates suite label, artifact publication and unknown row evaluation age" {
     $r=Get-LiveBenchData -FetchJson {
         param($u)
-        if($u -match "/commits\?") { @{status="ok";value=@(@{sha="commit1";commit=@{committer=@{date="2026-09-22T05:38:00Z"}}})} }
-        else { @{status="ok";value=@(@{name="table_2026_06_25.csv";download_url="table";html_url="https://example.test/lb"})} }
-    } -FetchText {param($u) @{status="ok";content="model,code_generation,code_completion`none,80,60"}}
+        @{status="ok";value=@(@{name="table_2026_06_25.csv";download_url="table";html_url="https://example.test/lb"})}
+    } -FetchText {param($u) @{status="ok";content="model,code_generation,code_completion`none,80,60";lastModified="2026-09-22T05:38:00Z"}}
     Assert-True ($r.status -eq "ok" -and $r.datasetVersion -eq "2026-06-25" -and $null -eq $r.sourceDate) "Suite name treated as results publication"
     Assert-True ([datetime]$r.artifactPublishedAtUtc -eq [datetime]"2026-09-22T05:38:00Z" -and $null -eq $r.models.one.evaluationDate) "Artifact update falsely refreshed row evaluation"
     Assert-True (($r.categoryColumns.coding -join ",") -eq "code_generation,code_completion") "Category methodology not retained"
+}
+Run-Test "LiveBench missing or invalid artifact dates never become fresh evaluation dates" {
+    foreach ($date in @($null,"not a date")) {
+        $r=Get-LiveBenchData -FetchJson {
+            param($u) @{status="ok";value=@(@{name="table_2026_06_25.csv"})}
+        } -FetchText {param($u) @{status="ok";content="model,code_generation,code_completion`none,80,60";lastModified=$date}}
+        Assert-True ($r.status -eq "ok" -and $null -eq $r.sourceDate -and $null -eq $r.artifactCommit) "Unknown evaluation date was fabricated"
+        if ($null -eq $date) {
+            Assert-True ($null -eq $r.artifactPublishedAtUtc -and $r.diagnostics -match "artifact_publication_unknown") "Missing header became the retrieval time"
+        } else {
+            Assert-True ($r.artifactPublishedAtUtc -eq $date -and $r.diagnostics -match "artifact_publication_invalid") "Invalid header became a valid timestamp"
+        }
+    }
 }
 Run-Test "Public component parser preserves effort and rejects fallback-served workflow scores" {
     . (Join-Path $PSScriptRoot "model-aa-component-data.ps1")
@@ -237,16 +384,15 @@ Run-Test "Public component parser preserves effort and rejects fallback-served w
     $r=ConvertFrom-AAComponentPage (Component-Html @{currentModel=$row;models=@($copy)})
     Assert-True ($null -eq $r.models["one-high"].automationBench) "Comparison duplicate revived a known composite score"
 }
-Run-Test "LiveBench preserves native GitHub timestamps under non-US cultures" {
+Run-Test "LiveBench preserves native artifact timestamps under non-US cultures" {
     $culture=[Globalization.CultureInfo]::CurrentCulture
     try {
         [Globalization.CultureInfo]::CurrentCulture=[Globalization.CultureInfo]::GetCultureInfo("da-DK")
         $r=Get-LiveBenchData -FetchJson {
             param($u)
-            if($u -match "/commits\?") { @{status="ok";value=@(@{sha="commit1";commit=@{committer=@{date=[datetime]"2026-09-22T05:38:00Z"}}})} }
-            else { @{status="ok";value=@(@{name="table_2026_06_25.csv";download_url="table";html_url="https://example.test/lb"})} }
-        } -FetchText {param($u) @{status="ok";content="model,code_generation,code_completion`none,80,60"}}
-        Assert-True ($r.artifactPublishedAtUtc -match '^2026-09-22T05:38:00' -and $r.artifactCommit -eq "commit1") "Native UTC timestamp was lost to local date parsing"
+            @{status="ok";value=@(@{name="table_2026_06_25.csv";download_url="table";html_url="https://example.test/lb"})}
+        } -FetchText {param($u) @{status="ok";content="model,code_generation,code_completion`none,80,60";lastModified=[datetime]"2026-09-22T05:38:00Z"}}
+        Assert-True ($r.artifactPublishedAtUtc -match '^2026-09-22T05:38:00' -and $null -eq $r.artifactCommit) "Native UTC timestamp was lost to local date parsing"
     } finally { [Globalization.CultureInfo]::CurrentCulture=$culture }
 }
 Run-Test "Duplicate public rows cannot hide composite or unresolvable effort identities" {

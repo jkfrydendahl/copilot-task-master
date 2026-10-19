@@ -371,7 +371,7 @@ unresolved mappings still require investigation. Price refresh alone does not su
 
 - [Artificial Analysis API](https://artificialanalysis.ai/api/v2/data/llms/models) supplies the Coding and Intelligence indices. [AA coding-agent harnesses](https://artificialanalysis.ai/agents/coding-agents) supply specialized Agentic evidence.
 - AA public model pages supply workflow, instruction-following, long-document reasoning and visual-understanding components. One deterministically chosen known-model page supplies the bulk comparison records plus the current model; the adapter does not fetch every model separately or execute page scripts.
-- [LiveBench](https://github.com/LiveBench/new-livebench/tree/main/public) supplies explicitly authorized fallback and supporting categories. Incomplete categories are unusable, rather than averages of whichever columns happen to exist. Cost-feed failure does not discard quality data.
+- [LiveBench 1.x](https://livebench.ai/#/release/2026-06-25) supplies explicitly authorized fallback and supporting categories. Release names come from the [official site repository](https://github.com/LiveBench/livebench.github.io/tree/main/public); scores and category definitions come from the published `https://livebench.ai/v1/` files, not older repository copies or LiveBench 2.0. Incomplete categories are unusable, rather than averages of whichever columns happen to exist. Cost-feed failure does not discard quality data.
 - Single-source evidence is allowed with reduced confidence. AA and LiveBench raw scores are never averaged; disagreement from informational alternatives is disclosed, while explicitly required dimensions are binding.
 - All eligible models compete; there is no orchestration shortlist. Family preferences from `config/model-policy.json` are informational fallback suggestions, never benchmark gates or automatic family upgrades.
 
@@ -459,6 +459,9 @@ control. New labels or harness names do not require new aliases, but unknown mod
 verified availability, capabilities and pricing. Ambiguous identities or multiple variants for the
 same model/effort, composite systems, incomplete coverage and incompatible benchmark suites are
 reported rather than guessed. Legacy cached label-only agent records are not silently upgraded.
+The upstream host-model slug is optional provenance: it is retained when published and otherwise
+recorded as null, never inferred. Published model, provider, harness and source variant identity
+remain required.
 
 Every fallback replacement, including a fallback used by a required qualification dimension,
 requires the incumbent's exact configuration in the same usable metric observation.
@@ -625,6 +628,13 @@ Configuration and pricing can load without importing benchmark providers. Run:
 The live review needs `ARTIFICIAL_ANALYSIS_API_KEY` (configured as an action secret) for AA's API;
 without it the failure is reported and independently usable sources remain available. The local
 review writes snapshots/report and can update profiles after confirmation; it performs no Git operations.
+LiveBench uses `GH_TOKEN` for authenticated GitHub API release discovery; the Action already supplies its
+built-in token, so no additional secret is needed. Local runs without `GH_TOKEN` use public
+unauthenticated access with GitHub's lower rate limit. Authentication is restricted to
+`https://api.github.com` and redirects are rejected; other source fetches never receive this token.
+Fetch failures remain explicit and any reused benchmark data retains its original retrieval timestamp.
+The published table's HTTP `Last-Modified` is artifact-update metadata only, not the publication date
+of its individual scores; absent or invalid metadata is not replaced with the retrieval time.
 
 ## Notes / limitations
 

@@ -1,8 +1,44 @@
 Set-StrictMode -Version Latest
 . (Join-Path $PSScriptRoot "model-data-common.ps1")
 
-$script:LiveBenchContentsApiUrl = "https://api.github.com/repos/LiveBench/new-livebench/contents/public"
-$script:LiveBenchRepoUrl = "https://github.com/LiveBench/new-livebench/tree/main/public"
+$script:LiveBenchContentsApiUrl = "https://api.github.com/repos/LiveBench/livebench.github.io/contents/public"
+$script:LiveBenchRepoUrl = "https://github.com/LiveBench/livebench.github.io/tree/main/public"
+$script:LiveBenchDataUrl = "https://livebench.ai/v1"
+
+function Invoke-LiveBenchJsonFetch {
+    [OutputType([pscustomobject])]
+    param(
+        [Parameter(Mandatory = $true)][string]$Url,
+        [int]$TimeoutSec = 30
+    )
+
+    $uri = $null
+    if (-not [uri]::TryCreate($Url, [UriKind]::Absolute, [ref]$uri) -or
+        $uri.Scheme -ne "https" -or $uri.Host -ne "api.github.com" -or
+        $uri.Port -ne 443 -or -not [string]::IsNullOrEmpty($uri.UserInfo)) {
+        return [pscustomobject]@{
+            status = "error"
+            value = $null
+            error = "LiveBench API requests require https://api.github.com without user information or a custom port."
+        }
+    }
+
+    $headers = @{
+        "User-Agent" = "copilot-task-master-model-ranking"
+        "Accept" = "application/vnd.github+json"
+    }
+    $token = [Environment]::GetEnvironmentVariable("GH_TOKEN", "Process")
+    if (-not [string]::IsNullOrWhiteSpace($token)) { $headers["Authorization"] = "Bearer $token" }
+
+    try {
+        $response = Invoke-RestMethod -Uri $uri -TimeoutSec $TimeoutSec -Headers $headers -MaximumRedirection 0
+        return [pscustomobject]@{status="ok";value=$response;error=$null}
+    } catch {
+        $message = $_.Exception.Message
+        if (-not [string]::IsNullOrWhiteSpace($token)) { $message = $message.Replace($token, "[REDACTED]") }
+        return [pscustomobject]@{status="error";value=$null;error=$message}
+    }
+}
 
 function Get-LiveBenchCategoryColumns {
     param(
@@ -223,7 +259,7 @@ function Get-LiveBenchData {
     $fetchedAtUtc = (Get-Date).ToUniversalTime().ToString("o")
 
     if ($null -eq $FetchJson) {
-        $FetchJson = { param($u) Invoke-JsonFetch -Url $u -TimeoutSec 30 }
+        $FetchJson = { param($u) Invoke-LiveBenchJsonFetch -Url $u -TimeoutSec 30 }
     }
     if ($null -eq $FetchText) {
         $FetchText = { param($u) Invoke-TextFetch -Url $u -TimeoutSec 30 }
@@ -263,9 +299,9 @@ function Get-LiveBenchData {
     $categoriesName = "categories_$tableDate.json"
     $costName = "cost_$tableDate.csv"
     $categoriesFile = @($items | Where-Object { $_.name -eq $categoriesName } | Select-Object -First 1)
-    $costFile = @($items | Where-Object { $_.name -eq $costName } | Select-Object -First 1)
+    $tableUrl = "$script:LiveBenchDataUrl/$($latestTable.name)"
 
-    $tableFetch = & $FetchText $latestTable.download_url
+    $tableFetch = & $FetchText $tableUrl
     if ($tableFetch.status -ne "ok") {
         return [pscustomobject]@{
             status = "error"
@@ -273,13 +309,13 @@ function Get-LiveBenchData {
             models = @{}
             sourceDate = $null
             fetchedAtUtc = $fetchedAtUtc
-            sourceUrl = [string]$latestTable.html_url
+            sourceUrl = $tableUrl
         }
     }
 
     $categoriesText = ""
     if ($categoriesFile.Count -gt 0) {
-        $categoryFetch = & $FetchText $categoriesFile[0].download_url
+        $categoryFetch = & $FetchText "$script:LiveBenchDataUrl/$categoriesName"
         if ($categoryFetch.status -ne "ok") {
             return [pscustomobject]@{
                 status = "unavailable"
@@ -287,27 +323,21 @@ function Get-LiveBenchData {
                 models = @{}
                 sourceDate = $null
                 fetchedAtUtc = $fetchedAtUtc
-                sourceUrl = [string]$latestTable.html_url
+                sourceUrl = $tableUrl
             }
         }
         $categoriesText = [string]$categoryFetch.content
     }
 
     $costText = ""
-    if ($costFile.Count -gt 0) {
-        $costFetch = & $FetchText $costFile[0].download_url
-        if ($costFetch.status -eq "ok") { $costText = [string]$costFetch.content }
-    }
+    $costFetch = & $FetchText "$script:LiveBenchDataUrl/$costName"
+    if ($costFetch.status -eq "ok") { $costText = [string]$costFetch.content }
 
     $parsed = Parse-LiveBenchData -CsvText ([string]$tableFetch.content) -CategoriesJsonText $categoriesText -CostCsvText $costText
     $publication = $null
-    $artifactCommit = $null
     $diagnostics = @(Get-ObjectMemberValue $parsed "diagnostics")
-    $commits = & $FetchJson ("https://api.github.com/repos/LiveBench/new-livebench/commits?path=public%2F$($latestTable.name)&per_page=1")
-    $commitRecords = @(Get-ObjectMemberValue $commits "value")
-    if ($commits.status -eq "ok" -and $commitRecords.Count) {
-        $commit = $commitRecords[0]
-        $date = Get-ObjectMemberValue (Get-ObjectMemberValue (Get-ObjectMemberValue $commit "commit") "committer") "date"
+    $date = Get-ObjectMemberValue $tableFetch "lastModified"
+    if (-not [string]::IsNullOrWhiteSpace([string]$date)) {
         $parsedDate = [datetime]::MinValue
         $validDate = $false
         if ($date -is [datetime]) { $parsedDate = $date.ToUniversalTime(); $validDate = $true }
@@ -317,13 +347,10 @@ function Get-LiveBenchData {
         }
         if ($validDate) {
             $publication = $parsedDate.ToUniversalTime().ToString("o")
-            $artifactCommit = Get-ObjectMemberValue $commit "sha"
         } elseif ($null -ne $date) {
             $publication = [string]$date
             $diagnostics += "artifact_publication_invalid"
         }
-    } elseif ($commits.status -ne "ok") {
-        $diagnostics += "artifact_publication_fetch_failed: $((Get-ObjectMemberValue $commits 'error'))"
     }
     if ($null -eq $publication) { $diagnostics += "artifact_publication_unknown; row evaluation ages remain unknown" }
     return [pscustomobject]@{
@@ -335,11 +362,11 @@ function Get-LiveBenchData {
         sourceDate = $parsed.sourceDate
         datasetVersion = $tableDate -replace '_', '-'
         artifactPublishedAtUtc = $publication
-        artifactCommit = $artifactCommit
+        artifactCommit = $null
         categoryColumns = Get-ObjectMemberValue $parsed "categoryColumns"
         diagnostics = $diagnostics
         sourceVersion = if ($parsed.status -eq "ok") { Get-ModelDataFingerprint @{table=$tableFetch.content;categories=$categoriesText} } else { $null }
         fetchedAtUtc = $fetchedAtUtc
-        sourceUrl = [string]$latestTable.html_url
+        sourceUrl = $tableUrl
     }
 }

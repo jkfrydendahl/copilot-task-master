@@ -384,6 +384,8 @@ Run-Test "Nine-role offline review confirms binding changes and preserves good c
         $legacy.sources.liveBench=@{status="ok";sourceDate="2026-06-25";fetchedAtUtc="2026-09-22Z";models=@{one=@{coding=99}}}
         Write-ModelJsonAtomic (Join-Path $root "data\model-ranking-snapshot.json") $legacy
         $sources.artificialAnalysisComponents=@{status="unavailable";message="malformed component observation"}
+        $sources.artificialAnalysisCodingAgents=@{status="unavailable";message="incomplete agent observation"}
+        $sources.liveBench=@{status="error";message="LiveBench HTTP403"}
         foreach($slug in @($aaModels.Keys | Where-Object {$_ -like "gpt-one-*"})) { $aaModels[$slug].codingIndex=99 }
         $outage=Invoke-TaskProfileReview @options -ForceImmediateApply
         $mechanical=$outage.results | Where-Object key -eq mechanical
@@ -392,9 +394,16 @@ Run-Test "Nine-role offline review confirms binding changes and preserves good c
         Assert-True (-not $orchestrator.resolution.applied -and $orchestrator.resolution.status -eq "retained_cached_evidence") "Cached workflow evidence authorized promotion"
         Assert-True ($outage.snapshot.sources.artificialAnalysisComponents.status -eq "cached" -and
             $outage.snapshot.sources.artificialAnalysisComponents.models["gpt-two-high"].automationBench -eq 0.91) "Malformed observation overwrote good component cache"
+        $agentCache=$outage.snapshot.sources.artificialAnalysisCodingAgents
+        $expectedAgentCache=$confirmed.snapshot.sources.artificialAnalysisCodingAgents
+        Assert-True ($agentCache.status -eq "cached" -and $agentCache.fetchedAtUtc -eq $expectedAgentCache.fetchedAtUtc -and
+            $agentCache.sourceVersion -eq $expectedAgentCache.sourceVersion -and
+            (Get-ModelDataFingerprint $agentCache.models) -eq (Get-ModelDataFingerprint $expectedAgentCache.models)) "Agent outage replaced cached records or refreshed their timestamp"
         Assert-True ($outage.snapshot.sources.liveBench.categoryCompletenessUnknown -and
-            $null -eq $outage.snapshot.sources.liveBench.sourceDate -and $outage.snapshot.sources.liveBench.datasetVersion -eq "2026-06-25") "Legacy LB cache silently upgraded its dates or category completeness"
+            $null -eq $outage.snapshot.sources.liveBench.sourceDate -and $outage.snapshot.sources.liveBench.datasetVersion -eq "2026-06-25" -and
+            $outage.snapshot.sources.liveBench.fetchedAtUtc -eq "2026-09-22Z") "Legacy LB cache silently upgraded its dates or category completeness"
         $report=Get-Content (Join-Path $root "reports\task-profile-review.md") -Raw
+        Assert-True ($report.Contains("incomplete agent observation") -and $report.Contains("LiveBench HTTP403")) "Cached failures disappeared from the report"
         Assert-True ([regex]::Matches($report,'\*\*Supporting evidence\*\*').Count -eq 9) "Supporting report remained profile-specific"
         foreach($term in @("AutomationBench-AA","EnterpriseOps-Gym-AA","strict pass@1","interactive orchestration","Incumbent selection basis","Role qualification")) {
             Assert-True ($report.Contains($term)) "Missing role explanation: $term"

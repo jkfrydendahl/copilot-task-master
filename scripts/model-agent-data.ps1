@@ -38,12 +38,14 @@ function ConvertFrom-AgentPageData {
                 }
                 $seen[$id] = $fingerprint
                 $display = Get-ObjectMemberValue $row "display"
+                $hostModelSlug = Get-ObjectMemberValue $row "hostModelSlug"
                 $required = @(
                     (Get-ObjectMemberValue $display "model"), (Get-ObjectMemberValue $row "provider"),
-                    (Get-ObjectMemberValue $row "agentName"), (Get-ObjectMemberValue $row "hostModelSlug"),
+                    (Get-ObjectMemberValue $row "agentName"),
                     (Get-ObjectMemberValue $row "displayLabel")
                 )
-                if (@($required | Where-Object { $_ -isnot [string] -or [string]::IsNullOrWhiteSpace($_) }).Count) {
+                if (@($required | Where-Object { $_ -isnot [string] -or [string]::IsNullOrWhiteSpace($_) }).Count -or
+                    ($null -ne $hostModelSlug -and ($hostModelSlug -isnot [string] -or [string]::IsNullOrWhiteSpace($hostModelSlug)))) {
                     $diagnostics.Add("${id}: identity_metadata_missing")
                     continue
                 }
@@ -85,7 +87,7 @@ function ConvertFrom-AgentPageData {
                 $suite = $suiteFingerprint
                 $models[$id] = @{
                     identitySchemaVersion=1;variantId=$id;label=$row.displayLabel;name=$row.displayLabel
-                    publishedModel=$display.model;provider=$row.provider;hostModelSlug=$row.hostModelSlug
+                    publishedModel=$display.model;provider=$row.provider;hostModelSlug=$hostModelSlug
                     harness=$row.agentName;versions=(Get-ObjectMemberValue $row "versions")
                     components=$components;suiteFingerprint=$suiteFingerprint;codingAgentIndex=[double]$row.indexScore
                 }

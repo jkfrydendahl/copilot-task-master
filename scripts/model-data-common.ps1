@@ -11,6 +11,7 @@ function Invoke-TextFetch {
         return [pscustomobject]@{
             status = "ok"
             content = [string]$response.Content
+            lastModified = [string]$response.Headers["Last-Modified"]
             error = $null
         }
     } catch {
