@@ -1,6 +1,7 @@
 {
   "availability": {
     "models": [
+      "claude-sonnet-5.5",
       "claude-sonnet-5",
       "claude-fable-5.1",
       "claude-fable-5",
@@ -9,6 +10,7 @@
       "claude-opus-4.8",
       "claude-opus-4.8-fast",
       "claude-sonnet-4.6",
+      "claude-haiku-5.5",
       "claude-haiku-4.5",
       "gpt-6.1-sol",
       "gpt-6-sol",
@@ -23,20 +25,21 @@
       "gpt-5.3-codex",
       "gpt-5-mini",
       "mai-code-1.1-flash",
+      "gemini-4-argon",
       "gemini-3.8-flash",
       "gemini-3.7-flash",
+      "grok-4.7",
+      "grok-4.6",
       "grok-4.5",
-      "kimi-k3",
-      "claude-sonnet-5.5",
-      "grok-4.6"
+      "kimi-k3"
     ],
     "source": "locally captured CLI help",
     "verified": true
   },
-  "observedAtUtc": "2026-10-07T12:21:37.186Z",
+  "observedAtUtc": "2026-10-19T07:00:31.905Z",
   "runtime": {
     "authenticated": true,
-    "fetchedAtUtc": "2026-10-07T12:21:37.186Z",
+    "fetchedAtUtc": "2026-10-19T07:00:31.905Z",
     "models": [
       {
         "id": "auto",
@@ -528,6 +531,43 @@
         "vision": true
       },
       {
+        "id": "claude-haiku-5.5",
+        "maxContextTokens": 1000000,
+        "name": "Claude Haiku 5.5",
+        "policyState": "enabled",
+        "reasoningEffort": true,
+        "supportedReasoningEfforts": [
+          "low",
+          "medium",
+          "high",
+          "xhigh",
+          "max"
+        ],
+        "tokenPrices": {
+          "batchSize": 1000000,
+          "cachePrice": 1,
+          "cacheReadPrice": 1,
+          "cacheWrite1hPrice": 20,
+          "cacheWritePrice": 12.5,
+          "contextMax": 100000,
+          "inputPrice": 10,
+          "longContext": {
+            "cachePrice": 5,
+            "cacheReadPrice": 5,
+            "cacheWrite1hPrice": 100,
+            "cacheWritePrice": 62.5,
+            "contextMax": 936000,
+            "inputPrice": 50,
+            "maxPromptTokens": 936000,
+            "outputPrice": 250
+          },
+          "maxPromptTokens": 100000,
+          "outputPrice": 50
+        },
+        "toolCalls": true,
+        "vision": true
+      },
+      {
         "id": "claude-opus-5.5",
         "maxContextTokens": 1000000,
         "name": "Claude Opus 5.5",
@@ -577,15 +617,15 @@
         ],
         "tokenPrices": {
           "batchSize": 1000000,
-          "cachePrice": 20,
-          "cacheReadPrice": 20,
+          "cachePrice": 10,
+          "cacheReadPrice": 10,
           "cacheWrite1hPrice": 400,
           "cacheWritePrice": 250,
           "contextMax": 200000,
           "inputPrice": 200,
           "longContext": {
-            "cachePrice": 20,
-            "cacheReadPrice": 20,
+            "cachePrice": 10,
+            "cacheReadPrice": 10,
             "cacheWrite1hPrice": 400,
             "cacheWritePrice": 250,
             "contextMax": 936000,
