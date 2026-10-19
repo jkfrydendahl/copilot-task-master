@@ -10,6 +10,7 @@
     "claude-opus-5.5": "Claude Opus 5.5",
     "claude-sonnet-4.6": "Claude Sonnet 4.6",
     "claude-sonnet-5": "Claude Sonnet 5",
+    "claude-sonnet-5.5": "Claude Sonnet 5.5",
     "gemini-3.5-flash": "Gemini 3.5 Flash",
     "gemini-3.6-flash": "Gemini 3.6 Flash",
     "gemini-3.7-flash": "Gemini 3.7 Flash",
@@ -25,14 +26,14 @@
     "gpt-6-astra": "GPT-6 Astra",
     "gpt-6-luna": "GPT-6 Luna",
     "gpt-6-sol": "GPT-6 Sol",
+    "gpt-6.1-sol": "GPT-6.1 Sol",
     "grok-4.5": "Grok 4.5",
     "grok-4.6": "Grok 4.6",
     "kimi-k2.7-code": "Kimi K2.7 Code",
     "kimi-k3": "Kimi K3",
     "mai-code-1-flash-picker": "MAI-Code-1-Flash",
     "mai-code-1.1-flash": "MAI-Code-1.1-Flash",
-    "claude-sonnet-5.5": "Claude Sonnet 5.5",
-    "gpt-6.1-sol": "GPT-6.1 Sol"
+    "claude-haiku-5.5": "Claude Haiku 5.5"
   },
   "schemaVersion": 1
 }
