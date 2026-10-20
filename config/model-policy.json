@@ -60,7 +60,7 @@
     "benchmarkMaxPublicationAgeDays": 90
   },
   "selectionPolicy": {
-    "version": 12,
+    "version": 13,
     "costTieBreak": "newest_verified_release",
     "referenceInputTokens": 1000000,
     "referenceOutputTokens": 100000,

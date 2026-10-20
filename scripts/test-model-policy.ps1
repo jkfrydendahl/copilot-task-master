@@ -222,7 +222,7 @@ Run-Test "Published and runtime-verified vision admit the configured Visual/UI v
 }
 Run-Test "Every profile preauthorizes its task-appropriate effort range" {
     $p=Get-ModelPolicyConfig (Join-Path $repo "config\model-policy.json")
-    Assert-True ($p.selectionPolicy.version -eq 12 -and $p.schemaVersion -eq 4) "Role evidence contract not versioned"
+    Assert-True ($p.selectionPolicy.version -eq 13 -and $p.schemaVersion -eq 4) "Retirement recovery contract not versioned"
     Assert-True ($p.consensusPolicy.discoveryFreshnessDays -eq 7) "Local discovery validity changed"
     Assert-True ($p.selectionPolicy.costTieBreak -eq "newest_verified_release") "Recency tie policy missing"
     foreach ($key in @("orchestrator","default-development")) {

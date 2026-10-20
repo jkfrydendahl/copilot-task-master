@@ -308,7 +308,7 @@ Run-Test "Same-run onboarding persists catalogs and enters normal profile qualif
         Remove-Item -LiteralPath $root
     }
 }
-Run-Test "A retired incumbent with no qualified replacement is explicitly blocked, not silently migrated" {
+Run-Test "A retired incumbent with no rankable comparison immediately migrates to its exact official successor" {
     $root=Join-Path ([IO.Path]::GetTempPath()) ([guid]::NewGuid().ToString("N"))
     foreach($dir in @("config","data","reports")){New-Item -ItemType Directory (Join-Path $root $dir) -Force | Out-Null}
     try{
@@ -320,16 +320,48 @@ Run-Test "A retired incumbent with no qualified replacement is explicitly blocke
         $f.PricingAliasConfig | ConvertTo-Json -Depth 15 | Set-Content (Join-Path $root "config\model-pricing-aliases.json")
         $path=Join-Path $root "task-profiles.json"
         ConvertTo-Json -InputObject @(@{key="quick";model="old";effort="low";context="default"}) | Set-Content $path
-        $before=Get-Content $path -Raw
         $review=Invoke-TaskProfileReview -RepoRoot $root -Availability $f.Availability -RuntimeCatalog $f.RuntimeCatalog `
-            -Sources $f.Sources -FetchPricing {param($u)$f.PricingFetch} -ForceImmediateApply -NowUtc $now
+            -Sources $f.Sources -FetchPricing {param($u)$f.PricingFetch} -NowUtc $now
         $result=$review.results[0]
-        Assert-True ($result.resolution.status -like "blocked_retired_incumbent*" -and -not $result.resolution.applied) "Retired incumbent presented as ordinary retention"
-        Assert-True ($result.finalModel -eq "old" -and (Get-Content $path -Raw) -ceq $before) "Unqualified migration applied"
-        Assert-True ($null -eq $result.selection.winner) "Retirement waived minimum comparison coverage"
+        $stored=@(Get-Content $path -Raw | ConvertFrom-Json)
+        Assert-True ($result.resolution.status -eq "applied_retirement_official_successor" -and $result.resolution.applied) "Retirement recovery was blocked or waited for confirmation"
+        Assert-True ($result.finalModel -eq "future-1.0" -and $stored[0].model -eq "future-1.0" -and $stored[0].effort -eq "low") "Supported migration not persisted"
+        Assert-True ($null -eq $result.selection.winner -and -not $result.selection.retirementRecovery.roleQualified) "Successor guidance fabricated benchmark qualification"
         $report=Get-Content (Join-Path $root "reports\task-profile-review.md") -Raw
-        Assert-True ($report.Contains("Action required:") -and $report.Contains("officially retired on **2026-09-22**") -and
-            $report.Contains("Suggested alternatives are migration guidance, not qualified winners")) "Retirement source/action caveat missing"
+        Assert-True ($report.Contains("Retirement recovery:") -and $report.Contains("officially retired on **2026-09-22**") -and
+            $report.Contains("Emergency replacement, not certified") -and -not $report.Contains("Current configuration retained")) "Retirement recovery or qualification caveat missing"
+        Assert-True ($report.Contains("| quick | value_balanced | old / low / default | future-1.0 / low / default | future-1.0 / low / default |")) "Successor recommendation absent from decision table"
+    }finally{
+        foreach($file in @(Get-ChildItem -LiteralPath $root -File -Recurse)){Remove-Item -LiteralPath $file.FullName}
+        foreach($dir in @("config","data","reports")){Remove-Item -LiteralPath (Join-Path $root $dir)}
+        Remove-Item -LiteralPath $root
+    }
+}
+Run-Test "Unrecoverable retirement fails without publishing profiles or replacing the prior report" {
+    $root=Join-Path ([IO.Path]::GetTempPath()) ([guid]::NewGuid().ToString("N"))
+    foreach($dir in @("config","data","reports")){New-Item -ItemType Directory (Join-Path $root $dir) -Force | Out-Null}
+    try{
+        $f=New-OnboardingFixture
+        $f.Availability.lifecycle.models.Old=@{retirementDate="2026-09-22";suggestedAlternative="Future 1.0";scope="all";exceptionNotes=@()}
+        $f.PricingFetch.content=$f.PricingFetch.content.Replace('$0.5','$20').Replace('$2.5','$100')
+        Copy-Item (Join-Path $PSScriptRoot "..\config\model-policy.json") (Join-Path $root "config")
+        $f.CapabilityCatalog | ConvertTo-Json -Depth 15 | Set-Content (Join-Path $root "config\model-capabilities.json")
+        $f.AliasConfig | ConvertTo-Json -Depth 15 | Set-Content (Join-Path $root "config\model-ranking-aliases.json")
+        $f.PricingAliasConfig | ConvertTo-Json -Depth 15 | Set-Content (Join-Path $root "config\model-pricing-aliases.json")
+        $path=Join-Path $root "task-profiles.json"
+        $reportPath=Join-Path $root "reports\task-profile-review.md"
+        ConvertTo-Json -InputObject @(@{key="quick";model="old";effort="low";context="default"}) | Set-Content $path
+        Set-Content $reportPath "previous report"
+        $profilesBefore=Get-Content $path -Raw
+        $reportBefore=Get-Content $reportPath -Raw
+        $failed=$false
+        try{
+            Invoke-TaskProfileReview -RepoRoot $root -Availability $f.Availability -RuntimeCatalog $f.RuntimeCatalog `
+                -Sources $f.Sources -FetchPricing {param($u)$f.PricingFetch} -ForceImmediateApply -NowUtc $now | Out-Null
+        }catch [InvalidOperationException]{$failed=$_.Exception.Message.Contains("No admissible retirement replacement")}
+        Assert-True $failed "Unrecoverable retirement reported success or force bypassed the hard budget"
+        Assert-True ((Get-Content $path -Raw) -ceq $profilesBefore -and
+            (Get-Content $reportPath -Raw) -ceq $reportBefore) "Failed recovery published a partial profile/report update"
     }finally{
         foreach($file in @(Get-ChildItem -LiteralPath $root -File -Recurse)){Remove-Item -LiteralPath $file.FullName}
         foreach($dir in @("config","data","reports")){Remove-Item -LiteralPath (Join-Path $root $dir)}

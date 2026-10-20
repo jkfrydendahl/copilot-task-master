@@ -44,6 +44,18 @@ function Use-ReasoningFallback($Fixture) {
         $record.metricIdentity="liveBench.reasoning"
     }
 }
+function Set-RetiredFixtureIncumbent($Fixture) {
+    foreach ($verdict in $Fixture.Verdicts) {
+        $verdict.lifecycle=@{status="not_listed";name=$verdict.modelId}
+    }
+    $incumbent=$Fixture.Verdicts | Where-Object modelId -eq incumbent
+    $incumbent.admissible=$false
+    $incumbent.reasonCodes=@("model_retired")
+    $incumbent.lifecycle=@{
+        status="retired";name="incumbent";retirementDate="2026-09-21";suggestedAlternative="strong"
+        sourceUrl="https://docs.github.com/en/copilot/reference/ai-models/supported-models"
+    }
+}
 Run-Test "All nine production contracts qualify before price selection" {
     $expected = @{
         quick="";"default-development"="instruction-following";"agentic-implementation"=""
@@ -256,5 +268,123 @@ Run-Test "Orchestrator workflow tolerates exactly 0.03, never more" {
     Assert-True ((Get-ProfileSelection @f).winner.model -eq "cheap") "Exact workflow boundary rejected"
     Set-FixtureScore $f cheap automationBench 0.769999
     Assert-True ((Get-ProfileSelection @f).winner.model -ne "cheap") "Workflow tolerance widened"
+}
+Run-Test "Retirement immediately applies a qualified winner without incumbent comparison or confirmation" {
+    $f=New-QualificationFixture
+    Set-RetiredFixtureIncumbent $f
+    Use-ReasoningFallback $f
+    $f.Evidence=@($f.Evidence | Where-Object model -ne incumbent)
+    $s=Get-ProfileSelection @f
+    $state=@{schemaVersion=4;incumbentBasis=@{
+        configurationId=$s.currentConfiguration.configurationId
+        metricKey="artificialAnalysis.codingIndex"
+        qualificationRoutes=@{reasoning="artificialAnalysis.intelligenceIndex"}
+    }}
+    $r=Resolve-ProfileSelectionState -CurrentModel incumbent -Selection $s -State $state
+    Assert-True ($r.applied -and $r.finalModel -eq "cheap" -and $null -eq $r.state.pending) "Retirement waited or required retired-incumbent evidence"
+    Assert-True ($r.status -eq "applied_retirement_qualified_replacement" -and $s.retirementRecovery.mode -eq "qualified") "Qualified repair not distinguished"
+    Assert-True ($r.state.retirementRecovery.retiredModel -eq "incumbent" -and $r.state.retirementRecovery.roleQualified) "Retirement provenance lost"
+}
+Run-Test "Retirement uses primary value ranking before the official successor without certifying missing dimensions" {
+    $f=New-QualificationFixture triage
+    Set-RetiredFixtureIncumbent $f
+    $f.Evidence=@($f.Evidence | Where-Object metric -eq intelligenceIndex)
+    $s=Get-ProfileSelection @f
+    $r=Resolve-ProfileSelectionState -CurrentModel incumbent -Selection $s
+    Assert-True ($r.applied -and $r.finalModel -eq "cheap" -and $r.status -eq "applied_retirement_primary_fallback") "Benchmark-led recovery did not use primary value rules"
+    Assert-True ($s.retirementRecovery.mode -eq "primary_benchmark" -and -not $s.retirementRecovery.roleQualified) "Partial evidence certified"
+    Assert-True ($s.qualification.status -eq "retained_insufficient_role_evidence" -and
+        -not ($s.qualification.candidates | Where-Object model -eq cheap).qualified) "Normal role requirements relaxed"
+    Assert-True ($null -eq (Get-ObjectMemberValue $r.state.incumbentBasis "qualificationRoutes")) "Failed dimensions became an established qualification basis"
+    $text=(Get-RoleQualificationReportLines @{selection=$s}) -join "`n"
+    Assert-True ($text.Contains("Emergency replacement, not certified") -and -not $text.Contains("Current configuration retained")) "Emergency migration misreported as ordinary retention"
+    $f.Profile.model="cheap"
+    $next=Resolve-ProfileSelectionState -CurrentModel cheap -Selection (Get-ProfileSelection @f) -State $r.state
+    Assert-True (-not $next.applied -and $next.finalModel -eq "cheap" -and
+        $next.state.retirementRecovery.retiredModel -eq "incumbent") "Emergency recovery repeated or lost its history"
+}
+Run-Test "An exact official successor repairs retirement only when benchmark ranking is unavailable" {
+    $f=New-QualificationFixture triage
+    Set-RetiredFixtureIncumbent $f
+    $f.Evidence=@()
+    $s=Get-ProfileSelection @f
+    $r=Resolve-ProfileSelectionState -CurrentModel incumbent -Selection $s
+    Assert-True ($r.applied -and $r.finalModel -eq "strong" -and $r.status -eq "applied_retirement_official_successor") "Official successor did not recover unrankable retirement"
+    Assert-True ($null -eq $s.winner -and $null -eq $r.state.incumbentBasis -and
+        $s.retirementRecovery.mode -eq "official_successor" -and -not $s.retirementRecovery.roleQualified) "Successor guidance became synthetic benchmark evidence"
+    Assert-True ($s.candidateReferenceAic -eq 150 -and $r.finalConfiguration.effort -eq "low") "Successor price or authorized configuration lost"
+}
+Run-Test "Retirement can use admissible cached primary evidence without claiming fresh qualification" {
+    $f=New-QualificationFixture triage
+    Set-RetiredFixtureIncumbent $f
+    $f.Evidence=@($f.Evidence | Where-Object metric -eq intelligenceIndex)
+    foreach ($record in $f.Evidence) { $record.cached=$true }
+    $s=Get-ProfileSelection @f
+    $r=Resolve-ProfileSelectionState -CurrentModel incumbent -Selection $s
+    Assert-True ($r.applied -and $r.finalModel -eq "cheap" -and -not $s.freshObservation -and
+        $s.confidence -eq "reduced" -and -not $s.retirementRecovery.roleQualified) "Cached retirement repair was blocked or certified as fresh"
+}
+Run-Test "A native no-effort official successor remains a native configuration" {
+    $f=New-QualificationFixture triage
+    Set-RetiredFixtureIncumbent $f
+    $f.Evidence=@()
+    $successor=$f.Verdicts | Where-Object modelId -eq strong
+    $successor.effort="none";$successor.capabilities=@{effortMode="unsupported"}
+    $s=Get-ProfileSelection @f
+    $r=Resolve-ProfileSelectionState -CurrentModel incumbent -Selection $s
+    Assert-True ($r.applied -and $r.finalConfiguration.effort -eq "none") "Native successor acquired invented effort control"
+}
+Run-Test "Retirement recovery never admits a hard-excluded or unauthorized successor" {
+    foreach ($reason in @("pricing_input_exceeds_ceiling","pricing_output_exceeds_ceiling","not_available",
+        "capabilities_stale","pricing_stale","vision_unsupported","model_retired","wrong_effort","wrong_context")) {
+        $f=New-QualificationFixture triage
+        Set-RetiredFixtureIncumbent $f
+        $f.Evidence=@()
+        ($f.Verdicts | Where-Object modelId -eq cheap).admissible=$false
+        $successor=$f.Verdicts | Where-Object modelId -eq strong
+        if ($reason -eq "wrong_effort") { $successor.effort="max" }
+        elseif ($reason -eq "wrong_context") { $successor.context="long_context" }
+        else { $successor.admissible=$false;$successor.reasonCodes=@($reason) }
+        $failed=$false
+        try { Get-ProfileSelection @f | Out-Null }
+        catch [InvalidOperationException] { $failed=$_.Exception.Message.Contains("No admissible retirement replacement") }
+        Assert-True $failed "Retirement recovery bypassed $reason or silently retained the retired model"
+    }
+}
+Run-Test "Ambiguous and approximate successor names cannot authorize retirement migration" {
+    foreach ($alternative in @("latest strong model","duplicate")) {
+        $f=New-QualificationFixture triage
+        Set-RetiredFixtureIncumbent $f
+        $f.Evidence=@()
+        ($f.Verdicts | Where-Object modelId -eq incumbent).lifecycle.suggestedAlternative=$alternative
+        if ($alternative -eq "duplicate") {
+            foreach ($v in @($f.Verdicts | Where-Object modelId -ne incumbent)) { $v.lifecycle.name="duplicate" }
+        }
+        $failed=$false
+        try { Get-ProfileSelection @f | Out-Null }
+        catch [InvalidOperationException] { $failed=$_.Exception.Message.Contains("No admissible retirement replacement") }
+        Assert-True $failed "Ambiguous or approximate successor identity guessed"
+    }
+}
+Run-Test "Scheduled and conditional lifecycle warnings do not activate mandatory recovery" {
+    foreach ($status in @("scheduled","conditional")) {
+        $f=New-QualificationFixture triage
+        foreach ($v in $f.Verdicts) { $v.lifecycle=@{status=$status;retirementDate="2026-09-21"} }
+        $f.Evidence=@($f.Evidence | Where-Object metric -eq intelligenceIndex)
+        $s=Get-ProfileSelection @f
+        $r=Resolve-ProfileSelectionState -CurrentModel incumbent -Selection $s -ForceImmediateApply
+        Assert-True ($null -eq $s.retirementRecovery -and -not $r.applied -and $r.finalModel -eq "incumbent") "Non-retired incumbent received emergency migration"
+    }
+}
+Run-Test "Retirement cannot successfully retain an incumbent after publication rollback" {
+    $f=New-QualificationFixture triage
+    Set-RetiredFixtureIncumbent $f
+    $f.Evidence=@($f.Evidence | Where-Object metric -eq intelligenceIndex)
+    $s=Get-ProfileSelection @f
+    $state=@{schemaVersion=4;latestSourceDates=@{"artificialAnalysis.intelligenceIndex"="2026-09-23"}}
+    $failed=$false
+    try { Resolve-ProfileSelectionState -CurrentModel incumbent -Selection $s -State $state | Out-Null }
+    catch [InvalidOperationException] { $failed=$_.Exception.Message.Contains("regressed") }
+    Assert-True $failed "Publication rollback left a retired configuration in a successful review"
 }
 if ($script:Failed) { exit 1 }

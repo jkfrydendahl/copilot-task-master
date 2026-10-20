@@ -1,6 +1,6 @@
 {
   "schemaVersion": 4,
-  "generatedAtUtc": "2026-10-20T12:27:39.6905336Z",
+  "generatedAtUtc": "2026-10-20T13:14:19.8392847Z",
   "sources": {
     "artificialAnalysisCodingAgents": {
       "status": "ok",
@@ -21500,7 +21500,7 @@
       },
       "sourceDate": null,
       "sourceVersion": "703366efee2bab84154d7cc85b4b67e19ec9f4b283dad34f1b786577ebc2e9f0|49e8283fcddbe6c8726218db6bf1281a1cca793556c887bbb18b99ed3e49cacf",
-      "fetchedAtUtc": "2026-10-20T12:27:33.1314550Z",
+      "fetchedAtUtc": "2026-10-20T12:27:33.131455Z",
       "sourceUrl": "https://artificialanalysis.ai/api/v2/data/llms/models"
     },
     "artificialAnalysisComponents": {
@@ -33358,7 +33358,7 @@
       },
       "sourceDate": null,
       "datasetVersion": "2026-06-25",
-      "artifactPublishedAtUtc": "2026-10-20T07:18:12.0000000Z",
+      "artifactPublishedAtUtc": "2026-10-20T07:18:12Z",
       "artifactCommit": null,
       "categoryColumns": {
         "reasoning": [
@@ -33391,114 +33391,14 @@
   },
   "consensus": {
     "profiles": {
-      "orchestrator": {
-        "activeOverride": {
-          "activatedAtUtc": "2026-09-30T11:17:00.3028541Z",
-          "configurationId": "c220dbb65e4b18e066ce645b930893bca382cc603a575260724e5dface45e2fb",
-          "context": "default",
-          "decidingSource": "artificialAnalysisComponents",
-          "effort": "high",
-          "evidenceIdentity": "0758460f6242ee1dd3d133aa5b6839ec5a81180691c152ba6ffd01a80abacf75",
-          "forced": true,
-          "metricKey": "artificialAnalysisComponents.automationBench",
-          "model": "gemini-3.7-flash",
-          "observation": "e4f743bb7e3027336fa68f38cf602fa1afdf9a6760947d6743c58db04b5916a0",
-          "policyFingerprint": "cf2a7102219115af34370e1ca62e53969d77bc17c497cd6c0e22dc3f5627193a"
-        },
-        "incumbentBasis": {
-          "configurationId": "c220dbb65e4b18e066ce645b930893bca382cc603a575260724e5dface45e2fb",
-          "evidenceIdentity": "0758460f6242ee1dd3d133aa5b6839ec5a81180691c152ba6ffd01a80abacf75",
-          "metricIdentity": "2c5e0b9ba3afad3951528046d6f2dca79a2b047257333f382980a531fa6ad63c",
-          "metricKey": "artificialAnalysisComponents.automationBench",
-          "observedAtUtc": "2026-10-06T06:44:11.6577346Z",
-          "qualificationRoutes": {
-            "instruction-following": "liveBench.instructionFollowing",
-            "long-context": "artificialAnalysisComponents.lcr",
-            "primary": "artificialAnalysisComponents.automationBench"
-          },
-          "sourceVersion": "6a921baa257c4491bdd548631cae942ebd2b8e0156ff1883c7750e5dc18f50a8"
-        },
-        "latestSourceDates": {
-          "liveBench.instructionFollowing:artifact": "2026-10-18T18:54:26.0000000Z"
-        },
-        "legacyLatestSourceDates": {},
-        "observations": {},
-        "pending": null,
-        "policyFingerprint": "ae9a89f28c0913a84a2549f542ec6d2859a1fa0efa34b1ac6f4ee22ddcbd9aa3",
-        "schemaVersion": 4
-      },
-      "agentic-implementation": {
-        "activeOverride": {
-          "activatedAtUtc": "2026-09-30T11:17:00.3028541Z",
-          "configurationId": "240e884b8d77bf19602619c77a8f9984ddeceae65298f1a6f0d742d434521999",
-          "context": "default",
-          "decidingSource": "artificialAnalysisCodingAgents",
-          "effort": "max",
-          "evidenceIdentity": "a42d755977502758b7df91be7d183a042e774c8f5f12c1b5c7637d06ce3acb26",
-          "forced": true,
-          "metricKey": "artificialAnalysisCodingAgents.codingAgentIndex",
-          "model": "claude-sonnet-5.5",
-          "observation": "4abe18d8888ef852ebcbfec76e41801789eeee6c167c54d44f55567e1bfce0e0",
-          "policyFingerprint": "28b44c81bf77f9872e717e5280a2e57a78a8f4ffda5ee6f8fb44f5afc0a5b223"
-        },
-        "incumbentBasis": {
-          "metricIdentity": "a578e386d7ca5ee35cb1b87f0a7a22779656c0bd3648e5b895aa6f3ee11ee88d",
-          "qualificationRoutes": {
-            "primary": "artificialAnalysisCodingAgents.codingAgentIndex"
-          },
-          "observedAtUtc": "2026-10-20T12:27:39.6905336Z",
-          "metricKey": "artificialAnalysisCodingAgents.codingAgentIndex",
-          "sourceVersion": "06a099e19926c9b78b28172d8834f455cbf98dc87337c6f2e470849f390a267e",
-          "configurationId": "240e884b8d77bf19602619c77a8f9984ddeceae65298f1a6f0d742d434521999",
-          "evidenceIdentity": "a42d755977502758b7df91be7d183a042e774c8f5f12c1b5c7637d06ce3acb26"
-        },
-        "latestSourceDates": {},
-        "legacyLatestSourceDates": {},
-        "observations": {},
-        "pending": null,
-        "policyFingerprint": "8925c88f11f0836a156182e988712615626e479f1ca62d01e65f9a4b3b2a6a93",
-        "schemaVersion": 4
-      },
-      "triage": {
-        "activeOverride": null,
-        "incumbentBasis": {
-          "configurationId": "911932b2f02ed498a3a1c3975bee2ceb32210537d45655c001128c3bda769530",
-          "evidenceIdentity": "9c996690e2e105ceca2c5f52c09f4ddf5a695c1aef4600bfe4289a48d73a800c",
-          "metricIdentity": "3d02bb00de3a529d42f71107dec3694a02fe845041dde14f3cd6b46582813f29",
-          "metricKey": "artificialAnalysis.intelligenceIndex",
-          "observedAtUtc": "2026-09-22T13:41:37.1264976Z",
-          "sourceVersion": "373eb83b57945c5451f459f31c14e3fcbde6874a854ce92b3d9daa0cdb599d79"
-        },
-        "latestSourceDates": {},
-        "legacyLatestSourceDates": {},
-        "observations": {},
-        "pending": null,
-        "policyFingerprint": "f7cb853118c2619204828b50cb9b4b7103802326469ffa09327cc16c363b2f14",
-        "schemaVersion": 4
-      },
-      "visual-ui": {
-        "activeOverride": null,
-        "incumbentBasis": {
-          "metricIdentity": "193918ba55ac6b5ec42d018d98a74735bdc6a63486e440dd074a0067f591530e",
-          "qualificationRoutes": {
-            "visual-understanding": "artificialAnalysisComponents.mmmuPro",
-            "primary": "artificialAnalysis.codingIndex"
-          },
-          "observedAtUtc": "2026-10-20T12:27:39.6905336Z",
-          "metricKey": "artificialAnalysis.codingIndex",
-          "sourceVersion": "7825dc26715ba132c8ff3e742042a9784fdb19ad366a3ce8c3647ac81777372f",
-          "configurationId": "5b244a2156f668298622988037757f73c0bdcb7448dd6e351298dd1b6187e6b9",
-          "evidenceIdentity": "bd9c9b3bd9480e9fcc45d8f4863de78e3d9ce7a662520b7acb5420ab99613930"
-        },
-        "latestSourceDates": {},
-        "legacyLatestSourceDates": {},
-        "observations": {},
-        "pending": null,
-        "policyFingerprint": "3ce7df28eccfee78ce8256d5be0f395c5e56f68f16724dac9c722df46480a6ab",
-        "schemaVersion": 4
-      },
       "mechanical": {
+        "schemaVersion": 4,
+        "policyFingerprint": "40743f3188c568e0aa8a373a44e877b59caf2b9ffe1591ad745ad8dbc25979e7",
+        "pending": null,
         "activeOverride": null,
+        "observations": {},
+        "latestSourceDates": {},
+        "legacyLatestSourceDates": {},
         "incumbentBasis": {
           "configurationId": "d1dd15cd25dc47cf3448b49e1c200a53ca3231d9145418540093c214b3c72bec",
           "evidenceIdentity": "01135c2381c93c2e508f109f6e94cf6c2b5bd4379bfdc200cf233fd55d5c9556",
@@ -33507,15 +33407,186 @@
           "observedAtUtc": "2026-09-22T13:41:37.1264976Z",
           "sourceVersion": "7da9d44827d99617d14406fda7e78ba29341fe7221fd1bb77e13a4aafa2f6a45"
         },
+        "retirementRecovery": null
+      },
+      "review": {
+        "schemaVersion": 4,
+        "policyFingerprint": "a5312326ac384278a2fbf89ffcee21ec3c9991463084b26e3fb1333f45540750",
+        "pending": null,
+        "activeOverride": {
+          "activatedAtUtc": "2026-10-20T12:27:39.6905336Z",
+          "configurationId": "1f7497a9a2df69cc66d4d95b9caecbc59d161e1b47e7c8ec3db9befce392f81f",
+          "context": "default",
+          "decidingSource": "artificialAnalysis",
+          "effort": "high",
+          "evidenceIdentity": "1b63b955e7c5eb724a0848f200566172223f6ef59657fb552f89fe577acc87f8",
+          "forced": true,
+          "metricKey": "artificialAnalysis.codingIndex",
+          "model": "claude-opus-5",
+          "observation": "039c261d8063a4e09043b1d0e3556fb43080a30926fd5ec3dfac37fa8c8d2af2",
+          "policyFingerprint": "4b26ad2d3ebf13fef932a95969ae26e7c1715cdd3540b7bd5e21bc413ce7a740"
+        },
+        "observations": {},
         "latestSourceDates": {},
         "legacyLatestSourceDates": {},
-        "observations": {},
+        "incumbentBasis": {
+          "qualificationRoutes": {
+            "long-context": "artificialAnalysisComponents.lcr",
+            "reasoning": "artificialAnalysis.intelligenceIndex",
+            "primary": "artificialAnalysis.codingIndex"
+          },
+          "evidenceIdentity": "1b63b955e7c5eb724a0848f200566172223f6ef59657fb552f89fe577acc87f8",
+          "observedAtUtc": "2026-10-20T13:14:19.8392847Z",
+          "sourceVersion": "7825dc26715ba132c8ff3e742042a9784fdb19ad366a3ce8c3647ac81777372f",
+          "configurationId": "1f7497a9a2df69cc66d4d95b9caecbc59d161e1b47e7c8ec3db9befce392f81f",
+          "metricIdentity": "193918ba55ac6b5ec42d018d98a74735bdc6a63486e440dd074a0067f591530e",
+          "metricKey": "artificialAnalysis.codingIndex"
+        },
+        "retirementRecovery": null
+      },
+      "quick": {
+        "schemaVersion": 4,
+        "policyFingerprint": "4ffe55558b29eabd19d1e631af3a9012a49e98198d8ef6e0ca91fb7016d6c804",
         "pending": null,
-        "policyFingerprint": "e6d1898f5c8dc2375939addffa6eb411b8a97f42c83f498bf38b67ef2dbc3294",
-        "schemaVersion": 4
+        "activeOverride": null,
+        "observations": {},
+        "latestSourceDates": {},
+        "legacyLatestSourceDates": {},
+        "incumbentBasis": {
+          "qualificationRoutes": {
+            "primary": "artificialAnalysis.codingIndex"
+          },
+          "evidenceIdentity": "d5ff4ada0cb304b2f26ef93b8e1b1f5650b7eb4a37c57d72c4e34c04b809136b",
+          "observedAtUtc": "2026-10-20T13:14:19.8392847Z",
+          "sourceVersion": "7825dc26715ba132c8ff3e742042a9784fdb19ad366a3ce8c3647ac81777372f",
+          "configurationId": "d1dd15cd25dc47cf3448b49e1c200a53ca3231d9145418540093c214b3c72bec",
+          "metricIdentity": "193918ba55ac6b5ec42d018d98a74735bdc6a63486e440dd074a0067f591530e",
+          "metricKey": "artificialAnalysis.codingIndex"
+        },
+        "retirementRecovery": null
+      },
+      "orchestrator": {
+        "schemaVersion": 4,
+        "policyFingerprint": "55425cd558384fef8f0a90bc44a2e27f4d5d4003b9fb75e74bb8642a1d01c748",
+        "pending": null,
+        "activeOverride": {
+          "model": "grok-4.6",
+          "effort": "high",
+          "context": "default",
+          "configurationId": "00a3989ceddf4701fc3a7ea33db052c9ce0b7893a27b2afeed757e51ccde40ee",
+          "policyFingerprint": "55425cd558384fef8f0a90bc44a2e27f4d5d4003b9fb75e74bb8642a1d01c748",
+          "decidingSource": "artificialAnalysisComponents",
+          "metricKey": "artificialAnalysisComponents.automationBench",
+          "observation": "b807598721b8452fde43b65b0e2c144dbf09d6fb48546e9071d935f1a8e1af29",
+          "evidenceIdentity": "56e8b9dbcef2fb39e68897c46dbfce4325f28da078e87e748999e83bd5fddea4",
+          "activatedAtUtc": "2026-10-20T13:14:19.8392847Z",
+          "forced": false,
+          "retirementRecovery": true
+        },
+        "observations": {},
+        "latestSourceDates": {
+          "liveBench.instructionFollowing:artifact": "2026-10-18T18:54:26.0000000Z"
+        },
+        "legacyLatestSourceDates": {},
+        "incumbentBasis": {
+          "evidenceIdentity": "56e8b9dbcef2fb39e68897c46dbfce4325f28da078e87e748999e83bd5fddea4",
+          "observedAtUtc": "2026-10-20T13:14:19.8392847Z",
+          "sourceVersion": "1db58496528be8d58ba149214850aa34e7cb5807fd5e59f2c75136804568e672",
+          "configurationId": "00a3989ceddf4701fc3a7ea33db052c9ce0b7893a27b2afeed757e51ccde40ee",
+          "metricIdentity": "2c5e0b9ba3afad3951528046d6f2dca79a2b047257333f382980a531fa6ad63c",
+          "metricKey": "artificialAnalysisComponents.automationBench"
+        },
+        "retirementRecovery": {
+          "configuration": {
+            "configurationId": "00a3989ceddf4701fc3a7ea33db052c9ce0b7893a27b2afeed757e51ccde40ee",
+            "context": "default",
+            "effort": "high",
+            "model": "grok-4.6"
+          },
+          "mode": "primary_benchmark",
+          "retiredModel": "gemini-3.7-flash",
+          "retirementDate": "2026-10-19",
+          "roleQualified": false,
+          "sourceUrl": "https://docs.github.com/en/copilot/reference/ai-models/supported-models",
+          "appliedAtUtc": "2026-10-20T13:14:19.8392847Z"
+        }
+      },
+      "visual-ui": {
+        "schemaVersion": 4,
+        "policyFingerprint": "2df8605a9f0a89d0cee02afe767eb4ec1b32b2f88bddea0812cdc4adc4b9a1f3",
+        "pending": null,
+        "activeOverride": null,
+        "observations": {},
+        "latestSourceDates": {},
+        "legacyLatestSourceDates": {},
+        "incumbentBasis": {
+          "qualificationRoutes": {
+            "visual-understanding": "artificialAnalysisComponents.mmmuPro",
+            "primary": "artificialAnalysis.codingIndex"
+          },
+          "evidenceIdentity": "bd9c9b3bd9480e9fcc45d8f4863de78e3d9ce7a662520b7acb5420ab99613930",
+          "observedAtUtc": "2026-10-20T13:14:19.8392847Z",
+          "sourceVersion": "7825dc26715ba132c8ff3e742042a9784fdb19ad366a3ce8c3647ac81777372f",
+          "configurationId": "5b244a2156f668298622988037757f73c0bdcb7448dd6e351298dd1b6187e6b9",
+          "metricIdentity": "193918ba55ac6b5ec42d018d98a74735bdc6a63486e440dd074a0067f591530e",
+          "metricKey": "artificialAnalysis.codingIndex"
+        },
+        "retirementRecovery": null
+      },
+      "triage": {
+        "schemaVersion": 4,
+        "policyFingerprint": "9f7160182ce0d83a41128ab773a4436fc4f5df260835aadeb822a593d3cc719e",
+        "pending": null,
+        "activeOverride": {
+          "model": "gpt-6.1-sol",
+          "effort": "low",
+          "context": "default",
+          "configurationId": "5c611e4e967b264150c0fd0b88ce793f4d4ddd8644ed0c3f9621f1b4e98acc3d",
+          "policyFingerprint": "9f7160182ce0d83a41128ab773a4436fc4f5df260835aadeb822a593d3cc719e",
+          "decidingSource": "artificialAnalysis",
+          "metricKey": "artificialAnalysis.intelligenceIndex",
+          "observation": "80e8793d3419a52b967e7cfe4821a56905f783d5933b5b6ad7f7ffc894e05877",
+          "evidenceIdentity": "6fdbb754dcbdd0cc25c81901fd05b78c6eb077b43cbc68349b3ad082e79af13c",
+          "activatedAtUtc": "2026-10-20T13:14:19.8392847Z",
+          "forced": false,
+          "retirementRecovery": true
+        },
+        "observations": {},
+        "latestSourceDates": {},
+        "legacyLatestSourceDates": {},
+        "incumbentBasis": {
+          "evidenceIdentity": "6fdbb754dcbdd0cc25c81901fd05b78c6eb077b43cbc68349b3ad082e79af13c",
+          "observedAtUtc": "2026-10-20T13:14:19.8392847Z",
+          "sourceVersion": "2609ba82f146323233ab550647036aee0f9bb410592e96d1305e4e70f89c8a6c",
+          "configurationId": "5c611e4e967b264150c0fd0b88ce793f4d4ddd8644ed0c3f9621f1b4e98acc3d",
+          "metricIdentity": "3d02bb00de3a529d42f71107dec3694a02fe845041dde14f3cd6b46582813f29",
+          "metricKey": "artificialAnalysis.intelligenceIndex"
+        },
+        "retirementRecovery": {
+          "configuration": {
+            "configurationId": "5c611e4e967b264150c0fd0b88ce793f4d4ddd8644ed0c3f9621f1b4e98acc3d",
+            "context": "default",
+            "effort": "low",
+            "model": "gpt-6.1-sol"
+          },
+          "mode": "primary_benchmark",
+          "retiredModel": "gemini-3.7-flash",
+          "retirementDate": "2026-10-19",
+          "roleQualified": false,
+          "sourceUrl": "https://docs.github.com/en/copilot/reference/ai-models/supported-models",
+          "appliedAtUtc": "2026-10-20T13:14:19.8392847Z"
+        }
       },
       "default-development": {
+        "schemaVersion": 4,
+        "policyFingerprint": "bd4d857ed2cdce7948ea6a48a28f49c5ac31fed0b9f1c75c3f37c5e7008ada59",
+        "pending": null,
         "activeOverride": null,
+        "observations": {},
+        "latestSourceDates": {
+          "liveBench.instructionFollowing:artifact": "2026-10-18T18:54:26.0000000Z"
+        },
+        "legacyLatestSourceDates": {},
         "incumbentBasis": {
           "configurationId": "5b244a2156f668298622988037757f73c0bdcb7448dd6e351298dd1b6187e6b9",
           "evidenceIdentity": "e3903279bf8d54f0ae5a0968175bdcf6aa57ede656ef6e2997a6016a19baabe7",
@@ -33528,74 +33599,12 @@
           },
           "sourceVersion": "7825dc26715ba132c8ff3e742042a9784fdb19ad366a3ce8c3647ac81777372f"
         },
-        "latestSourceDates": {
-          "liveBench.instructionFollowing:artifact": "2026-10-18T18:54:26.0000000Z"
-        },
-        "legacyLatestSourceDates": {},
-        "observations": {},
-        "pending": null,
-        "policyFingerprint": "c708884d8ddafe33f870f36ddc3cb016c301a13a71dc74aefd592f9fadaf70fa",
-        "schemaVersion": 4
-      },
-      "review": {
-        "activeOverride": {
-          "model": "claude-opus-5",
-          "effort": "high",
-          "context": "default",
-          "configurationId": "1f7497a9a2df69cc66d4d95b9caecbc59d161e1b47e7c8ec3db9befce392f81f",
-          "policyFingerprint": "4b26ad2d3ebf13fef932a95969ae26e7c1715cdd3540b7bd5e21bc413ce7a740",
-          "decidingSource": "artificialAnalysis",
-          "metricKey": "artificialAnalysis.codingIndex",
-          "observation": "039c261d8063a4e09043b1d0e3556fb43080a30926fd5ec3dfac37fa8c8d2af2",
-          "evidenceIdentity": "1b63b955e7c5eb724a0848f200566172223f6ef59657fb552f89fe577acc87f8",
-          "activatedAtUtc": "2026-10-20T12:27:39.6905336Z",
-          "forced": true
-        },
-        "incumbentBasis": {
-          "metricIdentity": "193918ba55ac6b5ec42d018d98a74735bdc6a63486e440dd074a0067f591530e",
-          "qualificationRoutes": {
-            "long-context": "artificialAnalysisComponents.lcr",
-            "primary": "artificialAnalysis.codingIndex",
-            "reasoning": "artificialAnalysis.intelligenceIndex"
-          },
-          "observedAtUtc": "2026-10-20T12:27:39.6905336Z",
-          "metricKey": "artificialAnalysis.codingIndex",
-          "sourceVersion": "7825dc26715ba132c8ff3e742042a9784fdb19ad366a3ce8c3647ac81777372f",
-          "configurationId": "1f7497a9a2df69cc66d4d95b9caecbc59d161e1b47e7c8ec3db9befce392f81f",
-          "evidenceIdentity": "1b63b955e7c5eb724a0848f200566172223f6ef59657fb552f89fe577acc87f8"
-        },
-        "latestSourceDates": {},
-        "legacyLatestSourceDates": {},
-        "observations": {
-          "artificialAnalysis.codingIndex": [
-            "039c261d8063a4e09043b1d0e3556fb43080a30926fd5ec3dfac37fa8c8d2af2"
-          ]
-        },
-        "pending": null,
-        "policyFingerprint": "4b26ad2d3ebf13fef932a95969ae26e7c1715cdd3540b7bd5e21bc413ce7a740",
-        "schemaVersion": 4
-      },
-      "quick": {
-        "activeOverride": null,
-        "incumbentBasis": {
-          "metricIdentity": "193918ba55ac6b5ec42d018d98a74735bdc6a63486e440dd074a0067f591530e",
-          "qualificationRoutes": {
-            "primary": "artificialAnalysis.codingIndex"
-          },
-          "observedAtUtc": "2026-10-20T12:27:39.6905336Z",
-          "metricKey": "artificialAnalysis.codingIndex",
-          "sourceVersion": "7825dc26715ba132c8ff3e742042a9784fdb19ad366a3ce8c3647ac81777372f",
-          "configurationId": "d1dd15cd25dc47cf3448b49e1c200a53ca3231d9145418540093c214b3c72bec",
-          "evidenceIdentity": "d5ff4ada0cb304b2f26ef93b8e1b1f5650b7eb4a37c57d72c4e34c04b809136b"
-        },
-        "latestSourceDates": {},
-        "legacyLatestSourceDates": {},
-        "observations": {},
-        "pending": null,
-        "policyFingerprint": "77c2cc32d19c0956568bb27142b37bf115b999eba1540d94fa62ddac986b1974",
-        "schemaVersion": 4
+        "retirementRecovery": null
       },
       "deep-reasoning": {
+        "schemaVersion": 4,
+        "policyFingerprint": "adda00ed27b9f1897a5143637d55f01e326d35f389841d98eb1f393e1de881d5",
+        "pending": null,
         "activeOverride": {
           "activatedAtUtc": "2026-09-30T11:17:00.3028541Z",
           "configurationId": "96b2d149a3d40b50b6e21ff3b831966f6892c390319636e318689acd9cbf79b2",
@@ -33609,24 +33618,55 @@
           "observation": "30af57ad11f6dd8ed55b852f9bf6bcda2a560b813a776ef62bedead7c94cae0e",
           "policyFingerprint": "fe5450cb84b950d445c09cf8eb25163eacf6939c3ec8c0bd936997d74be38178"
         },
+        "observations": {},
+        "latestSourceDates": {},
+        "legacyLatestSourceDates": {},
         "incumbentBasis": {
-          "metricIdentity": "3d02bb00de3a529d42f71107dec3694a02fe845041dde14f3cd6b46582813f29",
           "qualificationRoutes": {
             "long-context": "artificialAnalysisComponents.lcr",
             "primary": "artificialAnalysis.intelligenceIndex"
           },
-          "observedAtUtc": "2026-10-20T12:27:39.6905336Z",
-          "metricKey": "artificialAnalysis.intelligenceIndex",
+          "evidenceIdentity": "afcbb82de0c29dafd2b3088411d1092802e8cb38387b9a71e3640b467ce66687",
+          "observedAtUtc": "2026-10-20T13:14:19.8392847Z",
           "sourceVersion": "2609ba82f146323233ab550647036aee0f9bb410592e96d1305e4e70f89c8a6c",
           "configurationId": "96b2d149a3d40b50b6e21ff3b831966f6892c390319636e318689acd9cbf79b2",
-          "evidenceIdentity": "afcbb82de0c29dafd2b3088411d1092802e8cb38387b9a71e3640b467ce66687"
+          "metricIdentity": "3d02bb00de3a529d42f71107dec3694a02fe845041dde14f3cd6b46582813f29",
+          "metricKey": "artificialAnalysis.intelligenceIndex"
         },
+        "retirementRecovery": null
+      },
+      "agentic-implementation": {
+        "schemaVersion": 4,
+        "policyFingerprint": "41eed0fff148c760b7ec58fb4d8d27f3e98fdaf3475bff909483861e3e6277b9",
+        "pending": null,
+        "activeOverride": {
+          "activatedAtUtc": "2026-09-30T11:17:00.3028541Z",
+          "configurationId": "240e884b8d77bf19602619c77a8f9984ddeceae65298f1a6f0d742d434521999",
+          "context": "default",
+          "decidingSource": "artificialAnalysisCodingAgents",
+          "effort": "max",
+          "evidenceIdentity": "a42d755977502758b7df91be7d183a042e774c8f5f12c1b5c7637d06ce3acb26",
+          "forced": true,
+          "metricKey": "artificialAnalysisCodingAgents.codingAgentIndex",
+          "model": "claude-sonnet-5.5",
+          "observation": "4abe18d8888ef852ebcbfec76e41801789eeee6c167c54d44f55567e1bfce0e0",
+          "policyFingerprint": "28b44c81bf77f9872e717e5280a2e57a78a8f4ffda5ee6f8fb44f5afc0a5b223"
+        },
+        "observations": {},
         "latestSourceDates": {},
         "legacyLatestSourceDates": {},
-        "observations": {},
-        "pending": null,
-        "policyFingerprint": "e77c3842c6508d9f057828880314e3a61c6a1815dff619898760f32c80f0dfd9",
-        "schemaVersion": 4
+        "incumbentBasis": {
+          "qualificationRoutes": {
+            "primary": "artificialAnalysisCodingAgents.codingAgentIndex"
+          },
+          "evidenceIdentity": "a42d755977502758b7df91be7d183a042e774c8f5f12c1b5c7637d06ce3acb26",
+          "observedAtUtc": "2026-10-20T13:14:19.8392847Z",
+          "sourceVersion": "06a099e19926c9b78b28172d8834f455cbf98dc87337c6f2e470849f390a267e",
+          "configurationId": "240e884b8d77bf19602619c77a8f9984ddeceae65298f1a6f0d742d434521999",
+          "metricIdentity": "a578e386d7ca5ee35cb1b87f0a7a22779656c0bd3648e5b895aa6f3ee11ee88d",
+          "metricKey": "artificialAnalysisCodingAgents.codingAgentIndex"
+        },
+        "retirementRecovery": null
       }
     }
   }

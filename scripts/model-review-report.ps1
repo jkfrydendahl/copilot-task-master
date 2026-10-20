@@ -120,9 +120,11 @@ function Get-RoleQualificationReportLines {
     param($Result)
     $qualification = Get-ObjectMemberValue $Result.selection "qualification"
     if ($null -eq $qualification -or -not $qualification.enabled) { return @() }
+    $recovery = Get-ObjectMemberValue $Result.selection "retirementRecovery"
+    $status = if ($null -ne $recovery -and -not $recovery.roleQualified) { "not_qualified" } else { $qualification.status }
     $lines = [System.Collections.Generic.List[string]]::new()
     $lines.Add("")
-    $lines.Add("**Role qualification:** $($qualification.status). Every required dimension must pass independently; then the cheapest qualified configuration wins. At least $($qualification.minimumModels) distinct eligible models are required per comparison, not per surviving intersection.")
+    $lines.Add("**Role qualification:** $status. Every required dimension must pass independently; then the cheapest qualified configuration wins. At least $($qualification.minimumModels) distinct eligible models are required per comparison, not per surviving intersection.")
     $lines.Add("References are fixed before intersecting dimensions. Missing evidence is not zero or a pass; no cross-benchmark or cross-effort score substitution. These are proxy-based policy tolerances, not statistical equivalence or direct task-success measurements.")
     $lines.Add("")
     $lines.Add("| Required dimension | Selected metric | Comparison models | Reference configuration | Reference score | Allowed gap | Minimum score | Cached | Results published |")
@@ -155,7 +157,11 @@ function Get-RoleQualificationReportLines {
     }
     if ($qualification.status -ne "qualified") {
         $lines.Add("")
-        $lines.Add("**Current configuration retained, not certified:** no role-qualified recommendation is available. No requirements are relaxed to fill the profile, and force cannot bypass missing coverage or an empty intersection.")
+        if ($null -ne $recovery) {
+            $lines.Add("**Emergency replacement, not certified:** mandatory retirement recovery replaces the unusable incumbent. Missing or failed dimensions above remain unqualified; no benchmark scores are invented. Normal optimization still requires every band.")
+        } else {
+            $lines.Add("**Current configuration retained, not certified:** no role-qualified recommendation is available. No requirements are relaxed to fill the profile, and force cannot bypass missing coverage or an empty intersection.")
+        }
     }
     return @($lines)
 }
@@ -180,8 +186,15 @@ function Get-ProfileReviewReportLines {
     $lines.Add("Authorized deciding routes, strongest first: **$($routes -join ' > ')**. Supporting metrics are informational only.")
     $lines.Add("Task fit: external-harness proxy, not a measurement of Copilot CLI task success.")
     $lines.Add("Decision status: **$($r.resolution.status)**. Deciding metric: $(Format-ModelReportValue $r.selection.metricKey).")
+    $recovery = Get-ObjectMemberValue $r.selection "retirementRecovery"
+    if ($null -ne $recovery) {
+        $lines.Add("**Mandatory retirement recovery:** ``$($recovery.retiredModel)`` retired on **$($recovery.retirementDate)**; replacement **$(Format-ModelReportConfiguration $recovery.configuration)**; basis **$($recovery.mode)**. Applied without a confirmation wait. Availability, capability, fresh pricing, hard budgets, authorized efforts and fixed context remain binding.")
+        if ($recovery.mode -eq "official_successor") {
+            $lines.Add("No primary benchmark comparison was rankable. The exact GitHub-suggested successor supplies migration guidance only, not benchmark scores or role qualification.")
+        }
+    }
     $basis = Get-ObjectMemberValue $r.resolution.state "incumbentBasis"
-    $lines.Add("Incumbent selection basis (applied/current after run): $(if ($null -ne $basis) { Format-ModelReportValue $basis.metricKey } else { 'unknown; no historical provenance inferred' }).")
+    $lines.Add("Incumbent selection basis (applied/current after run): $(if ($null -ne $basis) { Format-ModelReportValue $basis.metricKey } elseif ($null -ne $recovery -and $recovery.mode -eq 'official_successor') { 'GitHub retirement guidance; no benchmark qualification basis' } else { 'unknown; no historical provenance inferred' }).")
     foreach ($key in $r.selection.evidenceRoutes) {
         $definition = $r.selection.metricDefinitions[$key]
         $lines.Add("$($definition.label) ($($definition.scale)): $($definition.limitation)")
@@ -206,7 +219,10 @@ function Get-ProfileReviewReportLines {
         $candidateAic = Format-ModelReportNumber $value.referenceAic
         $incumbentAic = Format-ModelReportNumber $value.incumbentReferenceAic
         $lines.Add("Eligible quality reference: $referenceModel ($referenceScore). Candidate gap: **$gap / $maximum** absolute $($value.qualityReference.metric) score points.")
-        $lines.Add("Lowest reference cost among configurations passing every required band wins; equal-cost model ties prefer the newest verified release. Reference usage: candidate **$candidateAic AIC**; incumbent **$incumbentAic AIC** (1 AIC = USD 0.01).")
+        $ranking = if ($null -ne $recovery -and -not $recovery.roleQualified) {
+            "Retirement recovery uses lowest reference cost within the primary metric's quality band, not full role qualification"
+        } else { "Lowest reference cost among configurations passing every required band wins" }
+        $lines.Add("$ranking; equal-cost model ties prefer the newest verified release. Reference usage: candidate **$candidateAic AIC**; incumbent **$incumbentAic AIC** (1 AIC = USD 0.01).")
         $recency = Get-ObjectMemberValue $value "recencyDecision"
         if ($null -ne $recency -and $recency.status -ne "not_needed") {
             $explanation = switch ($recency.status) {
@@ -321,11 +337,9 @@ function Get-TaskProfileReviewReport {
         if($null -ne $lifecycle){
             $lines.Add("Official retirement evidence: **$(Format-ModelReportValue $lifecycle.status)**; retrieved **$(Format-ModelReportValue $lifecycle.fetchedAtUtc)**; source $(Format-ModelReportValue $lifecycle.sourceUrl). Effective, unconditional retirements override stale help entries. Scheduled dates are evaluated in UTC; documented exceptions remain conditional, not blanket denials. Suggested alternatives are migration guidance, not qualified winners.")
         }
-        foreach($result in @($Results | Where-Object {$_.resolution.status -like "blocked_retired_incumbent*"})){
-            $current=@($result.verdicts | Where-Object {
-                $_.modelId -eq $result.currentModel -and $_.effort -eq $result.currentConfiguration.effort -and $_.context -eq $result.currentConfiguration.context
-            })[0]
-            $lines.Add("**Action required:** ``$($result.key)`` still configures ``$($result.currentModel)``, officially retired on **$($current.lifecycle.retirementDate)**. No replacement was applied; review a supported replacement separately. Budget, capability and role-qualification requirements have not been waived.")
+        foreach($result in @($Results | Where-Object {$null -ne (Get-ObjectMemberValue $_.selection "retirementRecovery")})){
+            $recovery=$result.selection.retirementRecovery
+            $lines.Add("**Retirement recovery:** ``$($result.key)`` automatically migrated from ``$($recovery.retiredModel)``, officially retired on **$($recovery.retirementDate)**, to **$(Format-ModelReportConfiguration $recovery.configuration)**. Basis: **$($recovery.mode)**; full role qualification: **$($recovery.roleQualified)**. Hard limits remain enforced.")
         }
         $lines.Add("Verified catalog facts are updated before comparison. Ready for comparison is not role qualification: each profile still requires its exact configuration evidence, budget, bands and confirmation.")
         foreach ($message in $Onboarding.diagnostics) { $lines.Add("- Warning: $(Format-ModelReportValue $message)") }
@@ -351,17 +365,21 @@ function Get-TaskProfileReviewReport {
     $lines.Add("| Profile | Strategy | Current configuration | Recommended configuration | Applied/current after run | Outcome | Confidence |")
     $lines.Add("|---|---|---|---|---|---|---|")
     foreach ($result in $Results) {
+        $recommendation = $result.selection.winner
+        $recovery = Get-ObjectMemberValue $result.selection "retirementRecovery"
+        if ($null -eq $recommendation -and $null -ne $recovery) { $recommendation = $recovery.configuration }
         $lines.Add((Format-ModelReportRow @(
             $result.key, $result.selection.strategy, (Format-ModelReportConfiguration $result.currentConfiguration),
-            (Format-ModelReportConfiguration $result.selection.winner), (Format-ModelReportConfiguration $result.finalConfiguration),
+            (Format-ModelReportConfiguration $recommendation), (Format-ModelReportConfiguration $result.finalConfiguration),
             $result.resolution.status, $result.selection.confidence
         )))
     }
     $lines.Add("")
-    $lines.Add("Recommendations require the intersection of each profile's explicit qualification dimensions, not one global model ranking. Price decides only among configurations passing every required band. Every comparison needs at least two distinct eligible models; multiple efforts do not inflate coverage. Empty intersections or insufficient evidence retain the current configuration without certifying it. Supporting-only scores never blend, rank or veto; overlapping benchmark lineage is not independent corroboration. Unknown publication age, cached evidence, single-source coverage and external harnesses reduce confidence. A context capability is not a benchmark measurement at that context length.")
+    $lines.Add("Normal recommendations require the intersection of each profile's explicit qualification dimensions, not one global model ranking. Price decides only among configurations passing every required band. Every comparison needs at least two distinct eligible models; multiple efforts do not inflate coverage. Empty intersections or insufficient evidence retain a non-retired current configuration without certifying it. Supporting-only scores never blend, rank or veto; overlapping benchmark lineage is not independent corroboration. Unknown publication age, cached evidence, single-source coverage and external harnesses reduce confidence. A context capability is not a benchmark measurement at that context length.")
+    $lines.Add("An effectively retired incumbent triggers mandatory recovery without waiting for confirmation or comparable incumbent evidence: a fully qualified winner first, otherwise the existing primary benchmark/value rules, otherwise an exact GitHub-suggested successor. Emergency migrations are not certified role-qualified winners. All hard admissibility and authorized configuration limits remain binding; no safe replacement fails the review instead of publishing a retained retired model.")
     $lines.Add("Value-balanced profiles minimize reference AIC within a source-specific gap of their best eligible score, under fixed hard input/output price ceilings. Bands are policy tolerances, not capability percentages or proof of task success. Token-price ceilings are not total session-spend limits.")
-    $lines.Add("Orchestrator workflow metrics allow a 0.03 absolute gap; Mechanical retains zero workflow tolerance. Every other required dimension must also pass, so the intersection may be empty. These are policy tolerances, not statistical significance claims. Fallback replacements require comparable incumbent evidence and cannot weaken an established primary or qualification basis.")
-    $lines.Add("Configuration cells show model / effective effort / context; 'none' means the model exposes no effort control. Allowed effort ranges are standing authorization: model and effort changes apply together after confirmation. Force bypasses only the confirmation wait, never hard budgets, allowed ranges, availability, capabilities or evidence requirements.")
+    $lines.Add("Orchestrator workflow metrics allow a 0.03 absolute gap; Mechanical retains zero workflow tolerance. For normal optimization every other required dimension must also pass, so the intersection may be empty. These are policy tolerances, not statistical significance claims. Normal fallback replacements require comparable incumbent evidence and cannot weaken an established primary or qualification basis.")
+    $lines.Add("Configuration cells show model / effective effort / context; 'none' means the model exposes no effort control. Allowed effort ranges are standing authorization: model and effort changes apply together after confirmation, except mandatory retirement recovery. Force bypasses only the normal confirmation wait, never hard budgets, allowed ranges, availability, capabilities or evidence requirements.")
     $lines.Add("")
     $lines.Add("## Pricing refresh")
     $lines.Add("")

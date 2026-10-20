@@ -105,7 +105,7 @@ function Test-ModelLifecycleCatalog {
 function Get-ModelLifecycleStatus {
     param([string]$ModelName, $Catalog, [datetime]$NowUtc=[datetime]::UtcNow)
     $row = if (-not [string]::IsNullOrWhiteSpace($ModelName)) { Get-ObjectMemberValue (Get-ObjectMemberValue $Catalog "models") $ModelName }
-    if ($null -eq $row) { return @{status="not_listed";sourceUrl=$Catalog.sourceUrl;fetchedAtUtc=$Catalog.fetchedAtUtc} }
+    if ($null -eq $row) { return @{status="not_listed";name=$ModelName;sourceUrl=$Catalog.sourceUrl;fetchedAtUtc=$Catalog.fetchedAtUtc} }
     $date = [datetime]::ParseExact($row.retirementDate, "yyyy-MM-dd", [Globalization.CultureInfo]::InvariantCulture)
     $status = if ($date -gt $NowUtc.ToUniversalTime().Date) { "scheduled" }
         elseif ($row.scope -eq "conditional") { "conditional" } else { "retired" }

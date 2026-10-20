@@ -55,6 +55,41 @@ function Get-ProfileSelection {
     })
     $qualification = Get-RoleQualification -Profile $Profile -Policy $Policy -Role $role -Eligible $eligible -Configurations $qualificationConfigurations
     $pool = @($qualification.pool)
+    $retirementRecovery = $null
+    $currentVerdict = $byConfiguration[$currentConfiguration.configurationId]
+    if (@(Get-ObjectMemberValue $currentVerdict "reasonCodes") -contains "model_retired") {
+        $lifecycle = Get-ObjectMemberValue $currentVerdict "lifecycle"
+        $retirementRecovery = @{
+            retiredModel=$Profile.model
+            retirementDate=(Get-ObjectMemberValue $lifecycle "retirementDate")
+            sourceUrl=(Get-ObjectMemberValue $lifecycle "sourceUrl")
+            mode=$(if ($qualification.status -eq "qualified") { "qualified" } else { "primary_benchmark" })
+            roleQualified=($qualification.status -eq "qualified")
+            configuration=$null
+        }
+        if (-not $pool.Count) { $pool = @($role.pool) }
+        if (-not $pool.Count) {
+            $alternative = Get-ObjectMemberValue $lifecycle "suggestedAlternative"
+            $successorModels = @($byConfiguration.Values | Where-Object {
+                -not [string]::IsNullOrWhiteSpace([string]$alternative) -and
+                (Get-ObjectMemberValue (Get-ObjectMemberValue $_ "lifecycle") "name") -ceq $alternative
+            } | ForEach-Object modelId | Sort-Object -Unique)
+            $successors = @(if ($successorModels.Count -eq 1) {
+                $byConfiguration.Values | Where-Object {
+                    $_.modelId -eq $successorModels[0] -and $_.admissible -and $_.context -eq $Profile.context -and
+                    ($configurationMode -ne "bounded_effort" -or $configurationPolicy.allowedEfforts -contains $_.effort -or
+                        ($_.effort -eq "none" -and
+                            (Get-ObjectMemberValue (Get-ObjectMemberValue $_ "capabilities") "effortMode") -eq "unsupported"))
+                } | ForEach-Object { Get-RecordModelConfiguration -Record $_ -Profile $Profile } |
+                    Sort-Object -Property @{Expression={ if ($_.effort -eq $currentConfiguration.effort) { 0 } else { 1 } }},effort
+            })
+            if (-not $successors.Count) {
+                throw [InvalidOperationException]::new("No admissible retirement replacement for profile '$($Profile.key)' (retired model '$($Profile.model)'). No primary benchmark comparison or unambiguous, eligible GitHub-suggested successor is usable. Hard limits remain enforced; task profiles will not be published.")
+            }
+            $retirementRecovery.mode = "official_successor"
+            $retirementRecovery.configuration = $successors[0]
+        }
+    }
     $decidingSource = if ($pool.Count) { $pool[0].source } else { $null }
 
     $fingerprint = Get-ModelDataFingerprint @{
@@ -70,13 +105,16 @@ function Get-ProfileSelection {
             currentConfiguration = $currentConfiguration
             configurationMode = $configurationMode
             allowedEfforts = @(Get-ObjectMemberValue $configurationPolicy "allowedEfforts")
-            candidateReferenceAic = $null
+            candidateReferenceAic = $(if ($null -ne $retirementRecovery) {
+                (Get-ModelReferenceCost $byConfiguration[$retirementRecovery.configuration.configurationId] $Policy.selectionPolicy) * 100
+            } else { $null })
             incumbentReferenceAic = $(if ($null -ne $incumbentCost) { $incumbentCost * 100 } else { $null })
             strategy = $strategy
             valueDecision = $null
             qualityWinner = $null
             decidingSource = $null
-            reason = $(if ($qualification.enabled) { $qualification.status } else { "retained_insufficient_evidence" })
+            reason = $(if ($null -ne $retirementRecovery) { "retirement_official_successor" }
+                elseif ($qualification.enabled) { $qualification.status } else { "retained_insufficient_evidence" })
             confidence = "none"
             contested = $false
             policyFingerprint = $fingerprint
@@ -90,6 +128,7 @@ function Get-ProfileSelection {
             routeIndex = -1
             roleDiagnostics = @($role.diagnostics) + @($qualification.diagnostics)
             qualification = $qualification
+            retirementRecovery = $retirementRecovery
         }
     }
 
@@ -167,9 +206,13 @@ function Get-ProfileSelection {
         @($qualification.governingEvidence | Where-Object { $_.cached -or $_.publicationAgeUnknown }).Count)) {
         $reducedConfidence = $true
     }
+    if ($null -ne $retirementRecovery -and -not $retirementRecovery.roleQualified) {
+        $reason = "retirement_primary_fallback"
+        $reducedConfidence = $true
+    }
     $hasVersion = -not [string]::IsNullOrWhiteSpace([string]$winner.sourceVersion)
     $promotionBlockReason = $null
-    if ($role.routeIndex -gt 0 -and
+    if ($null -eq $retirementRecovery -and $role.routeIndex -gt 0 -and
         $winner.configurationId -ne $currentConfiguration.configurationId) {
         $matchedIncumbent = @($comparisonEvidence | Where-Object {
             $_.configurationId -eq $currentConfiguration.configurationId -and (Test-BenchmarkEvidenceComparable $_ $winner)
@@ -178,7 +221,7 @@ function Get-ProfileSelection {
             $promotionBlockReason = "retained_fallback_incumbent_evidence_missing"
         }
     }
-    if ($qualification.enabled -and $winner.configurationId -ne $currentConfiguration.configurationId) {
+    if ($null -eq $retirementRecovery -and $qualification.enabled -and $winner.configurationId -ne $currentConfiguration.configurationId) {
         foreach ($dimension in @($qualification.dimensions | Where-Object { $_.key -ne "primary" -and $_.routeIndex -gt 0 })) {
             $reference = $dimension.reference
             if (-not @($comparisonEvidence | Where-Object {
@@ -206,6 +249,9 @@ function Get-ProfileSelection {
     }
     if ($qualification.enabled) { $observation = $qualification.observation }
     $candidateCost = Get-ModelReferenceCost $byConfiguration[$winner.configurationId] $Policy.selectionPolicy
+    if ($null -ne $retirementRecovery) {
+        $retirementRecovery.configuration = Get-RecordModelConfiguration -Record $winner -Profile $Profile
+    }
     return [pscustomobject]@{
         winner = $winner
         currentConfiguration = $currentConfiguration
@@ -233,7 +279,25 @@ function Get-ProfileSelection {
         routeIndex = $role.routeIndex
         roleDiagnostics = @($role.diagnostics) + @($qualification.diagnostics)
         qualification = $qualification
+        retirementRecovery = $retirementRecovery
     }
+}
+
+function New-ProfileSelectionBasis {
+    param($Configuration, $Selection, [datetime]$NowUtc)
+    $winner = $Selection.winner
+    $basis = @{
+        configurationId=$Configuration.configurationId;metricKey=$Selection.metricKey
+        sourceVersion=$winner.sourceVersion;evidenceIdentity=$Selection.evidenceIdentity
+        metricIdentity=(Get-ObjectMemberValue $winner "metricIdentity")
+        observedAtUtc=$NowUtc.ToUniversalTime().ToString("o")
+    }
+    $qualification = Get-ObjectMemberValue $Selection "qualification"
+    if ($null -ne $qualification -and $qualification.enabled -and $qualification.status -eq "qualified") {
+        $basis.qualificationRoutes = @{}
+        foreach ($dimension in $qualification.dimensions) { $basis.qualificationRoutes[$dimension.key] = $dimension.metricKey }
+    }
+    return $basis
 }
 
 function Resolve-ProfileSelectionState {
@@ -255,11 +319,12 @@ function Resolve-ProfileSelectionState {
         latestSourceDates = @{}
         legacyLatestSourceDates = @{}
         incumbentBasis = $null
+        retirementRecovery = $null
     }
     if ($compatible) {
         $next = ConvertTo-CanonicalModelData $State
     } else {
-        foreach ($field in @("latestSourceDates","legacyLatestSourceDates","activeOverride","incumbentBasis")) {
+        foreach ($field in @("latestSourceDates","legacyLatestSourceDates","activeOverride","incumbentBasis","retirementRecovery")) {
             $value = Get-ObjectMemberValue $State $field
             if ($null -ne $value) { $next[$field] = ConvertTo-CanonicalModelData $value }
         }
@@ -298,7 +363,10 @@ function Resolve-ProfileSelectionState {
         status = $Selection.reason
     }
     $qualification = Get-ObjectMemberValue $Selection "qualification"
-    $governingEvidence = if ($null -ne $qualification -and $qualification.enabled) {
+    $retirementRecovery = Get-ObjectMemberValue $Selection "retirementRecovery"
+    $governingEvidence = if ($null -ne $retirementRecovery -and -not $retirementRecovery.roleQualified) {
+        if ($null -ne $Selection.winner) { @($Selection.winner) } else { @() }
+    } elseif ($null -ne $qualification -and $qualification.enabled) {
         @($qualification.governingEvidence)
     } elseif ($null -ne $Selection.winner) { @($Selection.winner) } else { @() }
     $dateUpdates = @{}
@@ -316,6 +384,9 @@ function Resolve-ProfileSelectionState {
         }
         if ($null -ne $lastDate -and -not [string]::IsNullOrWhiteSpace([string]$sourceDate) -and
             [datetime]$sourceDate -lt [datetime]$lastDate) {
+            if ($null -ne $retirementRecovery) {
+                throw [InvalidOperationException]::new("Retirement recovery for '$CurrentModel' cannot use regressed '$key' evidence. Task profiles will not be published.")
+            }
             $result.status = "retained_source_regression"
             return $result
         }
@@ -325,6 +396,34 @@ function Resolve-ProfileSelectionState {
         }
     }
     foreach ($key in $dateUpdates.Keys) { $next.latestSourceDates[$key] = $dateUpdates[$key] }
+    if ($null -ne $retirementRecovery) {
+        $target = $retirementRecovery.configuration
+        if ($null -eq $target -or $target.model -eq $CurrentModel) {
+            throw [InvalidOperationException]::new("No admissible retirement replacement for '$CurrentModel'. Task profiles will not be published.")
+        }
+        $history = ConvertTo-CanonicalModelData $retirementRecovery
+        $history["appliedAtUtc"] = $NowUtc.ToUniversalTime().ToString("o")
+        $next["retirementRecovery"] = $history
+        $next.pending = $null
+        $next.incumbentBasis = if ($null -ne $Selection.winner) {
+            New-ProfileSelectionBasis -Configuration $target -Selection $Selection -NowUtc $NowUtc
+        } else { $null }
+        $next.activeOverride = [ordered]@{
+            model=$target.model;effort=$target.effort;context=$target.context;configurationId=$target.configurationId
+            policyFingerprint=$Selection.policyFingerprint;decidingSource=$Selection.decidingSource;metricKey=$Selection.metricKey
+            observation=$Selection.observation;evidenceIdentity=(Get-ObjectMemberValue $Selection "evidenceIdentity")
+            activatedAtUtc=$history.appliedAtUtc;forced=$false;retirementRecovery=$true
+        }
+        $result.finalModel = $target.model
+        $result.finalConfiguration = $target
+        $result.applied = $true
+        $result.status = switch ($retirementRecovery.mode) {
+            "qualified" { "applied_retirement_qualified_replacement" }
+            "primary_benchmark" { "applied_retirement_primary_fallback" }
+            "official_successor" { "applied_retirement_official_successor" }
+        }
+        return $result
+    }
     if ($null -eq $Selection.winner) {
         if ($null -ne $qualification -and $qualification.enabled) { $next.pending = $null }
         return $result
@@ -343,18 +442,11 @@ function Resolve-ProfileSelectionState {
         return $result
     }
     $basisIndex = [array]::IndexOf(@($Selection.evidenceRoutes), (Get-ObjectMemberValue $next.incumbentBasis "metricKey"))
-    $winnerBasis = @{
-        configurationId=$winnerConfiguration.configurationId;metricKey=$metricKey
-        sourceVersion=$winner.sourceVersion;evidenceIdentity=$Selection.evidenceIdentity
-        metricIdentity=(Get-ObjectMemberValue $winner "metricIdentity")
-        observedAtUtc=$NowUtc.ToUniversalTime().ToString("o")
-    }
+    $winnerBasis = New-ProfileSelectionBasis -Configuration $winnerConfiguration -Selection $Selection -NowUtc $NowUtc
     $weakerQualification = $false
     if ($null -ne $qualification -and $qualification.enabled) {
-        $winnerBasis.qualificationRoutes = @{}
         $oldRoutes = Get-ObjectMemberValue $next.incumbentBasis "qualificationRoutes"
         foreach ($dimension in $qualification.dimensions) {
-            $winnerBasis.qualificationRoutes[$dimension.key] = $dimension.metricKey
             $oldIndex = [array]::IndexOf(@($dimension.evidenceRoutes), (Get-ObjectMemberValue $oldRoutes $dimension.key))
             if ($oldIndex -ge 0 -and $oldIndex -lt $dimension.routeIndex) { $weakerQualification = $true }
         }

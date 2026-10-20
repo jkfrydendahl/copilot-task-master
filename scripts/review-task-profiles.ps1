@@ -190,7 +190,7 @@ function Invoke-TaskProfileReview {
         }
         if (-not $Availability.verified) { $resolved.status = "retained_unverified_availability" }
         if (-not $resolved.applied -and $currentVerdict.reasonCodes -contains "model_retired") {
-            $resolved.status = "blocked_retired_incumbent; $($resolved.status)"
+            throw [InvalidOperationException]::new("No admissible retirement replacement for profile '$($profile.key)'. A successful review cannot retain retired model '$($profile.model)'.")
         }
         $fallback = Get-PreferredModelForProfilePolicy -ProfileKey $profile.key -ValidModels $models `
             -Policy $policy -AdmissibleModels @($verdicts | Where-Object admissible | ForEach-Object modelId | Sort-Object -Unique)

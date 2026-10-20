@@ -4,7 +4,7 @@
     "label": "Orchestrator (route per task)",
     "description": "Mixed or evolving workloads where one session should classify each request and route to task-class subagents without relaunching.",
     "hint": "When you open the chat, describe the task. The session should choose inline vs @task-class agent routing per request.",
-    "model": "gemini-3.7-flash",
+    "model": "grok-4.6",
     "effort": "high",
     "context": "default"
   },
@@ -76,7 +76,7 @@
     "label": "Triage (not sure — estimate first)",
     "description": "Not sure what class to use — runs an inline estimate of your task and recommends which class to relaunch as.",
     "hint": "When you open the chat, describe your task and the agent will estimate the scope and recommend the right class before doing any work.",
-    "model": "gemini-3.7-flash",
+    "model": "gpt-6.1-sol",
     "effort": "low",
     "context": "default"
   }

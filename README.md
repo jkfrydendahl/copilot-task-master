@@ -281,17 +281,28 @@ after capture. Documented exceptions (such as annual-plan access) remain conditi
 than being applied as blanket retirements without entitlement evidence. The runtime and
 retirement observations must both be within the seven-day validity window.
 
-An unchanged retired incumbent is reported as **`blocked_retired_incumbent`**, with an
-action-required notice, not ordinary evidence-based retention. Suggested replacement models
-are migration guidance only: they do not bypass budgets, capability checks, exact-effort
-evidence or role qualification, and no unqualified replacement is automatically applied.
+An effectively retired incumbent triggers **mandatory retirement recovery**, not retention.
+Apply a fully role-qualified winner immediately; if none exists, reuse the profile's primary
+benchmark/value rules among admissible configurations. Only when no primary comparison is
+rankable may an exact, unambiguous GitHub-suggested successor supply migration guidance.
+The replacement must still pass availability, fresh capability/pricing, hard spending ceilings,
+authorized efforts and fixed-context checks. Scheduled dates and conditional plan exceptions
+do not trigger recovery. If no safe replacement exists, fail the review before writing profiles
+or a report rather than publish a retired assignment as a successful result.
+
+Recovery bypasses the confirmation wait and comparisons against an unusable incumbent, not
+hard limits or source-integrity checks. Partial-evidence and official-successor migrations are
+explicitly **emergency replacements, not certified**: missing scores and failed dimensions
+remain visible, normal qualification is unchanged, and no stronger qualification basis is
+fabricated. The report and consensus snapshot record the retired identity/date, selected
+configuration, recovery basis and whether full role qualification was met.
 
 The [workflow](.github/workflows/monthly-task-profile-review.yml) runs the tests, consumes the
 committed local snapshot, refreshes GitHub prices, and evaluates configuration-matched benchmarks.
 It never runs account discovery or refreshes the input snapshot. It opens/updates the review PR with:
 
 - `reports/task-profile-review.md`: current/recommended/applied configurations, confidence, exclusions, and price changes.
-- `task-profiles.json`: model and effort changes applied together after confirmation, within approved ranges. Context remains fixed.
+- `task-profiles.json`: model and effort changes applied together after confirmation, or immediately for retirement recovery, within approved ranges. Context remains fixed.
 - `data/model-ranking-snapshot.json`: independent source observations and confirmation state.
 - `data/model-pricing-snapshot.json`: independently verified rates and timestamps.
 - `data/model-onboarding-snapshot.json`: runtime metadata, discovered candidates, catalog changes and unresolved identities.
@@ -435,9 +446,11 @@ usable one, and filtering candidates never lowers a reference score.
 
 Only the surviving intersection enters cost selection. **One surviving configuration can win**
 if each comparison had adequate coverage. Missing evidence excludes that candidate, not all its
-qualified peers. If no candidate survives, or any dimension lacks comparable coverage, retain the
-current configuration with an explicit reason. Retention does **not** certify the incumbent.
-Force cannot relax these requirements. Sparse coverage can therefore pause automatic changes.
+qualified peers. In normal optimization, if no candidate survives or any dimension lacks
+comparable coverage, retain the non-retired current configuration with an explicit reason.
+Retention does **not** certify the incumbent. Force cannot relax these requirements. Sparse
+coverage can therefore pause optimization, but cannot turn a retired model into a usable result:
+the mandatory recovery path above applies instead.
 
 Quick's IF scores and Agentic's workflow scores remain explicitly supporting-only.
 Supporting metrics never become hidden weights, vetoes or replacement routes. General coding
@@ -485,11 +498,13 @@ The upstream host-model slug is optional provenance: it is retained when publish
 recorded as null, never inferred. Published model, provider, harness and source variant identity
 remain required.
 
-Every fallback replacement, including a fallback used by a required qualification dimension,
+Every normal optimization fallback, including a fallback used by a required qualification dimension,
 requires the incumbent's exact configuration in the same usable metric observation.
 An established stronger primary or qualification basis cannot be downgraded through a weaker fallback,
 even with force. Primary routes may replace an unscored incumbent; if no authorized route is usable,
-the current assignment stays. The report distinguishes recommendations from permission to apply.
+the non-retired current assignment stays. Mandatory retirement recovery does not require
+comparable evidence for an unusable incumbent or preserve its stronger optimization basis.
+The report distinguishes normal qualification from emergency operational migration.
 Incumbent provenance belongs to the actual model/effort/context, not to its family or profile name.
 Manual configuration changes do not inherit another configuration's basis.
 
@@ -506,8 +521,8 @@ Multiple efforts of one model do not count as independent model coverage.
 describes agent variants and normally uses agent-default reasoning settings; it is not a universal
 maximum-effort comparison. Scores remain external-harness evidence, not Copilot CLI measurements.
 
-An effort change inside the allowed range requires no separate approval. The same confirmation
-rules apply to model replacements, effort-only changes, and changes to both: the complete
+An effort change inside the allowed range requires no separate approval. For normal optimization,
+the same confirmation rules apply to model replacements, effort-only changes, and changes to both: the complete
 configuration must qualify twice on distinct decision-evidence observations, or once on a forced run.
 The model and effective effort are applied together; confirmation cannot be borrowed from a
 different effort of the same model. Native no-effort models retain the stored launcher effort
