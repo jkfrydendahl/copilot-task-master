@@ -10,7 +10,10 @@ function Run-Test($Name,[scriptblock]$Action){
 }
 function New-OnboardingFixture {
     @{
-        Availability=@{models=@("old");verified=$true;source="fixture help"}
+        Availability=@{models=@("old");verified=$true;source="fixture help";lifecycle=@{
+            status="ok";sourceUrl=$script:GitHubModelLifecycleUrl;fetchedAtUtc="2026-09-23Z"
+            models=@{"Unrelated model"=@{retirementDate="2026-09-01";suggestedAlternative="Newer model";scope="all";exceptionNotes=@()}}
+        }}
         RuntimeCatalog=@{status="ok";authenticated=$true;fetchedAtUtc="2026-09-23Z";runtimeVersion="fixture";models=@(
             @{id="future-1.0";name="Future 1.0";policyState="enabled";toolCalls=$true;vision=$true;reasoningEffort=$true;
                 supportedReasoningEfforts=@("low","high");maxContextTokens=1000000}
@@ -30,6 +33,104 @@ function New-OnboardingFixture {
         Policy=(Get-ModelPolicyConfig (Join-Path $PSScriptRoot "..\config\model-policy.json"))
         NowUtc=$now
     }
+}
+Run-Test "Runtime discovery prefers the installed CLI and honors explicit overrides" {
+    $installed=@{Source="C:\Program Files\Copilot\copilot.exe"}
+    Assert-True ((Get-LocalCopilotRuntimePath -ExplicitPath "" -InstalledCommand $installed) -ceq $installed.Source) "Installed CLI ignored"
+    Assert-True ((Get-LocalCopilotRuntimePath -ExplicitPath "C:\Override\copilot.exe" -InstalledCommand $installed) -ceq "C:\Override\copilot.exe") "Explicit runtime override ignored"
+    Assert-True ($null -eq (Get-LocalCopilotRuntimePath -ExplicitPath "" -InstalledCommand $null)) "Missing installation manufactured a runtime path"
+}
+Run-Test "Official retirement parsing preserves row headers, dates and scoped exceptions" {
+    $html=Get-Content (Join-Path $PSScriptRoot "fixtures\model-discovery\github-retirements.html") -Raw
+    $models=ConvertFrom-GitHubModelLifecycleHtml $html
+    Assert-True ($models.Count -eq 3 -and $models["Gemini 3.7 Flash"].retirementDate -ceq "2026-10-19") "Explicit retirement identity/date lost"
+    Assert-True ($models["Gemini 3.7 Flash"].scope -eq "all" -and $models["Gemini 3.7 Flash"].exceptionNotes -is [array]) "Unconditional retirement misclassified"
+    Assert-True ($models["Claude Sonnet 4.6"].scope -eq "conditional" -and
+        $models["Claude Sonnet 4.6"].exceptionNotes.Count -eq 1 -and
+        $models["Claude Sonnet 4.6"].exceptionNotes[0].Contains("annual plans") -and
+        -not $models["Claude Sonnet 4.6"].exceptionNotes[0].Contains("Back")) "Plan exception lost or footnote navigation leaked"
+    $data=Get-ModelLifecycleData -FetchText {param($u) @{status="ok";content=$html}} -NowUtc $now
+    Assert-True ((Test-ModelLifecycleCatalog $data 7 $now) -and $data.sourceUrl -ceq $script:GitHubModelLifecycleUrl) "Official lifecycle provenance invalid"
+    Assert-True ((Get-ModelLifecycleStatus "Gemini 3.7 Flash" $data ([datetime]"2026-10-18T23:59:59Z")).status -eq "scheduled") "Retirement applied before its UTC date"
+    Assert-True ((Get-ModelLifecycleStatus "Gemini 3.7 Flash" $data ([datetime]"2026-10-19Z")).status -eq "retired") "Effective retirement not applied"
+    Assert-True ((Get-ModelLifecycleStatus "Gemini 3.8 Flash" $data $now).status -eq "not_listed") "Lifecycle omission became an availability claim"
+    Assert-True ((Get-ModelLifecycleStatus "Claude Sonnet 4.6" $data $now).status -eq "conditional") "Annual-plan exception became a blanket denial"
+}
+Run-Test "Malformed or incomplete retirement data fails explicitly" {
+    $html=Get-Content (Join-Path $PSScriptRoot "fixtures\model-discovery\github-retirements.html") -Raw
+    foreach($broken in @(
+        "",
+        $html.Replace("2026-10-19","2026-02-30"),
+        $html.Replace("Retirement date","Other date"),
+        $html.Replace("Suggested alternative","Other field"),
+        $html.Replace('<td>Latest Gemini Flash model</td>',""),
+        $html.Replace('id="user-content-fn-claude-sonnet-46-annual"','id="missing-note"'),
+        ($html+$html),
+        $html.Replace('<th scope="row">GPT-5.4</th>','<th scope="row">Gemini 3.7 Flash</th>')
+    )){
+        $failed=$false
+        try{ConvertFrom-GitHubModelLifecycleHtml $broken | Out-Null}catch [IO.InvalidDataException]{$failed=$true}
+        Assert-True $failed "Malformed retirement data accepted"
+    }
+    $fetchFailure=Get-ModelLifecycleData -FetchText {param($u) @{status="error";error="fixture outage"}} -NowUtc $now
+    $parseFailure=Get-ModelLifecycleData -FetchText {param($u) @{status="ok";content="<table></table>"}} -NowUtc $now
+    Assert-True ($fetchFailure.status -eq "error" -and $fetchFailure.message.Contains("fixture outage")) "Retirement fetch failure hidden"
+    Assert-True ($parseFailure.status -eq "error" -and $parseFailure.message.Contains("parse failed")) "Retirement parse failure hidden"
+}
+Run-Test "Explicit retirement overrides stale help without excluding an omitted Gemini peer" {
+    $f=New-OnboardingFixture
+    $f.NowUtc=[datetime]"2026-10-20Z"
+    $f.RuntimeCatalog.fetchedAtUtc=$f.NowUtc.ToString("o")
+    $f.Availability.lifecycle.fetchedAtUtc=$f.RuntimeCatalog.fetchedAtUtc
+    $f.Availability.lifecycle.models=ConvertFrom-GitHubModelLifecycleHtml (Get-Content (Join-Path $PSScriptRoot "fixtures\model-discovery\github-retirements.html") -Raw)
+    foreach($id in @("gemini-3.7-flash","gemini-3.8-flash")){
+        $f.Availability.models+=@($id)
+        $f.CapabilityCatalog.models[$id]=$f.CapabilityCatalog.models.old.Clone()
+    }
+    $f.PricingAliasConfig.aliases["gemini-3.7-flash"]="Gemini 3.7 Flash"
+    $f.PricingAliasConfig.aliases["gemini-3.8-flash"]="Gemini 3.8 Flash"
+    $r=Resolve-ModelOnboarding @f
+    Assert-True ($r.availability.models -notcontains "gemini-3.7-flash" -and
+        $r.availability.lifecycleByModel["gemini-3.7-flash"].status -eq "retired") "Stale help overrode explicit retirement"
+    Assert-True ($r.availability.models -contains "gemini-3.8-flash" -and
+        $r.availability.lifecycleByModel["gemini-3.8-flash"].status -eq "not_listed") "Runtime omission excluded Gemini 3.8"
+    Assert-True ($r.capabilities.models["gemini-3.8-flash"].asOf -eq "2026-09-08") "Help-only peer acquired fabricated fresh capabilities"
+    $options=@{
+        ModelId="gemini-3.8-flash";ProfileKey="orchestrator";AvailabilityVerified=$r.availability.verified;AvailableModels=$r.availability.models
+        LifecycleRecord=$r.availability.lifecycleByModel["gemini-3.8-flash"];CapabilityRecord=$r.capabilities.models["gemini-3.8-flash"]
+        PricingRecord=@{verifiedAtUtc=$f.RuntimeCatalog.fetchedAtUtc;tiers=@{default=@{inputPerMillion=0.75;outputPerMillion=3.75}}}
+        ProfileRequirement=$f.Policy.profileRequirements.orchestrator;ProfileContextTier="default";ProfileEffort="high";NowUtc=$f.NowUtc
+    }
+    Assert-True ((Get-ModelAdmissibilityVerdict @options).admissible) "Available, otherwise eligible Gemini 3.8 was rejected"
+    $options.ModelId="gemini-3.7-flash";$options.LifecycleRecord=$r.availability.lifecycleByModel["gemini-3.7-flash"]
+    Assert-True ((Get-ModelAdmissibilityVerdict @options).reasonCodes -contains "model_retired") "Retirement reason missing from admissibility"
+}
+Run-Test "Scheduled and conditional retirements do not become early or blanket denials" {
+    foreach($case in @(
+        @{date="2026-09-24";scope="all";notes=@();status="scheduled";warning="model_retirement_scheduled"},
+        @{date="2026-09-01";scope="conditional";notes=@("Annual subscribers remain supported.");status="conditional";warning="model_retirement_scope_unconfirmed"}
+    )){
+        $f=New-OnboardingFixture
+        $f.Availability.lifecycle.models.Old=@{retirementDate=$case.date;suggestedAlternative="Future 1.0";scope=$case.scope;exceptionNotes=$case.notes}
+        $r=Resolve-ModelOnboarding @f
+        Assert-True ($r.availability.models -contains "old" -and $r.availability.lifecycleByModel.old.status -eq $case.status) "Scoped/future retirement denied an available model"
+        $verdict=Get-ModelAdmissibilityVerdict -ModelId old -ProfileKey quick -AvailabilityVerified $true -AvailableModels $r.availability.models `
+            -LifecycleRecord $r.availability.lifecycleByModel.old -ProfileRequirement $f.Policy.profileRequirements.quick `
+            -ProfileContextTier default -ProfileEffort low -NowUtc $now
+        Assert-True ($verdict.warningCodes -contains $case.warning -and $verdict.reasonCodes -notcontains "model_retired") "Lifecycle caveat missing or misclassified"
+    }
+}
+Run-Test "Ambiguous lifecycle identities do not retire an unrelated runtime ID" {
+    $f=New-OnboardingFixture
+    $f.Availability.lifecycle.models.Old=@{retirementDate="2026-09-01";suggestedAlternative="Newer model";scope="all";exceptionNotes=@()}
+    $f.RuntimeCatalog.models[0].name="Old"
+    $r=Resolve-ModelOnboarding @f
+    Assert-True ($r.availability.lifecycleByModel["future-1.0"].status -eq "unknown" -and
+        $r.availability.models -contains "future-1.0" -and $r.audit.diagnostics -match "ambiguous published model identity") "Shared display name retired an unrelated model ID"
+    $f.RuntimeCatalog.models+=@(@{id="old";name="Different published model";policyState="enabled"})
+    $r=Resolve-ModelOnboarding @f
+    Assert-True ($r.availability.lifecycleByModel.old.status -eq "unknown" -and
+        $r.availability.models -contains "old" -and $r.audit.diagnostics -match "conflicting runtime/pricing identities") "Conflicting identity was silently resolved"
 }
 Run-Test "Verified new models are onboarded without family or version allowlists" {
     $f=New-OnboardingFixture;$before=Get-ModelDataFingerprint $f;$r=Resolve-ModelOnboarding @f
@@ -207,9 +308,39 @@ Run-Test "Same-run onboarding persists catalogs and enters normal profile qualif
         Remove-Item -LiteralPath $root
     }
 }
+Run-Test "A retired incumbent with no qualified replacement is explicitly blocked, not silently migrated" {
+    $root=Join-Path ([IO.Path]::GetTempPath()) ([guid]::NewGuid().ToString("N"))
+    foreach($dir in @("config","data","reports")){New-Item -ItemType Directory (Join-Path $root $dir) -Force | Out-Null}
+    try{
+        $f=New-OnboardingFixture
+        $f.Availability.lifecycle.models.Old=@{retirementDate="2026-09-22";suggestedAlternative="Future 1.0";scope="all";exceptionNotes=@()}
+        Copy-Item (Join-Path $PSScriptRoot "..\config\model-policy.json") (Join-Path $root "config")
+        $f.CapabilityCatalog | ConvertTo-Json -Depth 15 | Set-Content (Join-Path $root "config\model-capabilities.json")
+        $f.AliasConfig | ConvertTo-Json -Depth 15 | Set-Content (Join-Path $root "config\model-ranking-aliases.json")
+        $f.PricingAliasConfig | ConvertTo-Json -Depth 15 | Set-Content (Join-Path $root "config\model-pricing-aliases.json")
+        $path=Join-Path $root "task-profiles.json"
+        ConvertTo-Json -InputObject @(@{key="quick";model="old";effort="low";context="default"}) | Set-Content $path
+        $before=Get-Content $path -Raw
+        $review=Invoke-TaskProfileReview -RepoRoot $root -Availability $f.Availability -RuntimeCatalog $f.RuntimeCatalog `
+            -Sources $f.Sources -FetchPricing {param($u)$f.PricingFetch} -ForceImmediateApply -NowUtc $now
+        $result=$review.results[0]
+        Assert-True ($result.resolution.status -like "blocked_retired_incumbent*" -and -not $result.resolution.applied) "Retired incumbent presented as ordinary retention"
+        Assert-True ($result.finalModel -eq "old" -and (Get-Content $path -Raw) -ceq $before) "Unqualified migration applied"
+        Assert-True ($null -eq $result.selection.winner) "Retirement waived minimum comparison coverage"
+        $report=Get-Content (Join-Path $root "reports\task-profile-review.md") -Raw
+        Assert-True ($report.Contains("Action required:") -and $report.Contains("officially retired on **2026-09-22**") -and
+            $report.Contains("Suggested alternatives are migration guidance, not qualified winners")) "Retirement source/action caveat missing"
+    }finally{
+        foreach($file in @(Get-ChildItem -LiteralPath $root -File -Recurse)){Remove-Item -LiteralPath $file.FullName}
+        foreach($dir in @("config","data","reports")){Remove-Item -LiteralPath (Join-Path $root $dir)}
+        Remove-Item -LiteralPath $root
+    }
+}
 Run-Test "Discovery export strips credentials/account identity and preserves singleton arrays" {
     $f=New-OnboardingFixture
     $f.RuntimeCatalog.token="secret-marker";$f.RuntimeCatalog.login="account-marker"
+    $f.Availability.lifecycle.token="secret-marker"
+    $f.Availability.lifecycle.models["Unrelated model"].account="account-marker"
     $model=$f.RuntimeCatalog.models[0];$model.secret="secret-marker";$model.supportedReasoningEfforts=@("high")
     $model.supportedContextTiers=@("default");$model.tokenPrices=@{inputPrice=50;token="secret-marker";longContext=@{maxPromptTokens=900000;login="account-marker"}}
     $snapshot=New-ModelDiscoverySnapshot $f.Availability $f.RuntimeCatalog
@@ -225,17 +356,33 @@ Run-Test "Discovery export strips credentials/account identity and preserves sin
     $model.supportedContextTiers=@(@{token="secret-marker"});$f.RuntimeCatalog.runtimeVersion=@{token="secret-marker"}
     $json=(New-ModelDiscoverySnapshot $f.Availability $f.RuntimeCatalog) | ConvertTo-Json -Depth 15
     Assert-True ($json -notmatch "secret-marker|account-marker") "Nested unexpected values bypassed export allowlist"
+    $f.Availability.lifecycle.models["Unrelated model"].exceptionNotes=@(@{token="secret-marker"})
+    $json=(New-ModelDiscoverySnapshot $f.Availability $f.RuntimeCatalog) | ConvertTo-Json -Depth 15
+    Assert-True ($json -notmatch "secret-marker|account-marker") "Nested lifecycle values bypassed export allowlist"
 }
 Run-Test "Discovery validity is inclusive at seven days and cannot be renewed by the envelope" {
     $f=New-OnboardingFixture;$snapshot=New-ModelDiscoverySnapshot $f.Availability $f.RuntimeCatalog
     Assert-True ((Resolve-ModelDiscoverySnapshot $snapshot 7 $now.AddDays(7)).status -eq "valid") "Exact expiry boundary rejected"
     Assert-True ((Resolve-ModelDiscoverySnapshot $snapshot 7 $now.AddDays(7).AddSeconds(1)).status -eq "expired") "Expired snapshot accepted"
+    $snapshot.lifecycle.fetchedAtUtc=$now.AddDays(-1).ToString("o")
+    Assert-True ((Resolve-ModelDiscoverySnapshot $snapshot 7 $now.AddDays(7)).status -eq "expired") "Runtime envelope renewed lifecycle evidence"
     $snapshot.observedAtUtc=$now.AddDays(7).ToString("o")
     Assert-True ((Resolve-ModelDiscoverySnapshot $snapshot 7 $now.AddDays(7)).status -eq "invalid") "Envelope date laundered observation age"
 }
 Run-Test "Malformed, future, unauthenticated and duplicate discovery snapshots fail closed" {
     foreach($change in @(
         {param($s)$s.schemaVersion=99},
+        {param($s)$s.schemaVersion=1},
+        {param($s)$s.Remove("lifecycle")},
+        {param($s)$s.lifecycle.sourceUrl="https://example.invalid/retirements"},
+        {param($s)$s.lifecycle.sourceUrl=@($s.lifecycle.sourceUrl)},
+        {param($s)$s.lifecycle.status=@("ok")},
+        {param($s)$s.lifecycle.models=@($s.lifecycle.models)},
+        {param($s)$s.lifecycle.models["Unrelated model"].retirementDate="2026-02-30"},
+        {param($s)$s.lifecycle.models["Unrelated model"].scope=@("all")},
+        {param($s)$s.lifecycle.models["Unrelated model"].scope="conditional"},
+        {param($s)$s.lifecycle.models["Unrelated model"].exceptionNotes="not-an-array"},
+        {param($s)$s.lifecycle.fetchedAtUtc=$now.AddDays(1).ToString("o")},
         {param($s)$s.runtime.authenticated=$false},
         {param($s)$s.runtime.models="not-an-array"},
         {param($s)$s.runtime.models+=@($s.runtime.models[0])},
@@ -257,7 +404,7 @@ Run-Test "Persisted discovery snapshot has canonical key order so refreshes diff
         $model=$f.RuntimeCatalog.models[0]
         $model.supportedContextTiers=@("default","long_context")
         $model.tokenPrices=@{outputPrice=250;inputPrice=50;cachePrice=5;longContext=@{outputPrice=300;inputPrice=60;maxPromptTokens=900000}}
-        Update-LocalModelDiscovery -RepoRoot $root -RuntimeProbe {$f.RuntimeCatalog} -HelpProbe {$f.Availability} -NowUtc $now | Out-Null
+        Update-LocalModelDiscovery -RepoRoot $root -RuntimeProbe {$f.RuntimeCatalog} -HelpProbe {$f.Availability} -LifecycleProbe {$f.Availability.lifecycle} -NowUtc $now | Out-Null
         function Test-CanonicalKeyOrder($Node){
             if($Node -is [pscustomobject]){
                 $names=@($Node.PSObject.Properties.Name)
@@ -289,16 +436,28 @@ Run-Test "Local refresh and remote review use a sanitized persistent snapshot wi
         $f.PricingAliasConfig | ConvertTo-Json -Depth 15 | Set-Content (Join-Path $root "config\model-pricing-aliases.json")
         ConvertTo-Json -InputObject @(@{key="quick";model="old";effort="low";context="default"}) | Set-Content (Join-Path $root "task-profiles.json")
         $path=Join-Path $root "data\model-discovery-snapshot.json"
-        Update-LocalModelDiscovery -RepoRoot $root -RuntimeProbe {$f.RuntimeCatalog} -HelpProbe {$f.Availability} -NowUtc $now | Out-Null
+        Update-LocalModelDiscovery -RepoRoot $root -RuntimeProbe {$f.RuntimeCatalog} -HelpProbe {$f.Availability} -LifecycleProbe {$f.Availability.lifecycle} -NowUtc $now | Out-Null
         $before=Get-Content $path -Raw
         $failed=$false
         try{
             Update-LocalModelDiscovery -RepoRoot $root -RuntimeProbe {@{status="error";authenticated=$false;models=@();message="fixture outage"}} `
-                -HelpProbe {$f.Availability} -NowUtc $now | Out-Null
+                -HelpProbe {$f.Availability} -LifecycleProbe {$f.Availability.lifecycle} -NowUtc $now | Out-Null
         }catch{$failed=$true}
         Assert-True ($failed -and (Get-Content $path -Raw) -ceq $before) "Failed refresh replaced good snapshot"
+        foreach($lifecycle in @(
+            @{status="error";message="fixture retirement outage"},
+            @{status="ok";sourceUrl=$script:GitHubModelLifecycleUrl;fetchedAtUtc=$now.ToString("o");models=@{}}
+        )){
+            $failed=$false
+            try{
+                Update-LocalModelDiscovery -RepoRoot $root -RuntimeProbe {$f.RuntimeCatalog} -HelpProbe {$f.Availability} `
+                    -LifecycleProbe {$lifecycle} -NowUtc $now | Out-Null
+            }catch{$failed=$true}
+            Assert-True ($failed -and (Get-Content $path -Raw) -ceq $before) "Retirement failure overwrote or renewed valid metadata"
+        }
         function Get-RuntimeModelCatalog {throw "Remote review must not authenticate"}
         function Get-ModelAvailability {throw "Remote review must not discover accounts"}
+        function Get-ModelLifecycleData {throw "Remote review must consume recorded lifecycle evidence"}
         foreach($days in @(1,2,7)){
             $r=Invoke-TaskProfileReview -RepoRoot $root -Sources $f.Sources -FetchPricing {param($u)$f.PricingFetch} -ForceImmediateApply -RequireFreshDiscovery -NowUtc $now.AddDays($days)
             Assert-True ($r.results[0].finalModel -eq "future-1.0") "Committed local metadata not used"
@@ -361,6 +520,7 @@ Run-Test "Strict review entry point exits nonzero before fetching or writing whe
         $expired=[datetime]::UtcNow.AddDays(-8).ToString("o")
         $snapshot.observedAtUtc=$expired
         $snapshot.runtime.fetchedAtUtc=$expired
+        $snapshot.lifecycle.fetchedAtUtc=$expired
         $path=Join-Path $root "data\model-discovery-snapshot.json"
         foreach($case in @(
             @{status="missing";json=$null},

@@ -251,6 +251,16 @@ workflow, then run **Monthly task profile review** from GitHub Actions on the br
 the metadata. The refresh command does not stage, commit or push anything. It only exports
 allowlisted model metadata, never credentials or account identity, and runs no inference.
 A failed local refresh does not overwrite a previously valid snapshot.
+Discovery prefers the installed CLI executable; `COPILOT_CLI_PATH` explicitly overrides that
+choice. If no CLI executable is installed, the SDK's bundled runtime is used. The snapshot
+records the runtime version actually queried, not the SDK package version.
+
+Snapshot schema **2** also captures GitHub's official
+[model retirement history](https://docs.github.com/en/copilot/reference/ai-models/supported-models#model-retirement-history),
+including source URL, retrieval time, effective dates and exception notes. Older snapshots
+must be refreshed. A failed or malformed retirement fetch aborts the refresh without
+overwriting the previous snapshot; the remote Action consumes the recorded evidence and
+does not fetch account metadata or renew these timestamps.
 
 The snapshot is valid for **7 days**, configured by `consensusPolicy.discoveryFreshnessDays`.
 Missing, invalid, future-dated or expired metadata **fails the Action, even with force**.
@@ -263,6 +273,18 @@ renew this seven-day validity. Availability is explicitly **locally verified at 
 not live-verified by the Action. Access changes after capture cannot be detected remotely.
 Help-only entries remain CLI-catalog evidence, not proof of per-account entitlement; the
 report distinguishes them from models listed by the authenticated runtime.
+Neither catalog is assumed exhaustive: a runtime omission is not a denial, and a help entry
+cannot override an effective, unconditional official retirement. Published identities are
+matched exactly against known pricing/runtime display names; ambiguous identities remain
+unresolved. Retirement dates are evaluated in UTC at review time, including dates scheduled
+after capture. Documented exceptions (such as annual-plan access) remain conditional rather
+than being applied as blanket retirements without entitlement evidence. The runtime and
+retirement observations must both be within the seven-day validity window.
+
+An unchanged retired incumbent is reported as **`blocked_retired_incumbent`**, with an
+action-required notice, not ordinary evidence-based retention. Suggested replacement models
+are migration guidance only: they do not bypass budgets, capability checks, exact-effort
+evidence or role qualification, and no unqualified replacement is automatically applied.
 
 The [workflow](.github/workflows/monthly-task-profile-review.yml) runs the tests, consumes the
 committed local snapshot, refreshes GitHub prices, and evaluates configuration-matched benchmarks.
@@ -608,6 +630,7 @@ The implementation uses focused modules under `scripts/`:
 | `model-role-evidence.ps1` | Pure profile-contract qualification and comparable metric pools. |
 | `refresh-model-catalog.ps1`, `get-runtime-models.mjs` | Local-only authenticated discovery using the user's own credentials; sanitized metadata export. |
 | `model-discovery-snapshot.ps1`, `model-onboarding.ps1` | Seven-day snapshot validation, conservative catalog reconciliation and explicit onboarding audit without remote authentication. |
+| `model-lifecycle-data.ps1` | Official, dated retirement evidence with scoped exceptions; independent of runtime catalog omissions and benchmark qualification. |
 | `model-release-data.ps1` | Verified release-date reconciliation and equal-cost recency decisions, independent of benchmark observations. |
 | `model-pricing-data.ps1` | GitHub pricing acquisition and last-known-good rates. |
 | `model-configuration.ps1` | Shared candidate generation, effective-effort normalization and model/effort/context identities. |

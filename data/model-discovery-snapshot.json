@@ -36,15 +36,307 @@
     "source": "locally captured CLI help",
     "verified": true
   },
-  "observedAtUtc": "2026-10-19T07:00:31.905Z",
+  "lifecycle": {
+    "fetchedAtUtc": "2026-10-20T10:22:24.3086233Z",
+    "models": {
+      "Claude Opus 4": {
+        "exceptionNotes": [],
+        "retirementDate": "2025-10-23",
+        "scope": "all",
+        "suggestedAlternative": "Latest Claude Opus model"
+      },
+      "Claude Opus 4.1": {
+        "exceptionNotes": [],
+        "retirementDate": "2026-02-17",
+        "scope": "all",
+        "suggestedAlternative": "Latest Claude Opus model"
+      },
+      "Claude Opus 4.5": {
+        "exceptionNotes": [],
+        "retirementDate": "2026-09-01",
+        "scope": "all",
+        "suggestedAlternative": "Latest Claude Opus model"
+      },
+      "Claude Opus 4.6": {
+        "exceptionNotes": [],
+        "retirementDate": "2026-09-01",
+        "scope": "all",
+        "suggestedAlternative": "Latest Claude Opus model"
+      },
+      "Claude Opus 4.6 (fast mode) (preview)": {
+        "exceptionNotes": [],
+        "retirementDate": "2026-06-29",
+        "scope": "all",
+        "suggestedAlternative": "Latest Claude Opus model in fast mode"
+      },
+      "Claude Opus 4.7": {
+        "exceptionNotes": [],
+        "retirementDate": "2026-10-02",
+        "scope": "all",
+        "suggestedAlternative": "Latest Claude Opus model"
+      },
+      "Claude Sonnet 3.5": {
+        "exceptionNotes": [],
+        "retirementDate": "2025-11-06",
+        "scope": "all",
+        "suggestedAlternative": "Latest Claude Haiku model"
+      },
+      "Claude Sonnet 3.7": {
+        "exceptionNotes": [],
+        "retirementDate": "2025-10-23",
+        "scope": "all",
+        "suggestedAlternative": "Latest Claude Sonnet model"
+      },
+      "Claude Sonnet 3.7 Thinking": {
+        "exceptionNotes": [],
+        "retirementDate": "2025-10-23",
+        "scope": "all",
+        "suggestedAlternative": "Latest Claude Sonnet model"
+      },
+      "Claude Sonnet 4": {
+        "exceptionNotes": [],
+        "retirementDate": "2026-05-01",
+        "scope": "all",
+        "suggestedAlternative": "Latest Claude Sonnet model"
+      },
+      "Claude Sonnet 4.5": {
+        "exceptionNotes": [],
+        "retirementDate": "2026-09-01",
+        "scope": "all",
+        "suggestedAlternative": "Latest Claude Sonnet model"
+      },
+      "Claude Sonnet 4.6": {
+        "exceptionNotes": [
+          "Claude Sonnet 4.6 remains available to individual Copilot subscribers on annual plans. The retirement of Claude Sonnet 4.6 does not apply to these subscribers."
+        ],
+        "retirementDate": "2026-09-01",
+        "scope": "conditional",
+        "suggestedAlternative": "Latest Claude Sonnet model"
+      },
+      "Gemini 2.0 Flash": {
+        "exceptionNotes": [],
+        "retirementDate": "2025-10-23",
+        "scope": "all",
+        "suggestedAlternative": "Latest Gemini Flash model"
+      },
+      "Gemini 2.5 Pro": {
+        "exceptionNotes": [],
+        "retirementDate": "2026-07-31",
+        "scope": "all",
+        "suggestedAlternative": "Latest Gemini Flash model"
+      },
+      "Gemini 3 Flash": {
+        "exceptionNotes": [],
+        "retirementDate": "2026-07-31",
+        "scope": "all",
+        "suggestedAlternative": "Latest Gemini Flash model"
+      },
+      "Gemini 3 Pro": {
+        "exceptionNotes": [],
+        "retirementDate": "2026-03-26",
+        "scope": "all",
+        "suggestedAlternative": "Latest Gemini Flash model"
+      },
+      "Gemini 3.1 Pro": {
+        "exceptionNotes": [],
+        "retirementDate": "2026-09-01",
+        "scope": "all",
+        "suggestedAlternative": "Latest Gemini Flash model"
+      },
+      "Gemini 3.5 Flash": {
+        "exceptionNotes": [],
+        "retirementDate": "2026-10-02",
+        "scope": "all",
+        "suggestedAlternative": "Latest Gemini Flash model"
+      },
+      "Gemini 3.6 Flash": {
+        "exceptionNotes": [],
+        "retirementDate": "2026-10-02",
+        "scope": "all",
+        "suggestedAlternative": "Latest Gemini Flash model"
+      },
+      "Gemini 3.7 Flash": {
+        "exceptionNotes": [],
+        "retirementDate": "2026-10-19",
+        "scope": "all",
+        "suggestedAlternative": "Latest Gemini Flash model"
+      },
+      "GPT-4.1": {
+        "exceptionNotes": [],
+        "retirementDate": "2026-06-01",
+        "scope": "all",
+        "suggestedAlternative": "Latest GPT model"
+      },
+      "GPT-5": {
+        "exceptionNotes": [],
+        "retirementDate": "2026-02-17",
+        "scope": "all",
+        "suggestedAlternative": "Latest GPT model"
+      },
+      "GPT-5 mini": {
+        "exceptionNotes": [],
+        "retirementDate": "2026-10-19",
+        "scope": "all",
+        "suggestedAlternative": "Latest GPT Luna model"
+      },
+      "GPT-5-Codex": {
+        "exceptionNotes": [],
+        "retirementDate": "2026-02-17",
+        "scope": "all",
+        "suggestedAlternative": "Latest GPT Codex model"
+      },
+      "GPT-5.1": {
+        "exceptionNotes": [],
+        "retirementDate": "2026-04-15",
+        "scope": "all",
+        "suggestedAlternative": "Latest GPT Codex model"
+      },
+      "GPT-5.1-Codex": {
+        "exceptionNotes": [],
+        "retirementDate": "2026-04-01",
+        "scope": "all",
+        "suggestedAlternative": "Latest GPT Codex model"
+      },
+      "GPT-5.1-Codex-Max": {
+        "exceptionNotes": [],
+        "retirementDate": "2026-04-01",
+        "scope": "all",
+        "suggestedAlternative": "Latest GPT Codex model"
+      },
+      "GPT-5.1-Codex-Mini": {
+        "exceptionNotes": [],
+        "retirementDate": "2026-04-01",
+        "scope": "all",
+        "suggestedAlternative": "Latest GPT Codex model"
+      },
+      "GPT-5.2": {
+        "exceptionNotes": [],
+        "retirementDate": "2026-06-05",
+        "scope": "all",
+        "suggestedAlternative": "Latest GPT model"
+      },
+      "GPT-5.2-Codex": {
+        "exceptionNotes": [],
+        "retirementDate": "2026-06-05",
+        "scope": "all",
+        "suggestedAlternative": "Latest GPT Codex model"
+      },
+      "GPT-5.4": {
+        "exceptionNotes": [],
+        "retirementDate": "2026-10-19",
+        "scope": "all",
+        "suggestedAlternative": "Latest GPT Sol model"
+      },
+      "GPT-5.4 mini": {
+        "exceptionNotes": [],
+        "retirementDate": "2026-10-19",
+        "scope": "all",
+        "suggestedAlternative": "Latest GPT Luna model"
+      },
+      "GPT-5.5": {
+        "exceptionNotes": [],
+        "retirementDate": "2026-10-19",
+        "scope": "all",
+        "suggestedAlternative": "Latest GPT Sol model"
+      },
+      "Grok Code Fast 1": {
+        "exceptionNotes": [],
+        "retirementDate": "2026-05-15",
+        "scope": "all",
+        "suggestedAlternative": "Latest GPT mini model"
+      },
+      "Kimi K2.7 Code": {
+        "exceptionNotes": [],
+        "retirementDate": "2026-10-02",
+        "scope": "all",
+        "suggestedAlternative": "Latest Kimi model"
+      },
+      "MAI-Code-1-Flash": {
+        "exceptionNotes": [],
+        "retirementDate": "2026-09-10",
+        "scope": "all",
+        "suggestedAlternative": "Latest MAI-Code model"
+      },
+      "o1-mini": {
+        "exceptionNotes": [],
+        "retirementDate": "2025-10-23",
+        "scope": "all",
+        "suggestedAlternative": "Latest GPT mini model"
+      },
+      "o3": {
+        "exceptionNotes": [],
+        "retirementDate": "2025-10-23",
+        "scope": "all",
+        "suggestedAlternative": "Latest GPT model"
+      },
+      "o3-mini": {
+        "exceptionNotes": [],
+        "retirementDate": "2025-10-23",
+        "scope": "all",
+        "suggestedAlternative": "Latest GPT mini model"
+      },
+      "o4-mini": {
+        "exceptionNotes": [],
+        "retirementDate": "2025-10-23",
+        "scope": "all",
+        "suggestedAlternative": "Latest GPT mini model"
+      },
+      "Raptor mini": {
+        "exceptionNotes": [],
+        "retirementDate": "2026-09-01",
+        "scope": "all",
+        "suggestedAlternative": "Latest MAI-Code model"
+      }
+    },
+    "sourceUrl": "https://docs.github.com/en/copilot/reference/ai-models/supported-models",
+    "status": "ok"
+  },
+  "observedAtUtc": "2026-10-20T10:22:23.114Z",
   "runtime": {
     "authenticated": true,
-    "fetchedAtUtc": "2026-10-19T07:00:31.905Z",
+    "fetchedAtUtc": "2026-10-20T10:22:23.114Z",
     "models": [
       {
         "id": "auto",
         "maxContextTokens": 0,
         "name": "Auto"
+      },
+      {
+        "id": "claude-sonnet-5.5",
+        "maxContextTokens": 1000000,
+        "name": "Claude Sonnet 5.5",
+        "policyState": "enabled",
+        "reasoningEffort": true,
+        "supportedReasoningEfforts": [
+          "low",
+          "medium",
+          "high",
+          "xhigh",
+          "max"
+        ],
+        "tokenPrices": {
+          "batchSize": 1000000,
+          "cachePrice": 10,
+          "cacheReadPrice": 10,
+          "cacheWrite1hPrice": 400,
+          "cacheWritePrice": 250,
+          "contextMax": 200000,
+          "inputPrice": 200,
+          "longContext": {
+            "cachePrice": 10,
+            "cacheReadPrice": 10,
+            "cacheWrite1hPrice": 400,
+            "cacheWritePrice": 250,
+            "contextMax": 936000,
+            "inputPrice": 200,
+            "maxPromptTokens": 936000,
+            "outputPrice": 1000
+          },
+          "maxPromptTokens": 200000,
+          "outputPrice": 1000
+        },
+        "toolCalls": true,
+        "vision": true
       },
       {
         "id": "claude-sonnet-5",
@@ -79,6 +371,41 @@
           },
           "maxPromptTokens": 200000,
           "outputPrice": 1000
+        },
+        "toolCalls": true,
+        "vision": true
+      },
+      {
+        "id": "claude-opus-5.5",
+        "maxContextTokens": 1000000,
+        "name": "Claude Opus 5.5",
+        "policyState": "enabled",
+        "reasoningEffort": true,
+        "supportedReasoningEfforts": [
+          "low",
+          "medium",
+          "high",
+          "xhigh",
+          "max"
+        ],
+        "tokenPrices": {
+          "batchSize": 1000000,
+          "cachePrice": 20,
+          "cacheReadPrice": 20,
+          "cacheWritePrice": 500,
+          "contextMax": 200000,
+          "inputPrice": 400,
+          "longContext": {
+            "cachePrice": 20,
+            "cacheReadPrice": 20,
+            "cacheWritePrice": 500,
+            "contextMax": 1000000,
+            "inputPrice": 400,
+            "maxPromptTokens": 1000000,
+            "outputPrice": 2000
+          },
+          "maxPromptTokens": 200000,
+          "outputPrice": 2000
         },
         "toolCalls": true,
         "vision": true
@@ -195,6 +522,43 @@
         "vision": true
       },
       {
+        "id": "claude-haiku-5.5",
+        "maxContextTokens": 1000000,
+        "name": "Claude Haiku 5.5",
+        "policyState": "enabled",
+        "reasoningEffort": true,
+        "supportedReasoningEfforts": [
+          "low",
+          "medium",
+          "high",
+          "xhigh",
+          "max"
+        ],
+        "tokenPrices": {
+          "batchSize": 1000000,
+          "cachePrice": 1,
+          "cacheReadPrice": 1,
+          "cacheWrite1hPrice": 20,
+          "cacheWritePrice": 12.5,
+          "contextMax": 100000,
+          "inputPrice": 10,
+          "longContext": {
+            "cachePrice": 5,
+            "cacheReadPrice": 5,
+            "cacheWrite1hPrice": 100,
+            "cacheWritePrice": 62.5,
+            "contextMax": 936000,
+            "inputPrice": 50,
+            "maxPromptTokens": 936000,
+            "outputPrice": 250
+          },
+          "maxPromptTokens": 100000,
+          "outputPrice": 50
+        },
+        "toolCalls": true,
+        "vision": true
+      },
+      {
         "id": "claude-haiku-4.5",
         "maxContextTokens": 200000,
         "name": "Claude Haiku 4.5",
@@ -207,6 +571,113 @@
           "cacheWritePrice": 125,
           "inputPrice": 100,
           "outputPrice": 500
+        },
+        "toolCalls": true,
+        "vision": true
+      },
+      {
+        "id": "gpt-6.1-sol",
+        "maxContextTokens": 1050000,
+        "name": "GPT-6.1 Sol",
+        "policyState": "enabled",
+        "reasoningEffort": true,
+        "supportedReasoningEfforts": [
+          "low",
+          "medium",
+          "high",
+          "xhigh",
+          "max"
+        ],
+        "tokenPrices": {
+          "batchSize": 1000000,
+          "cachePrice": 10,
+          "cacheReadPrice": 10,
+          "cacheWritePrice": 250,
+          "contextMax": 272000,
+          "inputPrice": 200,
+          "longContext": {
+            "cachePrice": 20,
+            "cacheReadPrice": 20,
+            "cacheWritePrice": 500,
+            "contextMax": 922000,
+            "inputPrice": 400,
+            "maxPromptTokens": 922000,
+            "outputPrice": 1500
+          },
+          "maxPromptTokens": 272000,
+          "outputPrice": 1000
+        },
+        "toolCalls": true,
+        "vision": true
+      },
+      {
+        "id": "gpt-6-sol",
+        "maxContextTokens": 1000000,
+        "name": "GPT-6 Sol",
+        "policyState": "enabled",
+        "reasoningEffort": true,
+        "supportedReasoningEfforts": [
+          "none",
+          "low",
+          "medium",
+          "high",
+          "xhigh",
+          "max"
+        ],
+        "tokenPrices": {
+          "batchSize": 1000000,
+          "cachePrice": 20,
+          "cacheReadPrice": 20,
+          "cacheWritePrice": 250,
+          "contextMax": 272000,
+          "inputPrice": 200,
+          "longContext": {
+            "cachePrice": 40,
+            "cacheReadPrice": 40,
+            "cacheWritePrice": 500,
+            "contextMax": 872000,
+            "inputPrice": 400,
+            "maxPromptTokens": 872000,
+            "outputPrice": 1500
+          },
+          "maxPromptTokens": 272000,
+          "outputPrice": 1000
+        },
+        "toolCalls": true,
+        "vision": true
+      },
+      {
+        "id": "gpt-6-luna",
+        "maxContextTokens": 1000000,
+        "name": "GPT-6 Luna",
+        "policyState": "enabled",
+        "reasoningEffort": true,
+        "supportedReasoningEfforts": [
+          "none",
+          "low",
+          "medium",
+          "high",
+          "xhigh",
+          "max"
+        ],
+        "tokenPrices": {
+          "batchSize": 1000000,
+          "cachePrice": 1,
+          "cacheReadPrice": 1,
+          "cacheWritePrice": 12.5,
+          "contextMax": 272000,
+          "inputPrice": 10,
+          "longContext": {
+            "cachePrice": 2,
+            "cacheReadPrice": 2,
+            "cacheWritePrice": 25,
+            "contextMax": 872000,
+            "inputPrice": 20,
+            "maxPromptTokens": 872000,
+            "outputPrice": 75
+          },
+          "maxPromptTokens": 272000,
+          "outputPrice": 50
         },
         "toolCalls": true,
         "vision": true
@@ -355,102 +826,6 @@
         "vision": true
       },
       {
-        "id": "gpt-5.5",
-        "maxContextTokens": 1050000,
-        "name": "GPT-5.5",
-        "policyState": "enabled",
-        "reasoningEffort": true,
-        "supportedReasoningEfforts": [
-          "none",
-          "low",
-          "medium",
-          "high",
-          "xhigh"
-        ],
-        "tokenPrices": {
-          "batchSize": 1000000,
-          "cachePrice": 50,
-          "cacheReadPrice": 50,
-          "cacheWritePrice": 0,
-          "contextMax": 272000,
-          "inputPrice": 500,
-          "longContext": {
-            "cachePrice": 100,
-            "cacheReadPrice": 100,
-            "cacheWritePrice": 0,
-            "contextMax": 922000,
-            "inputPrice": 1000,
-            "maxPromptTokens": 922000,
-            "outputPrice": 4500
-          },
-          "maxPromptTokens": 272000,
-          "outputPrice": 3000
-        },
-        "toolCalls": true,
-        "vision": true
-      },
-      {
-        "id": "gpt-5.4",
-        "maxContextTokens": 1050000,
-        "name": "GPT-5.4",
-        "policyState": "enabled",
-        "reasoningEffort": true,
-        "supportedReasoningEfforts": [
-          "none",
-          "low",
-          "medium",
-          "high",
-          "xhigh"
-        ],
-        "tokenPrices": {
-          "batchSize": 1000000,
-          "cachePrice": 25,
-          "cacheReadPrice": 25,
-          "cacheWritePrice": 0,
-          "contextMax": 272000,
-          "inputPrice": 250,
-          "longContext": {
-            "cachePrice": 50,
-            "cacheReadPrice": 50,
-            "cacheWritePrice": 0,
-            "contextMax": 922000,
-            "inputPrice": 500,
-            "maxPromptTokens": 922000,
-            "outputPrice": 2250
-          },
-          "maxPromptTokens": 272000,
-          "outputPrice": 1500
-        },
-        "toolCalls": true,
-        "vision": true
-      },
-      {
-        "id": "gpt-5.4-mini",
-        "maxContextTokens": 400000,
-        "name": "GPT-5.4 mini",
-        "policyState": "enabled",
-        "reasoningEffort": true,
-        "supportedReasoningEfforts": [
-          "none",
-          "low",
-          "medium",
-          "high",
-          "xhigh"
-        ],
-        "tokenPrices": {
-          "batchSize": 1000000,
-          "cachePrice": 7.5,
-          "cacheReadPrice": 7.5,
-          "cacheWritePrice": 0,
-          "contextMax": 272000,
-          "inputPrice": 75,
-          "maxPromptTokens": 272000,
-          "outputPrice": 450
-        },
-        "toolCalls": true,
-        "vision": true
-      },
-      {
         "id": "gpt-5.3-codex",
         "maxContextTokens": 400000,
         "name": "GPT-5.3-Codex",
@@ -499,14 +874,15 @@
         "vision": true
       },
       {
-        "id": "grok-4.5",
+        "id": "grok-4.7",
         "maxContextTokens": 500000,
-        "name": "Grok 4.5",
+        "name": "Grok 4.7",
         "reasoningEffort": true,
         "supportedReasoningEfforts": [
           "low",
           "medium",
-          "high"
+          "high",
+          "xhigh"
         ],
         "tokenPrices": {
           "batchSize": 1000000,
@@ -526,223 +902,6 @@
           },
           "maxPromptTokens": 200000,
           "outputPrice": 600
-        },
-        "toolCalls": true,
-        "vision": true
-      },
-      {
-        "id": "claude-haiku-5.5",
-        "maxContextTokens": 1000000,
-        "name": "Claude Haiku 5.5",
-        "policyState": "enabled",
-        "reasoningEffort": true,
-        "supportedReasoningEfforts": [
-          "low",
-          "medium",
-          "high",
-          "xhigh",
-          "max"
-        ],
-        "tokenPrices": {
-          "batchSize": 1000000,
-          "cachePrice": 1,
-          "cacheReadPrice": 1,
-          "cacheWrite1hPrice": 20,
-          "cacheWritePrice": 12.5,
-          "contextMax": 100000,
-          "inputPrice": 10,
-          "longContext": {
-            "cachePrice": 5,
-            "cacheReadPrice": 5,
-            "cacheWrite1hPrice": 100,
-            "cacheWritePrice": 62.5,
-            "contextMax": 936000,
-            "inputPrice": 50,
-            "maxPromptTokens": 936000,
-            "outputPrice": 250
-          },
-          "maxPromptTokens": 100000,
-          "outputPrice": 50
-        },
-        "toolCalls": true,
-        "vision": true
-      },
-      {
-        "id": "claude-opus-5.5",
-        "maxContextTokens": 1000000,
-        "name": "Claude Opus 5.5",
-        "policyState": "enabled",
-        "reasoningEffort": true,
-        "supportedReasoningEfforts": [
-          "low",
-          "medium",
-          "high",
-          "xhigh",
-          "max"
-        ],
-        "tokenPrices": {
-          "batchSize": 1000000,
-          "cachePrice": 20,
-          "cacheReadPrice": 20,
-          "cacheWritePrice": 500,
-          "contextMax": 200000,
-          "inputPrice": 400,
-          "longContext": {
-            "cachePrice": 20,
-            "cacheReadPrice": 20,
-            "cacheWritePrice": 500,
-            "contextMax": 1000000,
-            "inputPrice": 400,
-            "maxPromptTokens": 1000000,
-            "outputPrice": 2000
-          },
-          "maxPromptTokens": 200000,
-          "outputPrice": 2000
-        },
-        "toolCalls": true,
-        "vision": true
-      },
-      {
-        "id": "claude-sonnet-5.5",
-        "maxContextTokens": 1000000,
-        "name": "Claude Sonnet 5.5",
-        "policyState": "enabled",
-        "reasoningEffort": true,
-        "supportedReasoningEfforts": [
-          "low",
-          "medium",
-          "high",
-          "xhigh",
-          "max"
-        ],
-        "tokenPrices": {
-          "batchSize": 1000000,
-          "cachePrice": 10,
-          "cacheReadPrice": 10,
-          "cacheWrite1hPrice": 400,
-          "cacheWritePrice": 250,
-          "contextMax": 200000,
-          "inputPrice": 200,
-          "longContext": {
-            "cachePrice": 10,
-            "cacheReadPrice": 10,
-            "cacheWrite1hPrice": 400,
-            "cacheWritePrice": 250,
-            "contextMax": 936000,
-            "inputPrice": 200,
-            "maxPromptTokens": 936000,
-            "outputPrice": 1000
-          },
-          "maxPromptTokens": 200000,
-          "outputPrice": 1000
-        },
-        "toolCalls": true,
-        "vision": true
-      },
-      {
-        "id": "gpt-6.1-sol",
-        "maxContextTokens": 1050000,
-        "name": "GPT-6.1 Sol",
-        "policyState": "enabled",
-        "reasoningEffort": true,
-        "supportedReasoningEfforts": [
-          "none",
-          "low",
-          "medium",
-          "high",
-          "xhigh",
-          "max"
-        ],
-        "tokenPrices": {
-          "batchSize": 1000000,
-          "cachePrice": 10,
-          "cacheReadPrice": 10,
-          "cacheWritePrice": 250,
-          "contextMax": 272000,
-          "inputPrice": 200,
-          "longContext": {
-            "cachePrice": 20,
-            "cacheReadPrice": 20,
-            "cacheWritePrice": 500,
-            "contextMax": 922000,
-            "inputPrice": 400,
-            "maxPromptTokens": 922000,
-            "outputPrice": 1500
-          },
-          "maxPromptTokens": 272000,
-          "outputPrice": 1000
-        },
-        "toolCalls": true,
-        "vision": true
-      },
-      {
-        "id": "gpt-6-luna",
-        "maxContextTokens": 1000000,
-        "name": "GPT-6 Luna",
-        "policyState": "enabled",
-        "reasoningEffort": true,
-        "supportedReasoningEfforts": [
-          "none",
-          "low",
-          "medium",
-          "high",
-          "xhigh",
-          "max"
-        ],
-        "tokenPrices": {
-          "batchSize": 1000000,
-          "cachePrice": 1,
-          "cacheReadPrice": 1,
-          "cacheWritePrice": 12.5,
-          "contextMax": 272000,
-          "inputPrice": 10,
-          "longContext": {
-            "cachePrice": 2,
-            "cacheReadPrice": 2,
-            "cacheWritePrice": 25,
-            "contextMax": 872000,
-            "inputPrice": 20,
-            "maxPromptTokens": 872000,
-            "outputPrice": 75
-          },
-          "maxPromptTokens": 272000,
-          "outputPrice": 50
-        },
-        "toolCalls": true,
-        "vision": true
-      },
-      {
-        "id": "gpt-6-sol",
-        "maxContextTokens": 1000000,
-        "name": "GPT-6 Sol",
-        "policyState": "enabled",
-        "reasoningEffort": true,
-        "supportedReasoningEfforts": [
-          "none",
-          "low",
-          "medium",
-          "high",
-          "xhigh",
-          "max"
-        ],
-        "tokenPrices": {
-          "batchSize": 1000000,
-          "cachePrice": 20,
-          "cacheReadPrice": 20,
-          "cacheWritePrice": 250,
-          "contextMax": 272000,
-          "inputPrice": 200,
-          "longContext": {
-            "cachePrice": 40,
-            "cacheReadPrice": 40,
-            "cacheWritePrice": 500,
-            "contextMax": 872000,
-            "inputPrice": 400,
-            "maxPromptTokens": 872000,
-            "outputPrice": 1500
-          },
-          "maxPromptTokens": 272000,
-          "outputPrice": 1000
         },
         "toolCalls": true,
         "vision": true
@@ -779,43 +938,11 @@
         },
         "toolCalls": true,
         "vision": true
-      },
-      {
-        "id": "grok-4.7",
-        "maxContextTokens": 500000,
-        "name": "Grok 4.7",
-        "reasoningEffort": true,
-        "supportedReasoningEfforts": [
-          "low",
-          "medium",
-          "high"
-        ],
-        "tokenPrices": {
-          "batchSize": 1000000,
-          "cachePrice": 50,
-          "cacheReadPrice": 50,
-          "cacheWritePrice": 0,
-          "contextMax": 200000,
-          "inputPrice": 200,
-          "longContext": {
-            "cachePrice": 100,
-            "cacheReadPrice": 100,
-            "cacheWritePrice": 0,
-            "contextMax": 500000,
-            "inputPrice": 400,
-            "maxPromptTokens": 500000,
-            "outputPrice": 1200
-          },
-          "maxPromptTokens": 200000,
-          "outputPrice": 600
-        },
-        "toolCalls": true,
-        "vision": true
       }
     ],
-    "runtimeVersion": "1.0.85",
+    "runtimeVersion": "1.0.101-0",
     "source": "copilot-sdk models.list; captured locally",
     "status": "ok"
   },
-  "schemaVersion": 1
+  "schemaVersion": 2
 }

@@ -159,6 +159,7 @@ function Invoke-TaskProfileReview {
                 ProfileKey = $profile.key
                 AvailabilityVerified = $Availability.verified
                 AvailableModels = $models
+                LifecycleRecord = (Get-ObjectMemberValue $Availability.lifecycleByModel $model)
                 Denylist = $policy.denylist
                 CapabilityRecord = $capabilities[$model]
                 PricingRecord = $priceRecord
@@ -188,6 +189,9 @@ function Invoke-TaskProfileReview {
             $resolved.status = "over_budget_retention; $($resolved.status)"
         }
         if (-not $Availability.verified) { $resolved.status = "retained_unverified_availability" }
+        if (-not $resolved.applied -and $currentVerdict.reasonCodes -contains "model_retired") {
+            $resolved.status = "blocked_retired_incumbent; $($resolved.status)"
+        }
         $fallback = Get-PreferredModelForProfilePolicy -ProfileKey $profile.key -ValidModels $models `
             -Policy $policy -AdmissibleModels @($verdicts | Where-Object admissible | ForEach-Object modelId | Sort-Object -Unique)
         $results.Add([pscustomobject]@{

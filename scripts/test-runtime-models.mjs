@@ -1,6 +1,18 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { collectRuntimeCatalog } from "./get-runtime-models.mjs";
+import { collectRuntimeCatalog, getRuntimeClientOptions } from "./get-runtime-models.mjs";
+
+test("Runtime path selection uses the explicit installation without changing the parent environment", () => {
+    const env = { COPILOT_CLI_PATH: "old-runtime", OTHER: "preserved" };
+    const options = getRuntimeClientOptions(["--cli-path", "C:\\Program Files\\Copilot\\copilot.exe"], env);
+    assert.equal(options.env.COPILOT_CLI_PATH, "C:\\Program Files\\Copilot\\copilot.exe");
+    assert.equal(options.env.OTHER, "preserved");
+    assert.equal(env.COPILOT_CLI_PATH, "old-runtime");
+    assert.deepEqual(getRuntimeClientOptions([]), { logLevel: "none" });
+    assert.throws(() => getRuntimeClientOptions(["--cli-path"]), /Expected --cli-path/);
+    assert.throws(() => getRuntimeClientOptions(["--cli-path", " "]), /Expected --cli-path/);
+    assert.throws(() => getRuntimeClientOptions(["--other", "path"]), /Expected --cli-path/);
+});
 
 test("Unauthenticated discovery never queries or publishes a model catalog", async () => {
     const result = await collectRuntimeCatalog({

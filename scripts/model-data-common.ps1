@@ -1,5 +1,11 @@
 Set-StrictMode -Version Latest
 
+function ConvertFrom-ModelHtmlCell {
+    param([string]$Html)
+    $text = [regex]::Replace($Html, '(?is)<sup\b.*?</sup>', '')
+    return ([System.Net.WebUtility]::HtmlDecode([regex]::Replace($text, '<[^>]+>', '')) -replace '\s+', ' ').Trim()
+}
+
 function Invoke-TextFetch {
     param(
         [Parameter(Mandatory = $true)][string]$Url,

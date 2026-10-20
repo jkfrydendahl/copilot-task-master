@@ -1,5 +1,13 @@
 import { pathToFileURL } from "node:url";
 
+export function getRuntimeClientOptions(args, env = process.env) {
+    if (args.length === 0) return { logLevel: "none" };
+    if (args.length !== 2 || args[0] !== "--cli-path" || !args[1].trim()) {
+        throw new Error("Expected --cli-path followed by an installed Copilot CLI path.");
+    }
+    return { logLevel: "none", env: { ...env, COPILOT_CLI_PATH: args[1] } };
+}
+
 export async function collectRuntimeCatalog(client) {
     await client.start();
     const auth = await client.getAuthStatus();
@@ -34,9 +42,7 @@ async function main() {
     let timer;
     try {
         const { CopilotClient } = await import("@github/copilot-sdk");
-        client = new CopilotClient({
-            logLevel: "none",
-        });
+        client = new CopilotClient(getRuntimeClientOptions(process.argv.slice(2)));
         const result = await Promise.race([
             collectRuntimeCatalog(client),
             new Promise((_, reject) => {

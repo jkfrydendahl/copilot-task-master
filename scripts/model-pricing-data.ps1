@@ -2,17 +2,11 @@ Set-StrictMode -Version Latest
 . (Join-Path $PSScriptRoot "model-data-common.ps1")
 $script:GitHubPricingUrl = "https://docs.github.com/en/copilot/reference/copilot-billing/models-and-pricing"
 
-function ConvertFrom-PricingCell {
-    param([string]$Html)
-    $text = [regex]::Replace($Html, '(?is)<sup\b.*?</sup>', '')
-    return ([System.Net.WebUtility]::HtmlDecode([regex]::Replace($text, '<[^>]+>', '')) -replace '\s+', ' ').Trim()
-}
-
 function ConvertFrom-GitHubPricingHtml {
     param([AllowEmptyString()][string]$Html)
     $models = @{}
     foreach ($table in [regex]::Matches($Html, '(?is)<table\b[^>]*>.*?</table>')) {
-        $headers = @([regex]::Matches($table.Value, '(?is)<th\b[^>]*>(.*?)</th>') | ForEach-Object { ConvertFrom-PricingCell $_.Groups[1].Value })
+        $headers = @([regex]::Matches($table.Value, '(?is)<th\b[^>]*>(.*?)</th>') | ForEach-Object { ConvertFrom-ModelHtmlCell $_.Groups[1].Value })
         if ($headers -notcontains "Model") { continue }
         if ($headers -notcontains "Input" -or $headers -notcontains "Output") {
             throw [System.IO.InvalidDataException]::new("GitHub model pricing table is missing Input/Output columns.")
@@ -21,7 +15,7 @@ function ConvertFrom-GitHubPricingHtml {
             throw [System.IO.InvalidDataException]::new("Duplicate GitHub pricing columns.")
         }
         foreach ($row in [regex]::Matches($table.Value, '(?is)<tr\b[^>]*>(.*?)</tr>')) {
-            $cells = @([regex]::Matches($row.Value, '(?is)<td\b[^>]*>(.*?)</td>') | ForEach-Object { ConvertFrom-PricingCell $_.Groups[1].Value })
+            $cells = @([regex]::Matches($row.Value, '(?is)<td\b[^>]*>(.*?)</td>') | ForEach-Object { ConvertFrom-ModelHtmlCell $_.Groups[1].Value })
             if ($cells.Count -eq 0) { continue }
             if ($cells.Count -ne $headers.Count) { throw [System.IO.InvalidDataException]::new("GitHub pricing row has an unexpected column count.") }
             if (-not ($cells -join '').Trim()) { continue }

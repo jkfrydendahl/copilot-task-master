@@ -12,6 +12,7 @@ function Get-ModelAdmissibilityVerdict {
         [Parameter(Mandatory)][bool]$AvailabilityVerified,
         [string[]]$Denylist = @(),
         [string[]]$AvailableModels = @(),
+        $LifecycleRecord = $null,
         $CapabilityRecord = $null,
         $PricingRecord = $null,
         [Parameter(Mandatory)]$ProfileRequirement,
@@ -23,6 +24,11 @@ function Get-ModelAdmissibilityVerdict {
     )
     $reasons = [System.Collections.Generic.List[string]]::new()
     $warnings = [System.Collections.Generic.List[string]]::new()
+    switch (Get-ObjectMemberValue $LifecycleRecord "status") {
+        "retired" { $reasons.Add("model_retired") }
+        "scheduled" { $warnings.Add("model_retirement_scheduled") }
+        "conditional" { $warnings.Add("model_retirement_scope_unconfirmed") }
+    }
     if ($Denylist -contains $ModelId) { $reasons.Add("denylisted") }
     if ($AvailableModels -notcontains $ModelId) { $reasons.Add("not_available") }
     if (-not $AvailabilityVerified) { $reasons.Add("unverified_availability_freezes_promotion") }
@@ -97,6 +103,7 @@ function Get-ModelAdmissibilityVerdict {
         warningCodes = @($warnings)
         pricing = $pricing
         capabilities = $CapabilityRecord
+        lifecycle = $LifecycleRecord
         availabilityConfidence = $(if ($AvailabilityVerified) { "verified" } else { "unverified" })
     }
 }

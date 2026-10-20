@@ -317,16 +317,28 @@ function Get-TaskProfileReviewReport {
         }
         $lines.Add("Runtime and help catalogs are reconciled, not assumed exhaustive. Absence is not an explicit denial; runtime-disabled, ambiguous, denylisted and virtual routing models cannot enter selection. Public pricing/benchmark rows alone do not prove Copilot availability.")
         $lines.Add("Help-only entries are CLI-catalog evidence, not proof of per-account entitlement. The source columns distinguish these from recorded authenticated runtime entries.")
+        $lifecycle=Get-ObjectMemberValue $Onboarding "lifecycle"
+        if($null -ne $lifecycle){
+            $lines.Add("Official retirement evidence: **$(Format-ModelReportValue $lifecycle.status)**; retrieved **$(Format-ModelReportValue $lifecycle.fetchedAtUtc)**; source $(Format-ModelReportValue $lifecycle.sourceUrl). Effective, unconditional retirements override stale help entries. Scheduled dates are evaluated in UTC; documented exceptions remain conditional, not blanket denials. Suggested alternatives are migration guidance, not qualified winners.")
+        }
+        foreach($result in @($Results | Where-Object {$_.resolution.status -like "blocked_retired_incumbent*"})){
+            $current=@($result.verdicts | Where-Object {
+                $_.modelId -eq $result.currentModel -and $_.effort -eq $result.currentConfiguration.effort -and $_.context -eq $result.currentConfiguration.context
+            })[0]
+            $lines.Add("**Action required:** ``$($result.key)`` still configures ``$($result.currentModel)``, officially retired on **$($current.lifecycle.retirementDate)**. No replacement was applied; review a supported replacement separately. Budget, capability and role-qualification requirements have not been waived.")
+        }
         $lines.Add("Verified catalog facts are updated before comparison. Ready for comparison is not role qualification: each profile still requires its exact configuration evidence, budget, bands and confirmation.")
         foreach ($message in $Onboarding.diagnostics) { $lines.Add("- Warning: $(Format-ModelReportValue $message)") }
         $lines.Add("")
         $lines.Add("<details>")
         $lines.Add("<summary>Discovered models, verified additions and remaining blockers</summary>")
         $lines.Add("")
-        $lines.Add("| Model | Runtime listed | Help listed | Onboarding status | Blockers / limitations |")
-        $lines.Add("|---|---|---|---|---|")
+        $lines.Add("| Model | Runtime listed | Help listed | Lifecycle | Retirement date | Onboarding status | Blockers / limitations |")
+        $lines.Add("|---|---|---|---|---|---|---|")
         foreach ($model in $Onboarding.models) {
-            $lines.Add((Format-ModelReportRow @($model.model,$model.runtimeListed,$model.helpListed,$model.status,($model.reasons -join "; "))))
+            $modelLifecycle=Get-ObjectMemberValue $model "lifecycle"
+            $lines.Add((Format-ModelReportRow @($model.model,$model.runtimeListed,$model.helpListed,
+                (Get-ObjectMemberValue $modelLifecycle "status"),(Get-ObjectMemberValue $modelLifecycle "retirementDate"),$model.status,($model.reasons -join "; "))))
         }
         $lines.Add("")
         $lines.Add("Catalog changes: $($Onboarding.changes.Count). Unmapped benchmark variants: $($Onboarding.unmappedBenchmarkVariants.Count); complete discovery details are retained in ``data/model-onboarding-snapshot.json``. Such variants may be unrelated to Copilot and are not automatically admitted.")

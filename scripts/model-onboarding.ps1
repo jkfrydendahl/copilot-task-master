@@ -1,12 +1,26 @@
 Set-StrictMode -Version Latest
 . (Join-Path $PSScriptRoot "model-data-common.ps1")
 . (Join-Path $PSScriptRoot "model-pricing-data.ps1")
+. (Join-Path $PSScriptRoot "model-lifecycle-data.ps1")
+
+function Get-LocalCopilotRuntimePath {
+    param(
+        [string]$ExplicitPath=$env:COPILOT_CLI_PATH,
+        $InstalledCommand=(Get-Command copilot -CommandType Application -ErrorAction SilentlyContinue)
+    )
+    if (-not [string]::IsNullOrWhiteSpace($ExplicitPath)) { return $ExplicitPath }
+    if ($null -ne $InstalledCommand) { return $InstalledCommand.Source }
+    return $null
+}
 
 function Get-RuntimeModelCatalog {
     if (-not (Get-Command node -ErrorAction SilentlyContinue)) {
         return @{status="unavailable";authenticated=$false;models=@();message="Node.js unavailable; install dependencies with npm ci."}
     }
-    $output = @(& node (Join-Path $PSScriptRoot "get-runtime-models.mjs") 2>&1)
+    $arguments = @((Join-Path $PSScriptRoot "get-runtime-models.mjs"))
+    $cliPath = Get-LocalCopilotRuntimePath
+    if (-not [string]::IsNullOrWhiteSpace($cliPath)) { $arguments += @("--cli-path",$cliPath) }
+    $output = @(& node @arguments 2>&1)
     try { $result = ConvertFrom-JsonAsHashtableCompat ($output -join "`n") }
     catch [System.ArgumentException] {
         return @{status="error";authenticated=$false;models=@();message="Runtime adapter returned invalid JSON; check Node.js and run npm ci."}
@@ -76,6 +90,27 @@ function Resolve-ModelOnboarding {
         if ((Get-ObjectMemberValue $record "policyState") -eq "disabled") { $blocked += $id }
     }
     $discovered = @(@($Availability.models) + @($runtimeById.Keys) + @($capabilities.models.Keys) | Sort-Object -Unique)
+    $lifecycleCatalog = Get-ObjectMemberValue $Availability "lifecycle"
+    $lifecycleFresh = Test-ModelLifecycleCatalog $lifecycleCatalog $Policy.consensusPolicy.discoveryFreshnessDays $NowUtc
+    $lifecycleByModel = @{}
+    if ($null -ne $lifecycleCatalog -and -not $lifecycleFresh) {
+        $diagnostics.Add("Official retirement evidence is invalid or stale; model lifecycles are unknown, not inferred from catalog omissions.")
+    }
+    foreach ($id in $discovered) {
+        $lifecycleByModel[$id] = @{status="unknown"}
+        if (-not $lifecycleFresh) { continue }
+        $names = @(@((Get-ObjectMemberValue $pricingAliases.aliases $id),
+            $(if ($runtimeFresh) { Get-ObjectMemberValue (Get-ObjectMemberValue $runtimeById $id) "name" })) |
+            Where-Object { $_ -is [string] -and -not [string]::IsNullOrWhiteSpace($_) } | Sort-Object -Unique)
+        if ($names.Count -eq 1) {
+            $owners = @($pricingAliases.aliases.Keys | Where-Object { $pricingAliases.aliases[$_] -eq $names[0] })
+            if (-not $owners.Count -or ($owners.Count -eq 1 -and $owners[0] -eq $id)) {
+                $lifecycleByModel[$id] = Get-ModelLifecycleStatus $names[0] $lifecycleCatalog $NowUtc
+            }
+            else { $diagnostics.Add("${id}: ambiguous published model identity; retirement scope is not assumed.") }
+        } elseif ($names.Count -gt 1) { $diagnostics.Add("${id}: conflicting runtime/pricing identities; retirement scope is not assumed.") }
+        if ($lifecycleByModel[$id].status -eq "retired") { $blocked += $id }
+    }
     $available = @(if ($Availability.verified) { $Availability.models | Where-Object { $_ -notin $blocked } })
     foreach ($id in @($runtimeById.Keys | Sort-Object)) {
         $record = $runtimeById[$id]
@@ -92,7 +127,12 @@ function Resolve-ModelOnboarding {
             pricing=(Get-ObjectMemberValue $pricingAliases.aliases $id)
         }
         $record = Get-ObjectMemberValue $runtimeById $id
-        if ($id -in $blocked) {
+        $lifecycle = $lifecycleByModel[$id]
+        if ($lifecycle.status -eq "scheduled") { $reasons.Add("retirement_scheduled_on_$($lifecycle.retirementDate)") }
+        if ($lifecycle.status -eq "conditional") { $reasons.Add("retirement_scope_unconfirmed; $($lifecycle.exceptionNotes -join ' ')") }
+        if ($lifecycle.status -eq "retired") {
+            $reasons.Add("officially_retired_on_$($lifecycle.retirementDate)")
+        } elseif ($id -in $blocked) {
             $reasons.Add("denylisted_disabled_virtual_or_ambiguous")
         } elseif ($null -eq $record -or (Get-ObjectMemberValue $record "policyState") -ne "enabled") {
             $reasons.Add("enabled_runtime_metadata_missing; existing facts retain their original verification dates")
@@ -219,7 +259,7 @@ function Resolve-ModelOnboarding {
         if ($null -eq $after.capability) { $reasons.Add("capabilities_missing") }
         if ($null -eq $after.pricing) { $reasons.Add("pricing_alias_missing") }
         if ($null -eq $after.benchmarks) { $reasons.Add("benchmark_aliases_missing; structured agent evidence is resolved separately") }
-        $rows.Add(@{model=$id;runtimeListed=($null -ne $record);helpListed=($Availability.verified -and $id -in $Availability.models);
+        $rows.Add(@{model=$id;runtimeListed=($null -ne $record);helpListed=($Availability.verified -and $id -in $Availability.models);lifecycle=$lifecycle;
             status=$(if ($id -in $blocked -or $null -eq $after.capability) { "blocked" } elseif ($reasons.Count) { "partial" } else { "ready_for_comparison" })
             reasons=@($reasons)})
     }
@@ -250,11 +290,13 @@ function Resolve-ModelOnboarding {
     return @{
         capabilities=$capabilities;aliases=$aliases;selectionAliases=$selectionAliases;pricingAliases=$pricingAliases
         availability=@{models=$available;verified=($Availability.verified -or ($runtimeFresh -and $available.Count -gt 0));
-            source="$($Availability.source); recorded runtime $(if($runtimeFresh){'reconciled'}else{'unavailable (degraded)'})"}
+            source="$($Availability.source); recorded runtime $(if($runtimeFresh){'reconciled'}else{'unavailable (degraded)'})";lifecycleByModel=$lifecycleByModel}
         audit=@{schemaVersion=1;generatedAtUtc=$NowUtc.ToString("o");runtimeStatus=(Get-ObjectMemberValue $RuntimeCatalog "status");
             runtimeAuthenticated=$runtimeFresh;runtimeVersion=(Get-ObjectMemberValue $RuntimeCatalog "runtimeVersion")
             runtimeFetchedAtUtc=(Get-ObjectMemberValue $RuntimeCatalog "fetchedAtUtc")
             discoverySnapshot=(Get-ObjectMemberValue $Availability "discoverySnapshot")
+            lifecycle=@{status=$(if($lifecycleFresh){"ok"}else{"unavailable_or_stale"});
+                sourceUrl=(Get-ObjectMemberValue $lifecycleCatalog "sourceUrl");fetchedAtUtc=(Get-ObjectMemberValue $lifecycleCatalog "fetchedAtUtc")}
             runtimeModels=@($runtimeById.Values | Sort-Object id)
             models=@($rows);changes=@($changes);diagnostics=@($diagnostics);unmappedBenchmarkVariants=$unmapped
             rejectedMappings=@($rejectedMappings)}

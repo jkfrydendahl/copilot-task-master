@@ -10,13 +10,18 @@ function Update-LocalModelDiscovery {
         [string]$RepoRoot=(Split-Path $PSScriptRoot -Parent),
         [scriptblock]$RuntimeProbe={Get-RuntimeModelCatalog},
         [scriptblock]$HelpProbe={Get-ModelAvailability},
+        [scriptblock]$LifecycleProbe={Get-ModelLifecycleData},
         [datetime]$NowUtc=[datetime]::UtcNow
     )
     $policy=Get-ModelPolicyConfig (Join-Path $RepoRoot "config\model-policy.json")
     $runtime=& $RuntimeProbe
     $help=& $HelpProbe
+    $lifecycle=& $LifecycleProbe
+    if((Get-ObjectMemberValue $lifecycle "status") -ne "ok"){
+        throw "Official retirement discovery failed; previous snapshot was not overwritten. $((Get-ObjectMemberValue $lifecycle 'message'))"
+    }
     if(-not $PSBoundParameters.ContainsKey("NowUtc")){$NowUtc=[datetime]::UtcNow}
-    $snapshot=New-ModelDiscoverySnapshot -Availability $help -RuntimeCatalog $runtime
+    $snapshot=New-ModelDiscoverySnapshot -Availability $help -RuntimeCatalog $runtime -LifecycleCatalog $lifecycle
     $check=Resolve-ModelDiscoverySnapshot -Snapshot $snapshot -MaxAgeDays $policy.consensusPolicy.discoveryFreshnessDays -NowUtc $NowUtc
     if($check.status -ne "valid"){
         throw "Local discovery failed; previous snapshot was not overwritten. Authenticate your local CLI with your own account and retry. $($check.message) $((Get-ObjectMemberValue $runtime 'message'))"
