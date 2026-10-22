@@ -22,8 +22,8 @@ These are the shared vocabulary; each maps to a key in `task-profiles.json`:
 5. Review — ordinary diff review (use Deep reasoning for risky/large/business-critical diffs).
 6. Visual/UI — UI/layout-oriented work where visual reasoning matters.
 7. Mechanical — repetitive bulk edits OR known operational steps (build, package, deploy, run migrations) after the approach is clear; no real design decisions required.
-8. Orchestrator — mixed/evolving work in one session; route each request to the best task-class custom agent without relaunching.
-9. Triage — a cheap "I'm not sure" launch that estimates the task first, then recommends one of the classes above (see Triage mode below).
+8. Orchestrator — mixed/evolving work in one session; select execution profiles within the active delivery stage without relaunching.
+9. Triage — an "I'm not sure" launch that assesses scope first, then recommends one of the classes above (see Triage mode below).
 
 To change models, effort, or context tier, the **right action is to adjust the launch**:
 relaunch via `Start-CopilotWork.ps1` with a different task class, or use the in-session
@@ -53,11 +53,12 @@ For `orchestrator`, follow [Orchestrator Mode](15-orchestrator-mode.instructions
 That file owns agent routing, the response prefix, and the exemption from drift banners.
 The triage and non-orchestrator drift rules below remain owned by this file.
 
-## Triage mode (auto-estimate)
+## Triage mode (routing assessment)
 
-If the launched task class (from the kickoff message) is `triage`, the user launched cheaply on purpose because they were
+If the launched task class (from the kickoff message) is `triage`, the user chose a routing assessment because they were
 unsure how heavy the task is. **Before doing the actual work**, on your first substantive turn,
-perform a streamlined inline task estimate — do NOT invoke the `/estimate-task` skill:
+perform a streamlined inline scope assessment. This selects execution settings;
+it is not a delivery estimate, planning skill or substitute for company/project policy.
 
 1. Ask the one or two highest-value clarifying questions needed to score the task (skip this
    if the user's description already makes the size obvious).
@@ -92,7 +93,7 @@ perform a streamlined inline task estimate — do NOT invoke the `/estimate-task
 
 Compare the **full profile** (model + effort + context) when deciding whether a switch is needed —
 not just the model name. If the recommended class has a different effort or context than triage
-(e.g. triage is `low`/`default` but Default development is `medium`/`default`), a switch is
+(e.g. triage is `low`/`default` but the recommended class has higher effort), a switch is
 still warranted even if the model name is the same. Only skip the switch recommendation if the
 full profile is identical to triage.
 
@@ -116,7 +117,7 @@ Mismatch matters in **both directions**, and the cheaper direction matters at le
   bug, a data-model change, or a risky refactor (→ Deep reasoning). Risk: silently
   under-powering the task and producing weak work.
 - **Over-powered (downgrade — cost):** launched heavy, but the work is actually trivial — e.g.
-  launched **Deep reasoning** (`opus`, high effort, long_context) but you're now doing a rename,
+  launched **Deep reasoning** (using its configured model/effort/context) but you're now doing a rename,
   a formatting fix, a one-line edit, or other Quick/Mechanical work. Staying on the expensive
   model/effort/context wastes money on **every turn**. Flag it so the user can drop to a cheaper
   class. This direction is at least as important as upgrading.

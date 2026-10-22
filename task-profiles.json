@@ -2,8 +2,8 @@
   {
     "key": "orchestrator",
     "label": "Orchestrator (route per task)",
-    "description": "Mixed or evolving workloads where one session should classify each request and route to task-class subagents without relaunching.",
-    "hint": "When you open the chat, describe the task. The session should choose inline vs @task-class agent routing per request.",
+    "description": "Mixed or evolving workloads: select execution profiles within the active delivery stage and approved plan, without relaunching.",
+    "hint": "Describe the task and active delivery stage. Delegate self-contained work only when separate context adds value.",
     "model": "grok-4.6",
     "effort": "high",
     "context": "default"
@@ -21,7 +21,7 @@
     "key": "default-development",
     "label": "Default development",
     "description": "Ordinary bug fixes, normal feature work, straightforward refactors, small D365 changes.",
-    "hint": "When you open the chat, describe what you want to fix or build. The agent will plan before coding.",
+    "hint": "Describe what you want to fix or build; follow the active company/project delivery policy.",
     "model": "gemini-3.8-flash",
     "effort": "high",
     "context": "default"
@@ -30,7 +30,7 @@
     "key": "agentic-implementation",
     "label": "Agentic implementation",
     "description": "Multi-file implementation, edit/test loops, repo exploration, coordinated layered changes.",
-    "hint": "When you open the chat, describe the feature or change. The agent will explore, plan, and implement across files.",
+    "hint": "Describe the feature or change and any approved plan; execution follows the active delivery stage.",
     "model": "claude-sonnet-5.5",
     "effort": "max",
     "context": "default"
@@ -48,7 +48,7 @@
     "key": "review",
     "label": "Review",
     "description": "Ordinary diff review. For risky/large/business-critical diffs, use Deep reasoning instead.",
-    "hint": "When you open the chat, run /review (or /code-review-synthesis for multi-model). Stage your changes first.",
+    "hint": "Identify the actual task changes to review: committed, staged, unstaged and relevant untracked files; staging is not required.",
     "model": "claude-opus-5",
     "effort": "high",
     "context": "default"

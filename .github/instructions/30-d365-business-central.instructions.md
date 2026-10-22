@@ -13,5 +13,5 @@ When working with AL:
 - Treat table extensions, enum extensions, events, subscribers, reports, and API pages as high-impact changes.
 - Prefer event subscribers over base-object modification where applicable.
 - Watch for breaking changes in public APIs, integrations, and report datasets.
-- Suggest validation through compile/build and relevant BC test or smoke-test steps.
+- Run the project's documented compile/build and relevant automated BC tests. Report unavailable validation as pending; sandbox deployment and manual smoke tests require applicable authorization and are not implied by local results.
 - Do not invent object IDs if the repo has a documented ID range; inspect first.

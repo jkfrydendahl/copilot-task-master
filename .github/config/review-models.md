@@ -1,26 +1,21 @@
 # Review Models Configuration
 
-Configure the AI models used for multi-model code review. Update this file when newer or better models become available — all review references point here.
+Use this guidance when explicitly selecting independent reviewers. Delivery and
+review policy belong to the active company/project instructions, not this file.
 
-## Models
+## Model availability
 
-| Model | Review Command Name | Model ID | Strengths |
-|-------|-------------------|----------|-----------|
-| **GPT-5.3-Codex** | `codex 5.3` | `gpt-5.3-codex` | Code-focused reasoning, implementation detail |
-| **Claude Opus 4.8** | `opus 4.8` | `claude-opus-4.8` | Broad analysis, architectural thinking |
-| **Gemini 3 Pro** | `gemini 3 pro` | `gemini-3-pro-preview` | Alternative perspective, pattern recognition |
-
-## Review Command
-
-```
-/review using codex 5.3, opus 4.8, gemini 3 pro
-```
-
-Update the model names in the table above **and** the review command when changing models. The "Review Command Name" column shows the exact string used in the `/review using ...` command.
+Choose from the models actually available in the selected client/account, using
+its current model picker and review help. Do not assume a fixed model ID or a
+historical command alias still works. The `review` entry in `task-profiles.json`
+selects one ordinary-review profile; it is not a multi-model reviewer roster.
 
 ## Choosing Models
 
-Pick **3 models from different providers** for maximum coverage — different architectures catch different issues. Use benchmarks to inform your selection:
+When additional coverage is warranted, pick **2-3 available models from different
+providers**. Different architectures can find different issues; additional passes
+also consume credits. Use benchmarks to inform selection, not to claim that an
+unavailable model can be invoked:
 
 **General coding benchmarks:**
 - [SWE-bench](https://www.swebench.com/) — Real-world software engineering tasks

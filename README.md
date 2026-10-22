@@ -1,29 +1,29 @@
 # copilot-task-master
 
 A Windows/PowerShell launcher that starts the **GitHub Copilot CLI** inside one of
-your project repositories with a consistent, shared set of workflow instructions injected.
+your project repositories with task-aware model settings and routing guidance.
 
-It is a personal workflow harness — not application code. The "payload" is the shared rule set
-in `AGENTS.md` and `.github/instructions/`, plus the reusable **skills** in `skills/`, all of
-which get applied to whatever repo you launch into.
+It owns model routing, generated task-class agents and session tooling, not the
+delivery workflow. Company/project policy and native plugins own that workflow.
+This workbench ships no skills (see [Skills and migration](#skills-and-migration)).
 
 ## What's here
 
 | File | Purpose |
 | ---- | ------- |
-| `Start-CopilotWork.ps1` | Interactive picker: choose a repo **and a task class**, inject master instructions, sync shared skills + generated task-class agents, optionally open VS Code, then launch `copilot` with the right model/effort/context. |
-| `scripts/workbench-setup.ps1` | Personal skills/agent setup and the launch-baseline kickoff message. Importing it performs no setup. |
+| `Start-CopilotWork.ps1` | Interactive picker: choose a repo **and a task class**, inject master instructions, generate task-class agents, optionally open VS Code, then launch `copilot` with the right model/effort/context. It does not link or modify `~/.copilot/skills`. |
+| `scripts/workbench-setup.ps1` | Ownership-checked task-class agent generation and launch-baseline kickoff. Importing it performs no setup. |
+| `scripts/Migrate-PersonalSkills.ps1` | One-time migration off the legacy `~/.copilot/skills` whole-root junction. Plan-only unless `-Apply` is given. See [Skills and migration](#skills-and-migration). |
 | `scripts/workbench-session.ps1` | Session markers, shared usage-record formatting, completion logging and abandoned-session recovery. |
 | `repos.json` | Registry of your working repos (`name`, `type`, `path`). |
 | `task-profiles.json` | Maps each task class → `{ model, effort, context }`. The source of truth for model selection. |
 | `usage-log.csv` | Silent session log: start/end time, duration, repo name+type (created on first run, git-ignored). |
-| `AGENTS.md` | Baseline plan-first workflow rules. |
-| `.github/instructions/*.instructions.md` | Scoped rules (model selection, planning, skills routing, code review, Git boundaries, D365 BC/CE). |
-| `.github/config/review-models.md` | Models + `/review` command used for multi-model code review. |
-| `skills/` | Reusable agent skills (slash commands) linked into `~/.copilot/skills` so they're available in every repo. |
+| `AGENTS.md` | Target-project identity, delivery-policy dependency and model-routing ownership. |
+| `.github/instructions/*.instructions.md` | Model selection, orchestrator routing and D365 BC/CE domain guidance. |
+| `.github/config/review-models.md` | Selection guidance for optional independent reviewers, not a fixed roster or delivery policy. |
 | `LICENSE` | MIT. |
 
-Workflow ownership is explicit: `AGENTS.md` provides the baseline workflow;
+Ownership is explicit: active company/project instructions provide delivery policy;
 `10-model-selection.instructions.md` owns triage and drift detection;
 `15-orchestrator-mode.instructions.md` owns task-level routing. The launcher supplies the
 selected profile's baseline and points to the applicable rules rather than maintaining another
@@ -61,9 +61,9 @@ copy of those rules in its kickoff text.
    .\Start-CopilotWork.ps1
    ```
 
-3. Pick a numbered repo or `C` for a custom path, then pick a **task class**. The script will:
+4. Pick a numbered repo or `C` for a custom path, then pick a **task class**. The script will:
    - Set `COPILOT_CUSTOM_INSTRUCTIONS_DIRS` to this folder so the master rules travel with you.
-   - Sync shared **skills** (`~/.copilot/skills` junction) and generate task-class custom agents in `~/.copilot/agents` from `task-profiles.json` (except `triage`/`orchestrator`).
+   - Generate task-class custom agents in `~/.copilot/agents` from `task-profiles.json` (except `triage`/`orchestrator`). Personal skills in `~/.copilot/skills` are not touched.
    - `cd` into the target repo.
    - Sends a **kickoff message** into the session with the task class, model, effort, context, and class definition — so the agent knows its baseline from turn 0 without reading env vars.
    - Launches `copilot --model <m> --effort <e> --context <c> --interactive "<kickoff>"` (errors out clearly if the CLI isn't installed).
@@ -73,9 +73,9 @@ copy of those rules in its kickoff text.
 What happens, end to end, each time you launch:
 
 1. **Run `Start-CopilotWork.ps1`** in a terminal.
-2. **Loads + validates** `repos.json` and `task-profiles.json`.
+2. **Loads + validates** `repos.json` and `task-profiles.json`, then prepares task-class agents. An ownership conflict stops startup before the menus or CLI.
 3. **Prompts: "Select repo"** — a numbered list from `repos.json`, or `C` for a custom path.
-4. **Validates** the path exists, sets `COPILOT_CUSTOM_INSTRUCTIONS_DIRS` to this folder, syncs skills, regenerates task-class custom agents, and `cd`s into the repo.
+4. **Validates** the path exists, sets `COPILOT_CUSTOM_INSTRUCTIONS_DIRS` to this folder, and `cd`s into the repo.
 5. **Prompts: "Select task class"** — this is where the **model / effort / context** are decided (from the matching profile).
 6. **Validates** the profile's model against the live CLI list, and shows the new-model nudge if any.
 7. **Sends a kickoff message** into the session with the task class key, label, model, effort, context, and class definition embedded as text — so the agent has a hard baseline in conversation history from turn 0. For triage, also triggers the inline estimation.
@@ -89,8 +89,8 @@ So the order is: **script → pick repo → pick task class (model) → optional
 
 Each launch is a fully independent Copilot process with its own repo and its own task
 class/model. To work in several repos simultaneously, just run `Start-CopilotWork.ps1` again
-in **another terminal window** — e.g. a *Quick* haiku session in one repo and a *Deep
-reasoning* opus session in another, side by side, each logged separately.
+in **another terminal window** — e.g. *Quick* in one repo and *Deep reasoning*
+in another, using their current configured profiles and logging separately.
 
 ## Model selection (the point of this repo)
 
@@ -98,7 +98,7 @@ Model choice is decided **at launch** by default — not by asking the running m
 recommend a switch (it can't switch itself). The three levers the Copilot CLI exposes are set
 from the chosen task class:
 
-- `--model` — e.g. `claude-sonnet-4.6`, `claude-opus-4.8`, `gpt-5.4-mini`
+- `--model` — the selected profile's current, available model ID
 - `--effort` — `none|low|medium|high|xhigh|max`
 - `--context` — `default|long_context`
 
@@ -132,7 +132,9 @@ agents in `~/.copilot/agents` from `task-profiles.json`:
 - `mechanical.agent.md`
 
 These agent profiles pin the class model in frontmatter (`model: ...`), so the orchestrator can
-route non-trivial work to the best `@agent-key` without restarting the session. The caller must
+route self-contained work that benefits from separate context without restarting
+the session. The active Main Flow stage and approved plan still own delivery;
+non-trivial work alone does not require delegation. The caller must
 also pass `model`, `reasoning_effort` (when supported) and `context_tier` explicitly from the current
 approved profile. Generated descriptions include those arguments, but Markdown does not enforce
 execution effort/context, and inherited orchestrator settings are not a substitute. If the task
@@ -143,6 +145,22 @@ cleanest workflow.
 > Cost note: routing/delegation can improve quality and context isolation, but can also increase
 > total AI-credit usage (more independent LLM round-trips). It's not automatically cheaper.
 
+### Generated-agent ownership
+
+`~/.copilot/agents/.generated-task-class-agents.json` records schema-versioned
+SHA-256 ownership. Only owned, unmodified files may be updated or retired.
+Identical unmanaged output can be adopted without rewriting it; different
+unmanaged files, local edits, invalid manifests, read-only planned writes/deletes,
+and linked files or parent directories block before planned changes are applied.
+Unexpected I/O failures also stop startup; the launcher never continues after a
+failed synchronization. No-op runs preserve agent and manifest bytes/timestamps.
+
+Legacy key-array (or single-key string) manifests upgrade only when each existing current agent matches
+the known generated text (BOM/line-ending differences are accepted without
+rewriting). A retired or changed legacy file has no verifiable hash baseline and
+is preserved with a conflict. Review and explicitly archive/resolve conflicts
+before retrying; startup never moves personal files aside automatically.
+
 ### Drift detection within a session
 
 The launcher sends a kickoff message embedding the chosen task class and its definition into
@@ -152,51 +170,111 @@ MISMATCH** banner at the top of its response, telling you which class/model to s
 how (`Start-CopilotWork.ps1` relaunch or in-session `/model`).
 This works **both ways**: it flags *under-powered* sessions (a *Quick* launch that became an
 architecture change — switch up for quality) **and** *over-powered* ones (a *Deep reasoning*
-launch now doing a one-line rename — switch down to stop paying opus rates every turn). It does
+launch now doing a one-line rename — switch down to avoid unnecessary cost). It does
 not switch automatically; you stay in control, but the prompt to reconsider is loud and
 unmissable. See `.github/instructions/10-model-selection.instructions.md` for the exact rule.
 
 ## Instruction precedence
 
-Two layers of instructions can be active at once:
+The workbench is intentionally dependent on applicable delivery policy:
 
-1. **Master (baseline)** — this repo's `AGENTS.md` and `.github/instructions/`, injected via
-   `COPILOT_CUSTOM_INSTRUCTIONS_DIRS`.
-2. **Target repo** — any `AGENTS.md` / `.github` instructions inside the repo you launch into.
+1. **Company/project delivery policy** — active `general.instructions.md` and
+   `code-review.instructions.md` from CopilotCustomizations, plus target-project
+   instructions. These own planning/Main Flow, skill routing, validation,
+   actual-change self-review and task-scoped Git boundaries.
+2. **Workbench routing** — this repo's `AGENTS.md` and `.github/instructions/`,
+   injected via `COPILOT_CUSTOM_INSTRUCTIONS_DIRS`, supply execution settings and
+   domain guidance, not a second workflow.
 
-Treat the **master rules as the baseline** and the **target repo's rules as overrides**: when
-guidance conflicts, the target repo wins because it has project-specific context. Keep the
-master rules general (workflow discipline, Git boundaries, model selection) and leave
-project-specific detail to each repo.
+Project-specific guidance overrides generic workbench advice; stricter user/project
+limits still apply. If no applicable company/project delivery policy is loaded,
+the agent reports that and asks before implementation or Git writes. It may
+continue read-only investigation, but must not invent a standalone fallback.
 
 ### Not sure how heavy it is? Triage mode
 
 If you can't tell up front whether a task is light or heavy, pick the **Triage (not sure —
-estimate first)** class. It launches a cheap Sonnet/low session whose first action is to perform
-an **inline task estimate** — scoring size, uncertainty, and complexity — then recommend the
+estimate first)** class. It uses the current triage profile for an
+**inline routing assessment** — scoring size, uncertainty, and complexity — then recommends the
 right class with the exact model/effort/context to switch to. After showing the estimate it
 **stops and waits**: relaunch via the harness with the recommended class, or tell it to continue
-in-session. This turns "I don't know which model" into a cheap, one-question step instead of a
-guess.
+in-session. This is model selection, not a delivery estimate or a replacement for
+planning under the active company/project workflow.
 
-## Shared skills (slash commands)
+## Skills and migration
 
-The `skills/` folder holds reusable [agent skills](https://docs.github.com/en/copilot/concepts/agents/about-agent-skills)
-— `/grill-me`, `/refine-requirements`, `/estimate-task`, `/tdd-implement`, `/reference-lookup`,
-`/code-review`, `/create-release`, `/update-readme`, `/session-time-audit`.
+There is no `skills/` source folder or skill catalog here. Use
+[CopilotCustomizations](https://dev.azure.com/9altitudes-dk/9ACEDK_PlatformEngineering/_git/CopilotCustomizations)
+for company skills, canonical delivery instructions and the
+`dataverse-ce-project-install-customizations` entry point. Native plugin managers
+own Matt Pocock's skills. This workbench neither installs nor synchronizes them.
+Shared-skill regression tests belong to that library; workbench tests are
+self-contained and need no neighboring customizations checkout.
 
-The Copilot CLI loads **personal skills** from `~/.copilot/skills` in *every* repo. To keep this
-folder the single source of truth (no per-repo copies), the launcher creates a Windows
-**directory junction** `~/.copilot/skills` → `<this-folder>/skills` and self-heals it on each
-run (`Sync-PersonalSkills`). So the skills live and are version-controlled here, but are active
-everywhere automatically.
+The migration helper and its legacy-name fixtures remain intentionally until
+existing personal installations have moved off the old whole-root junction.
+They are compatibility tooling, not an active skill implementation.
 
-- If `~/.copilot/skills` already exists as a **real directory** (your own skills), the launcher
-  leaves it untouched rather than clobbering it, and prints a notice.
-- Because the junction makes skills active in **every** session, a broken skill affects all
-  repos — edit them deliberately.
-- When to reach for which skill is described in
-  `.github/instructions/45-skills-and-review.instructions.md`.
+### Migrating off the legacy whole-root junction (one-time)
+
+Earlier launchers linked `~/.copilot/skills` to this folder's `skills/` with one directory
+junction. The launcher no longer does that (the installer and the native plugin need a real
+directory that nothing in this repo owns), so move over once with
+`scripts/Migrate-PersonalSkills.ps1`. It is **plan-only by default**:
+
+```powershell
+# 1. Plan: reads and reports only, writes nothing.
+pwsh -NoProfile -File scripts\Migrate-PersonalSkills.ps1 -SourceSkillsPath 'C:\Work\copilot-task-master\skills'
+# 2. After reviewing the plan: migrate.
+pwsh -NoProfile -File scripts\Migrate-PersonalSkills.ps1 -SourceSkillsPath 'C:\Work\copilot-task-master\skills' -Apply
+```
+
+Replace the example path with the existing skills folder the junction really
+points to. This checkout no longer ships `skills/`, so pass the actual legacy
+target with `-SourceSkillsPath <live-checkout>\skills`; an unexpected target blocks
+the run. The source folder is only read, never modified.
+`-PersonalRoot` (default `%USERPROFILE%\.copilot`) and `-ArchiveRoot` (default
+`<personal root>\migration-archive`) are optional.
+
+How it decides:
+
+| What it finds at `~/.copilot/skills` | Result |
+| ------------------------------------ | ------ |
+| A directory junction to the expected source | Planned, or migrated with `-Apply` |
+| A junction to anything else, any other link, a missing or linked source, links inside the source tree, an archive location inside skill discovery, an invalid `-RetireSkill` name, or a leftover `skills.migration-*` folder when there is no skills folder | **Blocked**: nothing is written (exit 1) |
+| A real directory (already migrated, or your own skills) or no folder at all | No action (exit 0): a real directory is never replaced and no link is ever recreated, so repeating the migration is safe |
+
+With `-Apply` the script, in order:
+
+1. archives the approved legacy skills (`grill-me`, `refine-requirements`, `tdd-implement`,
+   `reference-lookup`, `create-release`, `update-readme`, `estimate-task`, `code-review`,
+   `session-time-audit`, or the names given with `-RetireSkill`) as a verified copy under
+   `<archive root>\skills-migration-<timestamp>-<id>\retired-skills`, outside skill discovery;
+2. copies every other entry (your unique personal skills, loose and hidden files, and
+   empty folders) into a staging folder next to the junction and
+   verifies it byte for byte;
+3. re-checks the junction and that the source is unchanged;
+4. detaches **only** the verified junction object (the source folder is never modified or deleted);
+5. renames the staging folder to the real `~/.copilot/skills` and verifies destination and source
+   again;
+6. writes `migration-report.json` into the archive folder.
+
+Legacy skills end up archived and no longer discoverable; unique personal skills stay in the real
+destination; the source keeps everything. There is no automatic rollback and the junction is never
+recreated: on a failure the script says what is left and how to continue, and individual skills can
+be restored by copying them back from the archive or from the source.
+The audit's complete legacy folder, including both helpers, is archived by
+default before shared installation so it cannot conflict with the shared version.
+An explicit `-RetireSkill` list replaces the defaults; excluding the audit preserves
+it as personal content, which may then conflict with the company installer.
+For an already-real skills directory the migration remains a no-op: review and
+explicitly archive a conflicting legacy audit folder outside discovery before
+installing the shared version. The installer never overwrites it for you.
+
+Run the migration **before** you pull the change that removes the legacy skills from `skills/` into
+the checkout the junction points to. After that pull the junction no longer shows them, so there is
+nothing left to archive (the plan lists them as not present in the source) and they are only
+available from Git history.
 
 ## Requirements
 
@@ -661,6 +739,13 @@ Configuration and pricing can load without importing benchmark providers. Run:
 ```powershell
 .\scripts\test-all.ps1
 .\scripts\review-task-profiles.ps1
+```
+
+For isolated agent-ownership coverage on Windows PowerShell 5.1 (without the
+PowerShell 7-only model pipeline tests), run:
+
+```powershell
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\test-workbench-helpers.ps1 -AgentOwnershipOnly
 ```
 
 The live review needs `ARTIFICIAL_ANALYSIS_API_KEY` (configured as an action secret) for AA's API;
