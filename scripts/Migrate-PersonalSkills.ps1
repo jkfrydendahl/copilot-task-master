@@ -203,7 +203,7 @@ function Get-EntryLines($Entry, [string]$Name) {
 
 function Get-ManifestMap($Entries) {
     $map = @{}
-    foreach ($entry in @($Entries)) {
+    foreach ($entry in $Entries) {
         $map[$entry.Name] = Get-EntryLines $entry $entry.Name
     }
     return $map

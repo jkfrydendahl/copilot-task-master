@@ -263,6 +263,8 @@ Legacy skills end up archived and no longer discoverable; unique personal skills
 destination; the source keeps everything. There is no automatic rollback and the junction is never
 recreated: on a failure the script says what is left and how to continue, and individual skills can
 be restored by copying them back from the archive or from the source.
+If the source contains only retired skills, or is empty, the real destination is
+intentionally empty until company/native installation supplies the new skills.
 The audit's complete legacy folder, including both helpers, is archived by
 default before shared installation so it cannot conflict with the shared version.
 An explicit `-RetireSkill` list replaces the defaults; excluding the audit preserves

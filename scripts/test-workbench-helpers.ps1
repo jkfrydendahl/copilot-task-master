@@ -836,6 +836,52 @@ Run-TestIf $script:OnWindows "T17: legacy skills are archived outside discovery 
     }
 }
 
+$emptyMigrationShells = @($script:PowerShellExe)
+if ($script:OnWindows -and (Get-Command powershell.exe -ErrorAction SilentlyContinue)) {
+    $emptyMigrationShells += (Get-Command powershell.exe).Source
+}
+foreach ($shell in @($emptyMigrationShells | Select-Object -Unique)) {
+    foreach ($scenario in @("LegacyOnly", "EmptySource")) {
+        Run-TestIf $script:OnWindows "T17: $scenario migrates to an empty real directory under $shell" "directory junctions require Windows" {
+            $fx = New-MigrationFixture
+            try {
+                foreach ($entry in @(Get-ChildItem -LiteralPath $fx.Source -Force)) {
+                    if ($scenario -eq "EmptySource" -or $script:RetiredSkillNames -notcontains $entry.Name) {
+                        Remove-FixtureNode $entry.FullName
+                    }
+                }
+                $sourceBefore = Get-TreeSnapshot $fx.Source
+                $rootBefore = Get-TreeSnapshot $fx.Root
+                $expectedRetired = if ($scenario -eq "LegacyOnly") { @($script:RetiredSkillNames) } else { @() }
+                $plan = Invoke-MigrationScript -Fixture $fx -Shell $shell
+                Assert-ResultLine $plan "Planned" 0 "$scenario empty-destination plan"
+                Assert-SameSnapshot $rootBefore (Get-TreeSnapshot $fx.Root) "Empty-destination planning changed the fixture"
+
+                $apply = Invoke-MigrationScript -Fixture $fx -Apply -Shell $shell
+                Assert-ResultLine $apply "Applied" 0 "$scenario empty-destination apply"
+                Assert-True ((Test-Path -LiteralPath $fx.Skills -PathType Container) -and -not (Test-IsLink $fx.Skills)) "Empty real destination was not established"
+                Assert-True (@(Get-ChildItem -LiteralPath $fx.Skills -Force).Count -eq 0) "Destination is not empty"
+                $runs = @(Get-ArchiveRunDirectories $fx)
+                Assert-True ($runs.Count -eq 1) "Expected one empty-destination migration archive"
+                $archived = Join-Path $runs[0].FullName "retired-skills"
+                Assert-SameSnapshot $sourceBefore (Get-TreeSnapshot $archived) "Empty-destination archive does not equal the original source"
+                Assert-SameSnapshot $sourceBefore (Get-TreeSnapshot $fx.Source) "Empty-destination migration changed the source"
+                $report = Get-Content -LiteralPath (Join-Path $runs[0].FullName "migration-report.json") -Raw | ConvertFrom-Json
+                Assert-True ($report.result -eq "Applied" -and $report.sourceUnchanged -and @($report.preservedEntries).Count -eq 0) "Empty-destination report lost its verified result"
+                $retiredNames = @($report.retiredSkills | ForEach-Object { $_.name } | Sort-Object)
+                Assert-True (($retiredNames -join ",") -ceq (($expectedRetired | Sort-Object) -join ",")) "Empty-destination report has incorrect retired skills"
+                Assert-True (@(Get-ChildItem -LiteralPath $fx.Personal -Directory -Force | Where-Object Name -like "skills.migration-*").Count -eq 0) "Empty-destination staging directory was left behind"
+                $after = Get-TreeSnapshot $fx.Root
+                $again = Invoke-MigrationScript -Fixture $fx -Apply -Shell $shell
+                Assert-ResultLine $again "NoAction" 0 "$scenario empty-destination repeat"
+                Assert-SameSnapshot $after (Get-TreeSnapshot $fx.Root) "Repeated empty-destination migration changed files"
+            } finally {
+                Remove-FixtureRoot $fx.Root
+            }
+        }
+    }
+}
+
 Run-TestIf $script:OnWindows "T17: the default archive location is under the personal root but outside skill discovery" "directory junctions require Windows" {
     $fx = New-MigrationFixture
     try {
