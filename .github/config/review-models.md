@@ -1,7 +1,7 @@
 # Review Models Configuration
 
 Use this guidance when explicitly selecting independent reviewers. Delivery and
-review policy belong to the active company/project instructions, not this file.
+review policy belong to the active user/project instructions, not this file.
 
 ## Model availability
 

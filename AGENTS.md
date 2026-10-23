@@ -6,16 +6,11 @@ Read the applicable target-project instructions (`AGENTS.md`, `CLAUDE.md`,
 Project-specific requirements override generic workbench guidance; stricter user
 or project restrictions always apply.
 
-## Delivery policy belongs to the company/project
+## Delivery policy belongs to the user/project
 
-Use the active company `general.instructions.md` and `code-review.instructions.md`
-(distributed by CopilotCustomizations), together with applicable project policy.
-They own planning/Main Flow, skill choice, validation, actual-change self-review
-and task-scoped Git boundaries. This workbench does not duplicate or replace them.
+Follow applicable user, project and task instructions for planning, skill choice, validation, actual-change self-review and Git boundaries. No particular instruction package or skill provider is required. This workbench supplies execution settings, not a delivery workflow.
 
-If no applicable company/project delivery policy is loaded, report the missing
-policy and ask the user before implementation or Git writes. Do not invent a
-fallback workflow. Read-only investigation and explanations may continue.
+If no applicable user/project delivery policy is loaded, report the missing policy and ask the user before implementation or Git writes. Do not invent a fallback workflow. Read-only investigation and explanations may continue.
 
 ## Model routing belongs to this workbench
 

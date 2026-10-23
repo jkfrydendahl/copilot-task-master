@@ -4,8 +4,8 @@ Plans (default) or applies the one-time move of the personal skills root off the
 
 .DESCRIPTION
 Older Task Master launchers linked the personal skills root (~/.copilot/skills) to this workbench's skills
-folder with ONE directory junction. The launcher no longer owns that link, because the company installer and
-the native plug-in flow need a real directory they can write to.
+folder with ONE directory junction. The launcher no longer manages personal skills; this helper converts
+that legacy link to a real user-managed directory without choosing or installing replacement skills.
 
 Without -Apply this script only reports what it would do and writes nothing at all.
 
@@ -13,8 +13,8 @@ With -Apply it
   1. verifies that the personal skills root is a directory junction whose target is the expected source
      skills folder (and that the source is a real folder without nested links),
   2. archives the explicitly approved legacy skills OUTSIDE skill discovery (a verified copy; the archive
-     location may not be inside the personal skills root or the source), including session-time-audit
-     with both helpers before the shared company version is installed,
+     location may not be inside the personal skills root or the source), including the complete legacy
+     session-time-audit folder with both helpers,
   3. copies EVERY other entry (unique personal skills, loose files, hidden files, empty folders) into a staging
      folder next to the junction and verifies it byte for byte,
   4. detaches ONLY the verified junction object - the source folder is never modified or deleted,
@@ -43,7 +43,7 @@ into its own skills-migration-<timestamp>-<id> subfolder.
 
 .PARAMETER RetireSkill
 Names of the legacy skill folders to archive and leave out of the real destination. Replaces the approved
-default list (including the relocated session-time-audit) when given. Only single folder names are accepted.
+default list (including the legacy session-time-audit) when given. Only single folder names are accepted.
 
 .PARAMETER Apply
 Actually migrate. Without it the script is plan-only.

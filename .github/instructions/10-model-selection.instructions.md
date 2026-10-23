@@ -58,7 +58,7 @@ The triage and non-orchestrator drift rules below remain owned by this file.
 If the launched task class (from the kickoff message) is `triage`, the user chose a routing assessment because they were
 unsure how heavy the task is. **Before doing the actual work**, on your first substantive turn,
 perform a streamlined inline scope assessment. This selects execution settings;
-it is not a delivery estimate, planning skill or substitute for company/project policy.
+it is not a delivery estimate, planning skill or substitute for user/project policy.
 
 1. Ask the one or two highest-value clarifying questions needed to score the task (skip this
    if the user's description already makes the size obvious).

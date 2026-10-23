@@ -7,8 +7,7 @@ description: Task-level routing rules for orchestrator sessions
 
 If the launcher kickoff says the task class is `orchestrator`, this session is intentionally
 cross-class: select appropriate execution settings without forcing manual relaunches.
-The active company/project delivery policy and approved Main Flow stage still own
-the work. Model routing is not an alternate planning or implementation workflow.
+The active user/project delivery policy and approved delivery stage still own the work. Model routing is not an alternate planning or implementation workflow.
 
 ## Available task-class agents
 

@@ -112,9 +112,8 @@ if (!(Test-Path $repoPath)) {
 # Tell Copilot CLI where your shared master instructions live.
 $env:COPILOT_CUSTOM_INSTRUCTIONS_DIRS = $MasterPath
 
-# The launcher no longer owns personal skills: Main Flow comes from the native plugin, shared skills
-# from the company installer, and the legacy whole-root junction is retired once by the plan-only
-# migration helper described in docs\legacy-skills-migration.md. Nothing is linked here.
+# Personal skills are user-managed. The plan-only helper in docs\legacy-skills-migration.md
+# handles the legacy whole-root junction separately; startup never runs it or creates links.
 
 Set-Location $repoPath
 

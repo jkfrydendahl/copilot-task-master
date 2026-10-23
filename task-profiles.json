@@ -21,7 +21,7 @@
     "key": "default-development",
     "label": "Default development",
     "description": "Ordinary bug fixes, normal feature work, straightforward refactors, small D365 changes.",
-    "hint": "Describe what you want to fix or build; follow the active company/project delivery policy.",
+    "hint": "Describe what you want to fix or build; follow the active user/project delivery policy.",
     "model": "gemini-3.8-flash",
     "effort": "high",
     "context": "default"

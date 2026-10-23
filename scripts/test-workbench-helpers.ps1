@@ -231,7 +231,7 @@ Run-Test "Interactive launcher wires helpers without starting a real CLI or edit
 }
 
 # =================================================================================================
-# Main Flow migration coverage (handover T16-T19).
+# Personal-skills migration and routing coverage (T16-T19).
 # Everything below runs against temporary fake homes, temporary junctions and source copies. It
 # never touches the real ~/.copilot, a real client, the live Task Master checkout or any global
 # setting, and it never installs anything.
@@ -1199,9 +1199,9 @@ function Get-RoutingProblems {
     }
 
     $requirements = @{
-        "AGENTS.md" = @("general.instructions.md", "code-review.instructions.md", "If no applicable company/project delivery policy is loaded", "ask the user before implementation or Git writes")
-        "instructions\15-orchestrator-mode.instructions.md" = @("approved Main Flow stage", "Non-trivial work alone is not a reason to delegate", "model", "reasoning_effort", "context_tier")
-        "README.md" = @("CopilotCustomizations", "Migrate-PersonalSkills.ps1", "-Apply", "no neighboring customizations checkout", "docs/legacy-skills-migration.md", "master checkout", "target repo", "does not update this alias")
+        "AGENTS.md" = @("No particular instruction package or skill provider is required", "If no applicable user/project delivery policy is loaded", "ask the user before implementation or Git writes")
+        "instructions\15-orchestrator-mode.instructions.md" = @("approved delivery stage", "Non-trivial work alone is not a reason to delegate", "model", "reasoning_effort", "context_tier")
+        "README.md" = @("does not select a skill provider", "Migrate-PersonalSkills.ps1", "-Apply", "no separate checkout", "docs/legacy-skills-migration.md", "master checkout", "target repo", "does not update this alias")
     }
     foreach ($label in $requirements.Keys) {
         $normalized = $Surfaces[$label] -replace "\s+", " "
@@ -1212,7 +1212,7 @@ function Get-RoutingProblems {
     return @($problems)
 }
 
-Run-Test "T19: delivery policy is shared; workbench guidance owns only routing and domain advice" {
+Run-Test "T19: workbench guidance owns only routing and domain advice without requiring a policy package" {
     foreach ($name in @("20-planning-first", "45-skills-and-review", "50-code-review", "60-git-boundaries")) {
         Assert-True (-not (Test-Path -LiteralPath (Join-Path $script:RepoRoot ".github\instructions\$name.instructions.md"))) "Duplicate policy $name remains"
     }
@@ -1223,13 +1223,13 @@ Run-Test "T19: delivery policy is shared; workbench guidance owns only routing a
     Assert-True ($problems.Count -eq 0) "Routing problems: $($problems -join '; ')"
 }
 
-Run-Test "T19: routing checks detect lost shared-policy gates, blanket delegation and obsolete guidance" {
+Run-Test "T19: routing checks detect lost user-policy gates, provider independence and obsolete guidance" {
     $surfaces = Get-WorkbenchGuidanceSurfaces
     $baseline = @(Get-RoutingProblems $surfaces)
     Assert-True ($baseline.Count -eq 0) "Baseline guidance is not clean, so injected defects cannot be judged: $($baseline -join '; ')"
     $cases = @(
         @{ Surface = "AGENTS.md"; Old = "ask the user before implementation or Git writes"; New = "proceed without policy"; Expect = "ask the user before implementation or Git writes" }
-        @{ Surface = "AGENTS.md"; Old = "code-review.instructions.md"; New = "local review rules"; Expect = "code-review.instructions.md" }
+        @{ Surface = "AGENTS.md"; Old = "No particular instruction package or skill provider is required"; New = "Install the required policy package"; Expect = "No particular instruction package or skill provider is required" }
         @{ Surface = "AGENTS.md"; Old = "# Copilot"; New = "Run /tdd-implement`n# Copilot"; Expect = "stale text '/tdd-implement'" }
         @{ Surface = "instructions\15-orchestrator-mode.instructions.md"; Old = "Non-trivial"; New = "Trivial"; Expect = "Non-trivial work alone is not a reason to delegate" }
         @{ Surface = "README.md"; Old = "Migrate-PersonalSkills.ps1"; New = "migration helper"; Expect = "Migrate-PersonalSkills.ps1" }

@@ -2,14 +2,12 @@
 
 This is upgrade compatibility for older Task Master installations, not an active
 skill catalog or a launcher startup step. New installations and already-migrated
-real personal-skills directories do not need it. Company installation and native
-plugin installation are separate operations; this helper performs neither.
+real personal-skills directories do not need it. Skill and plugin installation are separate operations; this helper performs neither and does not select a provider.
 
 ## When it is needed
 
 Earlier launchers linked `~/.copilot/skills` to the old workbench's `skills/` with
-one directory junction. The launcher no longer owns that link. The company
-installer and native plugin flow need a real directory.
+one directory junction. The launcher no longer owns that link. This helper converts it to a real user-managed directory without installing replacement content.
 
 Do not remove personal skills or reset the installation to test the new workflow.
 First inspect the existing path and, only for the legacy junction, review a plan
@@ -57,17 +55,12 @@ With `-Apply` the script, in order:
 
 Legacy skills end up archived and no longer discoverable; unique personal skills
 stay in the real destination; the source keeps everything. The complete legacy
-audit folder, including both helpers, is archived by default so it cannot conflict
-with the shared company version.
+audit folder, including both helpers, is archived by default as legacy content, not as a recommendation for any replacement.
 
-An explicit `-RetireSkill` list replaces the defaults. Excluding the audit preserves
-it as personal content, which may then conflict with company installation. For an
-already-real skills directory the migration remains a no-op: separately review and
-authorize archiving any conflicting legacy folder outside discovery. The installer
-never overwrites it for you.
+An explicit `-RetireSkill` list replaces the defaults. Excluding a skill preserves it as personal content. Review the planned list before applying it. For an already-real skills directory the migration remains a no-op; any later archival or installation is separately managed and authorized by its owner.
 
 If the source contains only retired skills, or is empty, the real destination is
-intentionally empty until company installation supplies the company skills.
+intentionally empty until its owner adds skills.
 Native plugin skills are discovered separately; do not copy them into that directory.
 
 ## Recovery and upgrade order
