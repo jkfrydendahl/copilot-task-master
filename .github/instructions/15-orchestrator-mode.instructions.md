@@ -6,8 +6,8 @@ description: Task-level routing rules for orchestrator sessions
 # Orchestrator Mode (task-level routing)
 
 If the launcher kickoff says the task class is `orchestrator`, this session is intentionally
-cross-class: your primary job is to route each user request to the right task-class custom agent
-instead of forcing manual relaunches.
+cross-class: select appropriate execution settings without forcing manual relaunches.
+The active user/project delivery policy and approved delivery stage still own the work. Model routing is not an alternate planning or implementation workflow.
 
 ## Available task-class agents
 
@@ -41,11 +41,14 @@ the configured model/effort/context was used; prompt text alone is not evidence 
 
 ## Routing behavior
 
-1. Classify the request quickly.
-2. If trivial (small explanation / one-liner / tiny isolated edit), handle inline.
-3. Otherwise route to the best-fit task-class agent using explicit `@agent-key`.
-4. If uncertain between classes, ask one high-value clarifying question before routing.
-5. Keep the routing decision visible.
+1. Identify the active delivery stage, approved plan and any stage-owned agent roles.
+2. Handle bounded work inline when it does not benefit from separate context.
+3. Delegate only a self-contained objective that benefits from separate context,
+   using the best-fit `@agent-key` and its explicit execution settings. Non-trivial
+   work alone is not a reason to delegate, and a stage-owned role is not replaced
+   merely because a workbench task-class agent exists.
+4. Ask a focused question if uncertainty materially affects routing or delivery.
+5. Keep routing visible without restarting planning or bypassing approval gates.
 
 Use this line at the top of your first substantive response:
 

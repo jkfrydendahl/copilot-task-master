@@ -57,7 +57,12 @@ if ($profiles.Count -eq 0) {
 
 # Ensure task-class custom agents are kept in sync with task-profiles.json.
 # This is additive to launch-time model selection (not a replacement).
-Update-TaskClassAgents -MasterPath $MasterPath -Profiles $profiles
+try {
+    Update-TaskClassAgents -MasterPath $MasterPath -Profiles $profiles
+} catch {
+    Write-Host "Task-class agent preparation failed: $($_.Exception.Message)" -ForegroundColor Red
+    exit 1
+}
 
 Write-Host ""
 Write-Host "=== Copilot Workbench ===" -ForegroundColor Cyan
@@ -107,8 +112,8 @@ if (!(Test-Path $repoPath)) {
 # Tell Copilot CLI where your shared master instructions live.
 $env:COPILOT_CUSTOM_INSTRUCTIONS_DIRS = $MasterPath
 
-# Ensure shared skills are linked into the personal skills dir the CLI reads everywhere.
-Sync-PersonalSkills -MasterPath $MasterPath
+# Personal skills are user-managed. The plan-only helper in docs\legacy-skills-migration.md
+# handles the legacy whole-root junction separately; startup never runs it or creates links.
 
 Set-Location $repoPath
 
