@@ -150,7 +150,10 @@ Run-Test "Recovery preserves live and unidentifiable owners and recovers exited 
         Set-Content -LiteralPath $badLog -Value "unrelated_header"
         Resolve-AbandonedSession -MasterPath $root -LogPath $badLog
         Assert-True ((Test-Path $path) -and (Get-Content -LiteralPath $badLog) -eq "unrelated_header") "Failed recovery lost marker or overwrote incompatible log"
-        $dictionary = $info | ConvertTo-Json | ConvertFrom-Json -AsHashtable
+        $dictionary = @{}
+        foreach ($property in $info.PSObject.Properties) {
+            $dictionary[$property.Name] = $property.Value
+        }
         Write-WorkbenchSessionMarker -Path $path -SessionInfo $dictionary
         $restored = Get-Content -LiteralPath $path -Raw | ConvertFrom-Json
         Assert-True ($restored.session_id -eq $info.session_id -and $restored.owner_process_id -eq $PID) "Dictionary marker lost its metadata"
@@ -1198,7 +1201,7 @@ function Get-RoutingProblems {
     $requirements = @{
         "AGENTS.md" = @("general.instructions.md", "code-review.instructions.md", "If no applicable company/project delivery policy is loaded", "ask the user before implementation or Git writes")
         "instructions\15-orchestrator-mode.instructions.md" = @("approved Main Flow stage", "Non-trivial work alone is not a reason to delegate", "model", "reasoning_effort", "context_tier")
-        "README.md" = @("CopilotCustomizations", "Migrate-PersonalSkills.ps1", "-Apply", "no neighboring customizations checkout")
+        "README.md" = @("CopilotCustomizations", "Migrate-PersonalSkills.ps1", "-Apply", "no neighboring customizations checkout", "docs/legacy-skills-migration.md", "master checkout", "target repo", "does not update this alias")
     }
     foreach ($label in $requirements.Keys) {
         $normalized = $Surfaces[$label] -replace "\s+", " "
@@ -1243,6 +1246,19 @@ Run-Test "T19: routing checks detect lost shared-policy gates, blanket delegatio
 Run-Test "T19: workbench ships no skills; all retired and relocated directories are gone" {
     $skillsRoot = Join-Path $script:RepoRoot "skills"
     Assert-True (-not (Test-Path -LiteralPath $skillsRoot)) "The obsolete workbench skills source root is still present"
+}
+
+Run-Test "T19: legacy migration is documented separately without prescribing an installation reset" {
+    $guide = Read-RepoText "docs\legacy-skills-migration.md"
+    $normalized = $guide -replace "\s+", " "
+    foreach ($term in @("upgrade compatibility", "plan-only by default", "-SourceSkillsPath", "-Apply", "-RetireSkill", "nothing is written", "real directory is never replaced", "no-op", "byte for byte", "migration-report.json", "no automatic rollback", "Git history", "explicit approval")) {
+        Assert-True ($normalized.Contains($term)) "Legacy upgrade guide is missing '$term'"
+    }
+    Assert-True ($normalized.Contains("do not copy them into that directory")) "Native plugin skills must remain separately managed"
+    Assert-True ($normalized.Contains("Do not remove personal skills or reset the installation")) "Upgrade guidance must not prescribe a reset"
+    foreach ($relative in @("README.md", "scripts\Migrate-PersonalSkills.ps1")) {
+        Assert-True (-not (Read-RepoText $relative).Contains("C:\Dev\00_MyStuff")) "$relative must not prescribe a developer-specific checkout"
+    }
 }
 
 if ($script:Failed) { exit 1 }

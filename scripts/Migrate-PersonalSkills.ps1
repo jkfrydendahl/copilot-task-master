@@ -49,10 +49,10 @@ default list (including the relocated session-time-audit) when given. Only singl
 Actually migrate. Without it the script is plan-only.
 
 .EXAMPLE
-pwsh -NoProfile -File scripts\Migrate-PersonalSkills.ps1 -SourceSkillsPath C:\Dev\00_MyStuff\copilot-task-master\skills
+pwsh -NoProfile -File scripts\Migrate-PersonalSkills.ps1 -SourceSkillsPath 'C:\Work\copilot-task-master\skills'
 
 .EXAMPLE
-pwsh -NoProfile -File scripts\Migrate-PersonalSkills.ps1 -SourceSkillsPath C:\Dev\00_MyStuff\copilot-task-master\skills -Apply
+pwsh -NoProfile -File scripts\Migrate-PersonalSkills.ps1 -SourceSkillsPath 'C:\Work\copilot-task-master\skills' -Apply
 #>
 [CmdletBinding()]
 param(

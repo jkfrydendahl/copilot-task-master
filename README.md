@@ -44,10 +44,13 @@ copy of those rules in its kickoff text.
    Open your PowerShell profile (`$PROFILE`) and add:
 
    ```powershell
-   function copilot-work { & "C:\Dev\00_MyStuff\copilot-task-master\Start-CopilotWork.ps1" @args }
+   function copilot-work { & "C:\Work\copilot-task-master\Start-CopilotWork.ps1" @args }
    ```
 
    Then reload: `. $PROFILE`
+
+   Replace the example with the checkout you intend to run. A new clone or worktree
+   does not update this alias or your ignored `repos.json` automatically.
 
 3. Run the launcher from any terminal:
 
@@ -67,6 +70,13 @@ copy of those rules in its kickoff text.
    - `cd` into the target repo.
    - Sends a **kickoff message** into the session with the task class, model, effort, context, and class definition — so the agent knows its baseline from turn 0 without reading env vars.
    - Launches `copilot --model <m> --effort <e> --context <c> --interactive "<kickoff>"` (errors out clearly if the CLI isn't installed).
+
+The **master checkout** supplies routing instructions; the selected **target repo**
+is the working directory and contributes its own project instructions. Verify both
+paths printed by the launcher. Launching a new master against an old Task Master
+checkout still loads that target's old instructions; it does not replace them.
+Review the relevant `repos.json` entry or select a custom path when testing an
+isolated worktree. Do not change the original checkout or launcher alias implicitly.
 
 ## Startup flow
 
@@ -211,72 +221,16 @@ own Matt Pocock's skills. This workbench neither installs nor synchronizes them.
 Shared-skill regression tests belong to that library; workbench tests are
 self-contained and need no neighboring customizations checkout.
 
-The migration helper and its legacy-name fixtures remain intentionally until
-existing personal installations have moved off the old whole-root junction.
-They are compatibility tooling, not an active skill implementation.
+Only older installations with a whole-root personal-skills junction need
+`scripts\Migrate-PersonalSkills.ps1`. It is plan-only unless explicitly run with
+`-Apply`; see the [one-time legacy migration guide](docs/legacy-skills-migration.md)
+before using it. The helper and its isolated legacy-name fixtures are retained
+as upgrade compatibility, not an active skill implementation or a startup step.
 
-### Migrating off the legacy whole-root junction (one-time)
-
-Earlier launchers linked `~/.copilot/skills` to this folder's `skills/` with one directory
-junction. The launcher no longer does that (the installer and the native plugin need a real
-directory that nothing in this repo owns), so move over once with
-`scripts/Migrate-PersonalSkills.ps1`. It is **plan-only by default**:
-
-```powershell
-# 1. Plan: reads and reports only, writes nothing.
-pwsh -NoProfile -File scripts\Migrate-PersonalSkills.ps1 -SourceSkillsPath 'C:\Work\copilot-task-master\skills'
-# 2. After reviewing the plan: migrate.
-pwsh -NoProfile -File scripts\Migrate-PersonalSkills.ps1 -SourceSkillsPath 'C:\Work\copilot-task-master\skills' -Apply
-```
-
-Replace the example path with the existing skills folder the junction really
-points to. This checkout no longer ships `skills/`, so pass the actual legacy
-target with `-SourceSkillsPath <live-checkout>\skills`; an unexpected target blocks
-the run. The source folder is only read, never modified.
-`-PersonalRoot` (default `%USERPROFILE%\.copilot`) and `-ArchiveRoot` (default
-`<personal root>\migration-archive`) are optional.
-
-How it decides:
-
-| What it finds at `~/.copilot/skills` | Result |
-| ------------------------------------ | ------ |
-| A directory junction to the expected source | Planned, or migrated with `-Apply` |
-| A junction to anything else, any other link, a missing or linked source, links inside the source tree, an archive location inside skill discovery, an invalid `-RetireSkill` name, or a leftover `skills.migration-*` folder when there is no skills folder | **Blocked**: nothing is written (exit 1) |
-| A real directory (already migrated, or your own skills) or no folder at all | No action (exit 0): a real directory is never replaced and no link is ever recreated, so repeating the migration is safe |
-
-With `-Apply` the script, in order:
-
-1. archives the approved legacy skills (`grill-me`, `refine-requirements`, `tdd-implement`,
-   `reference-lookup`, `create-release`, `update-readme`, `estimate-task`, `code-review`,
-   `session-time-audit`, or the names given with `-RetireSkill`) as a verified copy under
-   `<archive root>\skills-migration-<timestamp>-<id>\retired-skills`, outside skill discovery;
-2. copies every other entry (your unique personal skills, loose and hidden files, and
-   empty folders) into a staging folder next to the junction and
-   verifies it byte for byte;
-3. re-checks the junction and that the source is unchanged;
-4. detaches **only** the verified junction object (the source folder is never modified or deleted);
-5. renames the staging folder to the real `~/.copilot/skills` and verifies destination and source
-   again;
-6. writes `migration-report.json` into the archive folder.
-
-Legacy skills end up archived and no longer discoverable; unique personal skills stay in the real
-destination; the source keeps everything. There is no automatic rollback and the junction is never
-recreated: on a failure the script says what is left and how to continue, and individual skills can
-be restored by copying them back from the archive or from the source.
-If the source contains only retired skills, or is empty, the real destination is
-intentionally empty until company/native installation supplies the new skills.
-The audit's complete legacy folder, including both helpers, is archived by
-default before shared installation so it cannot conflict with the shared version.
-An explicit `-RetireSkill` list replaces the defaults; excluding the audit preserves
-it as personal content, which may then conflict with the company installer.
-For an already-real skills directory the migration remains a no-op: review and
-explicitly archive a conflicting legacy audit folder outside discovery before
-installing the shared version. The installer never overwrites it for you.
-
-Run the migration **before** you pull the change that removes the legacy skills from `skills/` into
-the checkout the junction points to. After that pull the junction no longer shows them, so there is
-nothing left to archive (the plan lists them as not present in the source) and they are only
-available from Git history.
+Clean installations and already-migrated real directories do not need migration,
+an installation reset, or restored old skills. Keep recovery archives until their
+owner explicitly approves removal. Discarded no-write project-setup drafts do not
+change this.
 
 ## Requirements
 

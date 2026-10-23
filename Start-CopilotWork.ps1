@@ -114,7 +114,7 @@ $env:COPILOT_CUSTOM_INSTRUCTIONS_DIRS = $MasterPath
 
 # The launcher no longer owns personal skills: Main Flow comes from the native plugin, shared skills
 # from the company installer, and the legacy whole-root junction is retired once by the plan-only
-# migration helper described in README.md (section Skills). Nothing is linked here.
+# migration helper described in docs\legacy-skills-migration.md. Nothing is linked here.
 
 Set-Location $repoPath
 
