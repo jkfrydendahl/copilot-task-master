@@ -1,4 +1,4 @@
-# Monthly task profile review (2026-10-20)
+# Monthly task profile review (2026-10-26)
 
 Availability: **True** (local model-discovery snapshot; status=valid; observed=2026-10-20T10:22:23.114Z; validity=7 days; not live-verified by this review; recorded runtime reconciled); manual confirmation override: **True**.
 
@@ -65,7 +65,7 @@ Verified catalog facts are updated before comparison. Ready for comparison is no
 | GPT-5.4 nano | False | False | n/a | n/a | discovered_only | unmapped_public_pricing_identity; runtime identity required |
 | Grok 4.7 | False | False | n/a | n/a | discovered_only | unmapped_public_pricing_identity; runtime identity required |
 
-Catalog changes: 0. Unmapped benchmark variants: 562; complete discovery details are retained in `data/model-onboarding-snapshot.json`. Such variants may be unrelated to Copilot and are not automatically admitted.
+Catalog changes: 0. Unmapped benchmark variants: 565; complete discovery details are retained in `data/model-onboarding-snapshot.json`. Such variants may be unrelated to Copilot and are not automatically admitted.
 </details>
 
 
@@ -92,7 +92,7 @@ Configuration cells show model / effective effort / context; 'none' means the mo
 ## Pricing refresh
 
 - Status: **partial**. Source: https://docs.github.com/en/copilot/reference/copilot-billing/models-and-pricing
-- Last successful page fetch: 2026-10-20T13:31:27.9077693Z. Per-model verification ages govern eligibility.
+- Last successful page fetch: 2026-10-26T07:16:06.8357115Z. Per-model verification ages govern eligibility.
 - Freshness limit: 45 days. Missing rows retain their original timestamps. Capabilities are never refreshed by pricing.
 - Reference-cost comparison: Aggregate uncached usage across requests within the selected context tier, not a single 1M-token request or predicted task cost. Cache reads/writes are excluded.
 - Reference tokens: input 1000000, output 100000.
@@ -119,17 +119,17 @@ Configuration cells show model / effective effort / context; 'none' means the mo
 
 | Source | Status | Results published | Suite label | Artifact updated | Retrieved | Raw observation identity |
 |---|---|---|---|---|---|---|
-| artificialAnalysis | ok | n/a | n/a | n/a | 2026-10-20T13:31:19.8970802Z | 703366efee2bab84154d7cc85b4b67e19ec9f4b283dad34f1b786577ebc2e9f0&#124;49e8283fcddbe6c8726218db6bf1281a1cca793556c887bbb18b99ed3e49cacf |
-| artificialAnalysisCodingAgents | ok | n/a | n/a | n/a | 2026-10-20T13:31:21.7893049Z | daa2b2f122bab06186970c4ae7dc881968a086e6890602dca75b853aaad2a8b2 |
-| artificialAnalysisComponents | ok | n/a | n/a | n/a | 2026-10-20T13:31:24.0960556Z | 1bf12182640e21108ac297bd563d85c333ab74726da140450f534905a9637a7b |
-| liveBench | ok | n/a | 2026-06-25 | 2026-10-20T07:18:12.0000000Z | 2026-10-20T13:31:26.7272354Z | a8d2183fc195b3177c396c0fbe6ac80040e2a4090717d391c9a2c6ec3243207d |
+| artificialAnalysis | ok | n/a | n/a | n/a | 2026-10-26T07:16:02.2939700Z | 8e0f2cd8e1eae7c9430d7b23b8ea7ba0a6c26070826e2426888298359ab2e4dd&#124;49e8283fcddbe6c8726218db6bf1281a1cca793556c887bbb18b99ed3e49cacf |
+| artificialAnalysisCodingAgents | ok | n/a | n/a | n/a | 2026-10-26T07:16:03.3338725Z | 59ac1337bc7d16af8282342bfb4e5c3cce238ecc8eb7e3f635725fc956dd9df0 |
+| artificialAnalysisComponents | ok | n/a | n/a | n/a | 2026-10-26T07:16:04.4064882Z | 4708f3600598e15e0666b2db1c9dff520d34a59ba0f1939b44ed74ac89cc37b9 |
+| liveBench | ok | n/a | 2026-06-25 | 2026-10-26T05:01:31.0000000Z | 2026-10-26T07:16:06.0517435Z | a8d2183fc195b3177c396c0fbe6ac80040e2a4090717d391c9a2c6ec3243207d |
 
 Confirmation uses metric-scoped observations, not the raw page fingerprint. Suite labels, artifact updates, row evaluation ages and retrieval times are distinct: an artifact update does not make every row newly evaluated. Unknown dates or methodology versions are not fabricated. AA public components remain separate from API aggregates; public pricing is never imported. Data attribution: https://artificialanalysis.ai and https://livebench.ai (LiveBench 1.x data; not LiveBench 2.0).
 
 
 ## Coverage and exclusions
 
-374 distinct exclusions, advisory warnings and evidence gaps. Repeated findings are listed once with every affected profile; full eligibility and scores remain available below.
+378 distinct exclusions, advisory warnings and evidence gaps. Repeated findings are listed once with every affected profile; full eligibility and scores remain available below.
 
 <details>
 <summary>Grouped coverage details</summary>
@@ -142,24 +142,23 @@ Confirmation uses metric-scoped observations, not the raw page fingerprint. Suit
 | advisory warning | claude-sonnet-4.6 / max / default | model_retirement_scope_unconfirmed | agentic-implementation |
 | advisory warning | claude-sonnet-4.6 / max / long_context | model_retirement_scope_unconfirmed | deep-reasoning |
 | advisory warning | claude-sonnet-4.6 / medium / default | model_retirement_scope_unconfirmed | default-development, review, visual-ui |
-| evidence gap | n/a / n/a / n/a | artificialAnalysisCodingAgents: 1b33b71cac6ac095ba7170559a03e534: model_or_provider_unresolved | agentic-implementation |
-| evidence gap | n/a / n/a / n/a | artificialAnalysisCodingAgents: 28ef65135f08f035dc93a97d324fea73: model_identity_unresolved_or_ambiguous 'DeepSeek V4 Flash 0731 (max)' | agentic-implementation |
-| evidence gap | n/a / n/a / n/a | artificialAnalysisCodingAgents: 29a1cdad0d140781d05b9b4746cfdd0d: composite_or_ambiguous_model_label 'Fable 5.1 (max) (with fallback)' | agentic-implementation |
-| evidence gap | n/a / n/a / n/a | artificialAnalysisCodingAgents: 2f37603a93bf2cdddfdb7fa9ccce4803: model_identity_unresolved_or_ambiguous 'Muse Spark Open (xhigh)' | agentic-implementation |
-| evidence gap | n/a / n/a / n/a | artificialAnalysisCodingAgents: 34970c963bdfd318e46205514d46ea4f: model_or_provider_unresolved | agentic-implementation |
-| evidence gap | n/a / n/a / n/a | artificialAnalysisCodingAgents: 45493c2782f1bd94f6d30d4911f317a0: model_identity_unresolved_or_ambiguous 'GLM-5.3' | agentic-implementation |
-| evidence gap | n/a / n/a / n/a | artificialAnalysisCodingAgents: 542590ecc1aa12a718d158565d464daa: model_identity_unresolved_or_ambiguous 'DeepSeek V4 Pro 0813 (max)' | agentic-implementation |
-| evidence gap | n/a / n/a / n/a | artificialAnalysisCodingAgents: 55b029d6971b4d378335bb168eb98b3b: model_identity_unresolved_or_ambiguous 'Kimi K3' | agentic-implementation |
-| evidence gap | n/a / n/a / n/a | artificialAnalysisCodingAgents: 60d5b66f39c9e9aacacde1855d69e211: model_identity_unresolved_or_ambiguous 'Muse Wonder Full (max)' | agentic-implementation |
-| evidence gap | n/a / n/a / n/a | artificialAnalysisCodingAgents: 61df0222d90b30e25d4ff8b08d0c0aca: model_identity_unresolved_or_ambiguous 'Muse Wonder (max)' | agentic-implementation |
-| evidence gap | n/a / n/a / n/a | artificialAnalysisCodingAgents: 9bafad3e22caac44923f3df721644e06: model_or_provider_unresolved | agentic-implementation |
-| evidence gap | n/a / n/a / n/a | artificialAnalysisCodingAgents: af5216a16f1d1e725b798b216da90479: model_or_provider_unresolved | agentic-implementation |
-| evidence gap | n/a / n/a / n/a | artificialAnalysisCodingAgents: cd4c865dc2f539b650d741fd2ebf7f2d: model_identity_unresolved_or_ambiguous 'Qwen3.8 Max' | agentic-implementation |
-| evidence gap | n/a / n/a / n/a | artificialAnalysisCodingAgents: cd60470c35fd626a116af80fd5915dfa: model_identity_unresolved_or_ambiguous 'Muse Spark 1.3 (xhigh)' | agentic-implementation |
-| evidence gap | n/a / n/a / n/a | artificialAnalysisCodingAgents: ef63fafa9b4a635522183c879ae8435b: model_identity_unresolved_or_ambiguous 'Gemini 4 Argon' | agentic-implementation |
-| evidence gap | n/a / n/a / n/a | artificialAnalysisCodingAgents: f2de07373c3626f1b9269a6ecad7804c: model_identity_unresolved_or_ambiguous 'Muse Spark 1.3 (max)' | agentic-implementation |
-| evidence gap | n/a / n/a / n/a | artificialAnalysisCodingAgents: f927d9c41b5c3021996eb14c3dd1341e: model_identity_unresolved_or_ambiguous 'Grok 4.7 (xhigh)' | agentic-implementation |
-| evidence gap | n/a / n/a / n/a | artificialAnalysisCodingAgents: fa2595093fa640e73d072e7d1aa7df82: model_or_provider_unresolved | agentic-implementation |
+| evidence gap | n/a / n/a / n/a | artificialAnalysisCodingAgents: 047ef12b001416f72e30e1ad633988e2: model_identity_unresolved_or_ambiguous 'Muse Wonder Full (max)' | agentic-implementation |
+| evidence gap | n/a / n/a / n/a | artificialAnalysisCodingAgents: 06c2cfad6e3aba9000f2dd5e429d4407: model_or_provider_unresolved | agentic-implementation |
+| evidence gap | n/a / n/a / n/a | artificialAnalysisCodingAgents: 1630d319b5e4dc5183cb88a2b2af1646: model_identity_unresolved_or_ambiguous 'Qwen3.8 Max' | agentic-implementation |
+| evidence gap | n/a / n/a / n/a | artificialAnalysisCodingAgents: 24c98f188d41522a849006ac453fdebe: model_identity_unresolved_or_ambiguous 'DeepSeek V4.1 Flash 1017' | agentic-implementation |
+| evidence gap | n/a / n/a / n/a | artificialAnalysisCodingAgents: 52f72f7f3393c5edf92b32326e7a678d: model_identity_unresolved_or_ambiguous 'Muse Wonder (max)' | agentic-implementation |
+| evidence gap | n/a / n/a / n/a | artificialAnalysisCodingAgents: 5c82a7985b08f35190cc0db574fd1773: composite_or_ambiguous_model_label 'Fable 5.1 (max) (with fallback)' | agentic-implementation |
+| evidence gap | n/a / n/a / n/a | artificialAnalysisCodingAgents: 736e1c6006fd243c9cc384b61c478e97: model_or_provider_unresolved | agentic-implementation |
+| evidence gap | n/a / n/a / n/a | artificialAnalysisCodingAgents: 88c83705811535bca8ee000bfd3a256c: model_identity_unresolved_or_ambiguous 'Kimi K3' | agentic-implementation |
+| evidence gap | n/a / n/a / n/a | artificialAnalysisCodingAgents: 96d7404e06194027474a6cc3bb31c068: model_identity_unresolved_or_ambiguous 'GLM-5.3' | agentic-implementation |
+| evidence gap | n/a / n/a / n/a | artificialAnalysisCodingAgents: a92c8b68f37df782f0e978e0e302b023: model_identity_unresolved_or_ambiguous 'Grok 4.7 (xhigh)' | agentic-implementation |
+| evidence gap | n/a / n/a / n/a | artificialAnalysisCodingAgents: accfbb12d349c0f2c93547ce814534b2: model_or_provider_unresolved | agentic-implementation |
+| evidence gap | n/a / n/a / n/a | artificialAnalysisCodingAgents: d843fce803ff4f84ababc47040306116: model_identity_unresolved_or_ambiguous 'Muse Spark Open (xhigh)' | agentic-implementation |
+| evidence gap | n/a / n/a / n/a | artificialAnalysisCodingAgents: dabb064c01568bc018ba730cc39c4a96: model_or_provider_unresolved | agentic-implementation |
+| evidence gap | n/a / n/a / n/a | artificialAnalysisCodingAgents: ee454ece0aab8dacb7127770643dcb6b: model_identity_unresolved_or_ambiguous 'Gemini 4 Argon' | agentic-implementation |
+| evidence gap | n/a / n/a / n/a | artificialAnalysisCodingAgents: ef847aa89b4f0471ffe5275ba2f11771: model_identity_unresolved_or_ambiguous 'DeepSeek V4.1 Flash' | agentic-implementation |
+| evidence gap | n/a / n/a / n/a | artificialAnalysisCodingAgents: f09fd629724ff1b103982a6158d00183: model_identity_unresolved_or_ambiguous 'Muse Spark 1.3 (max)' | agentic-implementation |
+| evidence gap | n/a / n/a / n/a | artificialAnalysisCodingAgents: fe6df4d0f0b5360790e73d6d8830d7a0: model_or_provider_unresolved | agentic-implementation |
 | evidence gap | n/a / n/a / n/a | artificialAnalysisComponents: claude-fable-5-1-high: identity_ambiguous_or_effort_invalid | agentic-implementation, deep-reasoning, default-development, mechanical, orchestrator, quick, review, triage, visual-ui |
 | evidence gap | n/a / n/a / n/a | artificialAnalysisComponents: claude-fable-5-1-low: identity_ambiguous_or_effort_invalid | agentic-implementation, deep-reasoning, default-development, mechanical, orchestrator, quick, review, triage, visual-ui |
 | evidence gap | n/a / n/a / n/a | artificialAnalysisComponents: claude-fable-5-1-medium: identity_ambiguous_or_effort_invalid | agentic-implementation, deep-reasoning, default-development, mechanical, orchestrator, quick, review, triage, visual-ui |
@@ -185,8 +184,8 @@ Confirmation uses metric-scoped observations, not the raw page fingerprint. Suit
 | evidence gap | n/a / n/a / n/a | claude-haiku-5.5: artificialAnalysis.codingIndex 'claude-haiku-5-5-high' score_missing_or_invalid | default-development, review, visual-ui |
 | evidence gap | n/a / n/a / n/a | claude-haiku-5.5: artificialAnalysis.codingIndex 'claude-haiku-5-5-low' score_missing_or_invalid | quick |
 | evidence gap | n/a / n/a / n/a | claude-haiku-5.5: artificialAnalysis.codingIndex 'claude-haiku-5-5-medium' score_missing_or_invalid | default-development, review, visual-ui |
-| evidence gap | n/a / n/a / n/a | claude-haiku-5.5: artificialAnalysisCodingAgents effort 'low' not_in_requested_configurations | agentic-implementation |
-| evidence gap | n/a / n/a / n/a | claude-haiku-5.5: artificialAnalysisCodingAgents effort 'medium' not_in_requested_configurations | agentic-implementation |
+| evidence gap | n/a / n/a / n/a | claude-haiku-5.5: artificialAnalysisCodingAgents effort 'high' structured_variant_not_matched | agentic-implementation |
+| evidence gap | n/a / n/a / n/a | claude-haiku-5.5: artificialAnalysisCodingAgents effort 'xhigh' structured_variant_not_matched | agentic-implementation |
 | evidence gap | n/a / n/a / n/a | claude-haiku-5.5: artificialAnalysisComponents.enterpriseOpsGym 'claude-haiku-5-5-high' score_missing_or_invalid | agentic-implementation, orchestrator |
 | evidence gap | n/a / n/a / n/a | claude-haiku-5.5: artificialAnalysisComponents.enterpriseOpsGym 'claude-haiku-5-5-low' score_missing_or_invalid | mechanical |
 | evidence gap | n/a / n/a / n/a | claude-haiku-5.5: artificialAnalysisComponents.enterpriseOpsGym 'claude-haiku-5-5-xhigh' score_missing_or_invalid | agentic-implementation |
@@ -233,6 +232,7 @@ Confirmation uses metric-scoped observations, not the raw page fingerprint. Suit
 | evidence gap | n/a / n/a / n/a | claude-opus-4.8: liveBench effort 'medium' alias_not_configured | default-development, review, visual-ui |
 | evidence gap | n/a / n/a / n/a | claude-opus-4.8: liveBench effort 'xhigh' alias_not_configured | agentic-implementation, deep-reasoning |
 | evidence gap | n/a / n/a / n/a | claude-opus-5: artificialAnalysisCodingAgents effort 'high' structured_variant_not_matched | agentic-implementation |
+| evidence gap | n/a / n/a / n/a | claude-opus-5: artificialAnalysisCodingAgents effort 'max' structured_variant_not_matched | agentic-implementation |
 | evidence gap | n/a / n/a / n/a | claude-opus-5: artificialAnalysisCodingAgents effort 'xhigh' structured_variant_not_matched | agentic-implementation |
 | evidence gap | n/a / n/a / n/a | claude-opus-5: artificialAnalysisComponents.enterpriseOpsGym 'claude-opus-5-high' score_missing_or_invalid | agentic-implementation, orchestrator |
 | evidence gap | n/a / n/a / n/a | claude-opus-5: artificialAnalysisComponents.enterpriseOpsGym 'claude-opus-5-low' score_missing_or_invalid | mechanical |
@@ -293,8 +293,8 @@ Confirmation uses metric-scoped observations, not the raw page fingerprint. Suit
 | evidence gap | n/a / n/a / n/a | claude-sonnet-5.5: artificialAnalysis effort 'max' alias_not_configured | deep-reasoning |
 | evidence gap | n/a / n/a / n/a | claude-sonnet-5.5: artificialAnalysis effort 'medium' alias_not_configured | default-development, review, visual-ui |
 | evidence gap | n/a / n/a / n/a | claude-sonnet-5.5: artificialAnalysis effort 'xhigh' alias_not_configured | deep-reasoning |
-| evidence gap | n/a / n/a / n/a | claude-sonnet-5.5: artificialAnalysisCodingAgents effort 'low' not_in_requested_configurations | agentic-implementation |
-| evidence gap | n/a / n/a / n/a | claude-sonnet-5.5: artificialAnalysisCodingAgents effort 'medium' not_in_requested_configurations | agentic-implementation |
+| evidence gap | n/a / n/a / n/a | claude-sonnet-5.5: artificialAnalysisCodingAgents effort 'high' structured_variant_not_matched | agentic-implementation |
+| evidence gap | n/a / n/a / n/a | claude-sonnet-5.5: artificialAnalysisCodingAgents effort 'xhigh' structured_variant_not_matched | agentic-implementation |
 | evidence gap | n/a / n/a / n/a | claude-sonnet-5.5: artificialAnalysisComponents effort 'high' alias_not_configured | agentic-implementation, deep-reasoning, default-development, orchestrator, review, visual-ui |
 | evidence gap | n/a / n/a / n/a | claude-sonnet-5.5: artificialAnalysisComponents effort 'low' alias_not_configured | mechanical, quick, triage |
 | evidence gap | n/a / n/a / n/a | claude-sonnet-5.5: artificialAnalysisComponents effort 'max' alias_not_configured | agentic-implementation, deep-reasoning |
@@ -326,6 +326,7 @@ Confirmation uses metric-scoped observations, not the raw page fingerprint. Suit
 | evidence gap | n/a / n/a / n/a | gpt-5.3-codex: liveBench effort 'medium' alias_not_configured | default-development, review, visual-ui |
 | evidence gap | n/a / n/a / n/a | gpt-5.3-codex: liveBench effort 'xhigh' alias_not_configured | agentic-implementation, deep-reasoning |
 | evidence gap | n/a / n/a / n/a | gpt-5.6-luna: artificialAnalysisCodingAgents effort 'high' structured_variant_not_matched | agentic-implementation |
+| evidence gap | n/a / n/a / n/a | gpt-5.6-luna: artificialAnalysisCodingAgents effort 'max' structured_variant_not_matched | agentic-implementation |
 | evidence gap | n/a / n/a / n/a | gpt-5.6-luna: artificialAnalysisCodingAgents effort 'xhigh' structured_variant_not_matched | agentic-implementation |
 | evidence gap | n/a / n/a / n/a | gpt-5.6-luna: artificialAnalysisComponents.enterpriseOpsGym 'gpt-5-6-luna-high' score_missing_or_invalid | agentic-implementation, orchestrator |
 | evidence gap | n/a / n/a / n/a | gpt-5.6-luna: artificialAnalysisComponents.enterpriseOpsGym 'gpt-5-6-luna-low' score_missing_or_invalid | mechanical |
@@ -338,6 +339,7 @@ Confirmation uses metric-scoped observations, not the raw page fingerprint. Suit
 | evidence gap | n/a / n/a / n/a | gpt-5.6-luna: liveBench effort 'medium' alias_not_configured | default-development, review, visual-ui |
 | evidence gap | n/a / n/a / n/a | gpt-5.6-luna: liveBench effort 'xhigh' alias_not_configured | agentic-implementation, deep-reasoning |
 | evidence gap | n/a / n/a / n/a | gpt-5.6-sol: artificialAnalysisCodingAgents effort 'high' structured_variant_not_matched | agentic-implementation |
+| evidence gap | n/a / n/a / n/a | gpt-5.6-sol: artificialAnalysisCodingAgents effort 'max' structured_variant_not_matched | agentic-implementation |
 | evidence gap | n/a / n/a / n/a | gpt-5.6-sol: artificialAnalysisCodingAgents effort 'xhigh' structured_variant_not_matched | agentic-implementation |
 | evidence gap | n/a / n/a / n/a | gpt-5.6-sol: artificialAnalysisComponents.enterpriseOpsGym 'gpt-5-6-sol-high' score_missing_or_invalid | agentic-implementation, orchestrator |
 | evidence gap | n/a / n/a / n/a | gpt-5.6-sol: artificialAnalysisComponents.enterpriseOpsGym 'gpt-5-6-sol-low' score_missing_or_invalid | mechanical |
@@ -389,6 +391,7 @@ Confirmation uses metric-scoped observations, not the raw page fingerprint. Suit
 | evidence gap | n/a / n/a / n/a | gpt-6-sol: artificialAnalysis.codingIndex 'gpt-6-sol-low' score_missing_or_invalid | quick |
 | evidence gap | n/a / n/a / n/a | gpt-6-sol: artificialAnalysis.codingIndex 'gpt-6-sol-medium' score_missing_or_invalid | default-development, review, visual-ui |
 | evidence gap | n/a / n/a / n/a | gpt-6-sol: artificialAnalysisCodingAgents effort 'high' structured_variant_not_matched | agentic-implementation |
+| evidence gap | n/a / n/a / n/a | gpt-6-sol: artificialAnalysisCodingAgents effort 'max' structured_variant_not_matched | agentic-implementation |
 | evidence gap | n/a / n/a / n/a | gpt-6-sol: artificialAnalysisCodingAgents effort 'xhigh' structured_variant_not_matched | agentic-implementation |
 | evidence gap | n/a / n/a / n/a | gpt-6-sol: artificialAnalysisComponents.enterpriseOpsGym 'gpt-6-sol-high' score_missing_or_invalid | agentic-implementation, orchestrator |
 | evidence gap | n/a / n/a / n/a | gpt-6-sol: artificialAnalysisComponents.enterpriseOpsGym 'gpt-6-sol-low' score_missing_or_invalid | mechanical |
@@ -404,8 +407,8 @@ Confirmation uses metric-scoped observations, not the raw page fingerprint. Suit
 | evidence gap | n/a / n/a / n/a | gpt-6.1-sol: artificialAnalysis.codingIndex 'gpt-6-1-sol-high' score_missing_or_invalid | default-development, review, visual-ui |
 | evidence gap | n/a / n/a / n/a | gpt-6.1-sol: artificialAnalysis.codingIndex 'gpt-6-1-sol-low' score_missing_or_invalid | quick |
 | evidence gap | n/a / n/a / n/a | gpt-6.1-sol: artificialAnalysis.codingIndex 'gpt-6-1-sol-medium' score_missing_or_invalid | default-development, review, visual-ui |
-| evidence gap | n/a / n/a / n/a | gpt-6.1-sol: artificialAnalysisCodingAgents effort 'low' not_in_requested_configurations | agentic-implementation |
-| evidence gap | n/a / n/a / n/a | gpt-6.1-sol: artificialAnalysisCodingAgents effort 'medium' not_in_requested_configurations | agentic-implementation |
+| evidence gap | n/a / n/a / n/a | gpt-6.1-sol: artificialAnalysisCodingAgents effort 'high' structured_variant_not_matched | agentic-implementation |
+| evidence gap | n/a / n/a / n/a | gpt-6.1-sol: artificialAnalysisCodingAgents effort 'xhigh' structured_variant_not_matched | agentic-implementation |
 | evidence gap | n/a / n/a / n/a | gpt-6.1-sol: artificialAnalysisComponents.enterpriseOpsGym 'gpt-6-1-sol-high' score_missing_or_invalid | agentic-implementation, orchestrator |
 | evidence gap | n/a / n/a / n/a | gpt-6.1-sol: artificialAnalysisComponents.enterpriseOpsGym 'gpt-6-1-sol-low' score_missing_or_invalid | mechanical |
 | evidence gap | n/a / n/a / n/a | gpt-6.1-sol: artificialAnalysisComponents.enterpriseOpsGym 'gpt-6-1-sol-xhigh' score_missing_or_invalid | agentic-implementation |
@@ -426,6 +429,7 @@ Confirmation uses metric-scoped observations, not the raw page fingerprint. Suit
 | evidence gap | n/a / n/a / n/a | grok-4.5: liveBench effort 'low' alias_not_configured | mechanical, quick, triage |
 | evidence gap | n/a / n/a / n/a | grok-4.5: liveBench effort 'medium' alias_not_configured | default-development, review, visual-ui |
 | evidence gap | n/a / n/a / n/a | grok-4.6: artificialAnalysisCodingAgents effort 'high' structured_variant_not_matched | agentic-implementation |
+| evidence gap | n/a / n/a / n/a | grok-4.6: artificialAnalysisCodingAgents effort 'xhigh' structured_variant_not_matched | agentic-implementation |
 | evidence gap | n/a / n/a / n/a | grok-4.6: artificialAnalysisComponents.enterpriseOpsGym 'grok-4-6-low' score_missing_or_invalid | mechanical |
 | evidence gap | n/a / n/a / n/a | grok-4.6: artificialAnalysisComponents.enterpriseOpsGym 'grok-4-6-xhigh' score_missing_or_invalid | agentic-implementation |
 | evidence gap | n/a / n/a / n/a | grok-4.6: artificialAnalysisComponents.ifbench 'grok-4-6-low' score_missing_or_invalid | mechanical, quick, triage |
@@ -577,27 +581,27 @@ None: the configured role dimensions are binding qualification requirements.
 
 | Configuration (model / effort / context) | Budget/capability eligible | Exclusions | Advisory warnings | Price tier | Input / output USD per M | Price verified | Capability as-of |
 |---|---|---|---|---|---|---|---|
-| claude-haiku-4.5 / none / default | True | n/a | n/a | default | 1 / 5 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| claude-haiku-5.5 / high / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| claude-opus-4.8 / high / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| claude-opus-4.8-fast / high / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| claude-opus-5 / high / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| claude-opus-5.5 / high / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 4 / 20 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| claude-sonnet-4.6 / high / default | False | capabilities_stale | model_retirement_scope_unconfirmed | default | 3 / 15 | 2026-10-20T13:31:27.9077693Z | 2026-07-30 |
-| claude-sonnet-5 / high / default | True | n/a | n/a | default | 2 / 10 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| claude-sonnet-5.5 / high / default | True | n/a | n/a | default | 2 / 10 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| gemini-3.8-flash / high / default | True | n/a | n/a | default | 0.75 / 3.75 | 2026-10-20T13:31:27.9077693Z | 2026-09-08 |
-| gpt-5.3-codex / high / default | True | n/a | n/a | default | 1.75 / 14 | 2026-10-20T13:31:27.9077693Z | 2026-09-08 |
-| gpt-5.6-luna / high / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| gpt-5.6-sol / high / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 4 / 20 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| gpt-5.6-terra / high / default | True | n/a | n/a | default | 2 / 12 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| gpt-6-astra / high / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| gpt-6-luna / high / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| gpt-6-sol / high / default | True | n/a | n/a | default | 2 / 10 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| gpt-6.1-sol / high / default | True | n/a | n/a | default | 2 / 10 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| grok-4.5 / high / default | True | n/a | n/a | default | 2 / 6 | 2026-10-20T13:31:27.9077693Z | 2026-09-08 |
-| grok-4.6 / high / default | True | n/a | n/a | default | 2 / 6 | 2026-10-20T13:31:27.9077693Z | 2026-09-08 |
-| mai-code-1.1-flash / high / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
+| claude-haiku-4.5 / none / default | True | n/a | n/a | default | 1 / 5 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| claude-haiku-5.5 / high / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| claude-opus-4.8 / high / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| claude-opus-4.8-fast / high / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| claude-opus-5 / high / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| claude-opus-5.5 / high / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 4 / 20 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| claude-sonnet-4.6 / high / default | False | capabilities_stale | model_retirement_scope_unconfirmed | default | 3 / 15 | 2026-10-26T07:16:06.8357115Z | 2026-07-30 |
+| claude-sonnet-5 / high / default | True | n/a | n/a | default | 2 / 10 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| claude-sonnet-5.5 / high / default | True | n/a | n/a | default | 2 / 10 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| gemini-3.8-flash / high / default | True | n/a | n/a | default | 0.75 / 3.75 | 2026-10-26T07:16:06.8357115Z | 2026-09-08 |
+| gpt-5.3-codex / high / default | True | n/a | n/a | default | 1.75 / 14 | 2026-10-26T07:16:06.8357115Z | 2026-09-08 |
+| gpt-5.6-luna / high / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| gpt-5.6-sol / high / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 4 / 20 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| gpt-5.6-terra / high / default | True | n/a | n/a | default | 2 / 12 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| gpt-6-astra / high / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| gpt-6-luna / high / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| gpt-6-sol / high / default | True | n/a | n/a | default | 2 / 10 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| gpt-6.1-sol / high / default | True | n/a | n/a | default | 2 / 10 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| grok-4.5 / high / default | True | n/a | n/a | default | 2 / 6 | 2026-10-26T07:16:06.8357115Z | 2026-09-08 |
+| grok-4.6 / high / default | True | n/a | n/a | default | 2 / 6 | 2026-10-26T07:16:06.8357115Z | 2026-09-08 |
+| mai-code-1.1-flash / high / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
 
 | Model | Source | Exact alias / source label | Effort | Metric | Score | Publication age unknown | Cached | Harness | Role |
 |---|---|---|---|---|---|---|---|---|---|
@@ -700,27 +704,27 @@ LiveBench Instruction Following: Instruction following, not end-to-end workflow 
 
 | Configuration (model / effort / context) | Budget/capability eligible | Exclusions | Advisory warnings | Price tier | Input / output USD per M | Price verified | Capability as-of |
 |---|---|---|---|---|---|---|---|
-| claude-haiku-4.5 / none / default | True | n/a | n/a | default | 1 / 5 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| claude-haiku-5.5 / low / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| claude-opus-4.8 / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| claude-opus-4.8-fast / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| claude-opus-5 / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| claude-opus-5.5 / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 4 / 20 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| claude-sonnet-4.6 / low / default | False | capabilities_stale, pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | model_retirement_scope_unconfirmed | default | 3 / 15 | 2026-10-20T13:31:27.9077693Z | 2026-07-30 |
-| claude-sonnet-5 / low / default | True | n/a | n/a | default | 2 / 10 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| claude-sonnet-5.5 / low / default | True | n/a | n/a | default | 2 / 10 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| gemini-3.8-flash / low / default | True | n/a | n/a | default | 0.75 / 3.75 | 2026-10-20T13:31:27.9077693Z | 2026-09-08 |
-| gpt-5.3-codex / low / default | False | pricing_output_exceeds_ceiling | n/a | default | 1.75 / 14 | 2026-10-20T13:31:27.9077693Z | 2026-09-08 |
-| gpt-5.6-luna / low / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| gpt-5.6-sol / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 4 / 20 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| gpt-5.6-terra / low / default | False | pricing_output_exceeds_ceiling | n/a | default | 2 / 12 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| gpt-6-astra / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| gpt-6-luna / low / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| gpt-6-sol / low / default | True | n/a | n/a | default | 2 / 10 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| gpt-6.1-sol / low / default | True | n/a | n/a | default | 2 / 10 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| grok-4.5 / low / default | True | n/a | n/a | default | 2 / 6 | 2026-10-20T13:31:27.9077693Z | 2026-09-08 |
-| grok-4.6 / low / default | True | n/a | n/a | default | 2 / 6 | 2026-10-20T13:31:27.9077693Z | 2026-09-08 |
-| mai-code-1.1-flash / low / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
+| claude-haiku-4.5 / none / default | True | n/a | n/a | default | 1 / 5 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| claude-haiku-5.5 / low / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| claude-opus-4.8 / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| claude-opus-4.8-fast / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| claude-opus-5 / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| claude-opus-5.5 / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 4 / 20 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| claude-sonnet-4.6 / low / default | False | capabilities_stale, pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | model_retirement_scope_unconfirmed | default | 3 / 15 | 2026-10-26T07:16:06.8357115Z | 2026-07-30 |
+| claude-sonnet-5 / low / default | True | n/a | n/a | default | 2 / 10 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| claude-sonnet-5.5 / low / default | True | n/a | n/a | default | 2 / 10 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| gemini-3.8-flash / low / default | True | n/a | n/a | default | 0.75 / 3.75 | 2026-10-26T07:16:06.8357115Z | 2026-09-08 |
+| gpt-5.3-codex / low / default | False | pricing_output_exceeds_ceiling | n/a | default | 1.75 / 14 | 2026-10-26T07:16:06.8357115Z | 2026-09-08 |
+| gpt-5.6-luna / low / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| gpt-5.6-sol / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 4 / 20 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| gpt-5.6-terra / low / default | False | pricing_output_exceeds_ceiling | n/a | default | 2 / 12 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| gpt-6-astra / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| gpt-6-luna / low / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| gpt-6-sol / low / default | True | n/a | n/a | default | 2 / 10 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| gpt-6.1-sol / low / default | True | n/a | n/a | default | 2 / 10 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| grok-4.5 / low / default | True | n/a | n/a | default | 2 / 6 | 2026-10-26T07:16:06.8357115Z | 2026-09-08 |
+| grok-4.6 / low / default | True | n/a | n/a | default | 2 / 6 | 2026-10-26T07:16:06.8357115Z | 2026-09-08 |
+| mai-code-1.1-flash / low / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
 
 | Model | Source | Exact alias / source label | Effort | Metric | Score | Publication age unknown | Cached | Harness | Role |
 |---|---|---|---|---|---|---|---|---|---|
@@ -817,47 +821,47 @@ None: the configured role dimensions are binding qualification requirements.
 
 | Configuration (model / effort / context) | Budget/capability eligible | Exclusions | Advisory warnings | Price tier | Input / output USD per M | Price verified | Capability as-of |
 |---|---|---|---|---|---|---|---|
-| claude-haiku-4.5 / none / default | True | n/a | n/a | default | 1 / 5 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| claude-haiku-5.5 / high / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| claude-haiku-5.5 / medium / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| claude-opus-4.8 / high / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| claude-opus-4.8 / medium / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| claude-opus-4.8-fast / high / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| claude-opus-4.8-fast / medium / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| claude-opus-5 / high / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| claude-opus-5 / medium / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| claude-opus-5.5 / high / default | True | n/a | n/a | default | 4 / 20 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| claude-opus-5.5 / medium / default | True | n/a | n/a | default | 4 / 20 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| claude-sonnet-4.6 / high / default | False | capabilities_stale | model_retirement_scope_unconfirmed | default | 3 / 15 | 2026-10-20T13:31:27.9077693Z | 2026-07-30 |
-| claude-sonnet-4.6 / medium / default | False | capabilities_stale | model_retirement_scope_unconfirmed | default | 3 / 15 | 2026-10-20T13:31:27.9077693Z | 2026-07-30 |
-| claude-sonnet-5 / high / default | True | n/a | n/a | default | 2 / 10 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| claude-sonnet-5 / medium / default | True | n/a | n/a | default | 2 / 10 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| claude-sonnet-5.5 / high / default | True | n/a | n/a | default | 2 / 10 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| claude-sonnet-5.5 / medium / default | True | n/a | n/a | default | 2 / 10 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| gemini-3.8-flash / high / default | True | n/a | n/a | default | 0.75 / 3.75 | 2026-10-20T13:31:27.9077693Z | 2026-09-08 |
-| gemini-3.8-flash / medium / default | True | n/a | n/a | default | 0.75 / 3.75 | 2026-10-20T13:31:27.9077693Z | 2026-09-08 |
-| gpt-5.3-codex / high / default | True | n/a | n/a | default | 1.75 / 14 | 2026-10-20T13:31:27.9077693Z | 2026-09-08 |
-| gpt-5.3-codex / medium / default | True | n/a | n/a | default | 1.75 / 14 | 2026-10-20T13:31:27.9077693Z | 2026-09-08 |
-| gpt-5.6-luna / high / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| gpt-5.6-luna / medium / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| gpt-5.6-sol / high / default | True | n/a | n/a | default | 4 / 20 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| gpt-5.6-sol / medium / default | True | n/a | n/a | default | 4 / 20 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| gpt-5.6-terra / high / default | True | n/a | n/a | default | 2 / 12 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| gpt-5.6-terra / medium / default | True | n/a | n/a | default | 2 / 12 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| gpt-6-astra / high / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| gpt-6-astra / medium / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| gpt-6-luna / high / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| gpt-6-luna / medium / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| gpt-6-sol / high / default | True | n/a | n/a | default | 2 / 10 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| gpt-6-sol / medium / default | True | n/a | n/a | default | 2 / 10 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| gpt-6.1-sol / high / default | True | n/a | n/a | default | 2 / 10 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| gpt-6.1-sol / medium / default | True | n/a | n/a | default | 2 / 10 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| grok-4.5 / high / default | True | n/a | n/a | default | 2 / 6 | 2026-10-20T13:31:27.9077693Z | 2026-09-08 |
-| grok-4.5 / medium / default | True | n/a | n/a | default | 2 / 6 | 2026-10-20T13:31:27.9077693Z | 2026-09-08 |
-| grok-4.6 / high / default | True | n/a | n/a | default | 2 / 6 | 2026-10-20T13:31:27.9077693Z | 2026-09-08 |
-| grok-4.6 / medium / default | True | n/a | n/a | default | 2 / 6 | 2026-10-20T13:31:27.9077693Z | 2026-09-08 |
-| mai-code-1.1-flash / high / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| mai-code-1.1-flash / medium / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
+| claude-haiku-4.5 / none / default | True | n/a | n/a | default | 1 / 5 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| claude-haiku-5.5 / high / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| claude-haiku-5.5 / medium / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| claude-opus-4.8 / high / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| claude-opus-4.8 / medium / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| claude-opus-4.8-fast / high / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| claude-opus-4.8-fast / medium / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| claude-opus-5 / high / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| claude-opus-5 / medium / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| claude-opus-5.5 / high / default | True | n/a | n/a | default | 4 / 20 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| claude-opus-5.5 / medium / default | True | n/a | n/a | default | 4 / 20 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| claude-sonnet-4.6 / high / default | False | capabilities_stale | model_retirement_scope_unconfirmed | default | 3 / 15 | 2026-10-26T07:16:06.8357115Z | 2026-07-30 |
+| claude-sonnet-4.6 / medium / default | False | capabilities_stale | model_retirement_scope_unconfirmed | default | 3 / 15 | 2026-10-26T07:16:06.8357115Z | 2026-07-30 |
+| claude-sonnet-5 / high / default | True | n/a | n/a | default | 2 / 10 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| claude-sonnet-5 / medium / default | True | n/a | n/a | default | 2 / 10 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| claude-sonnet-5.5 / high / default | True | n/a | n/a | default | 2 / 10 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| claude-sonnet-5.5 / medium / default | True | n/a | n/a | default | 2 / 10 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| gemini-3.8-flash / high / default | True | n/a | n/a | default | 0.75 / 3.75 | 2026-10-26T07:16:06.8357115Z | 2026-09-08 |
+| gemini-3.8-flash / medium / default | True | n/a | n/a | default | 0.75 / 3.75 | 2026-10-26T07:16:06.8357115Z | 2026-09-08 |
+| gpt-5.3-codex / high / default | True | n/a | n/a | default | 1.75 / 14 | 2026-10-26T07:16:06.8357115Z | 2026-09-08 |
+| gpt-5.3-codex / medium / default | True | n/a | n/a | default | 1.75 / 14 | 2026-10-26T07:16:06.8357115Z | 2026-09-08 |
+| gpt-5.6-luna / high / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| gpt-5.6-luna / medium / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| gpt-5.6-sol / high / default | True | n/a | n/a | default | 4 / 20 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| gpt-5.6-sol / medium / default | True | n/a | n/a | default | 4 / 20 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| gpt-5.6-terra / high / default | True | n/a | n/a | default | 2 / 12 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| gpt-5.6-terra / medium / default | True | n/a | n/a | default | 2 / 12 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| gpt-6-astra / high / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| gpt-6-astra / medium / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| gpt-6-luna / high / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| gpt-6-luna / medium / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| gpt-6-sol / high / default | True | n/a | n/a | default | 2 / 10 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| gpt-6-sol / medium / default | True | n/a | n/a | default | 2 / 10 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| gpt-6.1-sol / high / default | True | n/a | n/a | default | 2 / 10 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| gpt-6.1-sol / medium / default | True | n/a | n/a | default | 2 / 10 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| grok-4.5 / high / default | True | n/a | n/a | default | 2 / 6 | 2026-10-26T07:16:06.8357115Z | 2026-09-08 |
+| grok-4.5 / medium / default | True | n/a | n/a | default | 2 / 6 | 2026-10-26T07:16:06.8357115Z | 2026-09-08 |
+| grok-4.6 / high / default | True | n/a | n/a | default | 2 / 6 | 2026-10-26T07:16:06.8357115Z | 2026-09-08 |
+| grok-4.6 / medium / default | True | n/a | n/a | default | 2 / 6 | 2026-10-26T07:16:06.8357115Z | 2026-09-08 |
+| mai-code-1.1-flash / high / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| mai-code-1.1-flash / medium / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
 
 | Model | Source | Exact alias / source label | Effort | Metric | Score | Publication age unknown | Cached | Harness | Role |
 |---|---|---|---|---|---|---|---|---|---|
@@ -893,7 +897,7 @@ Evidence gaps are grouped by affected profile in [Coverage and exclusions](#cove
 ### agentic-implementation
 
 Budget: **hard**, input 10 / output 50 USD per million. Deciding source: artificialAnalysisCodingAgents.
-Quality leader before hard-budget exclusions: claude-sonnet-5.5 / max / default. Family fallback (informational, not a winner): gpt-5.3-codex.
+Quality leader before hard-budget exclusions: claude-opus-5.5 / max / default. Family fallback (informational, not a winner): gpt-5.3-codex.
 Strategy: **value_balanced**.
 Authorized deciding routes, strongest first: **AA Coding Agent Index > LiveBench Agentic Coding**. Supporting metrics are informational only.
 Task fit: external-harness proxy, not a measurement of Copilot CLI task success.
@@ -904,10 +908,10 @@ LiveBench Agentic Coding (percentage points): External agentic coding evaluation
 Configuration selection: **automatic bounded effort**; authorized efforts: high, xhigh, max. Models without effort controls use their native configuration; context remains fixed.
 Reference usage: candidate **300 AIC**; incumbent **300 AIC**.
 Reference AIC uses a fixed token basket, not measured consumption. Effort-related changes in token usage, task cost and latency are unknown; equal reference AIC does not establish equal task cost.
-Eligible quality reference: claude-sonnet-5.5 / max / default (0.683578337375). Candidate gap: **0 / 0.03** absolute codingAgentIndex score points.
+Eligible quality reference: claude-opus-5.5 / max / default (0.616528649506). Candidate gap: **0.0231542228739 / 0.03** absolute codingAgentIndex score points.
 Lowest reference cost among configurations passing every required band wins; equal-cost model ties prefer the newest verified release. Reference usage: candidate **300 AIC**; incumbent **300 AIC** (1 AIC = USD 0.01).
 Candidate cost change: **0%** (informational, not an incumbent-relative limit). Fixed hard ceilings authorize spending; they never rise automatically. A percentage is n/a when incumbent cost is unknown or a free incumbent would become paid.
-Matched incumbent score in this deciding-source observation: **0.683578337375**.
+Matched incumbent score in this deciding-source observation: **0.593374426632**.
 **Warning: an independent fallback metric disagrees under this profile's quality rule; the authorized primary route still decides.**
 
 **Role qualification:** qualified. Every required dimension must pass independently; then the cheapest qualified configuration wins. At least 2 distinct eligible models are required per comparison, not per surviving intersection.
@@ -915,7 +919,7 @@ References are fixed before intersecting dimensions. Missing evidence is not zer
 
 | Required dimension | Selected metric | Comparison models | Reference configuration | Reference score | Allowed gap | Minimum score | Cached | Results published |
 |---|---|---|---|---|---|---|---|---|
-| primary | artificialAnalysisCodingAgents.codingAgentIndex | 12 | claude-sonnet-5.5 / max / default | 0.683578337375 | 0.03 | 0.653578337375 | False | n/a |
+| primary | artificialAnalysisCodingAgents.codingAgentIndex | 7 | claude-opus-5.5 / max / default | 0.616528649506 | 0.03 | 0.586528649506 | False | n/a |
 
 primary routes: AA Coding Agent Index > LiveBench Agentic Coding.
 AA Coding Agent Index: External coding-agent harness, not Copilot CLI.
@@ -923,32 +927,32 @@ LiveBench Agentic Coding: External agentic coding evaluation, not the local orch
 
 | Budget/capability-eligible configuration | Role qualified | Required evidence checks |
 |---|---|---|
-| claude-haiku-5.5 / xhigh / default | False | primary: 0.414392761952 (outside_quality_band) |
+| claude-haiku-5.5 / xhigh / default | False | primary: n/a (exact_configuration_evidence_missing) |
 | grok-4.6 / high / default | False | primary: n/a (exact_configuration_evidence_missing) |
 | gpt-6-astra / high / default | False | primary: n/a (exact_configuration_evidence_missing) |
-| claude-haiku-5.5 / high / default | False | primary: 0.350585020439 (outside_quality_band) |
-| claude-opus-5.5 / max / default | True | primary: 0.659885802549 (passed) |
+| claude-haiku-5.5 / high / default | False | primary: n/a (exact_configuration_evidence_missing) |
+| claude-opus-5.5 / max / default | True | primary: 0.616528649506 (passed) |
 | claude-opus-5 / high / default | False | primary: n/a (exact_configuration_evidence_missing) |
 | gpt-5.6-luna / xhigh / default | False | primary: n/a (exact_configuration_evidence_missing) |
-| claude-sonnet-5.5 / xhigh / default | False | primary: 0.628713868151 (outside_quality_band) |
-| claude-sonnet-5.5 / max / default | True | primary: 0.683578337375 (passed) |
-| grok-4.6 / xhigh / default | False | primary: 0.469689520574 (outside_quality_band) |
+| claude-sonnet-5.5 / xhigh / default | False | primary: n/a (exact_configuration_evidence_missing) |
+| claude-sonnet-5.5 / max / default | True | primary: 0.593374426632 (passed) |
+| grok-4.6 / xhigh / default | False | primary: n/a (exact_configuration_evidence_missing) |
 | gpt-5.6-luna / high / default | False | primary: n/a (exact_configuration_evidence_missing) |
-| gpt-6.1-sol / xhigh / default | False | primary: 0.629077673682 (outside_quality_band) |
-| claude-haiku-5.5 / max / default | False | primary: 0.364726098169 (outside_quality_band) |
+| gpt-6.1-sol / xhigh / default | False | primary: n/a (exact_configuration_evidence_missing) |
+| claude-haiku-5.5 / max / default | False | primary: 0.373496050722 (outside_quality_band) |
 | claude-opus-4.8-fast / max / default | False | primary: n/a (exact_configuration_evidence_missing) |
 | gpt-5.6-sol / xhigh / default | False | primary: n/a (exact_configuration_evidence_missing) |
 | claude-opus-4.8 / max / default | False | primary: n/a (exact_configuration_evidence_missing) |
 | claude-haiku-4.5 / none / default | False | primary: n/a (exact_configuration_evidence_missing) |
-| claude-opus-5 / max / default | False | primary: 0.597263672984 (outside_quality_band) |
+| claude-opus-5 / max / default | False | primary: n/a (exact_configuration_evidence_missing) |
 | gpt-6-sol / xhigh / default | False | primary: n/a (exact_configuration_evidence_missing) |
 | claude-opus-4.8 / high / default | False | primary: n/a (exact_configuration_evidence_missing) |
 | gpt-5.3-codex / high / default | False | primary: n/a (exact_configuration_evidence_missing) |
 | grok-4.5 / high / default | False | primary: n/a (exact_configuration_evidence_missing) |
-| gpt-6-sol / max / default | False | primary: 0.566625912758 (outside_quality_band) |
+| gpt-6-sol / max / default | False | primary: n/a (exact_configuration_evidence_missing) |
 | mai-code-1.1-flash / high / default | False | primary: n/a (exact_configuration_evidence_missing) |
 | claude-opus-4.8-fast / high / default | False | primary: n/a (exact_configuration_evidence_missing) |
-| gemini-3.8-flash / high / default | False | primary: 0.418631552945 (outside_quality_band) |
+| gemini-3.8-flash / high / default | False | primary: 0.332723011187 (outside_quality_band) |
 | gpt-6-astra / xhigh / default | False | primary: n/a (exact_configuration_evidence_missing) |
 | gpt-5.6-sol / high / default | False | primary: n/a (exact_configuration_evidence_missing) |
 | claude-opus-5 / xhigh / default | False | primary: n/a (exact_configuration_evidence_missing) |
@@ -958,18 +962,18 @@ LiveBench Agentic Coding: External agentic coding evaluation, not the local orch
 | claude-sonnet-5 / max / default | False | primary: n/a (exact_configuration_evidence_missing) |
 | gpt-5.3-codex / xhigh / default | False | primary: n/a (exact_configuration_evidence_missing) |
 | gpt-5.6-terra / max / default | False | primary: n/a (exact_configuration_evidence_missing) |
-| gpt-5.6-sol / max / default | False | primary: 0.545591272896 (outside_quality_band) |
+| gpt-5.6-sol / max / default | False | primary: n/a (exact_configuration_evidence_missing) |
 | gpt-6-luna / xhigh / default | False | primary: n/a (exact_configuration_evidence_missing) |
-| gpt-5.6-luna / max / default | False | primary: 0.432246866803 (outside_quality_band) |
-| gpt-6.1-sol / high / default | False | primary: 0.601492371618 (outside_quality_band) |
+| gpt-5.6-luna / max / default | False | primary: n/a (exact_configuration_evidence_missing) |
+| gpt-6.1-sol / high / default | False | primary: n/a (exact_configuration_evidence_missing) |
 | gpt-6-sol / high / default | False | primary: n/a (exact_configuration_evidence_missing) |
 | gpt-5.6-terra / high / default | False | primary: n/a (exact_configuration_evidence_missing) |
 | claude-opus-5.5 / xhigh / default | False | primary: n/a (exact_configuration_evidence_missing) |
-| claude-sonnet-5.5 / high / default | False | primary: 0.550124904964 (outside_quality_band) |
-| gpt-6-luna / max / default | False | primary: 0.410743893402 (outside_quality_band) |
-| gpt-6.1-sol / max / default | False | primary: 0.60147507043 (outside_quality_band) |
+| claude-sonnet-5.5 / high / default | False | primary: n/a (exact_configuration_evidence_missing) |
+| gpt-6-luna / max / default | False | primary: 0.311260251113 (outside_quality_band) |
+| gpt-6.1-sol / max / default | False | primary: 0.541279798631 (outside_quality_band) |
 | gpt-6-luna / high / default | False | primary: n/a (exact_configuration_evidence_missing) |
-| gpt-6-astra / max / default | False | primary: 0.616450449879 (outside_quality_band) |
+| gpt-6-astra / max / default | False | primary: 0.546635690562 (outside_quality_band) |
 | gpt-5.6-terra / xhigh / default | False | primary: n/a (exact_configuration_evidence_missing) |
 | claude-opus-4.8 / xhigh / default | False | primary: n/a (exact_configuration_evidence_missing) |
 | claude-opus-4.8-fast / xhigh / default | False | primary: n/a (exact_configuration_evidence_missing) |
@@ -990,79 +994,68 @@ EnterpriseOps-Gym-AA: AA oracle-tool workflow harness; tools supplied. Not tool-
 
 | Configuration (model / effort / context) | Budget/capability eligible | Exclusions | Advisory warnings | Price tier | Input / output USD per M | Price verified | Capability as-of |
 |---|---|---|---|---|---|---|---|
-| claude-haiku-4.5 / none / default | True | n/a | n/a | default | 1 / 5 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| claude-haiku-5.5 / high / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| claude-haiku-5.5 / max / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| claude-haiku-5.5 / xhigh / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| claude-opus-4.8 / high / default | True | n/a | n/a | default | 5 / 25 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| claude-opus-4.8 / max / default | True | n/a | n/a | default | 5 / 25 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| claude-opus-4.8 / xhigh / default | True | n/a | n/a | default | 5 / 25 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| claude-opus-4.8-fast / high / default | True | n/a | n/a | default | 10 / 50 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| claude-opus-4.8-fast / max / default | True | n/a | n/a | default | 10 / 50 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| claude-opus-4.8-fast / xhigh / default | True | n/a | n/a | default | 10 / 50 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| claude-opus-5 / high / default | True | n/a | n/a | default | 5 / 25 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| claude-opus-5 / max / default | True | n/a | n/a | default | 5 / 25 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| claude-opus-5 / xhigh / default | True | n/a | n/a | default | 5 / 25 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| claude-opus-5.5 / high / default | True | n/a | n/a | default | 4 / 20 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| claude-opus-5.5 / max / default | True | n/a | n/a | default | 4 / 20 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| claude-opus-5.5 / xhigh / default | True | n/a | n/a | default | 4 / 20 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| claude-sonnet-4.6 / high / default | False | capabilities_stale | model_retirement_scope_unconfirmed | default | 3 / 15 | 2026-10-20T13:31:27.9077693Z | 2026-07-30 |
-| claude-sonnet-4.6 / max / default | False | capabilities_stale | model_retirement_scope_unconfirmed | default | 3 / 15 | 2026-10-20T13:31:27.9077693Z | 2026-07-30 |
-| claude-sonnet-5 / high / default | True | n/a | n/a | default | 2 / 10 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| claude-sonnet-5 / max / default | True | n/a | n/a | default | 2 / 10 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| claude-sonnet-5 / xhigh / default | True | n/a | n/a | default | 2 / 10 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| claude-sonnet-5.5 / high / default | True | n/a | n/a | default | 2 / 10 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| claude-sonnet-5.5 / max / default | True | n/a | n/a | default | 2 / 10 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| claude-sonnet-5.5 / xhigh / default | True | n/a | n/a | default | 2 / 10 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| gemini-3.8-flash / high / default | True | n/a | n/a | default | 0.75 / 3.75 | 2026-10-20T13:31:27.9077693Z | 2026-09-08 |
-| gpt-5.3-codex / high / default | True | n/a | n/a | default | 1.75 / 14 | 2026-10-20T13:31:27.9077693Z | 2026-09-08 |
-| gpt-5.3-codex / xhigh / default | True | n/a | n/a | default | 1.75 / 14 | 2026-10-20T13:31:27.9077693Z | 2026-09-08 |
-| gpt-5.6-luna / high / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| gpt-5.6-luna / max / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| gpt-5.6-luna / xhigh / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| gpt-5.6-sol / high / default | True | n/a | n/a | default | 4 / 20 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| gpt-5.6-sol / max / default | True | n/a | n/a | default | 4 / 20 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| gpt-5.6-sol / xhigh / default | True | n/a | n/a | default | 4 / 20 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| gpt-5.6-terra / high / default | True | n/a | n/a | default | 2 / 12 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| gpt-5.6-terra / max / default | True | n/a | n/a | default | 2 / 12 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| gpt-5.6-terra / xhigh / default | True | n/a | n/a | default | 2 / 12 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| gpt-6-astra / high / default | True | n/a | n/a | default | 10 / 50 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| gpt-6-astra / max / default | True | n/a | n/a | default | 10 / 50 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| gpt-6-astra / xhigh / default | True | n/a | n/a | default | 10 / 50 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| gpt-6-luna / high / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| gpt-6-luna / max / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| gpt-6-luna / xhigh / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| gpt-6-sol / high / default | True | n/a | n/a | default | 2 / 10 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| gpt-6-sol / max / default | True | n/a | n/a | default | 2 / 10 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| gpt-6-sol / xhigh / default | True | n/a | n/a | default | 2 / 10 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| gpt-6.1-sol / high / default | True | n/a | n/a | default | 2 / 10 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| gpt-6.1-sol / max / default | True | n/a | n/a | default | 2 / 10 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| gpt-6.1-sol / xhigh / default | True | n/a | n/a | default | 2 / 10 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| grok-4.5 / high / default | True | n/a | n/a | default | 2 / 6 | 2026-10-20T13:31:27.9077693Z | 2026-09-08 |
-| grok-4.6 / high / default | True | n/a | n/a | default | 2 / 6 | 2026-10-20T13:31:27.9077693Z | 2026-09-08 |
-| grok-4.6 / xhigh / default | True | n/a | n/a | default | 2 / 6 | 2026-10-20T13:31:27.9077693Z | 2026-09-08 |
-| mai-code-1.1-flash / high / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
+| claude-haiku-4.5 / none / default | True | n/a | n/a | default | 1 / 5 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| claude-haiku-5.5 / high / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| claude-haiku-5.5 / max / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| claude-haiku-5.5 / xhigh / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| claude-opus-4.8 / high / default | True | n/a | n/a | default | 5 / 25 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| claude-opus-4.8 / max / default | True | n/a | n/a | default | 5 / 25 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| claude-opus-4.8 / xhigh / default | True | n/a | n/a | default | 5 / 25 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| claude-opus-4.8-fast / high / default | True | n/a | n/a | default | 10 / 50 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| claude-opus-4.8-fast / max / default | True | n/a | n/a | default | 10 / 50 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| claude-opus-4.8-fast / xhigh / default | True | n/a | n/a | default | 10 / 50 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| claude-opus-5 / high / default | True | n/a | n/a | default | 5 / 25 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| claude-opus-5 / max / default | True | n/a | n/a | default | 5 / 25 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| claude-opus-5 / xhigh / default | True | n/a | n/a | default | 5 / 25 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| claude-opus-5.5 / high / default | True | n/a | n/a | default | 4 / 20 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| claude-opus-5.5 / max / default | True | n/a | n/a | default | 4 / 20 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| claude-opus-5.5 / xhigh / default | True | n/a | n/a | default | 4 / 20 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| claude-sonnet-4.6 / high / default | False | capabilities_stale | model_retirement_scope_unconfirmed | default | 3 / 15 | 2026-10-26T07:16:06.8357115Z | 2026-07-30 |
+| claude-sonnet-4.6 / max / default | False | capabilities_stale | model_retirement_scope_unconfirmed | default | 3 / 15 | 2026-10-26T07:16:06.8357115Z | 2026-07-30 |
+| claude-sonnet-5 / high / default | True | n/a | n/a | default | 2 / 10 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| claude-sonnet-5 / max / default | True | n/a | n/a | default | 2 / 10 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| claude-sonnet-5 / xhigh / default | True | n/a | n/a | default | 2 / 10 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| claude-sonnet-5.5 / high / default | True | n/a | n/a | default | 2 / 10 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| claude-sonnet-5.5 / max / default | True | n/a | n/a | default | 2 / 10 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| claude-sonnet-5.5 / xhigh / default | True | n/a | n/a | default | 2 / 10 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| gemini-3.8-flash / high / default | True | n/a | n/a | default | 0.75 / 3.75 | 2026-10-26T07:16:06.8357115Z | 2026-09-08 |
+| gpt-5.3-codex / high / default | True | n/a | n/a | default | 1.75 / 14 | 2026-10-26T07:16:06.8357115Z | 2026-09-08 |
+| gpt-5.3-codex / xhigh / default | True | n/a | n/a | default | 1.75 / 14 | 2026-10-26T07:16:06.8357115Z | 2026-09-08 |
+| gpt-5.6-luna / high / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| gpt-5.6-luna / max / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| gpt-5.6-luna / xhigh / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| gpt-5.6-sol / high / default | True | n/a | n/a | default | 4 / 20 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| gpt-5.6-sol / max / default | True | n/a | n/a | default | 4 / 20 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| gpt-5.6-sol / xhigh / default | True | n/a | n/a | default | 4 / 20 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| gpt-5.6-terra / high / default | True | n/a | n/a | default | 2 / 12 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| gpt-5.6-terra / max / default | True | n/a | n/a | default | 2 / 12 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| gpt-5.6-terra / xhigh / default | True | n/a | n/a | default | 2 / 12 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| gpt-6-astra / high / default | True | n/a | n/a | default | 10 / 50 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| gpt-6-astra / max / default | True | n/a | n/a | default | 10 / 50 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| gpt-6-astra / xhigh / default | True | n/a | n/a | default | 10 / 50 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| gpt-6-luna / high / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| gpt-6-luna / max / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| gpt-6-luna / xhigh / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| gpt-6-sol / high / default | True | n/a | n/a | default | 2 / 10 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| gpt-6-sol / max / default | True | n/a | n/a | default | 2 / 10 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| gpt-6-sol / xhigh / default | True | n/a | n/a | default | 2 / 10 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| gpt-6.1-sol / high / default | True | n/a | n/a | default | 2 / 10 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| gpt-6.1-sol / max / default | True | n/a | n/a | default | 2 / 10 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| gpt-6.1-sol / xhigh / default | True | n/a | n/a | default | 2 / 10 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| grok-4.5 / high / default | True | n/a | n/a | default | 2 / 6 | 2026-10-26T07:16:06.8357115Z | 2026-09-08 |
+| grok-4.6 / high / default | True | n/a | n/a | default | 2 / 6 | 2026-10-26T07:16:06.8357115Z | 2026-09-08 |
+| grok-4.6 / xhigh / default | True | n/a | n/a | default | 2 / 6 | 2026-10-26T07:16:06.8357115Z | 2026-09-08 |
+| mai-code-1.1-flash / high / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
 
 | Model | Source | Exact alias / source label | Effort | Metric | Score | Publication age unknown | Cached | Harness | Role |
 |---|---|---|---|---|---|---|---|---|---|
-| claude-haiku-5.5 | artificialAnalysisCodingAgents | Claude Code - Haiku 5.5 (high) | high | codingAgentIndex | 0.350585020439 | True | False | Claude Code; variant da2f03dcda6604f53d83189400698b0a; external agent harness, not Copilot CLI | deciding |
-| claude-haiku-5.5 | artificialAnalysisCodingAgents | Claude Code - Haiku 5.5 (max) | max | codingAgentIndex | 0.364726098169 | True | False | Claude Code; variant 69061178d1f87a145d332b38f566b7d0; external agent harness, not Copilot CLI | deciding |
-| claude-haiku-5.5 | artificialAnalysisCodingAgents | Claude Code - Haiku 5.5 (xhigh) | xhigh | codingAgentIndex | 0.414392761952 | True | False | Claude Code; variant e52072ed5528ec319d2f8030a2cf63a2; external agent harness, not Copilot CLI | deciding |
-| claude-opus-5 | artificialAnalysisCodingAgents | Claude Code - Opus 5 (max) | max | codingAgentIndex | 0.597263672984 | True | False | Claude Code; variant 409518818f1e9ad21995d70631ab05b6; external agent harness, not Copilot CLI | deciding |
-| claude-opus-5.5 | artificialAnalysisCodingAgents | Claude Code - Opus 5.5 (max) | max | codingAgentIndex | 0.659885802549 | True | False | Claude Code; variant ab5074e404be48bbd4ac3c488ad9a3e2; external agent harness, not Copilot CLI | deciding |
-| claude-sonnet-5.5 | artificialAnalysisCodingAgents | Claude Code - Sonnet 5.5 (high) | high | codingAgentIndex | 0.550124904964 | True | False | Claude Code; variant 33e80f383dc644527161435b076798ad; external agent harness, not Copilot CLI | deciding |
-| claude-sonnet-5.5 | artificialAnalysisCodingAgents | Claude Code - Sonnet 5.5 (max) | max | codingAgentIndex | 0.683578337375 | True | False | Claude Code; variant a2c87c062f3cef73d8525e7578f14742; external agent harness, not Copilot CLI | deciding |
-| claude-sonnet-5.5 | artificialAnalysisCodingAgents | Claude Code - Sonnet 5.5 (xhigh) | xhigh | codingAgentIndex | 0.628713868151 | True | False | Claude Code; variant 666605c66ad569c503ce53c01682e285; external agent harness, not Copilot CLI | deciding |
-| gemini-3.8-flash | artificialAnalysisCodingAgents | Antigravity SDK - Gemini 3.8 Flash (high) | high | codingAgentIndex | 0.418631552945 | True | False | Antigravity SDK v0.1.12; variant d1003684d8f29b95a3b14d2a7722221a; external agent harness, not Copilot CLI | deciding |
-| gpt-5.6-luna | artificialAnalysisCodingAgents | Codex - GPT-5.6 Luna (max) | max | codingAgentIndex | 0.432246866803 | True | False | Codex; variant b3c56ec69185d544992fd578edb75e8c; external agent harness, not Copilot CLI | deciding |
-| gpt-5.6-sol | artificialAnalysisCodingAgents | Codex - GPT-5.6 Sol (max) ({'reasoning_effort': 'max'}) | max | codingAgentIndex | 0.545591272896 | True | False | Codex; variant 709f801275dedae5675b1f56e97c9df3; external agent harness, not Copilot CLI | deciding |
-| gpt-6-astra | artificialAnalysisCodingAgents | Codex - GPT-6 Astra (max) | max | codingAgentIndex | 0.616450449879 | True | False | Codex; variant 9e810ff3c6cce5ebaaff7c744c687a47; external agent harness, not Copilot CLI | deciding |
-| gpt-6-luna | artificialAnalysisCodingAgents | Codex - GPT-6 Luna (max) ({'reasoning_effort': 'max'}) | max | codingAgentIndex | 0.410743893402 | True | False | Codex; variant ac8276cd5d15ac2daacb9956ad44c132; external agent harness, not Copilot CLI | deciding |
-| gpt-6-sol | artificialAnalysisCodingAgents | Codex - GPT-6 Sol (max) | max | codingAgentIndex | 0.566625912758 | True | False | Codex; variant 7a0dfd2a7a9d93056f860d4675586d66; external agent harness, not Copilot CLI | deciding |
-| gpt-6.1-sol | artificialAnalysisCodingAgents | Codex - GPT-6.1 Sol (high) ({'reasoning_effort': 'high'}) | high | codingAgentIndex | 0.601492371618 | True | False | Codex; variant 4aee8aa2d4a0bad6068644f40edae235; external agent harness, not Copilot CLI | deciding |
-| gpt-6.1-sol | artificialAnalysisCodingAgents | Codex - GPT-6.1 Sol (max) | max | codingAgentIndex | 0.60147507043 | True | False | Codex; variant ea296ce785422d3b97cfff4427f2e0d2; external agent harness, not Copilot CLI | deciding |
-| gpt-6.1-sol | artificialAnalysisCodingAgents | Codex - GPT-6.1 Sol (xhigh) ({'reasoning_effort': 'xhigh'}) | xhigh | codingAgentIndex | 0.629077673682 | True | False | Codex; variant ed8c1d0b0a2fe4560bbfa0a9f47e8941; external agent harness, not Copilot CLI | deciding |
-| grok-4.6 | artificialAnalysisCodingAgents | Grok Build - Grok 4.6 (xhigh) | xhigh | codingAgentIndex | 0.469689520574 | True | False | Grok Build; variant 70a5d300021b9986f77d4198272ef1a5; external agent harness, not Copilot CLI | deciding |
+| claude-haiku-5.5 | artificialAnalysisCodingAgents | Claude Code - Haiku 5.5 (max) | max | codingAgentIndex | 0.373496050722 | True | False | Claude Code; variant 2a2fed494e0d1343b14efe96e6bc3669; external agent harness, not Copilot CLI | deciding |
+| claude-opus-5.5 | artificialAnalysisCodingAgents | Claude Code - Opus 5.5 (max) | max | codingAgentIndex | 0.616528649506 | True | False | Claude Code; variant f8b3c23615b8b60e23364c27e8494d6d; external agent harness, not Copilot CLI | deciding |
+| claude-sonnet-5.5 | artificialAnalysisCodingAgents | Claude Code - Sonnet 5.5 (max) | max | codingAgentIndex | 0.593374426632 | True | False | Claude Code; variant 9983e10d68576074ad63407d0ca81e4b; external agent harness, not Copilot CLI | deciding |
+| gemini-3.8-flash | artificialAnalysisCodingAgents | Antigravity SDK - Gemini 3.8 Flash (high) | high | codingAgentIndex | 0.332723011187 | True | False | Antigravity SDK v0.1.12; variant e17ee3a79eab160154a92f31c6c2b1fa; external agent harness, not Copilot CLI | deciding |
+| gpt-6-astra | artificialAnalysisCodingAgents | Codex - GPT-6 Astra (max) | max | codingAgentIndex | 0.546635690562 | True | False | Codex; variant 34e0f78892fac8fd39aff6595d04610e; external agent harness, not Copilot CLI | deciding |
+| gpt-6-luna | artificialAnalysisCodingAgents | Codex - GPT-6 Luna (max) ({'reasoning_effort': 'max'}) | max | codingAgentIndex | 0.311260251113 | True | False | Codex; variant c54a3c8e7e89d5a784e98211605eaa53; external agent harness, not Copilot CLI | deciding |
+| gpt-6.1-sol | artificialAnalysisCodingAgents | Codex - GPT-6.1 Sol (max) | max | codingAgentIndex | 0.541279798631 | True | False | Codex; variant 3897d72a57138fd2e2353367570b4b37; external agent harness, not Copilot CLI | deciding |
 | claude-haiku-5.5 | liveBench | claude-haiku-5-5-max-effort | max | agenticCoding | 57.1716666667 | True | False | source benchmark harness, not Copilot CLI | authorized fallback |
 | claude-haiku-5.5 | liveBench | claude-haiku-5-5-xhigh-effort | xhigh | agenticCoding | 51.3636666667 | True | False | source benchmark harness, not Copilot CLI | authorized fallback |
 | claude-opus-4.8 | liveBench | claude-opus-4-8-max-effort | max | agenticCoding | 50.505 | True | False | source benchmark harness, not Copilot CLI | authorized fallback |
@@ -1216,58 +1209,58 @@ None: the configured role dimensions are binding qualification requirements.
 
 | Configuration (model / effort / context) | Budget/capability eligible | Exclusions | Advisory warnings | Price tier | Input / output USD per M | Price verified | Capability as-of |
 |---|---|---|---|---|---|---|---|
-| claude-haiku-4.5 / none / long_context | False | context_unsupported | n/a | default | 1 / 5 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| claude-haiku-5.5 / high / long_context | True | n/a | n/a | long_context | 0.5 / 2.5 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| claude-haiku-5.5 / max / long_context | True | n/a | n/a | long_context | 0.5 / 2.5 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| claude-haiku-5.5 / xhigh / long_context | True | n/a | n/a | long_context | 0.5 / 2.5 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| claude-opus-4.8 / high / long_context | True | n/a | n/a | default | 5 / 25 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| claude-opus-4.8 / max / long_context | True | n/a | n/a | default | 5 / 25 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| claude-opus-4.8 / xhigh / long_context | True | n/a | n/a | default | 5 / 25 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| claude-opus-4.8-fast / high / long_context | False | pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| claude-opus-4.8-fast / max / long_context | False | pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| claude-opus-4.8-fast / xhigh / long_context | False | pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| claude-opus-5 / high / long_context | True | n/a | n/a | default | 5 / 25 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| claude-opus-5 / max / long_context | True | n/a | n/a | default | 5 / 25 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| claude-opus-5 / xhigh / long_context | True | n/a | n/a | default | 5 / 25 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| claude-opus-5.5 / high / long_context | True | n/a | n/a | default | 4 / 20 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| claude-opus-5.5 / max / long_context | True | n/a | n/a | default | 4 / 20 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| claude-opus-5.5 / xhigh / long_context | True | n/a | n/a | default | 4 / 20 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| claude-sonnet-4.6 / high / long_context | False | capabilities_stale | model_retirement_scope_unconfirmed | default | 3 / 15 | 2026-10-20T13:31:27.9077693Z | 2026-07-30 |
-| claude-sonnet-4.6 / max / long_context | False | capabilities_stale | model_retirement_scope_unconfirmed | default | 3 / 15 | 2026-10-20T13:31:27.9077693Z | 2026-07-30 |
-| claude-sonnet-5 / high / long_context | True | n/a | n/a | default | 2 / 10 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| claude-sonnet-5 / max / long_context | True | n/a | n/a | default | 2 / 10 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| claude-sonnet-5 / xhigh / long_context | True | n/a | n/a | default | 2 / 10 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| claude-sonnet-5.5 / high / long_context | True | n/a | n/a | default | 2 / 10 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| claude-sonnet-5.5 / max / long_context | True | n/a | n/a | default | 2 / 10 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| claude-sonnet-5.5 / xhigh / long_context | True | n/a | n/a | default | 2 / 10 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| gemini-3.8-flash / high / long_context | True | n/a | n/a | default | 0.75 / 3.75 | 2026-10-20T13:31:27.9077693Z | 2026-09-08 |
-| gpt-5.3-codex / high / long_context | False | context_unsupported | n/a | default | 1.75 / 14 | 2026-10-20T13:31:27.9077693Z | 2026-09-08 |
-| gpt-5.3-codex / xhigh / long_context | False | context_unsupported | n/a | default | 1.75 / 14 | 2026-10-20T13:31:27.9077693Z | 2026-09-08 |
-| gpt-5.6-luna / high / long_context | True | n/a | n/a | long_context | 0.4 / 1.8 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| gpt-5.6-luna / max / long_context | True | n/a | n/a | long_context | 0.4 / 1.8 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| gpt-5.6-luna / xhigh / long_context | True | n/a | n/a | long_context | 0.4 / 1.8 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| gpt-5.6-sol / high / long_context | True | n/a | n/a | long_context | 8 / 30 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| gpt-5.6-sol / max / long_context | True | n/a | n/a | long_context | 8 / 30 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| gpt-5.6-sol / xhigh / long_context | True | n/a | n/a | long_context | 8 / 30 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| gpt-5.6-terra / high / long_context | True | n/a | n/a | long_context | 4 / 18 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| gpt-5.6-terra / max / long_context | True | n/a | n/a | long_context | 4 / 18 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| gpt-5.6-terra / xhigh / long_context | True | n/a | n/a | long_context | 4 / 18 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| gpt-6-astra / high / long_context | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | long_context | 20 / 75 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| gpt-6-astra / max / long_context | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | long_context | 20 / 75 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| gpt-6-astra / xhigh / long_context | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | long_context | 20 / 75 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| gpt-6-luna / high / long_context | True | n/a | n/a | long_context | 0.2 / 0.75 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| gpt-6-luna / max / long_context | True | n/a | n/a | long_context | 0.2 / 0.75 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| gpt-6-luna / xhigh / long_context | True | n/a | n/a | long_context | 0.2 / 0.75 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| gpt-6-sol / high / long_context | True | n/a | n/a | long_context | 4 / 15 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| gpt-6-sol / max / long_context | True | n/a | n/a | long_context | 4 / 15 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| gpt-6-sol / xhigh / long_context | True | n/a | n/a | long_context | 4 / 15 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| gpt-6.1-sol / high / long_context | True | n/a | n/a | long_context | 4 / 15 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| gpt-6.1-sol / max / long_context | True | n/a | n/a | long_context | 4 / 15 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| gpt-6.1-sol / xhigh / long_context | True | n/a | n/a | long_context | 4 / 15 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| grok-4.5 / high / long_context | True | n/a | n/a | long_context | 4 / 12 | 2026-10-20T13:31:27.9077693Z | 2026-09-08 |
-| grok-4.6 / high / long_context | True | n/a | n/a | long_context | 4 / 12 | 2026-10-20T13:31:27.9077693Z | 2026-09-08 |
-| grok-4.6 / xhigh / long_context | True | n/a | n/a | long_context | 4 / 12 | 2026-10-20T13:31:27.9077693Z | 2026-09-08 |
-| mai-code-1.1-flash / high / long_context | False | context_unsupported | n/a | default | 0.2 / 1.2 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
+| claude-haiku-4.5 / none / long_context | False | context_unsupported | n/a | default | 1 / 5 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| claude-haiku-5.5 / high / long_context | True | n/a | n/a | long_context | 0.5 / 2.5 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| claude-haiku-5.5 / max / long_context | True | n/a | n/a | long_context | 0.5 / 2.5 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| claude-haiku-5.5 / xhigh / long_context | True | n/a | n/a | long_context | 0.5 / 2.5 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| claude-opus-4.8 / high / long_context | True | n/a | n/a | default | 5 / 25 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| claude-opus-4.8 / max / long_context | True | n/a | n/a | default | 5 / 25 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| claude-opus-4.8 / xhigh / long_context | True | n/a | n/a | default | 5 / 25 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| claude-opus-4.8-fast / high / long_context | False | pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| claude-opus-4.8-fast / max / long_context | False | pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| claude-opus-4.8-fast / xhigh / long_context | False | pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| claude-opus-5 / high / long_context | True | n/a | n/a | default | 5 / 25 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| claude-opus-5 / max / long_context | True | n/a | n/a | default | 5 / 25 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| claude-opus-5 / xhigh / long_context | True | n/a | n/a | default | 5 / 25 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| claude-opus-5.5 / high / long_context | True | n/a | n/a | default | 4 / 20 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| claude-opus-5.5 / max / long_context | True | n/a | n/a | default | 4 / 20 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| claude-opus-5.5 / xhigh / long_context | True | n/a | n/a | default | 4 / 20 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| claude-sonnet-4.6 / high / long_context | False | capabilities_stale | model_retirement_scope_unconfirmed | default | 3 / 15 | 2026-10-26T07:16:06.8357115Z | 2026-07-30 |
+| claude-sonnet-4.6 / max / long_context | False | capabilities_stale | model_retirement_scope_unconfirmed | default | 3 / 15 | 2026-10-26T07:16:06.8357115Z | 2026-07-30 |
+| claude-sonnet-5 / high / long_context | True | n/a | n/a | default | 2 / 10 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| claude-sonnet-5 / max / long_context | True | n/a | n/a | default | 2 / 10 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| claude-sonnet-5 / xhigh / long_context | True | n/a | n/a | default | 2 / 10 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| claude-sonnet-5.5 / high / long_context | True | n/a | n/a | default | 2 / 10 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| claude-sonnet-5.5 / max / long_context | True | n/a | n/a | default | 2 / 10 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| claude-sonnet-5.5 / xhigh / long_context | True | n/a | n/a | default | 2 / 10 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| gemini-3.8-flash / high / long_context | True | n/a | n/a | default | 0.75 / 3.75 | 2026-10-26T07:16:06.8357115Z | 2026-09-08 |
+| gpt-5.3-codex / high / long_context | False | context_unsupported | n/a | default | 1.75 / 14 | 2026-10-26T07:16:06.8357115Z | 2026-09-08 |
+| gpt-5.3-codex / xhigh / long_context | False | context_unsupported | n/a | default | 1.75 / 14 | 2026-10-26T07:16:06.8357115Z | 2026-09-08 |
+| gpt-5.6-luna / high / long_context | True | n/a | n/a | long_context | 0.4 / 1.8 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| gpt-5.6-luna / max / long_context | True | n/a | n/a | long_context | 0.4 / 1.8 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| gpt-5.6-luna / xhigh / long_context | True | n/a | n/a | long_context | 0.4 / 1.8 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| gpt-5.6-sol / high / long_context | True | n/a | n/a | long_context | 8 / 30 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| gpt-5.6-sol / max / long_context | True | n/a | n/a | long_context | 8 / 30 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| gpt-5.6-sol / xhigh / long_context | True | n/a | n/a | long_context | 8 / 30 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| gpt-5.6-terra / high / long_context | True | n/a | n/a | long_context | 4 / 18 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| gpt-5.6-terra / max / long_context | True | n/a | n/a | long_context | 4 / 18 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| gpt-5.6-terra / xhigh / long_context | True | n/a | n/a | long_context | 4 / 18 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| gpt-6-astra / high / long_context | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | long_context | 20 / 75 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| gpt-6-astra / max / long_context | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | long_context | 20 / 75 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| gpt-6-astra / xhigh / long_context | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | long_context | 20 / 75 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| gpt-6-luna / high / long_context | True | n/a | n/a | long_context | 0.2 / 0.75 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| gpt-6-luna / max / long_context | True | n/a | n/a | long_context | 0.2 / 0.75 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| gpt-6-luna / xhigh / long_context | True | n/a | n/a | long_context | 0.2 / 0.75 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| gpt-6-sol / high / long_context | True | n/a | n/a | long_context | 4 / 15 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| gpt-6-sol / max / long_context | True | n/a | n/a | long_context | 4 / 15 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| gpt-6-sol / xhigh / long_context | True | n/a | n/a | long_context | 4 / 15 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| gpt-6.1-sol / high / long_context | True | n/a | n/a | long_context | 4 / 15 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| gpt-6.1-sol / max / long_context | True | n/a | n/a | long_context | 4 / 15 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| gpt-6.1-sol / xhigh / long_context | True | n/a | n/a | long_context | 4 / 15 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| grok-4.5 / high / long_context | True | n/a | n/a | long_context | 4 / 12 | 2026-10-26T07:16:06.8357115Z | 2026-09-08 |
+| grok-4.6 / high / long_context | True | n/a | n/a | long_context | 4 / 12 | 2026-10-26T07:16:06.8357115Z | 2026-09-08 |
+| grok-4.6 / xhigh / long_context | True | n/a | n/a | long_context | 4 / 12 | 2026-10-26T07:16:06.8357115Z | 2026-09-08 |
+| mai-code-1.1-flash / high / long_context | False | context_unsupported | n/a | default | 0.2 / 1.2 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
 
 | Model | Source | Exact alias / source label | Effort | Metric | Score | Publication age unknown | Cached | Harness | Role |
 |---|---|---|---|---|---|---|---|---|---|
@@ -1455,47 +1448,47 @@ None: the configured role dimensions are binding qualification requirements.
 
 | Configuration (model / effort / context) | Budget/capability eligible | Exclusions | Advisory warnings | Price tier | Input / output USD per M | Price verified | Capability as-of |
 |---|---|---|---|---|---|---|---|
-| claude-haiku-4.5 / none / default | True | n/a | n/a | default | 1 / 5 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| claude-haiku-5.5 / high / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| claude-haiku-5.5 / medium / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| claude-opus-4.8 / high / default | True | n/a | n/a | default | 5 / 25 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| claude-opus-4.8 / medium / default | True | n/a | n/a | default | 5 / 25 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| claude-opus-4.8-fast / high / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| claude-opus-4.8-fast / medium / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| claude-opus-5 / high / default | True | n/a | n/a | default | 5 / 25 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| claude-opus-5 / medium / default | True | n/a | n/a | default | 5 / 25 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| claude-opus-5.5 / high / default | True | n/a | n/a | default | 4 / 20 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| claude-opus-5.5 / medium / default | True | n/a | n/a | default | 4 / 20 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| claude-sonnet-4.6 / high / default | False | capabilities_stale | model_retirement_scope_unconfirmed | default | 3 / 15 | 2026-10-20T13:31:27.9077693Z | 2026-07-30 |
-| claude-sonnet-4.6 / medium / default | False | capabilities_stale | model_retirement_scope_unconfirmed | default | 3 / 15 | 2026-10-20T13:31:27.9077693Z | 2026-07-30 |
-| claude-sonnet-5 / high / default | True | n/a | n/a | default | 2 / 10 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| claude-sonnet-5 / medium / default | True | n/a | n/a | default | 2 / 10 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| claude-sonnet-5.5 / high / default | True | n/a | n/a | default | 2 / 10 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| claude-sonnet-5.5 / medium / default | True | n/a | n/a | default | 2 / 10 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| gemini-3.8-flash / high / default | True | n/a | n/a | default | 0.75 / 3.75 | 2026-10-20T13:31:27.9077693Z | 2026-09-08 |
-| gemini-3.8-flash / medium / default | True | n/a | n/a | default | 0.75 / 3.75 | 2026-10-20T13:31:27.9077693Z | 2026-09-08 |
-| gpt-5.3-codex / high / default | True | n/a | n/a | default | 1.75 / 14 | 2026-10-20T13:31:27.9077693Z | 2026-09-08 |
-| gpt-5.3-codex / medium / default | True | n/a | n/a | default | 1.75 / 14 | 2026-10-20T13:31:27.9077693Z | 2026-09-08 |
-| gpt-5.6-luna / high / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| gpt-5.6-luna / medium / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| gpt-5.6-sol / high / default | True | n/a | n/a | default | 4 / 20 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| gpt-5.6-sol / medium / default | True | n/a | n/a | default | 4 / 20 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| gpt-5.6-terra / high / default | True | n/a | n/a | default | 2 / 12 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| gpt-5.6-terra / medium / default | True | n/a | n/a | default | 2 / 12 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| gpt-6-astra / high / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| gpt-6-astra / medium / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| gpt-6-luna / high / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| gpt-6-luna / medium / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| gpt-6-sol / high / default | True | n/a | n/a | default | 2 / 10 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| gpt-6-sol / medium / default | True | n/a | n/a | default | 2 / 10 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| gpt-6.1-sol / high / default | True | n/a | n/a | default | 2 / 10 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| gpt-6.1-sol / medium / default | True | n/a | n/a | default | 2 / 10 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| grok-4.5 / high / default | True | n/a | n/a | default | 2 / 6 | 2026-10-20T13:31:27.9077693Z | 2026-09-08 |
-| grok-4.5 / medium / default | True | n/a | n/a | default | 2 / 6 | 2026-10-20T13:31:27.9077693Z | 2026-09-08 |
-| grok-4.6 / high / default | True | n/a | n/a | default | 2 / 6 | 2026-10-20T13:31:27.9077693Z | 2026-09-08 |
-| grok-4.6 / medium / default | True | n/a | n/a | default | 2 / 6 | 2026-10-20T13:31:27.9077693Z | 2026-09-08 |
-| mai-code-1.1-flash / high / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| mai-code-1.1-flash / medium / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
+| claude-haiku-4.5 / none / default | True | n/a | n/a | default | 1 / 5 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| claude-haiku-5.5 / high / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| claude-haiku-5.5 / medium / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| claude-opus-4.8 / high / default | True | n/a | n/a | default | 5 / 25 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| claude-opus-4.8 / medium / default | True | n/a | n/a | default | 5 / 25 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| claude-opus-4.8-fast / high / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| claude-opus-4.8-fast / medium / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| claude-opus-5 / high / default | True | n/a | n/a | default | 5 / 25 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| claude-opus-5 / medium / default | True | n/a | n/a | default | 5 / 25 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| claude-opus-5.5 / high / default | True | n/a | n/a | default | 4 / 20 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| claude-opus-5.5 / medium / default | True | n/a | n/a | default | 4 / 20 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| claude-sonnet-4.6 / high / default | False | capabilities_stale | model_retirement_scope_unconfirmed | default | 3 / 15 | 2026-10-26T07:16:06.8357115Z | 2026-07-30 |
+| claude-sonnet-4.6 / medium / default | False | capabilities_stale | model_retirement_scope_unconfirmed | default | 3 / 15 | 2026-10-26T07:16:06.8357115Z | 2026-07-30 |
+| claude-sonnet-5 / high / default | True | n/a | n/a | default | 2 / 10 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| claude-sonnet-5 / medium / default | True | n/a | n/a | default | 2 / 10 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| claude-sonnet-5.5 / high / default | True | n/a | n/a | default | 2 / 10 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| claude-sonnet-5.5 / medium / default | True | n/a | n/a | default | 2 / 10 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| gemini-3.8-flash / high / default | True | n/a | n/a | default | 0.75 / 3.75 | 2026-10-26T07:16:06.8357115Z | 2026-09-08 |
+| gemini-3.8-flash / medium / default | True | n/a | n/a | default | 0.75 / 3.75 | 2026-10-26T07:16:06.8357115Z | 2026-09-08 |
+| gpt-5.3-codex / high / default | True | n/a | n/a | default | 1.75 / 14 | 2026-10-26T07:16:06.8357115Z | 2026-09-08 |
+| gpt-5.3-codex / medium / default | True | n/a | n/a | default | 1.75 / 14 | 2026-10-26T07:16:06.8357115Z | 2026-09-08 |
+| gpt-5.6-luna / high / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| gpt-5.6-luna / medium / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| gpt-5.6-sol / high / default | True | n/a | n/a | default | 4 / 20 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| gpt-5.6-sol / medium / default | True | n/a | n/a | default | 4 / 20 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| gpt-5.6-terra / high / default | True | n/a | n/a | default | 2 / 12 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| gpt-5.6-terra / medium / default | True | n/a | n/a | default | 2 / 12 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| gpt-6-astra / high / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| gpt-6-astra / medium / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| gpt-6-luna / high / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| gpt-6-luna / medium / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| gpt-6-sol / high / default | True | n/a | n/a | default | 2 / 10 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| gpt-6-sol / medium / default | True | n/a | n/a | default | 2 / 10 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| gpt-6.1-sol / high / default | True | n/a | n/a | default | 2 / 10 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| gpt-6.1-sol / medium / default | True | n/a | n/a | default | 2 / 10 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| grok-4.5 / high / default | True | n/a | n/a | default | 2 / 6 | 2026-10-26T07:16:06.8357115Z | 2026-09-08 |
+| grok-4.5 / medium / default | True | n/a | n/a | default | 2 / 6 | 2026-10-26T07:16:06.8357115Z | 2026-09-08 |
+| grok-4.6 / high / default | True | n/a | n/a | default | 2 / 6 | 2026-10-26T07:16:06.8357115Z | 2026-09-08 |
+| grok-4.6 / medium / default | True | n/a | n/a | default | 2 / 6 | 2026-10-26T07:16:06.8357115Z | 2026-09-08 |
+| mai-code-1.1-flash / high / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| mai-code-1.1-flash / medium / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
 
 | Model | Source | Exact alias / source label | Effort | Metric | Score | Publication age unknown | Cached | Harness | Role |
 |---|---|---|---|---|---|---|---|---|---|
@@ -1651,47 +1644,47 @@ None: the configured role dimensions are binding qualification requirements.
 
 | Configuration (model / effort / context) | Budget/capability eligible | Exclusions | Advisory warnings | Price tier | Input / output USD per M | Price verified | Capability as-of |
 |---|---|---|---|---|---|---|---|
-| claude-haiku-4.5 / none / default | True | n/a | n/a | default | 1 / 5 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| claude-haiku-5.5 / high / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| claude-haiku-5.5 / medium / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| claude-opus-4.8 / high / default | True | n/a | n/a | default | 5 / 25 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| claude-opus-4.8 / medium / default | True | n/a | n/a | default | 5 / 25 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| claude-opus-4.8-fast / high / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| claude-opus-4.8-fast / medium / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| claude-opus-5 / high / default | True | n/a | n/a | default | 5 / 25 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| claude-opus-5 / medium / default | True | n/a | n/a | default | 5 / 25 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| claude-opus-5.5 / high / default | True | n/a | n/a | default | 4 / 20 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| claude-opus-5.5 / medium / default | True | n/a | n/a | default | 4 / 20 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| claude-sonnet-4.6 / high / default | False | capabilities_stale | model_retirement_scope_unconfirmed | default | 3 / 15 | 2026-10-20T13:31:27.9077693Z | 2026-07-30 |
-| claude-sonnet-4.6 / medium / default | False | capabilities_stale | model_retirement_scope_unconfirmed | default | 3 / 15 | 2026-10-20T13:31:27.9077693Z | 2026-07-30 |
-| claude-sonnet-5 / high / default | True | n/a | n/a | default | 2 / 10 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| claude-sonnet-5 / medium / default | True | n/a | n/a | default | 2 / 10 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| claude-sonnet-5.5 / high / default | True | n/a | n/a | default | 2 / 10 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| claude-sonnet-5.5 / medium / default | True | n/a | n/a | default | 2 / 10 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| gemini-3.8-flash / high / default | True | n/a | n/a | default | 0.75 / 3.75 | 2026-10-20T13:31:27.9077693Z | 2026-09-08 |
-| gemini-3.8-flash / medium / default | True | n/a | n/a | default | 0.75 / 3.75 | 2026-10-20T13:31:27.9077693Z | 2026-09-08 |
-| gpt-5.3-codex / high / default | False | vision_unknown | n/a | default | 1.75 / 14 | 2026-10-20T13:31:27.9077693Z | 2026-09-08 |
-| gpt-5.3-codex / medium / default | False | vision_unknown | n/a | default | 1.75 / 14 | 2026-10-20T13:31:27.9077693Z | 2026-09-08 |
-| gpt-5.6-luna / high / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| gpt-5.6-luna / medium / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| gpt-5.6-sol / high / default | True | n/a | n/a | default | 4 / 20 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| gpt-5.6-sol / medium / default | True | n/a | n/a | default | 4 / 20 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| gpt-5.6-terra / high / default | True | n/a | n/a | default | 2 / 12 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| gpt-5.6-terra / medium / default | True | n/a | n/a | default | 2 / 12 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| gpt-6-astra / high / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| gpt-6-astra / medium / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| gpt-6-luna / high / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| gpt-6-luna / medium / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| gpt-6-sol / high / default | True | n/a | n/a | default | 2 / 10 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| gpt-6-sol / medium / default | True | n/a | n/a | default | 2 / 10 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| gpt-6.1-sol / high / default | True | n/a | n/a | default | 2 / 10 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| gpt-6.1-sol / medium / default | True | n/a | n/a | default | 2 / 10 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| grok-4.5 / high / default | False | vision_unknown | n/a | default | 2 / 6 | 2026-10-20T13:31:27.9077693Z | 2026-09-08 |
-| grok-4.5 / medium / default | False | vision_unknown | n/a | default | 2 / 6 | 2026-10-20T13:31:27.9077693Z | 2026-09-08 |
-| grok-4.6 / high / default | True | n/a | n/a | default | 2 / 6 | 2026-10-20T13:31:27.9077693Z | 2026-09-08 |
-| grok-4.6 / medium / default | True | n/a | n/a | default | 2 / 6 | 2026-10-20T13:31:27.9077693Z | 2026-09-08 |
-| mai-code-1.1-flash / high / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| mai-code-1.1-flash / medium / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
+| claude-haiku-4.5 / none / default | True | n/a | n/a | default | 1 / 5 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| claude-haiku-5.5 / high / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| claude-haiku-5.5 / medium / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| claude-opus-4.8 / high / default | True | n/a | n/a | default | 5 / 25 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| claude-opus-4.8 / medium / default | True | n/a | n/a | default | 5 / 25 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| claude-opus-4.8-fast / high / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| claude-opus-4.8-fast / medium / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| claude-opus-5 / high / default | True | n/a | n/a | default | 5 / 25 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| claude-opus-5 / medium / default | True | n/a | n/a | default | 5 / 25 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| claude-opus-5.5 / high / default | True | n/a | n/a | default | 4 / 20 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| claude-opus-5.5 / medium / default | True | n/a | n/a | default | 4 / 20 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| claude-sonnet-4.6 / high / default | False | capabilities_stale | model_retirement_scope_unconfirmed | default | 3 / 15 | 2026-10-26T07:16:06.8357115Z | 2026-07-30 |
+| claude-sonnet-4.6 / medium / default | False | capabilities_stale | model_retirement_scope_unconfirmed | default | 3 / 15 | 2026-10-26T07:16:06.8357115Z | 2026-07-30 |
+| claude-sonnet-5 / high / default | True | n/a | n/a | default | 2 / 10 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| claude-sonnet-5 / medium / default | True | n/a | n/a | default | 2 / 10 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| claude-sonnet-5.5 / high / default | True | n/a | n/a | default | 2 / 10 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| claude-sonnet-5.5 / medium / default | True | n/a | n/a | default | 2 / 10 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| gemini-3.8-flash / high / default | True | n/a | n/a | default | 0.75 / 3.75 | 2026-10-26T07:16:06.8357115Z | 2026-09-08 |
+| gemini-3.8-flash / medium / default | True | n/a | n/a | default | 0.75 / 3.75 | 2026-10-26T07:16:06.8357115Z | 2026-09-08 |
+| gpt-5.3-codex / high / default | False | vision_unknown | n/a | default | 1.75 / 14 | 2026-10-26T07:16:06.8357115Z | 2026-09-08 |
+| gpt-5.3-codex / medium / default | False | vision_unknown | n/a | default | 1.75 / 14 | 2026-10-26T07:16:06.8357115Z | 2026-09-08 |
+| gpt-5.6-luna / high / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| gpt-5.6-luna / medium / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| gpt-5.6-sol / high / default | True | n/a | n/a | default | 4 / 20 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| gpt-5.6-sol / medium / default | True | n/a | n/a | default | 4 / 20 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| gpt-5.6-terra / high / default | True | n/a | n/a | default | 2 / 12 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| gpt-5.6-terra / medium / default | True | n/a | n/a | default | 2 / 12 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| gpt-6-astra / high / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| gpt-6-astra / medium / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| gpt-6-luna / high / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| gpt-6-luna / medium / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| gpt-6-sol / high / default | True | n/a | n/a | default | 2 / 10 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| gpt-6-sol / medium / default | True | n/a | n/a | default | 2 / 10 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| gpt-6.1-sol / high / default | True | n/a | n/a | default | 2 / 10 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| gpt-6.1-sol / medium / default | True | n/a | n/a | default | 2 / 10 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| grok-4.5 / high / default | False | vision_unknown | n/a | default | 2 / 6 | 2026-10-26T07:16:06.8357115Z | 2026-09-08 |
+| grok-4.5 / medium / default | False | vision_unknown | n/a | default | 2 / 6 | 2026-10-26T07:16:06.8357115Z | 2026-09-08 |
+| grok-4.6 / high / default | True | n/a | n/a | default | 2 / 6 | 2026-10-26T07:16:06.8357115Z | 2026-09-08 |
+| grok-4.6 / medium / default | True | n/a | n/a | default | 2 / 6 | 2026-10-26T07:16:06.8357115Z | 2026-09-08 |
+| mai-code-1.1-flash / high / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| mai-code-1.1-flash / medium / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
 
 | Model | Source | Exact alias / source label | Effort | Metric | Score | Publication age unknown | Cached | Harness | Role |
 |---|---|---|---|---|---|---|---|---|---|
@@ -1793,27 +1786,27 @@ None: the configured role dimensions are binding qualification requirements.
 
 | Configuration (model / effort / context) | Budget/capability eligible | Exclusions | Advisory warnings | Price tier | Input / output USD per M | Price verified | Capability as-of |
 |---|---|---|---|---|---|---|---|
-| claude-haiku-4.5 / none / default | True | n/a | n/a | default | 1 / 5 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| claude-haiku-5.5 / low / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| claude-opus-4.8 / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| claude-opus-4.8-fast / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| claude-opus-5 / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| claude-opus-5.5 / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 4 / 20 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| claude-sonnet-4.6 / low / default | False | capabilities_stale, pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | model_retirement_scope_unconfirmed | default | 3 / 15 | 2026-10-20T13:31:27.9077693Z | 2026-07-30 |
-| claude-sonnet-5 / low / default | True | n/a | n/a | default | 2 / 10 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| claude-sonnet-5.5 / low / default | True | n/a | n/a | default | 2 / 10 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| gemini-3.8-flash / low / default | True | n/a | n/a | default | 0.75 / 3.75 | 2026-10-20T13:31:27.9077693Z | 2026-09-08 |
-| gpt-5.3-codex / low / default | False | pricing_output_exceeds_ceiling | n/a | default | 1.75 / 14 | 2026-10-20T13:31:27.9077693Z | 2026-09-08 |
-| gpt-5.6-luna / low / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| gpt-5.6-sol / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 4 / 20 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| gpt-5.6-terra / low / default | False | pricing_output_exceeds_ceiling | n/a | default | 2 / 12 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| gpt-6-astra / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| gpt-6-luna / low / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| gpt-6-sol / low / default | True | n/a | n/a | default | 2 / 10 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| gpt-6.1-sol / low / default | True | n/a | n/a | default | 2 / 10 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| grok-4.5 / low / default | True | n/a | n/a | default | 2 / 6 | 2026-10-20T13:31:27.9077693Z | 2026-09-08 |
-| grok-4.6 / low / default | True | n/a | n/a | default | 2 / 6 | 2026-10-20T13:31:27.9077693Z | 2026-09-08 |
-| mai-code-1.1-flash / low / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
+| claude-haiku-4.5 / none / default | True | n/a | n/a | default | 1 / 5 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| claude-haiku-5.5 / low / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| claude-opus-4.8 / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| claude-opus-4.8-fast / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| claude-opus-5 / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| claude-opus-5.5 / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 4 / 20 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| claude-sonnet-4.6 / low / default | False | capabilities_stale, pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | model_retirement_scope_unconfirmed | default | 3 / 15 | 2026-10-26T07:16:06.8357115Z | 2026-07-30 |
+| claude-sonnet-5 / low / default | True | n/a | n/a | default | 2 / 10 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| claude-sonnet-5.5 / low / default | True | n/a | n/a | default | 2 / 10 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| gemini-3.8-flash / low / default | True | n/a | n/a | default | 0.75 / 3.75 | 2026-10-26T07:16:06.8357115Z | 2026-09-08 |
+| gpt-5.3-codex / low / default | False | pricing_output_exceeds_ceiling | n/a | default | 1.75 / 14 | 2026-10-26T07:16:06.8357115Z | 2026-09-08 |
+| gpt-5.6-luna / low / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| gpt-5.6-sol / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 4 / 20 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| gpt-5.6-terra / low / default | False | pricing_output_exceeds_ceiling | n/a | default | 2 / 12 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| gpt-6-astra / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| gpt-6-luna / low / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| gpt-6-sol / low / default | True | n/a | n/a | default | 2 / 10 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| gpt-6.1-sol / low / default | True | n/a | n/a | default | 2 / 10 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| grok-4.5 / low / default | True | n/a | n/a | default | 2 / 6 | 2026-10-26T07:16:06.8357115Z | 2026-09-08 |
+| grok-4.6 / low / default | True | n/a | n/a | default | 2 / 6 | 2026-10-26T07:16:06.8357115Z | 2026-09-08 |
+| mai-code-1.1-flash / low / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
 
 | Model | Source | Exact alias / source label | Effort | Metric | Score | Publication age unknown | Cached | Harness | Role |
 |---|---|---|---|---|---|---|---|---|---|
@@ -1893,27 +1886,27 @@ None: the configured role dimensions are binding qualification requirements.
 
 | Configuration (model / effort / context) | Budget/capability eligible | Exclusions | Advisory warnings | Price tier | Input / output USD per M | Price verified | Capability as-of |
 |---|---|---|---|---|---|---|---|
-| claude-haiku-4.5 / none / default | True | n/a | n/a | default | 1 / 5 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| claude-haiku-5.5 / low / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| claude-opus-4.8 / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| claude-opus-4.8-fast / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| claude-opus-5 / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| claude-opus-5.5 / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 4 / 20 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| claude-sonnet-4.6 / low / default | False | capabilities_stale, pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | model_retirement_scope_unconfirmed | default | 3 / 15 | 2026-10-20T13:31:27.9077693Z | 2026-07-30 |
-| claude-sonnet-5 / low / default | True | n/a | n/a | default | 2 / 10 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| claude-sonnet-5.5 / low / default | True | n/a | n/a | default | 2 / 10 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| gemini-3.8-flash / low / default | True | n/a | n/a | default | 0.75 / 3.75 | 2026-10-20T13:31:27.9077693Z | 2026-09-08 |
-| gpt-5.3-codex / low / default | False | pricing_output_exceeds_ceiling | n/a | default | 1.75 / 14 | 2026-10-20T13:31:27.9077693Z | 2026-09-08 |
-| gpt-5.6-luna / low / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| gpt-5.6-sol / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 4 / 20 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| gpt-5.6-terra / low / default | False | pricing_output_exceeds_ceiling | n/a | default | 2 / 12 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| gpt-6-astra / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| gpt-6-luna / low / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| gpt-6-sol / low / default | True | n/a | n/a | default | 2 / 10 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| gpt-6.1-sol / low / default | True | n/a | n/a | default | 2 / 10 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
-| grok-4.5 / low / default | True | n/a | n/a | default | 2 / 6 | 2026-10-20T13:31:27.9077693Z | 2026-09-08 |
-| grok-4.6 / low / default | True | n/a | n/a | default | 2 / 6 | 2026-10-20T13:31:27.9077693Z | 2026-09-08 |
-| mai-code-1.1-flash / low / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-10-20T13:31:27.9077693Z | 2026-10-20T10:22:23.114Z |
+| claude-haiku-4.5 / none / default | True | n/a | n/a | default | 1 / 5 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| claude-haiku-5.5 / low / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| claude-opus-4.8 / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| claude-opus-4.8-fast / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| claude-opus-5 / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| claude-opus-5.5 / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 4 / 20 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| claude-sonnet-4.6 / low / default | False | capabilities_stale, pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | model_retirement_scope_unconfirmed | default | 3 / 15 | 2026-10-26T07:16:06.8357115Z | 2026-07-30 |
+| claude-sonnet-5 / low / default | True | n/a | n/a | default | 2 / 10 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| claude-sonnet-5.5 / low / default | True | n/a | n/a | default | 2 / 10 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| gemini-3.8-flash / low / default | True | n/a | n/a | default | 0.75 / 3.75 | 2026-10-26T07:16:06.8357115Z | 2026-09-08 |
+| gpt-5.3-codex / low / default | False | pricing_output_exceeds_ceiling | n/a | default | 1.75 / 14 | 2026-10-26T07:16:06.8357115Z | 2026-09-08 |
+| gpt-5.6-luna / low / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| gpt-5.6-sol / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 4 / 20 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| gpt-5.6-terra / low / default | False | pricing_output_exceeds_ceiling | n/a | default | 2 / 12 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| gpt-6-astra / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| gpt-6-luna / low / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| gpt-6-sol / low / default | True | n/a | n/a | default | 2 / 10 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| gpt-6.1-sol / low / default | True | n/a | n/a | default | 2 / 10 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
+| grok-4.5 / low / default | True | n/a | n/a | default | 2 / 6 | 2026-10-26T07:16:06.8357115Z | 2026-09-08 |
+| grok-4.6 / low / default | True | n/a | n/a | default | 2 / 6 | 2026-10-26T07:16:06.8357115Z | 2026-09-08 |
+| mai-code-1.1-flash / low / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-10-26T07:16:06.8357115Z | 2026-10-20T10:22:23.114Z |
 
 | Model | Source | Exact alias / source label | Effort | Metric | Score | Publication age unknown | Cached | Harness | Role |
 |---|---|---|---|---|---|---|---|---|---|
