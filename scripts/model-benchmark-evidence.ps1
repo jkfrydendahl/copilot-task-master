@@ -143,10 +143,14 @@ function Get-ProfileBenchmarkEvidence {
                 }
                 $record = Get-ObjectMemberValue (Get-ObjectMemberValue $source "models") $alias
             }
-            if ($sourceName -eq "artificialAnalysisComponents") {
+            if ($sourceName -in @("artificialAnalysis", "artificialAnalysisComponents")) {
                 $publishedEffort = Get-ObjectMemberValue $record "effort"
                 $name = [string](Get-ObjectMemberValue $record "name")
+                $namedEffort = if ($name -match '\((?<effort>none|minimal|low|medium|high|xhigh|max)\)') {
+                    $Matches.effort.ToLowerInvariant()
+                } else { $null }
                 if (($null -ne $publishedEffort -and $publishedEffort -ne $effort) -or
+                    ($null -ne $namedEffort -and $namedEffort -ne $effort) -or
                     $name -match '(?i)\bfallback\b|\bensemble\b|\s\+\s') {
                     $diagnostics.Add("${model}: ${metricKey} identity_ambiguous_or_effort_mismatch")
                     continue

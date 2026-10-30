@@ -116,6 +116,87 @@ These agent profiles pin the class model in frontmatter (`model: ...`), so the o
 
 > Cost note: routing/delegation can improve quality and context isolation, but can also increase total AI-credit usage (more independent LLM round-trips). It's not automatically cheaper.
 
+### Controlled orchestration evaluation
+
+The advisory runner exercises real model inference with fixture-backed `view`, `task`
+and denied-shell tools. It records actual delegation requests instead of trusting a
+model's claim that it delegated. It does **not** execute workers, give models host-file
+or shell access, certify a role, or change `task-profiles.json`.
+
+With the existing SDK dependency installed and the local CLI authenticated, run:
+
+```powershell
+node .\scripts\evaluate-orchestration.mjs `
+  --cli-path 'C:\Program Files\Microsoft VS Code\bin\copilot-shim\copilot.exe' `
+  --models grok-4.6,gpt-6.1-sol,claude-sonnet-5.5 `
+  --repetitions 3 `
+  --output .\reports\orchestration-evaluation.json
+```
+
+Use your actual CLI executable path. The SDK's bundled runtime can differ from the
+installed CLI; the report records the runtime queried and verifies actual
+model/effort/context before every turn. Candidates run at `high` / `default`, with
+rotated order and three fresh six-turn conversations each. A run with runtime errors,
+unexpected host access or configuration mismatches is invalid, not a zero score.
+This command consumes inference credits; `test-all.ps1` runs only offline harness tests.
+
+The six turns cover scoped instructions/untrusted data, architecture, approved bulk
+formatting, ordinary review, visual assessment, and returning to a tiny inline task.
+Expected invocation arguments come from the launcher's shared helper. Reports include
+the scenario manifest, exact requests, responses, usage, installed-agent argument
+audit, and input/harness fingerprints. Instruction checks observe fixture-tool request
+order, not the model's internal reasoning or real CLI instruction discovery.
+
+**2026-10-30 sample:** all nine conversations completed on CLI `1.0.105`.
+The original transcripts and initial grades are preserved in
+[`orchestration-evaluation.json`](reports/orchestration-evaluation.json).
+[`orchestration-evaluation-summary.json`](reports/orchestration-evaluation-summary.json)
+contains corrected version-2 scoring: the routing prefix is required only on the
+first substantive response, and root/scoped instructions must both precede task data,
+not necessarily each other. No model calls were rerun or discarded.
+
+Reproduce the corrected summary offline, without authentication or inference credits:
+
+```powershell
+node .\scripts\evaluate-orchestration.mjs `
+  --rescore .\reports\orchestration-evaluation.json `
+  --models grok-4.6,gpt-6.1-sol,claude-sonnet-5.5 `
+  --output .\reports\orchestration-evaluation-summary.json
+```
+
+An absent `scoringVersion` explicitly identifies the retained legacy version-1 grades.
+Legacy transcripts require `--models` to verify the intended conversation count;
+new transcripts record that manifest. Rescoring rejects duplicate/unplanned runs,
+marks incomplete or invalid evidence explicitly, and never overwrites the source
+transcript. Offline tests reproduce the committed summary from the raw transcript.
+The scorer and raw transcript use pinned LF endings so fingerprints survive Windows
+Git checkout conversion.
+
+| Model | Correct delegation agent/settings | Correct inline routing | Explicit per-delegation config rereads | First-response prefix | Fully compliant turns |
+|---|---|---|---|---|---|
+| Grok 4.6 | 12 / 12 | 6 / 6 | 3 / 12 | 3 / 3 | 9 / 18 |
+| GPT-6.1 Sol | 12 / 12 | 6 / 6 | 12 / 12 | 0 / 3 | 15 / 18 |
+| Claude Sonnet 5.5 | 12 / 12 | 6 / 6 | 4 / 12 | 1 / 3 | 8 / 18 |
+
+The full-compliance column includes both literal rereads and presentation requirements;
+it is not a worker-success or general orchestration score. GPT was most literal about
+the fixture's instruction to reread configuration files before **every** delegation,
+but omitted all three first-response routing prefixes; Sonnet omitted two, Grok none.
+Grok and Sonnet generally reused previously read settings, which
+remained correct in this static fixture. All models read scoped instructions before
+task data, retained the required marker, and made no shell attempts. These small,
+explicitly prompted routing tasks do not demonstrate superior autonomous orchestration
+or justify an automatic model replacement.
+
+Five installed agent descriptions were stale relative to approved settings: Quick,
+Default development, Visual/UI and Mechanical advertised unsupported Gemini effort
+overrides; Deep reasoning advertised `max` rather than `xhigh`. The audit does not
+rewrite them; normal ownership-checked launcher synchronization owns that update.
+The installed runtime also omitted Gemini 3.8 Flash from its catalog at evaluation
+time. Correctly requesting its configured arguments is **not** proof that those
+workers can execute. No company permission-enforcement probe, long-session retention,
+real-worker outcome or business acceptance is claimed.
+
 ### Generated-agent ownership
 
 `~/.copilot/agents/.generated-task-class-agents.json` records schema-versioned SHA-256 ownership. Only owned, unmodified files may be updated or retired. Identical unmanaged output can be adopted without rewriting it; different unmanaged files, local edits, invalid manifests, read-only planned writes/deletes, and linked files or parent directories block before planned changes are applied. Unexpected I/O failures also stop startup; the launcher never continues after a failed synchronization. No-op runs preserve agent and manifest bytes/timestamps.
@@ -190,7 +271,7 @@ An effectively retired incumbent triggers **mandatory retirement recovery**, not
 
 Recovery bypasses the confirmation wait and comparisons against an unusable incumbent, not hard limits or source-integrity checks. Partial-evidence and official-successor migrations are explicitly **emergency replacements, not certified**: missing scores and failed dimensions remain visible, normal qualification is unchanged, and no stronger qualification basis is fabricated. The report and consensus snapshot record the retired identity/date, selected configuration, recovery basis and whether full role qualification was met.
 
-The [workflow](.github/workflows/monthly-task-profile-review.yml) runs the tests, consumes the committed local snapshot, refreshes GitHub prices, and evaluates configuration-matched benchmarks. It never runs account discovery or refreshes the input snapshot. It opens/updates the review PR with:
+The [workflow](.github/workflows/monthly-task-profile-review.yml) runs the tests, consumes the committed local snapshot, refreshes GitHub prices, and evaluates configuration-matched benchmarks. It then reruns the complete offline suite against the generated catalogs and reports **before** publishing a PR. It never runs account discovery, refreshes the input snapshot, or runs the live orchestration evaluation. It opens/updates the review PR with:
 
 - `reports/task-profile-review.md`: current/recommended/applied configurations, confidence, exclusions, and price changes.
 - `task-profiles.json`: model and effort changes applied together after confirmation, or immediately for retirement recovery, within approved ranges. Context remains fixed.
@@ -241,6 +322,13 @@ Eligibility also requires unexpired locally verified availability, no denylist m
 
 `config/model-ranking-aliases.json` maps AA general-model and LiveBench model/effort pairs to explicit source IDs. AA public components reuse those exact AA identities, but remain separate source observations. Max/xhigh scores cannot stand in for high/medium/low. Onboarding adds verified new variants; unresolved mappings still require investigation. Price refresh alone does not supply capability facts.
 
+AA API aggregates and public components both reject fallback/composite identities and
+conflicting published efforts, including attempts to attach High scores to a native
+no-effort configuration. Structured agent labels normalize the casing of recognized
+efforts (`Max`, `Xhigh`), not unknown efforts or fallback labels. GitHub image-generation
+pricing tables are excluded from language-token pricing; malformed language tables
+still fail explicitly.
+
 - [Artificial Analysis API](https://artificialanalysis.ai/api/v2/language/models/free) supplies the Intelligence Index. AA no longer publishes a Coding Index on this endpoint. Quick, default-development, review and visual-ui decide on LiveBench coding first, then AA Intelligence Index. [AA coding-agent harnesses](https://artificialanalysis.ai/agents/coding-agents) supply specialized Agentic evidence.
 - AA public model pages supply workflow, instruction-following, long-document reasoning and visual-understanding components. One deterministically chosen known-model page supplies the bulk comparison records plus the current model; the adapter does not fetch every model separately or execute page scripts.
 - [LiveBench 1.x](https://livebench.ai/#/release/2026-06-25) supplies explicitly authorized fallback and supporting categories. Release names come from the [official site repository](https://github.com/LiveBench/livebench.github.io/tree/main/public); scores and category definitions come from the published `https://livebench.ai/v1/` files, not older repository copies or LiveBench 2.0. Incomplete categories are unusable, rather than averages of whichever columns happen to exist. Cost-feed failure does not discard quality data.
@@ -251,12 +339,12 @@ Eligibility also requires unexpired locally verified availability, no denylist m
 
 | Profile | Primary deciding metric | Authorized primary fallbacks | Additional required dimensions |
 |---|---|---|---|
-| Quick | AA Coding | LiveBench Coding | None; narrow coding tasks |
-| Default Development | AA Coding | LiveBench Coding | Instruction following |
+| Quick | LiveBench Coding | AA Intelligence | None; narrow coding tasks |
+| Default Development | LiveBench Coding | AA Intelligence | Instruction following |
 | Agentic Implementation | AA Coding Agent Index | LiveBench Agentic Coding | None; the primary already measures end-to-end agentic coding |
 | Deep Reasoning | AA Intelligence | LiveBench Reasoning | Long-document reasoning |
-| Review | AA Coding | LiveBench Coding | Reasoning AND long-document reasoning |
-| Visual/UI | AA Coding | LiveBench Coding | Visual understanding |
+| Review | LiveBench Coding | AA Intelligence | Reasoning AND long-document reasoning |
+| Visual/UI | LiveBench Coding | AA Intelligence | Visual understanding |
 | Mechanical | AutomationBench-AA | EnterpriseOps-Gym-AA | Instruction following |
 | Orchestrator | AutomationBench-AA | EnterpriseOps-Gym-AA | Long-document reasoning AND instruction following |
 | Triage | AA Intelligence | LiveBench Reasoning | Instruction following |
@@ -280,7 +368,7 @@ Every profile uses `configurationSelection.mode: bounded_effort` and `effortChan
 | Profiles | Allowed efforts |
 |---|---|
 | Quick, Mechanical, Triage | low |
-| Orchestrator | high |
+| Orchestrator | high, xhigh |
 | Default Development, Review, Visual/UI | medium, high |
 | Agentic Implementation, Deep Reasoning | high, xhigh, max |
 
@@ -290,7 +378,7 @@ AA coding-agent variants are resolved automatically from structured page data ra
 
 Every normal optimization fallback, including a fallback used by a required qualification dimension, requires the incumbent's exact configuration in the same usable metric observation. An established stronger primary or qualification basis cannot be downgraded through a weaker fallback, even with force. Primary routes may replace an unscored incumbent; if no authorized route is usable, the non-retired current assignment stays. Mandatory retirement recovery does not require comparable evidence for an unusable incumbent or preserve its stronger optimization basis. The report distinguishes normal qualification from emergency operational migration. Incumbent provenance belongs to the actual model/effort/context, not to its family or profile name. Manual configuration changes do not inherit another configuration's basis.
 
-Orchestrator retains high-only effort and its $3 / $15 ceilings. Changing the deciding metric does not establish reliable Copilot CLI delegation, constraint retention or supervision. All profiles show required metrics, comparison coverage, reference scores, bands and per-candidate pass/fail checks outside collapsed evidence details. Any remaining informational scores are labelled separately.
+Orchestrator alone now authorizes both high and xhigh, within its unchanged $3 / $15 ceilings and workflow, long-document and instruction-following requirements. Max remains unauthorized, and all other profiles retain their existing effort ranges. This authorization change does not directly rewrite `task-profiles.json`; qualified recommendations still use the existing confirmation or explicitly forced review path. Benchmark qualification does not establish reliable Copilot CLI delegation, skill selection, constraint retention or supervision. All profiles show required metrics, comparison coverage, reference scores, bands and per-candidate pass/fail checks outside collapsed evidence details. Any remaining informational scores are labelled separately.
 
 The framework compares **measured configurations**, not the maximum setting by definition: an `xhigh` result can win even if the model supports an unmeasured `max` setting. Each configuration passes its own eligibility gates, and corroboration must match the same model, effort and context. Multiple efforts of one model do not count as independent model coverage. [AA's methodology](https://artificialanalysis.ai/methodology/coding-agents-benchmarking#agent-settings) describes agent variants and normally uses agent-default reasoning settings; it is not a universal maximum-effort comparison. Scores remain external-harness evidence, not Copilot CLI measurements.
 
@@ -318,6 +406,32 @@ Policy schema 4 defines binding role contracts; ranking snapshot schema 4 stores
 
 The report separates quality leader, recommended candidate, pending change, and configuration actually applied, showing model / effective effort / context. Value profiles also show their eligible quality reference, score gap/band, candidate and incumbent reference AIC, informational percentage cost change, fixed authorization limits, allowed efforts and any incumbent evidence or pricing gaps. Repeated exclusions and variant gaps are grouped by configuration with all affected profiles. Expandable sections retain the complete per-profile eligibility and benchmark evidence. Fresh capability metadata and valid mappings still require maintenance.
 
+#### Pinned ranking-repair replay
+
+[`ranking-coverage-audit.json`](reports/ranking-coverage-audit.json) records the
+before/after replay of the committed October 30 snapshot, with input hashes,
+per-dimension eligible model counts, exact-configuration checks and selection reasons.
+Both isolated reviews received identical benchmark/discovery inputs and one captured
+public pricing response; the review clock was pinned to the snapshot timestamp.
+The HTML capture remains session-local, not a committed portable replay fixture.
+
+The repairs recover current language-model pricing and one structured agent
+observation, but **did not change any profile selection** in that replay. Under the
+replay's High-only Orchestrator authorization, Orchestrator and Default development
+had empty fully qualifying intersections; Quick and
+Visual/UI lack comparable incumbent evidence on the usable fallback; Agentic retains
+its stronger historical basis; Review, Mechanical and Triage lack sufficient usable
+role comparisons. Deep reasoning remains rankable. The generated repaired tree passed
+all 13 test files before publication.
+
+The later Orchestrator-only high/xhigh authorization is a separate policy correction,
+not part of that unchanged-policy replay.
+
+Missing mappings are not proof that a matching published variant does not exist.
+These blockers need targeted exact-configuration measurements or an explicitly
+justified, versioned policy route; neither invented aliases, LiveBench 1.x/2.0 score
+mixing nor this small advisory routing sample resolves them automatically.
+
 The implementation uses focused modules under `scripts/`:
 
 | Module | Responsibility |
@@ -338,6 +452,7 @@ The implementation uses focused modules under `scripts/`:
 | `model-value-selection.ps1` | Reference costs and cheapest-qualified ranking within native metric bands. |
 | `model-review-report.ps1` | Decision summary, grouped coverage and expandable audit detail. |
 | `review-task-profiles.ps1` | End-to-end orchestration. |
+| `evaluate-orchestration.mjs` | Advisory, transcript-scored local routing evaluation; no role-policy or profile writes. |
 
 The former combined ranking module and its legacy snapshot/bucket pipeline have been removed. Configuration and pricing can load without importing benchmark providers. Run:
 

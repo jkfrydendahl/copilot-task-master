@@ -60,7 +60,7 @@
     "benchmarkMaxPublicationAgeDays": 90
   },
   "selectionPolicy": {
-    "version": 14,
+    "version": 15,
     "costTieBreak": "newest_verified_release",
     "referenceInputTokens": 1000000,
     "referenceOutputTokens": 100000,
@@ -77,7 +77,7 @@
             { "key": "instruction-following", "evidenceRoutes": ["liveBench.instructionFollowing", "artificialAnalysisComponents.ifbench"], "qualityBands": { "artificialAnalysisComponents.ifbench": 0.03, "liveBench.instructionFollowing": 3 } }
           ]
         },
-        "configurationSelection": { "mode": "bounded_effort", "allowedEfforts": ["high"], "effortChangePolicy": "automatic" },
+        "configurationSelection": { "mode": "bounded_effort", "allowedEfforts": ["high", "xhigh"], "effortChangePolicy": "automatic" },
         "qualityBands": { "artificialAnalysisComponents.automationBench": 0.03, "artificialAnalysisComponents.enterpriseOpsGym": 0.03 }
       },
       "quick": {

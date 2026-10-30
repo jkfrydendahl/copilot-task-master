@@ -222,7 +222,7 @@ Run-Test "Published and runtime-verified vision admit the configured Visual/UI v
 }
 Run-Test "Every profile preauthorizes its task-appropriate effort range" {
     $p=Get-ModelPolicyConfig (Join-Path $repo "config\model-policy.json")
-    Assert-True ($p.selectionPolicy.version -eq 14 -and $p.schemaVersion -eq 4) "Retirement recovery contract not versioned"
+    Assert-True ($p.selectionPolicy.version -eq 15 -and $p.schemaVersion -eq 4) "Orchestrator Xhigh authorization not versioned"
     Assert-True ($p.consensusPolicy.discoveryFreshnessDays -eq 7) "Local discovery validity changed"
     Assert-True ($p.selectionPolicy.costTieBreak -eq "newest_verified_release") "Recency tie policy missing"
     foreach ($key in @("orchestrator","default-development")) {
@@ -234,7 +234,7 @@ Run-Test "Every profile preauthorizes its task-appropriate effort range" {
         Assert-True ($p.selectionPolicy.profiles.mechanical.qualityBands[$metric] -eq 0) "Mechanical band changed"
     }
     $ranges=@{
-        quick="low";mechanical="low";triage="low";orchestrator="high"
+        quick="low";mechanical="low";triage="low";orchestrator="high,xhigh"
         "default-development"="medium,high";review="medium,high";"visual-ui"="medium,high"
         "agentic-implementation"="high,xhigh,max";"deep-reasoning"="high,xhigh,max"
     }
@@ -263,7 +263,7 @@ Run-Test "Every profile preauthorizes its task-appropriate effort range" {
         Assert-True (($selection.allowedEfforts -join ",") -eq $ranges[$key]) "Wrong effort range: $key"
     }
     $orchestrator = Get-Content (Join-Path $repo "task-profiles.json") -Raw | ConvertFrom-Json | Where-Object key -eq "orchestrator"
-    Assert-True ($orchestrator.effort -eq "high") "Launcher default disagrees with high-only policy"
+    Assert-True ($orchestrator.effort -in $p.selectionPolicy.profiles.orchestrator.configurationSelection.allowedEfforts) "Launcher default is outside the authorized Orchestrator range"
     Assert-True (($p.selectionPolicy.profiles.orchestrator.evidenceRoutes -join ",") -eq
         "artificialAnalysisComponents.automationBench,artificialAnalysisComponents.enterpriseOpsGym") "Orchestrator workflow routes"
 }

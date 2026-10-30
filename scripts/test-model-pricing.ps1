@@ -18,6 +18,13 @@ Run-Test "Parses exact rates, cache prices and thresholds" {
     Assert-True ($p["Example One"].long_context.thresholdInputTokens -eq 200000) "Threshold"
     Assert-True ($p["Example One"].long_context.outputPerMillion -eq 15) "Long price"
 }
+Run-Test "Image-generation pricing tables do not invalidate language-model prices" {
+    $image = '<table><tr><th>Model</th><th>Text input</th><th>Image input</th><th>Image output</th></tr><tr><td>Image Model</td><td>$5.00</td><td>$8.00</td><td>$30.00</td></tr></table>'
+    foreach ($page in @(($html + $image), ($image + $html))) {
+        $p = ConvertFrom-GitHubPricingHtml $page
+        Assert-True ($p.Count -eq 1 -and $p["Example One"].default.inputPerMillion -eq 2) "Image prices imported or language rates lost"
+    }
+}
 Run-Test "Rejects malformed, negative, ambiguous and nonfinite prices" {
     foreach ($bad in @("", $html.Replace('$2.00', '$-2'), $html.Replace('$2.00', 'NaN'), ($html + $html), $html.Replace('<th>Output</th>', '<th>Unknown</th>'))) {
         $threw = $false

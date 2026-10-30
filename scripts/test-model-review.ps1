@@ -130,8 +130,12 @@ Run-Test "Workflow persists price updates and runs all new suites" {
     Assert-True (-not $workflow.Contains("COPILOT_GITHUB_TOKEN") -and
         -not $workflow.Contains("npm install --global @github/copilot") -and
         $workflow -notmatch 'run:.*refresh-model-catalog') "Action performs local authentication/discovery"
+    $generationIndex=$workflow.IndexOf('run: .\scripts\review-task-profiles.ps1')
+    $publishIndex=$workflow.IndexOf('- name: Create/update PR')
+    $postGeneration=$workflow.Substring($generationIndex, $publishIndex-$generationIndex)
+    Assert-True ($postGeneration -match 'run:\s*\.\\scripts\\test-all\.ps1') "Generated catalogs are not validated before publication"
     $runner=Get-Content (Join-Path $PSScriptRoot "test-all.ps1") -Raw
-    foreach ($file in @("test-model-pricing.ps1","test-model-evidence.ps1","test-model-selection.ps1","test-model-review.ps1")) {
+    foreach ($file in @("test-model-pricing.ps1","test-model-evidence.ps1","test-model-selection.ps1","test-model-review.ps1","test-orchestration-evaluation.mjs")) {
         Assert-True ($runner.Contains($file)) "Runner omits $file"
     }
 }

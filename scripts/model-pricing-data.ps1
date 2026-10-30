@@ -8,6 +8,8 @@ function ConvertFrom-GitHubPricingHtml {
     foreach ($table in [regex]::Matches($Html, '(?is)<table\b[^>]*>.*?</table>')) {
         $headers = @([regex]::Matches($table.Value, '(?is)<th\b[^>]*>(.*?)</th>') | ForEach-Object { ConvertFrom-ModelHtmlCell $_.Groups[1].Value })
         if ($headers -notcontains "Model") { continue }
+        if ($headers -contains "Text input" -and $headers -contains "Image output" -and
+            $headers -notcontains "Input" -and $headers -notcontains "Output") { continue }
         if ($headers -notcontains "Input" -or $headers -notcontains "Output") {
             throw [System.IO.InvalidDataException]::new("GitHub model pricing table is missing Input/Output columns.")
         }

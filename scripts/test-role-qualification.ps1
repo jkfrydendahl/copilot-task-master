@@ -263,6 +263,40 @@ Run-Test "Orchestrator workflow tolerates exactly 0.03, never more" {
     Set-FixtureScore $f cheap automationBench 0.769999
     Assert-True ((Get-ProfileSelection @f).winner.model -ne "cheap") "Workflow tolerance widened"
 }
+Run-Test "Orchestrator Xhigh resolves High-only evidence gaps without bypassing confirmation or exact effort" {
+    $f=New-QualificationFixture "orchestrator"
+    $xhighRecords=@(foreach ($record in $f.Evidence) {
+        $copy=$record.Clone();$copy.effort="xhigh";$copy.alias="$($copy.model)-xhigh";$copy
+    })
+    $xhighVerdicts=@(foreach ($verdict in $f.Verdicts) {
+        $copy=$verdict.Clone();$copy.effort="xhigh";$copy
+    })
+    $f.Evidence=@($f.Evidence | Where-Object metric -ne instructionFollowing)+$xhighRecords
+    $f.Verdicts+=$xhighVerdicts
+    $authorizedPolicy=$f.Policy
+    $f.Policy=ConvertTo-CanonicalModelData $authorizedPolicy
+    $f.Policy.selectionPolicy.profiles.orchestrator.configurationSelection.allowedEfforts=@("high")
+    Assert-True ($null -eq (Get-ProfileSelection @f).winner) "High borrowed Xhigh instruction-following evidence"
+    $f.Policy=$authorizedPolicy
+    $s=Get-ProfileSelection @f
+    Assert-True ($s.winner.model -eq "cheap" -and $s.winner.effort -eq "xhigh" -and $s.freshObservation) "Measured Xhigh configuration did not qualify"
+    Assert-True (@($s.qualification.dimensions | Where-Object {$_.modelCount -lt 2}).Count -eq 0) "Sparse comparisons authorized the replacement"
+    $first=Resolve-ProfileSelectionState -CurrentModel incumbent -Selection $s
+    $same=Resolve-ProfileSelectionState -CurrentModel incumbent -Selection $s -State $first.state
+    Assert-True (-not $same.applied -and $same.state.pending.count -eq 1 -and $same.state.pending.effort -eq "xhigh") "Authorization applied a replacement or counted repeated evidence"
+    $forced=Resolve-ProfileSelectionState -CurrentModel incumbent -Selection $s -State $same.state -ForceImmediateApply
+    Assert-True ($forced.applied -and $forced.finalConfiguration.model -eq "cheap" -and
+        $forced.finalConfiguration.effort -eq "xhigh" -and $forced.finalConfiguration.context -eq "default") "Explicit approval lost the complete configuration"
+    foreach ($record in @($f.Evidence | Where-Object metric -eq lcr)) {
+        $record.sourceVersion="v2";$record.score+=0.001
+    }
+    $confirmed=Resolve-ProfileSelectionState -CurrentModel incumbent -Selection (Get-ProfileSelection @f) -State $same.state
+    Assert-True ($confirmed.applied -and $confirmed.finalConfiguration.effort -eq "xhigh") "Distinct binding evidence did not confirm Xhigh"
+    ($f.Evidence | Where-Object { $_.model -eq "cheap" -and $_.metric -eq "instructionFollowing" }).effort="high"
+    $mismatched=Get-ProfileSelection @f
+    $xhighCheck=$mismatched.qualification.candidates | Where-Object { $_.model -eq "cheap" -and $_.effort -eq "xhigh" }
+    Assert-True (-not $xhighCheck.qualified -and $mismatched.winner.effort -eq "high") "High instruction-following evidence certified Xhigh"
+}
 Run-Test "Retirement immediately applies a qualified winner without incumbent comparison or confirmation" {
     $f=New-QualificationFixture
     Set-RetiredFixtureIncumbent $f

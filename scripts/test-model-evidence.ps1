@@ -56,7 +56,7 @@ Run-Test "Structured agent evidence resolves new efforts and harnesses without a
     $agents = @{
         status="ok";sourceDate=$null;fetchedAtUtc="2026-09-09Z";sourceUrl="https://artificialanalysis.ai/agents/coding-agents"
         sourceVersion="fixture-agents";models=@{
-            gemini=(New-NormalizedAgentFixture gemini "Gemini 3.8 Flash (high)" 0.4186 google)
+            gemini=(New-NormalizedAgentFixture gemini "Gemini 3.8 Flash" 0.4186 google)
             opus=(New-NormalizedAgentFixture opus "Opus 5 (max)" 0.5973 anthropic)
             grok=(New-NormalizedAgentFixture grok "Grok 4.6 (xhigh)" 0.4697 xai)
         }
@@ -76,7 +76,7 @@ Run-Test "Structured agent evidence resolves new efforts and harnesses without a
         @{modelId=$config.model;effort=$config.effort;context="default";admissible=$true;reasonCodes=@();pricing=@{inputPerMillion=1;outputPerMillion=5}}
     })
     $fallback = [pscustomobject]@{model="gemini-3.8-flash";score=99;source="artificialAnalysis";metric="codingIndex";
-        effort="high";context="default";sourceVersion="fixture-aa";cached=$false;publicationAgeUnknown=$true}
+        effort="none";context="default";sourceVersion="fixture-aa";cached=$false;publicationAgeUnknown=$true}
     $selection = Get-ProfileSelection -Profile $agentProfile -Evidence (@($r.records) + @($fallback)) `
         -Verdicts $verdicts -Policy $configuredPolicy -Aliases @{}
     Assert-True ($selection.winner.model -eq "claude-opus-5" -and $selection.winner.effort -eq "max" -and
@@ -84,7 +84,7 @@ Run-Test "Structured agent evidence resolves new efforts and harnesses without a
     $agentProfile.effort="medium"
     $r = Get-ProfileBenchmarkEvidence -Profile $agentProfile -Models $models -Sources $sources `
         -Aliases @{} -Capabilities $caps -Policy $configuredPolicy -NowUtc ([datetime]"2026-09-09Z")
-    Assert-True ($r.records.Count -eq 0 -and $r.diagnostics.Count) "Another effort supplied medium evidence"
+    Assert-True ($r.records.Count -eq 1 -and $r.records[0].model -eq "gemini-3.8-flash" -and $r.records[0].effort -eq "none") "Native evidence changed with requested profile effort"
 }
 Run-Test "Agent resolution rejects composites, unknown efforts, providers and ambiguous identities" {
     $known=@("gpt-one","claude-opus-5","gemini-3.8-flash")
@@ -181,6 +181,32 @@ Run-Test "Components never borrow another effort or accept composite model ident
         $r=Get-ProfileBenchmarkEvidence -Profile $current -Models @("one") -Sources @{artificialAnalysisComponents=$source} -Aliases $aliases -Policy $p -NowUtc $now
         Assert-True ($r.records.Count -eq 0 -and $r.diagnostics -match "identity") "Composite/other effort accepted"
     }
+}
+Run-Test "API aggregates reject fallback identities and published effort mismatches" {
+    foreach ($name in @("One (Medium, Default Fallback)", "One + Two", "One (Medium, Ensemble)", "One (High)")) {
+        $source=ConvertTo-CanonicalModelData $aa
+        $source.models["one-medium"].name=$name
+        $r=Evidence -Sources @{artificialAnalysis=$source}
+        Assert-True ($r.records.Count -eq 0 -and $r.diagnostics -match "identity") "Aggregate identity accepted: $name"
+    }
+    $source=ConvertTo-CanonicalModelData $aa
+    $source.models["one-medium"].name="One (High)"
+    $r=Evidence -Sources @{artificialAnalysis=$source} -Mapping @{one=@{artificialAnalysis=@{none="one-medium"}}} -Caps @{one=@{effortMode="unsupported"}}
+    Assert-True ($r.records.Count -eq 0) "Native configuration borrowed published High"
+}
+Run-Test "Agent effort casing is normalized without admitting fallback or native conflicts" {
+    foreach ($effort in @("Max","Xhigh","HIGH")) {
+        $row=New-NormalizedAgentFixture one "GPT-one ($effort)" 0.7 openai
+        $r=Resolve-AgentModelIdentities -Records @{one=$row} -KnownModels @("gpt-one")
+        Assert-True ($r.records.Count -eq 1 -and $r.records[0].effort -ceq $effort.ToLowerInvariant()) "Effort casing not normalized"
+    }
+    foreach ($label in @("GPT-one (Max, Default Fallback)", "GPT-one (Automatic)")) {
+        $r=Resolve-AgentModelIdentities -Records @{one=(New-NormalizedAgentFixture one $label 0.7 openai)} -KnownModels @("gpt-one")
+        Assert-True ($r.records.Count -eq 0) "Invalid agent identity admitted"
+    }
+    $r=Resolve-AgentModelIdentities -Records @{one=(New-NormalizedAgentFixture one "Gemini 3.8 Flash (High)" 0.7 google)} `
+        -KnownModels @("gemini-3.8-flash") -Capabilities @{"gemini-3.8-flash"=@{effortMode="unsupported"}}
+    Assert-True ($r.records.Count -eq 0 -and $r.diagnostics -match "explicit_effort_conflicts_with_native_model") "Native mismatch admitted"
 }
 Run-Test "API aggregate confirmation is independent of other aggregate metrics" {
     $source=ConvertTo-CanonicalModelData $aa

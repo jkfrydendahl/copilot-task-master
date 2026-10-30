@@ -32,9 +32,9 @@ function Resolve-AgentModelIdentities {
             continue
         }
         $effort = $null
-        if ($label -cmatch '^(?<model>[A-Za-z0-9][A-Za-z0-9 ._-]*) \((?<effort>minimal|low|medium|high|xhigh|max)\)$') {
+        if ($label -match '^(?<model>[A-Za-z0-9][A-Za-z0-9 ._-]*) \((?<effort>minimal|low|medium|high|xhigh|max)\)$') {
             $name = $Matches.model
-            $effort = $Matches.effort
+            $effort = $Matches.effort.ToLowerInvariant()
         } elseif ($label -cmatch '^[A-Za-z0-9][A-Za-z0-9 ._-]*$') {
             $name = $label
         } else {
@@ -43,15 +43,15 @@ function Resolve-AgentModelIdentities {
         }
         $normalized = ConvertTo-AgentModelName $name
         if ($provider -eq "anthropic" -and -not $normalized.StartsWith("claude-")) { $normalized = "claude-$normalized" }
-        $matches = @($KnownModels | Sort-Object -Unique | Where-Object {
+        $modelMatches = @($KnownModels | Sort-Object -Unique | Where-Object {
             $_.StartsWith($prefixes[$provider], [StringComparison]::OrdinalIgnoreCase) -and
             (ConvertTo-AgentModelName $_) -ceq $normalized
         })
-        if ($matches.Count -ne 1) {
+        if ($modelMatches.Count -ne 1) {
             $diagnostics.Add("${key}: model_identity_unresolved_or_ambiguous '$label'")
             continue
         }
-        $model = $matches[0]
+        $model = $modelMatches[0]
         $native = (Get-ObjectMemberValue $Capabilities[$model] "effortMode") -eq "unsupported"
         if ($null -eq $effort) {
             if (-not $native) {

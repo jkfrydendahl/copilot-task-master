@@ -1,0 +1,4752 @@
+{
+  "schemaVersion": 1,
+  "baselineCommit": "6eb7647a05e04cda2a22143aa39c63fafc09e98a",
+  "reviewAsOfUtc": "2026-10-30T08:42:54.7970579Z",
+  "inputs": {
+    "task-profiles.json": "adc6afc260ebf56788efb691a1e0f2da01950f1ffade0fcce4e757e7cc946cbd",
+    "config\\model-policy.json": "e136b1f62fecdff2d3ca180b0e59252039e3114c8f19313bb8b45f70553b251d",
+    "config\\model-capabilities.json": "93c8fea201f6a81b20d53457c9b376d4abdc6b90f0ed519f06fc10de8b376fcf",
+    "config\\model-ranking-aliases.json": "09ff0e4548aafbaf52825399bc179e169bd648bf1819069e0018826e57df9734",
+    "config\\model-pricing-aliases.json": "468713cfdf6c5f01370630c1ae8589cf16fc1d4e85f6261dc337cb74239e3c13",
+    "data\\model-ranking-snapshot.json": "a13c8e2663a426dba0b70db5a7d381fbe79e886979551c9e8c595d97c715b0ab",
+    "data\\model-pricing-snapshot.json": "ff9553d3e4ee97f659b9cd91ec623dcec551ab1488ea515b5eda7e876a55b0bf",
+    "data\\model-discovery-snapshot.json": "5afbbc511cb0ad2d3bdced18797f1b967378faf83069f8f92b5594e4841cfcd0"
+  },
+  "repairedCode": {
+    "scripts\\model-agent-identity.ps1": "13711918d69254bd6327a89e1a79715cdf1ebe9b6e687a10cd8edd7fab846b7d",
+    "scripts\\model-benchmark-evidence.ps1": "a50b96debc57305a16013dc8a54b47cef3e96b35e9ecd3b8d84e3c9ce1a37763",
+    "scripts\\model-pricing-data.ps1": "5cc20091840d8629a9012f675ed3ea35d97925ce7ae7f7f0ffca9de8aaab075a"
+  },
+  "pricingSource": "https://docs.github.com/en/copilot/reference/copilot-billing/models-and-pricing",
+  "pricingCaptureSha256": "871565a3853c329e749b70b992a07e7d00c72dbbaff4664ecf41c27bb348b234",
+  "pricingCapture": "Public HTML captured once in the session workspace; identical bytes supplied to both reviews. Capture is not committed.",
+  "beforePricingStatus": "degraded",
+  "afterPricingStatus": "partial",
+  "beforePricingDiagnostics": [
+    "Pricing parse failed: GitHub model pricing table is missing Input/Output columns."
+  ],
+  "afterPricingDiagnostics": [
+    "Missing pricing row: claude-opus-4.7 (Claude Opus 4.7); retaining original verification timestamp if available.",
+    "Missing pricing row: gemini-3.5-flash (Gemini 3.5 Flash); retaining original verification timestamp if available.",
+    "Missing pricing row: gemini-3.6-flash (Gemini 3.6 Flash); retaining original verification timestamp if available.",
+    "Missing pricing row: gemini-3.7-flash (Gemini 3.7 Flash); retaining original verification timestamp if available.",
+    "Missing pricing row: gpt-5-mini (GPT-5 mini); retaining original verification timestamp if available.",
+    "Missing pricing row: gpt-5.4 (GPT-5.4); retaining original verification timestamp if available.",
+    "Missing pricing row: gpt-5.4-mini (GPT-5.4 mini); retaining original verification timestamp if available.",
+    "Missing pricing row: gpt-5.5 (GPT-5.5); retaining original verification timestamp if available.",
+    "Missing pricing row: kimi-k2.7-code (Kimi K2.7 Code); retaining original verification timestamp if available.",
+    "Missing pricing row: mai-code-1-flash-picker (MAI-Code-1-Flash); retaining original verification timestamp if available.",
+    "Unmapped GitHub pricing model: Claude Sonnet 4",
+    "Unmapped GitHub pricing model: GPT-5.4 nano",
+    "Unmapped GitHub pricing model: GPT-6.1 Terra",
+    "Unmapped GitHub pricing model: Grok 4.7"
+  ],
+  "methodology": "Isolated copies of the committed profiles, policy, discovery, capabilities, aliases and source snapshot, evaluated at the snapshot timestamp. Baseline uses committed ingestion code; repaired copy uses worktree ingestion code. Identical captured pricing HTML and benchmark/discovery inputs; no live benchmark fetches, forced application, policy changes or host profile/catalog writes.",
+  "postGenerationValidation": "All 13 test files passed against the repaired isolated generated tree.",
+  "limitation": "This is an audit of the pinned October 30 snapshot, not fresh publication evidence or proof that missing aliases imply an unpublished model variant. Missing exact configurations, insufficient comparable pools, an empty passing intersection and incumbent provenance guards remain distinct blockers. Direct orchestration evidence is advisory and not an additional ranking route.",
+  "profiles": [
+    {
+      "profile": "orchestrator",
+      "currentConfiguration": {
+        "model": "grok-4.6",
+        "effort": "high",
+        "context": "default",
+        "configurationId": "00a3989ceddf4701fc3a7ea33db052c9ce0b7893a27b2afeed757e51ccde40ee"
+      },
+      "beforeStatus": "retained_no_role_qualified_candidate",
+      "afterStatus": "retained_no_role_qualified_candidate",
+      "finalConfiguration": {
+        "model": "grok-4.6",
+        "effort": "high",
+        "context": "default",
+        "configurationId": "00a3989ceddf4701fc3a7ea33db052c9ce0b7893a27b2afeed757e51ccde40ee"
+      },
+      "selectionUnchanged": true,
+      "beforeEvidenceCount": 30,
+      "afterEvidenceCount": 30,
+      "minimumDistinctModels": 2,
+      "qualifiedConfigurations": [],
+      "dimensions": [
+        {
+          "dimension": "primary",
+          "metric": "artificialAnalysisComponents.automationBench",
+          "routeIndex": 0,
+          "distinctEligibleModels": 9,
+          "requiredModels": 2,
+          "referenceConfiguration": {
+            "model": "grok-4.6",
+            "effort": "high",
+            "context": "default",
+            "score": 0.6667849638121398
+          },
+          "maximumScoreGap": 0.03
+        },
+        {
+          "dimension": "long-context",
+          "metric": "artificialAnalysisComponents.lcr",
+          "routeIndex": 0,
+          "distinctEligibleModels": 10,
+          "requiredModels": 2,
+          "referenceConfiguration": {
+            "model": "gpt-6-sol",
+            "effort": "high",
+            "context": "default",
+            "score": 0.836666666666667
+          },
+          "maximumScoreGap": 0.05
+        },
+        {
+          "dimension": "instruction-following",
+          "metric": "artificialAnalysisComponents.ifbench",
+          "routeIndex": 1,
+          "distinctEligibleModels": 2,
+          "requiredModels": 2,
+          "referenceConfiguration": {
+            "model": "gpt-5.6-terra",
+            "effort": "high",
+            "context": "default",
+            "score": 0.64421768707483
+          },
+          "maximumScoreGap": 0.03
+        }
+      ],
+      "candidateChecks": [
+        {
+          "model": "grok-4.6",
+          "effort": "high",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysisComponents.automationBench",
+              "status": "passed"
+            },
+            {
+              "dimension": "long-context",
+              "metricKey": "artificialAnalysisComponents.lcr",
+              "status": "passed"
+            },
+            {
+              "dimension": "instruction-following",
+              "metricKey": "artificialAnalysisComponents.ifbench",
+              "status": "exact_configuration_evidence_missing"
+            }
+          ]
+        },
+        {
+          "model": "claude-haiku-5.5",
+          "effort": "high",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysisComponents.automationBench",
+              "status": "outside_quality_band"
+            },
+            {
+              "dimension": "long-context",
+              "metricKey": "artificialAnalysisComponents.lcr",
+              "status": "outside_quality_band"
+            },
+            {
+              "dimension": "instruction-following",
+              "metricKey": "artificialAnalysisComponents.ifbench",
+              "status": "exact_configuration_evidence_missing"
+            }
+          ]
+        },
+        {
+          "model": "gemini-3.8-flash",
+          "effort": "none",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysisComponents.automationBench",
+              "status": "exact_configuration_evidence_missing"
+            },
+            {
+              "dimension": "long-context",
+              "metricKey": "artificialAnalysisComponents.lcr",
+              "status": "exact_configuration_evidence_missing"
+            },
+            {
+              "dimension": "instruction-following",
+              "metricKey": "artificialAnalysisComponents.ifbench",
+              "status": "exact_configuration_evidence_missing"
+            }
+          ]
+        },
+        {
+          "model": "gpt-5.6-luna",
+          "effort": "high",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysisComponents.automationBench",
+              "status": "outside_quality_band"
+            },
+            {
+              "dimension": "long-context",
+              "metricKey": "artificialAnalysisComponents.lcr",
+              "status": "passed"
+            },
+            {
+              "dimension": "instruction-following",
+              "metricKey": "artificialAnalysisComponents.ifbench",
+              "status": "exact_configuration_evidence_missing"
+            }
+          ]
+        },
+        {
+          "model": "claude-haiku-4.5",
+          "effort": "none",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysisComponents.automationBench",
+              "status": "exact_configuration_evidence_missing"
+            },
+            {
+              "dimension": "long-context",
+              "metricKey": "artificialAnalysisComponents.lcr",
+              "status": "outside_quality_band"
+            },
+            {
+              "dimension": "instruction-following",
+              "metricKey": "artificialAnalysisComponents.ifbench",
+              "status": "outside_quality_band"
+            }
+          ]
+        },
+        {
+          "model": "gpt-5.3-codex",
+          "effort": "high",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysisComponents.automationBench",
+              "status": "exact_configuration_evidence_missing"
+            },
+            {
+              "dimension": "long-context",
+              "metricKey": "artificialAnalysisComponents.lcr",
+              "status": "exact_configuration_evidence_missing"
+            },
+            {
+              "dimension": "instruction-following",
+              "metricKey": "artificialAnalysisComponents.ifbench",
+              "status": "exact_configuration_evidence_missing"
+            }
+          ]
+        },
+        {
+          "model": "grok-4.5",
+          "effort": "high",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysisComponents.automationBench",
+              "status": "outside_quality_band"
+            },
+            {
+              "dimension": "long-context",
+              "metricKey": "artificialAnalysisComponents.lcr",
+              "status": "passed"
+            },
+            {
+              "dimension": "instruction-following",
+              "metricKey": "artificialAnalysisComponents.ifbench",
+              "status": "exact_configuration_evidence_missing"
+            }
+          ]
+        },
+        {
+          "model": "mai-code-1.1-flash",
+          "effort": "high",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysisComponents.automationBench",
+              "status": "exact_configuration_evidence_missing"
+            },
+            {
+              "dimension": "long-context",
+              "metricKey": "artificialAnalysisComponents.lcr",
+              "status": "exact_configuration_evidence_missing"
+            },
+            {
+              "dimension": "instruction-following",
+              "metricKey": "artificialAnalysisComponents.ifbench",
+              "status": "exact_configuration_evidence_missing"
+            }
+          ]
+        },
+        {
+          "model": "claude-sonnet-5",
+          "effort": "high",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysisComponents.automationBench",
+              "status": "outside_quality_band"
+            },
+            {
+              "dimension": "long-context",
+              "metricKey": "artificialAnalysisComponents.lcr",
+              "status": "outside_quality_band"
+            },
+            {
+              "dimension": "instruction-following",
+              "metricKey": "artificialAnalysisComponents.ifbench",
+              "status": "exact_configuration_evidence_missing"
+            }
+          ]
+        },
+        {
+          "model": "gemini-4-argon",
+          "effort": "none",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysisComponents.automationBench",
+              "status": "exact_configuration_evidence_missing"
+            },
+            {
+              "dimension": "long-context",
+              "metricKey": "artificialAnalysisComponents.lcr",
+              "status": "exact_configuration_evidence_missing"
+            },
+            {
+              "dimension": "instruction-following",
+              "metricKey": "artificialAnalysisComponents.ifbench",
+              "status": "exact_configuration_evidence_missing"
+            }
+          ]
+        },
+        {
+          "model": "gpt-6.1-sol",
+          "effort": "high",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysisComponents.automationBench",
+              "status": "passed"
+            },
+            {
+              "dimension": "long-context",
+              "metricKey": "artificialAnalysisComponents.lcr",
+              "status": "passed"
+            },
+            {
+              "dimension": "instruction-following",
+              "metricKey": "artificialAnalysisComponents.ifbench",
+              "status": "exact_configuration_evidence_missing"
+            }
+          ]
+        },
+        {
+          "model": "gpt-6-sol",
+          "effort": "high",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysisComponents.automationBench",
+              "status": "outside_quality_band"
+            },
+            {
+              "dimension": "long-context",
+              "metricKey": "artificialAnalysisComponents.lcr",
+              "status": "passed"
+            },
+            {
+              "dimension": "instruction-following",
+              "metricKey": "artificialAnalysisComponents.ifbench",
+              "status": "exact_configuration_evidence_missing"
+            }
+          ]
+        },
+        {
+          "model": "gpt-5.6-terra",
+          "effort": "high",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysisComponents.automationBench",
+              "status": "outside_quality_band"
+            },
+            {
+              "dimension": "long-context",
+              "metricKey": "artificialAnalysisComponents.lcr",
+              "status": "outside_quality_band"
+            },
+            {
+              "dimension": "instruction-following",
+              "metricKey": "artificialAnalysisComponents.ifbench",
+              "status": "passed"
+            }
+          ]
+        },
+        {
+          "model": "claude-sonnet-5.5",
+          "effort": "high",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysisComponents.automationBench",
+              "status": "exact_configuration_evidence_missing"
+            },
+            {
+              "dimension": "long-context",
+              "metricKey": "artificialAnalysisComponents.lcr",
+              "status": "exact_configuration_evidence_missing"
+            },
+            {
+              "dimension": "instruction-following",
+              "metricKey": "artificialAnalysisComponents.ifbench",
+              "status": "exact_configuration_evidence_missing"
+            }
+          ]
+        },
+        {
+          "model": "gpt-6-luna",
+          "effort": "high",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysisComponents.automationBench",
+              "status": "outside_quality_band"
+            },
+            {
+              "dimension": "long-context",
+              "metricKey": "artificialAnalysisComponents.lcr",
+              "status": "passed"
+            },
+            {
+              "dimension": "instruction-following",
+              "metricKey": "artificialAnalysisComponents.ifbench",
+              "status": "exact_configuration_evidence_missing"
+            }
+          ]
+        }
+      ],
+      "diagnosticCounts": [
+        {
+          "reason": "alias_not_configured",
+          "count": 58
+        },
+        {
+          "reason": "score_missing_or_invalid",
+          "count": 22
+        }
+      ]
+    },
+    {
+      "profile": "quick",
+      "currentConfiguration": {
+        "model": "gemini-3.8-flash",
+        "effort": "none",
+        "context": "default",
+        "configurationId": "23f0157ab0d0a44e482e37bf7ed8922b604354e25b8223996577321f45e42a4e"
+      },
+      "beforeStatus": "retained_fallback_incumbent_evidence_missing",
+      "afterStatus": "retained_fallback_incumbent_evidence_missing",
+      "finalConfiguration": {
+        "model": "gemini-3.8-flash",
+        "effort": "none",
+        "context": "default",
+        "configurationId": "23f0157ab0d0a44e482e37bf7ed8922b604354e25b8223996577321f45e42a4e"
+      },
+      "selectionUnchanged": true,
+      "beforeEvidenceCount": 7,
+      "afterEvidenceCount": 7,
+      "minimumDistinctModels": 2,
+      "qualifiedConfigurations": [
+        {
+          "model": "gpt-6.1-sol",
+          "effort": "low",
+          "context": "default"
+        }
+      ],
+      "dimensions": [
+        {
+          "dimension": "primary",
+          "metric": "artificialAnalysis.intelligenceIndex",
+          "routeIndex": 1,
+          "distinctEligibleModels": 3,
+          "requiredModels": 2,
+          "referenceConfiguration": {
+            "model": "gpt-6.1-sol",
+            "effort": "low",
+            "context": "default",
+            "score": 34.5
+          },
+          "maximumScoreGap": 3
+        }
+      ],
+      "candidateChecks": [
+        {
+          "model": "mai-code-1.1-flash",
+          "effort": "low",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "exact_configuration_evidence_missing"
+            }
+          ]
+        },
+        {
+          "model": "gemini-3.8-flash",
+          "effort": "none",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "exact_configuration_evidence_missing"
+            }
+          ]
+        },
+        {
+          "model": "claude-haiku-5.5",
+          "effort": "low",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "outside_quality_band"
+            }
+          ]
+        },
+        {
+          "model": "claude-haiku-4.5",
+          "effort": "none",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "exact_configuration_evidence_missing"
+            }
+          ]
+        },
+        {
+          "model": "gpt-6-luna",
+          "effort": "low",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "outside_quality_band"
+            }
+          ]
+        },
+        {
+          "model": "gpt-6.1-sol",
+          "effort": "low",
+          "context": "default",
+          "qualified": true,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "passed"
+            }
+          ]
+        },
+        {
+          "model": "gpt-5.6-luna",
+          "effort": "low",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "exact_configuration_evidence_missing"
+            }
+          ]
+        },
+        {
+          "model": "claude-sonnet-5",
+          "effort": "low",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "exact_configuration_evidence_missing"
+            }
+          ]
+        },
+        {
+          "model": "gemini-4-argon",
+          "effort": "none",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "exact_configuration_evidence_missing"
+            }
+          ]
+        },
+        {
+          "model": "grok-4.5",
+          "effort": "low",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "exact_configuration_evidence_missing"
+            }
+          ]
+        },
+        {
+          "model": "grok-4.6",
+          "effort": "low",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "exact_configuration_evidence_missing"
+            }
+          ]
+        },
+        {
+          "model": "gpt-6-sol",
+          "effort": "low",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "exact_configuration_evidence_missing"
+            }
+          ]
+        },
+        {
+          "model": "claude-sonnet-5.5",
+          "effort": "low",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "exact_configuration_evidence_missing"
+            }
+          ]
+        }
+      ],
+      "diagnosticCounts": [
+        {
+          "reason": "alias_not_configured",
+          "count": 64
+        },
+        {
+          "reason": "score_missing_or_invalid",
+          "count": 17
+        }
+      ]
+    },
+    {
+      "profile": "default-development",
+      "currentConfiguration": {
+        "model": "gemini-3.8-flash",
+        "effort": "none",
+        "context": "default",
+        "configurationId": "23f0157ab0d0a44e482e37bf7ed8922b604354e25b8223996577321f45e42a4e"
+      },
+      "beforeStatus": "retained_no_role_qualified_candidate",
+      "afterStatus": "retained_no_role_qualified_candidate",
+      "finalConfiguration": {
+        "model": "gemini-3.8-flash",
+        "effort": "none",
+        "context": "default",
+        "configurationId": "23f0157ab0d0a44e482e37bf7ed8922b604354e25b8223996577321f45e42a4e"
+      },
+      "selectionUnchanged": true,
+      "beforeEvidenceCount": 15,
+      "afterEvidenceCount": 15,
+      "minimumDistinctModels": 2,
+      "qualifiedConfigurations": [],
+      "dimensions": [
+        {
+          "dimension": "primary",
+          "metric": "artificialAnalysis.intelligenceIndex",
+          "routeIndex": 1,
+          "distinctEligibleModels": 3,
+          "requiredModels": 2,
+          "referenceConfiguration": {
+            "model": "gpt-6.1-sol",
+            "effort": "high",
+            "context": "default",
+            "score": 50.2
+          },
+          "maximumScoreGap": 3
+        },
+        {
+          "dimension": "instruction-following",
+          "metric": "artificialAnalysisComponents.ifbench",
+          "routeIndex": 1,
+          "distinctEligibleModels": 3,
+          "requiredModels": 2,
+          "referenceConfiguration": {
+            "model": "gpt-5.6-sol",
+            "effort": "medium",
+            "context": "default",
+            "score": 0.695918367346939
+          },
+          "maximumScoreGap": 0.03
+        }
+      ],
+      "candidateChecks": [
+        {
+          "model": "grok-4.6",
+          "effort": "high",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "exact_configuration_evidence_missing"
+            },
+            {
+              "dimension": "instruction-following",
+              "metricKey": "artificialAnalysisComponents.ifbench",
+              "status": "exact_configuration_evidence_missing"
+            }
+          ]
+        },
+        {
+          "model": "gpt-6-sol",
+          "effort": "medium",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "exact_configuration_evidence_missing"
+            },
+            {
+              "dimension": "instruction-following",
+              "metricKey": "artificialAnalysisComponents.ifbench",
+              "status": "exact_configuration_evidence_missing"
+            }
+          ]
+        },
+        {
+          "model": "claude-sonnet-5",
+          "effort": "medium",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "exact_configuration_evidence_missing"
+            },
+            {
+              "dimension": "instruction-following",
+              "metricKey": "artificialAnalysisComponents.ifbench",
+              "status": "exact_configuration_evidence_missing"
+            }
+          ]
+        },
+        {
+          "model": "claude-haiku-5.5",
+          "effort": "high",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "outside_quality_band"
+            },
+            {
+              "dimension": "instruction-following",
+              "metricKey": "artificialAnalysisComponents.ifbench",
+              "status": "exact_configuration_evidence_missing"
+            }
+          ]
+        },
+        {
+          "model": "claude-opus-5.5",
+          "effort": "medium",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "exact_configuration_evidence_missing"
+            },
+            {
+              "dimension": "instruction-following",
+              "metricKey": "artificialAnalysisComponents.ifbench",
+              "status": "exact_configuration_evidence_missing"
+            }
+          ]
+        },
+        {
+          "model": "gemini-3.8-flash",
+          "effort": "none",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "exact_configuration_evidence_missing"
+            },
+            {
+              "dimension": "instruction-following",
+              "metricKey": "artificialAnalysisComponents.ifbench",
+              "status": "exact_configuration_evidence_missing"
+            }
+          ]
+        },
+        {
+          "model": "gpt-5.6-luna",
+          "effort": "high",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "exact_configuration_evidence_missing"
+            },
+            {
+              "dimension": "instruction-following",
+              "metricKey": "artificialAnalysisComponents.ifbench",
+              "status": "exact_configuration_evidence_missing"
+            }
+          ]
+        },
+        {
+          "model": "gpt-5.6-sol",
+          "effort": "medium",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "exact_configuration_evidence_missing"
+            },
+            {
+              "dimension": "instruction-following",
+              "metricKey": "artificialAnalysisComponents.ifbench",
+              "status": "passed"
+            }
+          ]
+        },
+        {
+          "model": "grok-4.5",
+          "effort": "medium",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "exact_configuration_evidence_missing"
+            },
+            {
+              "dimension": "instruction-following",
+              "metricKey": "artificialAnalysisComponents.ifbench",
+              "status": "exact_configuration_evidence_missing"
+            }
+          ]
+        },
+        {
+          "model": "claude-haiku-4.5",
+          "effort": "none",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "exact_configuration_evidence_missing"
+            },
+            {
+              "dimension": "instruction-following",
+              "metricKey": "artificialAnalysisComponents.ifbench",
+              "status": "outside_quality_band"
+            }
+          ]
+        },
+        {
+          "model": "gpt-5.3-codex",
+          "effort": "high",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "exact_configuration_evidence_missing"
+            },
+            {
+              "dimension": "instruction-following",
+              "metricKey": "artificialAnalysisComponents.ifbench",
+              "status": "exact_configuration_evidence_missing"
+            }
+          ]
+        },
+        {
+          "model": "grok-4.5",
+          "effort": "high",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "exact_configuration_evidence_missing"
+            },
+            {
+              "dimension": "instruction-following",
+              "metricKey": "artificialAnalysisComponents.ifbench",
+              "status": "exact_configuration_evidence_missing"
+            }
+          ]
+        },
+        {
+          "model": "mai-code-1.1-flash",
+          "effort": "high",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "exact_configuration_evidence_missing"
+            },
+            {
+              "dimension": "instruction-following",
+              "metricKey": "artificialAnalysisComponents.ifbench",
+              "status": "exact_configuration_evidence_missing"
+            }
+          ]
+        },
+        {
+          "model": "gpt-5.6-terra",
+          "effort": "medium",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "exact_configuration_evidence_missing"
+            },
+            {
+              "dimension": "instruction-following",
+              "metricKey": "artificialAnalysisComponents.ifbench",
+              "status": "outside_quality_band"
+            }
+          ]
+        },
+        {
+          "model": "claude-sonnet-5.5",
+          "effort": "medium",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "exact_configuration_evidence_missing"
+            },
+            {
+              "dimension": "instruction-following",
+              "metricKey": "artificialAnalysisComponents.ifbench",
+              "status": "exact_configuration_evidence_missing"
+            }
+          ]
+        },
+        {
+          "model": "gpt-5.6-sol",
+          "effort": "high",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "exact_configuration_evidence_missing"
+            },
+            {
+              "dimension": "instruction-following",
+              "metricKey": "artificialAnalysisComponents.ifbench",
+              "status": "passed"
+            }
+          ]
+        },
+        {
+          "model": "gpt-6-luna",
+          "effort": "medium",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "outside_quality_band"
+            },
+            {
+              "dimension": "instruction-following",
+              "metricKey": "artificialAnalysisComponents.ifbench",
+              "status": "exact_configuration_evidence_missing"
+            }
+          ]
+        },
+        {
+          "model": "grok-4.6",
+          "effort": "medium",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "exact_configuration_evidence_missing"
+            },
+            {
+              "dimension": "instruction-following",
+              "metricKey": "artificialAnalysisComponents.ifbench",
+              "status": "exact_configuration_evidence_missing"
+            }
+          ]
+        },
+        {
+          "model": "claude-sonnet-5",
+          "effort": "high",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "exact_configuration_evidence_missing"
+            },
+            {
+              "dimension": "instruction-following",
+              "metricKey": "artificialAnalysisComponents.ifbench",
+              "status": "exact_configuration_evidence_missing"
+            }
+          ]
+        },
+        {
+          "model": "claude-opus-5.5",
+          "effort": "high",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "exact_configuration_evidence_missing"
+            },
+            {
+              "dimension": "instruction-following",
+              "metricKey": "artificialAnalysisComponents.ifbench",
+              "status": "exact_configuration_evidence_missing"
+            }
+          ]
+        },
+        {
+          "model": "gpt-6.1-sol",
+          "effort": "medium",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "outside_quality_band"
+            },
+            {
+              "dimension": "instruction-following",
+              "metricKey": "artificialAnalysisComponents.ifbench",
+              "status": "exact_configuration_evidence_missing"
+            }
+          ]
+        },
+        {
+          "model": "gemini-4-argon",
+          "effort": "none",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "exact_configuration_evidence_missing"
+            },
+            {
+              "dimension": "instruction-following",
+              "metricKey": "artificialAnalysisComponents.ifbench",
+              "status": "exact_configuration_evidence_missing"
+            }
+          ]
+        },
+        {
+          "model": "mai-code-1.1-flash",
+          "effort": "medium",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "exact_configuration_evidence_missing"
+            },
+            {
+              "dimension": "instruction-following",
+              "metricKey": "artificialAnalysisComponents.ifbench",
+              "status": "exact_configuration_evidence_missing"
+            }
+          ]
+        },
+        {
+          "model": "claude-haiku-5.5",
+          "effort": "medium",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "outside_quality_band"
+            },
+            {
+              "dimension": "instruction-following",
+              "metricKey": "artificialAnalysisComponents.ifbench",
+              "status": "exact_configuration_evidence_missing"
+            }
+          ]
+        },
+        {
+          "model": "gpt-5.6-luna",
+          "effort": "medium",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "exact_configuration_evidence_missing"
+            },
+            {
+              "dimension": "instruction-following",
+              "metricKey": "artificialAnalysisComponents.ifbench",
+              "status": "exact_configuration_evidence_missing"
+            }
+          ]
+        },
+        {
+          "model": "gpt-6.1-sol",
+          "effort": "high",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "passed"
+            },
+            {
+              "dimension": "instruction-following",
+              "metricKey": "artificialAnalysisComponents.ifbench",
+              "status": "exact_configuration_evidence_missing"
+            }
+          ]
+        },
+        {
+          "model": "gpt-5.3-codex",
+          "effort": "medium",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "exact_configuration_evidence_missing"
+            },
+            {
+              "dimension": "instruction-following",
+              "metricKey": "artificialAnalysisComponents.ifbench",
+              "status": "exact_configuration_evidence_missing"
+            }
+          ]
+        },
+        {
+          "model": "gpt-6-sol",
+          "effort": "high",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "exact_configuration_evidence_missing"
+            },
+            {
+              "dimension": "instruction-following",
+              "metricKey": "artificialAnalysisComponents.ifbench",
+              "status": "exact_configuration_evidence_missing"
+            }
+          ]
+        },
+        {
+          "model": "gpt-5.6-terra",
+          "effort": "high",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "exact_configuration_evidence_missing"
+            },
+            {
+              "dimension": "instruction-following",
+              "metricKey": "artificialAnalysisComponents.ifbench",
+              "status": "outside_quality_band"
+            }
+          ]
+        },
+        {
+          "model": "claude-sonnet-5.5",
+          "effort": "high",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "exact_configuration_evidence_missing"
+            },
+            {
+              "dimension": "instruction-following",
+              "metricKey": "artificialAnalysisComponents.ifbench",
+              "status": "exact_configuration_evidence_missing"
+            }
+          ]
+        },
+        {
+          "model": "gpt-6-luna",
+          "effort": "high",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "outside_quality_band"
+            },
+            {
+              "dimension": "instruction-following",
+              "metricKey": "artificialAnalysisComponents.ifbench",
+              "status": "exact_configuration_evidence_missing"
+            }
+          ]
+        }
+      ],
+      "diagnosticCounts": [
+        {
+          "reason": "alias_not_configured",
+          "count": 114
+        },
+        {
+          "reason": "score_missing_or_invalid",
+          "count": 35
+        }
+      ]
+    },
+    {
+      "profile": "agentic-implementation",
+      "currentConfiguration": {
+        "model": "claude-sonnet-5.5",
+        "effort": "max",
+        "context": "default",
+        "configurationId": "240e884b8d77bf19602619c77a8f9984ddeceae65298f1a6f0d742d434521999"
+      },
+      "beforeStatus": "retained_stronger_incumbent_basis",
+      "afterStatus": "retained_stronger_incumbent_basis",
+      "finalConfiguration": {
+        "model": "claude-sonnet-5.5",
+        "effort": "max",
+        "context": "default",
+        "configurationId": "240e884b8d77bf19602619c77a8f9984ddeceae65298f1a6f0d742d434521999"
+      },
+      "selectionUnchanged": true,
+      "beforeEvidenceCount": 44,
+      "afterEvidenceCount": 45,
+      "minimumDistinctModels": 2,
+      "qualifiedConfigurations": [
+        {
+          "model": "claude-opus-5.5",
+          "effort": "max",
+          "context": "default"
+        }
+      ],
+      "dimensions": [
+        {
+          "dimension": "primary",
+          "metric": "liveBench.agenticCoding",
+          "routeIndex": 1,
+          "distinctEligibleModels": 7,
+          "requiredModels": 2,
+          "referenceConfiguration": {
+            "model": "claude-opus-5.5",
+            "effort": "max",
+            "context": "default",
+            "score": 71.717
+          },
+          "maximumScoreGap": 3
+        }
+      ],
+      "candidateChecks": [
+        {
+          "model": "claude-haiku-5.5",
+          "effort": "xhigh",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "liveBench.agenticCoding",
+              "status": "outside_quality_band"
+            }
+          ]
+        },
+        {
+          "model": "grok-4.6",
+          "effort": "high",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "liveBench.agenticCoding",
+              "status": "exact_configuration_evidence_missing"
+            }
+          ]
+        },
+        {
+          "model": "gpt-6-astra",
+          "effort": "high",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "liveBench.agenticCoding",
+              "status": "exact_configuration_evidence_missing"
+            }
+          ]
+        },
+        {
+          "model": "claude-haiku-5.5",
+          "effort": "high",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "liveBench.agenticCoding",
+              "status": "exact_configuration_evidence_missing"
+            }
+          ]
+        },
+        {
+          "model": "claude-opus-5.5",
+          "effort": "max",
+          "context": "default",
+          "qualified": true,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "liveBench.agenticCoding",
+              "status": "passed"
+            }
+          ]
+        },
+        {
+          "model": "claude-opus-5",
+          "effort": "high",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "liveBench.agenticCoding",
+              "status": "exact_configuration_evidence_missing"
+            }
+          ]
+        },
+        {
+          "model": "gpt-5.6-luna",
+          "effort": "xhigh",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "liveBench.agenticCoding",
+              "status": "exact_configuration_evidence_missing"
+            }
+          ]
+        },
+        {
+          "model": "claude-sonnet-5.5",
+          "effort": "xhigh",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "liveBench.agenticCoding",
+              "status": "outside_quality_band"
+            }
+          ]
+        },
+        {
+          "model": "gemini-3.8-flash",
+          "effort": "none",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "liveBench.agenticCoding",
+              "status": "exact_configuration_evidence_missing"
+            }
+          ]
+        },
+        {
+          "model": "claude-sonnet-5.5",
+          "effort": "max",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "liveBench.agenticCoding",
+              "status": "outside_quality_band"
+            }
+          ]
+        },
+        {
+          "model": "grok-4.6",
+          "effort": "xhigh",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "liveBench.agenticCoding",
+              "status": "exact_configuration_evidence_missing"
+            }
+          ]
+        },
+        {
+          "model": "gpt-5.6-luna",
+          "effort": "high",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "liveBench.agenticCoding",
+              "status": "exact_configuration_evidence_missing"
+            }
+          ]
+        },
+        {
+          "model": "gpt-6.1-sol",
+          "effort": "xhigh",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "liveBench.agenticCoding",
+              "status": "outside_quality_band"
+            }
+          ]
+        },
+        {
+          "model": "claude-haiku-5.5",
+          "effort": "max",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "liveBench.agenticCoding",
+              "status": "outside_quality_band"
+            }
+          ]
+        },
+        {
+          "model": "claude-opus-4.8-fast",
+          "effort": "max",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "liveBench.agenticCoding",
+              "status": "exact_configuration_evidence_missing"
+            }
+          ]
+        },
+        {
+          "model": "gpt-5.6-sol",
+          "effort": "xhigh",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "liveBench.agenticCoding",
+              "status": "exact_configuration_evidence_missing"
+            }
+          ]
+        },
+        {
+          "model": "claude-opus-4.8",
+          "effort": "max",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "liveBench.agenticCoding",
+              "status": "outside_quality_band"
+            }
+          ]
+        },
+        {
+          "model": "claude-haiku-4.5",
+          "effort": "none",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "liveBench.agenticCoding",
+              "status": "exact_configuration_evidence_missing"
+            }
+          ]
+        },
+        {
+          "model": "claude-opus-5",
+          "effort": "max",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "liveBench.agenticCoding",
+              "status": "outside_quality_band"
+            }
+          ]
+        },
+        {
+          "model": "gpt-6-sol",
+          "effort": "xhigh",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "liveBench.agenticCoding",
+              "status": "exact_configuration_evidence_missing"
+            }
+          ]
+        },
+        {
+          "model": "claude-opus-4.8",
+          "effort": "high",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "liveBench.agenticCoding",
+              "status": "exact_configuration_evidence_missing"
+            }
+          ]
+        },
+        {
+          "model": "gpt-5.3-codex",
+          "effort": "high",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "liveBench.agenticCoding",
+              "status": "exact_configuration_evidence_missing"
+            }
+          ]
+        },
+        {
+          "model": "grok-4.5",
+          "effort": "high",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "liveBench.agenticCoding",
+              "status": "exact_configuration_evidence_missing"
+            }
+          ]
+        },
+        {
+          "model": "mai-code-1.1-flash",
+          "effort": "high",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "liveBench.agenticCoding",
+              "status": "exact_configuration_evidence_missing"
+            }
+          ]
+        },
+        {
+          "model": "claude-opus-4.8-fast",
+          "effort": "high",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "liveBench.agenticCoding",
+              "status": "exact_configuration_evidence_missing"
+            }
+          ]
+        },
+        {
+          "model": "gpt-6-astra",
+          "effort": "xhigh",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "liveBench.agenticCoding",
+              "status": "exact_configuration_evidence_missing"
+            }
+          ]
+        },
+        {
+          "model": "gpt-5.6-sol",
+          "effort": "high",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "liveBench.agenticCoding",
+              "status": "exact_configuration_evidence_missing"
+            }
+          ]
+        },
+        {
+          "model": "claude-opus-5",
+          "effort": "xhigh",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "liveBench.agenticCoding",
+              "status": "exact_configuration_evidence_missing"
+            }
+          ]
+        },
+        {
+          "model": "claude-sonnet-5",
+          "effort": "xhigh",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "liveBench.agenticCoding",
+              "status": "outside_quality_band"
+            }
+          ]
+        },
+        {
+          "model": "claude-sonnet-5",
+          "effort": "high",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "liveBench.agenticCoding",
+              "status": "exact_configuration_evidence_missing"
+            }
+          ]
+        },
+        {
+          "model": "claude-opus-5.5",
+          "effort": "high",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "liveBench.agenticCoding",
+              "status": "exact_configuration_evidence_missing"
+            }
+          ]
+        },
+        {
+          "model": "claude-sonnet-5",
+          "effort": "max",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "liveBench.agenticCoding",
+              "status": "exact_configuration_evidence_missing"
+            }
+          ]
+        },
+        {
+          "model": "gemini-4-argon",
+          "effort": "none",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "liveBench.agenticCoding",
+              "status": "exact_configuration_evidence_missing"
+            }
+          ]
+        },
+        {
+          "model": "gpt-5.3-codex",
+          "effort": "xhigh",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "liveBench.agenticCoding",
+              "status": "exact_configuration_evidence_missing"
+            }
+          ]
+        },
+        {
+          "model": "gpt-6-luna",
+          "effort": "xhigh",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "liveBench.agenticCoding",
+              "status": "exact_configuration_evidence_missing"
+            }
+          ]
+        },
+        {
+          "model": "gpt-6.1-sol",
+          "effort": "high",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "liveBench.agenticCoding",
+              "status": "exact_configuration_evidence_missing"
+            }
+          ]
+        },
+        {
+          "model": "gpt-6-sol",
+          "effort": "high",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "liveBench.agenticCoding",
+              "status": "exact_configuration_evidence_missing"
+            }
+          ]
+        },
+        {
+          "model": "gpt-5.6-terra",
+          "effort": "high",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "liveBench.agenticCoding",
+              "status": "exact_configuration_evidence_missing"
+            }
+          ]
+        },
+        {
+          "model": "claude-opus-5.5",
+          "effort": "xhigh",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "liveBench.agenticCoding",
+              "status": "outside_quality_band"
+            }
+          ]
+        },
+        {
+          "model": "claude-sonnet-5.5",
+          "effort": "high",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "liveBench.agenticCoding",
+              "status": "exact_configuration_evidence_missing"
+            }
+          ]
+        },
+        {
+          "model": "gpt-6-luna",
+          "effort": "high",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "liveBench.agenticCoding",
+              "status": "exact_configuration_evidence_missing"
+            }
+          ]
+        },
+        {
+          "model": "gpt-5.6-terra",
+          "effort": "xhigh",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "liveBench.agenticCoding",
+              "status": "exact_configuration_evidence_missing"
+            }
+          ]
+        },
+        {
+          "model": "claude-opus-4.8",
+          "effort": "xhigh",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "liveBench.agenticCoding",
+              "status": "exact_configuration_evidence_missing"
+            }
+          ]
+        },
+        {
+          "model": "claude-opus-4.8-fast",
+          "effort": "xhigh",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "liveBench.agenticCoding",
+              "status": "exact_configuration_evidence_missing"
+            }
+          ]
+        }
+      ],
+      "diagnosticCounts": [
+        {
+          "reason": "alias_not_configured",
+          "count": 68
+        },
+        {
+          "reason": "not_in_requested_configurations",
+          "count": 3
+        },
+        {
+          "reason": "score_missing_or_invalid",
+          "count": 26
+        },
+        {
+          "reason": "structured_variant_not_matched",
+          "count": 45
+        }
+      ]
+    },
+    {
+      "profile": "deep-reasoning",
+      "currentConfiguration": {
+        "model": "gpt-6.1-sol",
+        "effort": "xhigh",
+        "context": "long_context",
+        "configurationId": "dcb8f7547841f5422155a7bc62c0d04b176e879d258bc324fecc2189ac3220a4"
+      },
+      "beforeStatus": "budget_constrained_choice",
+      "afterStatus": "budget_constrained_choice",
+      "finalConfiguration": {
+        "model": "gpt-6.1-sol",
+        "effort": "xhigh",
+        "context": "long_context",
+        "configurationId": "dcb8f7547841f5422155a7bc62c0d04b176e879d258bc324fecc2189ac3220a4"
+      },
+      "selectionUnchanged": true,
+      "beforeEvidenceCount": 49,
+      "afterEvidenceCount": 49,
+      "minimumDistinctModels": 2,
+      "qualifiedConfigurations": [
+        {
+          "model": "gpt-6.1-sol",
+          "effort": "high",
+          "context": "long_context"
+        },
+        {
+          "model": "gpt-6.1-sol",
+          "effort": "xhigh",
+          "context": "long_context"
+        }
+      ],
+      "dimensions": [
+        {
+          "dimension": "primary",
+          "metric": "artificialAnalysis.intelligenceIndex",
+          "routeIndex": 0,
+          "distinctEligibleModels": 3,
+          "requiredModels": 2,
+          "referenceConfiguration": {
+            "model": "gpt-6.1-sol",
+            "effort": "xhigh",
+            "context": "long_context",
+            "score": 52.3
+          },
+          "maximumScoreGap": 3
+        },
+        {
+          "dimension": "long-context",
+          "metric": "artificialAnalysisComponents.lcr",
+          "routeIndex": 0,
+          "distinctEligibleModels": 12,
+          "requiredModels": 2,
+          "referenceConfiguration": {
+            "model": "gpt-6-sol",
+            "effort": "high",
+            "context": "long_context",
+            "score": 0.836666666666667
+          },
+          "maximumScoreGap": 0.05
+        }
+      ],
+      "candidateChecks": [
+        {
+          "model": "gpt-5.6-terra",
+          "effort": "xhigh",
+          "context": "long_context",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "exact_configuration_evidence_missing"
+            },
+            {
+              "dimension": "long-context",
+              "metricKey": "artificialAnalysisComponents.lcr",
+              "status": "passed"
+            }
+          ]
+        },
+        {
+          "model": "claude-haiku-5.5",
+          "effort": "xhigh",
+          "context": "long_context",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "outside_quality_band"
+            },
+            {
+              "dimension": "long-context",
+              "metricKey": "artificialAnalysisComponents.lcr",
+              "status": "outside_quality_band"
+            }
+          ]
+        },
+        {
+          "model": "claude-sonnet-5",
+          "effort": "xhigh",
+          "context": "long_context",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "exact_configuration_evidence_missing"
+            },
+            {
+              "dimension": "long-context",
+              "metricKey": "artificialAnalysisComponents.lcr",
+              "status": "outside_quality_band"
+            }
+          ]
+        },
+        {
+          "model": "claude-haiku-5.5",
+          "effort": "max",
+          "context": "long_context",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "outside_quality_band"
+            },
+            {
+              "dimension": "long-context",
+              "metricKey": "artificialAnalysisComponents.lcr",
+              "status": "passed"
+            }
+          ]
+        },
+        {
+          "model": "claude-opus-5.5",
+          "effort": "xhigh",
+          "context": "long_context",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "exact_configuration_evidence_missing"
+            },
+            {
+              "dimension": "long-context",
+              "metricKey": "artificialAnalysisComponents.lcr",
+              "status": "exact_configuration_evidence_missing"
+            }
+          ]
+        },
+        {
+          "model": "claude-sonnet-5.5",
+          "effort": "xhigh",
+          "context": "long_context",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "exact_configuration_evidence_missing"
+            },
+            {
+              "dimension": "long-context",
+              "metricKey": "artificialAnalysisComponents.lcr",
+              "status": "exact_configuration_evidence_missing"
+            }
+          ]
+        },
+        {
+          "model": "gpt-5.6-luna",
+          "effort": "high",
+          "context": "long_context",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "exact_configuration_evidence_missing"
+            },
+            {
+              "dimension": "long-context",
+              "metricKey": "artificialAnalysisComponents.lcr",
+              "status": "passed"
+            }
+          ]
+        },
+        {
+          "model": "gpt-6.1-sol",
+          "effort": "high",
+          "context": "long_context",
+          "qualified": true,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "passed"
+            },
+            {
+              "dimension": "long-context",
+              "metricKey": "artificialAnalysisComponents.lcr",
+              "status": "passed"
+            }
+          ]
+        },
+        {
+          "model": "gpt-6-sol",
+          "effort": "high",
+          "context": "long_context",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "exact_configuration_evidence_missing"
+            },
+            {
+              "dimension": "long-context",
+              "metricKey": "artificialAnalysisComponents.lcr",
+              "status": "passed"
+            }
+          ]
+        },
+        {
+          "model": "claude-opus-5",
+          "effort": "max",
+          "context": "long_context",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "exact_configuration_evidence_missing"
+            },
+            {
+              "dimension": "long-context",
+              "metricKey": "artificialAnalysisComponents.lcr",
+              "status": "passed"
+            }
+          ]
+        },
+        {
+          "model": "gpt-5.6-sol",
+          "effort": "high",
+          "context": "long_context",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "exact_configuration_evidence_missing"
+            },
+            {
+              "dimension": "long-context",
+              "metricKey": "artificialAnalysisComponents.lcr",
+              "status": "passed"
+            }
+          ]
+        },
+        {
+          "model": "claude-sonnet-5",
+          "effort": "high",
+          "context": "long_context",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "exact_configuration_evidence_missing"
+            },
+            {
+              "dimension": "long-context",
+              "metricKey": "artificialAnalysisComponents.lcr",
+              "status": "outside_quality_band"
+            }
+          ]
+        },
+        {
+          "model": "grok-4.5",
+          "effort": "high",
+          "context": "long_context",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "exact_configuration_evidence_missing"
+            },
+            {
+              "dimension": "long-context",
+              "metricKey": "artificialAnalysisComponents.lcr",
+              "status": "passed"
+            }
+          ]
+        },
+        {
+          "model": "gpt-5.6-sol",
+          "effort": "xhigh",
+          "context": "long_context",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "exact_configuration_evidence_missing"
+            },
+            {
+              "dimension": "long-context",
+              "metricKey": "artificialAnalysisComponents.lcr",
+              "status": "passed"
+            }
+          ]
+        },
+        {
+          "model": "gpt-5.6-luna",
+          "effort": "xhigh",
+          "context": "long_context",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "exact_configuration_evidence_missing"
+            },
+            {
+              "dimension": "long-context",
+              "metricKey": "artificialAnalysisComponents.lcr",
+              "status": "passed"
+            }
+          ]
+        },
+        {
+          "model": "claude-sonnet-5.5",
+          "effort": "high",
+          "context": "long_context",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "exact_configuration_evidence_missing"
+            },
+            {
+              "dimension": "long-context",
+              "metricKey": "artificialAnalysisComponents.lcr",
+              "status": "exact_configuration_evidence_missing"
+            }
+          ]
+        },
+        {
+          "model": "claude-opus-4.8",
+          "effort": "xhigh",
+          "context": "long_context",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "exact_configuration_evidence_missing"
+            },
+            {
+              "dimension": "long-context",
+              "metricKey": "artificialAnalysisComponents.lcr",
+              "status": "exact_configuration_evidence_missing"
+            }
+          ]
+        },
+        {
+          "model": "gpt-5.6-terra",
+          "effort": "high",
+          "context": "long_context",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "exact_configuration_evidence_missing"
+            },
+            {
+              "dimension": "long-context",
+              "metricKey": "artificialAnalysisComponents.lcr",
+              "status": "outside_quality_band"
+            }
+          ]
+        },
+        {
+          "model": "claude-opus-4.8",
+          "effort": "high",
+          "context": "long_context",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "exact_configuration_evidence_missing"
+            },
+            {
+              "dimension": "long-context",
+              "metricKey": "artificialAnalysisComponents.lcr",
+              "status": "exact_configuration_evidence_missing"
+            }
+          ]
+        },
+        {
+          "model": "claude-opus-5.5",
+          "effort": "max",
+          "context": "long_context",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "exact_configuration_evidence_missing"
+            },
+            {
+              "dimension": "long-context",
+              "metricKey": "artificialAnalysisComponents.lcr",
+              "status": "exact_configuration_evidence_missing"
+            }
+          ]
+        },
+        {
+          "model": "gpt-6-luna",
+          "effort": "xhigh",
+          "context": "long_context",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "outside_quality_band"
+            },
+            {
+              "dimension": "long-context",
+              "metricKey": "artificialAnalysisComponents.lcr",
+              "status": "passed"
+            }
+          ]
+        },
+        {
+          "model": "grok-4.6",
+          "effort": "xhigh",
+          "context": "long_context",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "exact_configuration_evidence_missing"
+            },
+            {
+              "dimension": "long-context",
+              "metricKey": "artificialAnalysisComponents.lcr",
+              "status": "passed"
+            }
+          ]
+        },
+        {
+          "model": "grok-4.6",
+          "effort": "high",
+          "context": "long_context",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "exact_configuration_evidence_missing"
+            },
+            {
+              "dimension": "long-context",
+              "metricKey": "artificialAnalysisComponents.lcr",
+              "status": "passed"
+            }
+          ]
+        },
+        {
+          "model": "claude-sonnet-5",
+          "effort": "max",
+          "context": "long_context",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "exact_configuration_evidence_missing"
+            },
+            {
+              "dimension": "long-context",
+              "metricKey": "artificialAnalysisComponents.lcr",
+              "status": "passed"
+            }
+          ]
+        },
+        {
+          "model": "claude-sonnet-5.5",
+          "effort": "max",
+          "context": "long_context",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "exact_configuration_evidence_missing"
+            },
+            {
+              "dimension": "long-context",
+              "metricKey": "artificialAnalysisComponents.lcr",
+              "status": "exact_configuration_evidence_missing"
+            }
+          ]
+        },
+        {
+          "model": "claude-opus-5",
+          "effort": "high",
+          "context": "long_context",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "exact_configuration_evidence_missing"
+            },
+            {
+              "dimension": "long-context",
+              "metricKey": "artificialAnalysisComponents.lcr",
+              "status": "passed"
+            }
+          ]
+        },
+        {
+          "model": "gemini-4-argon",
+          "effort": "none",
+          "context": "long_context",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "exact_configuration_evidence_missing"
+            },
+            {
+              "dimension": "long-context",
+              "metricKey": "artificialAnalysisComponents.lcr",
+              "status": "exact_configuration_evidence_missing"
+            }
+          ]
+        },
+        {
+          "model": "claude-opus-4.8",
+          "effort": "max",
+          "context": "long_context",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "exact_configuration_evidence_missing"
+            },
+            {
+              "dimension": "long-context",
+              "metricKey": "artificialAnalysisComponents.lcr",
+              "status": "outside_quality_band"
+            }
+          ]
+        },
+        {
+          "model": "claude-opus-5",
+          "effort": "xhigh",
+          "context": "long_context",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "exact_configuration_evidence_missing"
+            },
+            {
+              "dimension": "long-context",
+              "metricKey": "artificialAnalysisComponents.lcr",
+              "status": "passed"
+            }
+          ]
+        },
+        {
+          "model": "gpt-6.1-sol",
+          "effort": "xhigh",
+          "context": "long_context",
+          "qualified": true,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "passed"
+            },
+            {
+              "dimension": "long-context",
+              "metricKey": "artificialAnalysisComponents.lcr",
+              "status": "passed"
+            }
+          ]
+        },
+        {
+          "model": "claude-opus-5.5",
+          "effort": "high",
+          "context": "long_context",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "exact_configuration_evidence_missing"
+            },
+            {
+              "dimension": "long-context",
+              "metricKey": "artificialAnalysisComponents.lcr",
+              "status": "exact_configuration_evidence_missing"
+            }
+          ]
+        },
+        {
+          "model": "claude-haiku-5.5",
+          "effort": "high",
+          "context": "long_context",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "outside_quality_band"
+            },
+            {
+              "dimension": "long-context",
+              "metricKey": "artificialAnalysisComponents.lcr",
+              "status": "outside_quality_band"
+            }
+          ]
+        },
+        {
+          "model": "gemini-3.8-flash",
+          "effort": "none",
+          "context": "long_context",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "exact_configuration_evidence_missing"
+            },
+            {
+              "dimension": "long-context",
+              "metricKey": "artificialAnalysisComponents.lcr",
+              "status": "exact_configuration_evidence_missing"
+            }
+          ]
+        },
+        {
+          "model": "gpt-6-luna",
+          "effort": "high",
+          "context": "long_context",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "outside_quality_band"
+            },
+            {
+              "dimension": "long-context",
+              "metricKey": "artificialAnalysisComponents.lcr",
+              "status": "passed"
+            }
+          ]
+        },
+        {
+          "model": "gpt-6-sol",
+          "effort": "xhigh",
+          "context": "long_context",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "exact_configuration_evidence_missing"
+            },
+            {
+              "dimension": "long-context",
+              "metricKey": "artificialAnalysisComponents.lcr",
+              "status": "passed"
+            }
+          ]
+        }
+      ],
+      "diagnosticCounts": [
+        {
+          "reason": "alias_not_configured",
+          "count": 68
+        },
+        {
+          "reason": "score_missing_or_invalid",
+          "count": 21
+        }
+      ]
+    },
+    {
+      "profile": "review",
+      "currentConfiguration": {
+        "model": "claude-opus-5",
+        "effort": "high",
+        "context": "default",
+        "configurationId": "1f7497a9a2df69cc66d4d95b9caecbc59d161e1b47e7c8ec3db9befce392f81f"
+      },
+      "beforeStatus": "retained_insufficient_role_evidence",
+      "afterStatus": "retained_insufficient_role_evidence",
+      "finalConfiguration": {
+        "model": "claude-opus-5",
+        "effort": "high",
+        "context": "default",
+        "configurationId": "1f7497a9a2df69cc66d4d95b9caecbc59d161e1b47e7c8ec3db9befce392f81f"
+      },
+      "selectionUnchanged": true,
+      "beforeEvidenceCount": 34,
+      "afterEvidenceCount": 34,
+      "minimumDistinctModels": 2,
+      "qualifiedConfigurations": [],
+      "dimensions": [
+        {
+          "dimension": "primary",
+          "metric": "artificialAnalysis.intelligenceIndex",
+          "routeIndex": 1,
+          "distinctEligibleModels": 3,
+          "requiredModels": 2,
+          "referenceConfiguration": {
+            "model": "gpt-6.1-sol",
+            "effort": "high",
+            "context": "default",
+            "score": 50.2
+          },
+          "maximumScoreGap": 3
+        },
+        {
+          "dimension": "reasoning",
+          "metric": null,
+          "routeIndex": -1,
+          "distinctEligibleModels": 0,
+          "requiredModels": 2,
+          "referenceConfiguration": null,
+          "maximumScoreGap": null
+        },
+        {
+          "dimension": "long-context",
+          "metric": "artificialAnalysisComponents.lcr",
+          "routeIndex": 0,
+          "distinctEligibleModels": 12,
+          "requiredModels": 2,
+          "referenceConfiguration": {
+            "model": "gpt-6-sol",
+            "effort": "high",
+            "context": "default",
+            "score": 0.836666666666667
+          },
+          "maximumScoreGap": 0.05
+        }
+      ],
+      "candidateChecks": [
+        {
+          "model": "grok-4.6",
+          "effort": "high",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "exact_configuration_evidence_missing"
+            },
+            {
+              "dimension": "reasoning",
+              "metricKey": null,
+              "status": "insufficient_comparison_evidence"
+            },
+            {
+              "dimension": "long-context",
+              "metricKey": "artificialAnalysisComponents.lcr",
+              "status": "passed"
+            }
+          ]
+        },
+        {
+          "model": "gpt-6-sol",
+          "effort": "medium",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "exact_configuration_evidence_missing"
+            },
+            {
+              "dimension": "reasoning",
+              "metricKey": null,
+              "status": "insufficient_comparison_evidence"
+            },
+            {
+              "dimension": "long-context",
+              "metricKey": "artificialAnalysisComponents.lcr",
+              "status": "passed"
+            }
+          ]
+        },
+        {
+          "model": "claude-sonnet-5",
+          "effort": "medium",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "exact_configuration_evidence_missing"
+            },
+            {
+              "dimension": "reasoning",
+              "metricKey": null,
+              "status": "insufficient_comparison_evidence"
+            },
+            {
+              "dimension": "long-context",
+              "metricKey": "artificialAnalysisComponents.lcr",
+              "status": "outside_quality_band"
+            }
+          ]
+        },
+        {
+          "model": "claude-haiku-5.5",
+          "effort": "high",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "outside_quality_band"
+            },
+            {
+              "dimension": "reasoning",
+              "metricKey": null,
+              "status": "insufficient_comparison_evidence"
+            },
+            {
+              "dimension": "long-context",
+              "metricKey": "artificialAnalysisComponents.lcr",
+              "status": "outside_quality_band"
+            }
+          ]
+        },
+        {
+          "model": "claude-opus-5",
+          "effort": "high",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "exact_configuration_evidence_missing"
+            },
+            {
+              "dimension": "reasoning",
+              "metricKey": null,
+              "status": "insufficient_comparison_evidence"
+            },
+            {
+              "dimension": "long-context",
+              "metricKey": "artificialAnalysisComponents.lcr",
+              "status": "passed"
+            }
+          ]
+        },
+        {
+          "model": "claude-opus-5.5",
+          "effort": "medium",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "exact_configuration_evidence_missing"
+            },
+            {
+              "dimension": "reasoning",
+              "metricKey": null,
+              "status": "insufficient_comparison_evidence"
+            },
+            {
+              "dimension": "long-context",
+              "metricKey": "artificialAnalysisComponents.lcr",
+              "status": "exact_configuration_evidence_missing"
+            }
+          ]
+        },
+        {
+          "model": "gemini-3.8-flash",
+          "effort": "none",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "exact_configuration_evidence_missing"
+            },
+            {
+              "dimension": "reasoning",
+              "metricKey": null,
+              "status": "insufficient_comparison_evidence"
+            },
+            {
+              "dimension": "long-context",
+              "metricKey": "artificialAnalysisComponents.lcr",
+              "status": "exact_configuration_evidence_missing"
+            }
+          ]
+        },
+        {
+          "model": "claude-opus-4.8",
+          "effort": "medium",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "exact_configuration_evidence_missing"
+            },
+            {
+              "dimension": "reasoning",
+              "metricKey": null,
+              "status": "insufficient_comparison_evidence"
+            },
+            {
+              "dimension": "long-context",
+              "metricKey": "artificialAnalysisComponents.lcr",
+              "status": "exact_configuration_evidence_missing"
+            }
+          ]
+        },
+        {
+          "model": "gpt-5.6-luna",
+          "effort": "high",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "exact_configuration_evidence_missing"
+            },
+            {
+              "dimension": "reasoning",
+              "metricKey": null,
+              "status": "insufficient_comparison_evidence"
+            },
+            {
+              "dimension": "long-context",
+              "metricKey": "artificialAnalysisComponents.lcr",
+              "status": "passed"
+            }
+          ]
+        },
+        {
+          "model": "gpt-5.6-sol",
+          "effort": "medium",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "exact_configuration_evidence_missing"
+            },
+            {
+              "dimension": "reasoning",
+              "metricKey": null,
+              "status": "insufficient_comparison_evidence"
+            },
+            {
+              "dimension": "long-context",
+              "metricKey": "artificialAnalysisComponents.lcr",
+              "status": "passed"
+            }
+          ]
+        },
+        {
+          "model": "grok-4.5",
+          "effort": "medium",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "exact_configuration_evidence_missing"
+            },
+            {
+              "dimension": "reasoning",
+              "metricKey": null,
+              "status": "insufficient_comparison_evidence"
+            },
+            {
+              "dimension": "long-context",
+              "metricKey": "artificialAnalysisComponents.lcr",
+              "status": "exact_configuration_evidence_missing"
+            }
+          ]
+        },
+        {
+          "model": "claude-haiku-4.5",
+          "effort": "none",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "exact_configuration_evidence_missing"
+            },
+            {
+              "dimension": "reasoning",
+              "metricKey": null,
+              "status": "insufficient_comparison_evidence"
+            },
+            {
+              "dimension": "long-context",
+              "metricKey": "artificialAnalysisComponents.lcr",
+              "status": "outside_quality_band"
+            }
+          ]
+        },
+        {
+          "model": "claude-opus-4.8",
+          "effort": "high",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "exact_configuration_evidence_missing"
+            },
+            {
+              "dimension": "reasoning",
+              "metricKey": null,
+              "status": "insufficient_comparison_evidence"
+            },
+            {
+              "dimension": "long-context",
+              "metricKey": "artificialAnalysisComponents.lcr",
+              "status": "exact_configuration_evidence_missing"
+            }
+          ]
+        },
+        {
+          "model": "gpt-5.3-codex",
+          "effort": "high",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "exact_configuration_evidence_missing"
+            },
+            {
+              "dimension": "reasoning",
+              "metricKey": null,
+              "status": "insufficient_comparison_evidence"
+            },
+            {
+              "dimension": "long-context",
+              "metricKey": "artificialAnalysisComponents.lcr",
+              "status": "exact_configuration_evidence_missing"
+            }
+          ]
+        },
+        {
+          "model": "grok-4.5",
+          "effort": "high",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "exact_configuration_evidence_missing"
+            },
+            {
+              "dimension": "reasoning",
+              "metricKey": null,
+              "status": "insufficient_comparison_evidence"
+            },
+            {
+              "dimension": "long-context",
+              "metricKey": "artificialAnalysisComponents.lcr",
+              "status": "passed"
+            }
+          ]
+        },
+        {
+          "model": "mai-code-1.1-flash",
+          "effort": "high",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "exact_configuration_evidence_missing"
+            },
+            {
+              "dimension": "reasoning",
+              "metricKey": null,
+              "status": "insufficient_comparison_evidence"
+            },
+            {
+              "dimension": "long-context",
+              "metricKey": "artificialAnalysisComponents.lcr",
+              "status": "exact_configuration_evidence_missing"
+            }
+          ]
+        },
+        {
+          "model": "gpt-5.6-terra",
+          "effort": "medium",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "exact_configuration_evidence_missing"
+            },
+            {
+              "dimension": "reasoning",
+              "metricKey": null,
+              "status": "insufficient_comparison_evidence"
+            },
+            {
+              "dimension": "long-context",
+              "metricKey": "artificialAnalysisComponents.lcr",
+              "status": "outside_quality_band"
+            }
+          ]
+        },
+        {
+          "model": "claude-sonnet-5.5",
+          "effort": "medium",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "exact_configuration_evidence_missing"
+            },
+            {
+              "dimension": "reasoning",
+              "metricKey": null,
+              "status": "insufficient_comparison_evidence"
+            },
+            {
+              "dimension": "long-context",
+              "metricKey": "artificialAnalysisComponents.lcr",
+              "status": "exact_configuration_evidence_missing"
+            }
+          ]
+        },
+        {
+          "model": "gpt-5.6-sol",
+          "effort": "high",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "exact_configuration_evidence_missing"
+            },
+            {
+              "dimension": "reasoning",
+              "metricKey": null,
+              "status": "insufficient_comparison_evidence"
+            },
+            {
+              "dimension": "long-context",
+              "metricKey": "artificialAnalysisComponents.lcr",
+              "status": "passed"
+            }
+          ]
+        },
+        {
+          "model": "gpt-6-luna",
+          "effort": "medium",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "outside_quality_band"
+            },
+            {
+              "dimension": "reasoning",
+              "metricKey": null,
+              "status": "insufficient_comparison_evidence"
+            },
+            {
+              "dimension": "long-context",
+              "metricKey": "artificialAnalysisComponents.lcr",
+              "status": "outside_quality_band"
+            }
+          ]
+        },
+        {
+          "model": "grok-4.6",
+          "effort": "medium",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "exact_configuration_evidence_missing"
+            },
+            {
+              "dimension": "reasoning",
+              "metricKey": null,
+              "status": "insufficient_comparison_evidence"
+            },
+            {
+              "dimension": "long-context",
+              "metricKey": "artificialAnalysisComponents.lcr",
+              "status": "passed"
+            }
+          ]
+        },
+        {
+          "model": "claude-sonnet-5",
+          "effort": "high",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "exact_configuration_evidence_missing"
+            },
+            {
+              "dimension": "reasoning",
+              "metricKey": null,
+              "status": "insufficient_comparison_evidence"
+            },
+            {
+              "dimension": "long-context",
+              "metricKey": "artificialAnalysisComponents.lcr",
+              "status": "outside_quality_band"
+            }
+          ]
+        },
+        {
+          "model": "claude-opus-5.5",
+          "effort": "high",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "exact_configuration_evidence_missing"
+            },
+            {
+              "dimension": "reasoning",
+              "metricKey": null,
+              "status": "insufficient_comparison_evidence"
+            },
+            {
+              "dimension": "long-context",
+              "metricKey": "artificialAnalysisComponents.lcr",
+              "status": "exact_configuration_evidence_missing"
+            }
+          ]
+        },
+        {
+          "model": "gpt-6.1-sol",
+          "effort": "medium",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "outside_quality_band"
+            },
+            {
+              "dimension": "reasoning",
+              "metricKey": null,
+              "status": "insufficient_comparison_evidence"
+            },
+            {
+              "dimension": "long-context",
+              "metricKey": "artificialAnalysisComponents.lcr",
+              "status": "passed"
+            }
+          ]
+        },
+        {
+          "model": "gemini-4-argon",
+          "effort": "none",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "exact_configuration_evidence_missing"
+            },
+            {
+              "dimension": "reasoning",
+              "metricKey": null,
+              "status": "insufficient_comparison_evidence"
+            },
+            {
+              "dimension": "long-context",
+              "metricKey": "artificialAnalysisComponents.lcr",
+              "status": "exact_configuration_evidence_missing"
+            }
+          ]
+        },
+        {
+          "model": "mai-code-1.1-flash",
+          "effort": "medium",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "exact_configuration_evidence_missing"
+            },
+            {
+              "dimension": "reasoning",
+              "metricKey": null,
+              "status": "insufficient_comparison_evidence"
+            },
+            {
+              "dimension": "long-context",
+              "metricKey": "artificialAnalysisComponents.lcr",
+              "status": "exact_configuration_evidence_missing"
+            }
+          ]
+        },
+        {
+          "model": "claude-haiku-5.5",
+          "effort": "medium",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "outside_quality_band"
+            },
+            {
+              "dimension": "reasoning",
+              "metricKey": null,
+              "status": "insufficient_comparison_evidence"
+            },
+            {
+              "dimension": "long-context",
+              "metricKey": "artificialAnalysisComponents.lcr",
+              "status": "outside_quality_band"
+            }
+          ]
+        },
+        {
+          "model": "gpt-5.6-luna",
+          "effort": "medium",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "exact_configuration_evidence_missing"
+            },
+            {
+              "dimension": "reasoning",
+              "metricKey": null,
+              "status": "insufficient_comparison_evidence"
+            },
+            {
+              "dimension": "long-context",
+              "metricKey": "artificialAnalysisComponents.lcr",
+              "status": "outside_quality_band"
+            }
+          ]
+        },
+        {
+          "model": "gpt-6.1-sol",
+          "effort": "high",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "passed"
+            },
+            {
+              "dimension": "reasoning",
+              "metricKey": null,
+              "status": "insufficient_comparison_evidence"
+            },
+            {
+              "dimension": "long-context",
+              "metricKey": "artificialAnalysisComponents.lcr",
+              "status": "passed"
+            }
+          ]
+        },
+        {
+          "model": "gpt-5.3-codex",
+          "effort": "medium",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "exact_configuration_evidence_missing"
+            },
+            {
+              "dimension": "reasoning",
+              "metricKey": null,
+              "status": "insufficient_comparison_evidence"
+            },
+            {
+              "dimension": "long-context",
+              "metricKey": "artificialAnalysisComponents.lcr",
+              "status": "exact_configuration_evidence_missing"
+            }
+          ]
+        },
+        {
+          "model": "gpt-6-sol",
+          "effort": "high",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "exact_configuration_evidence_missing"
+            },
+            {
+              "dimension": "reasoning",
+              "metricKey": null,
+              "status": "insufficient_comparison_evidence"
+            },
+            {
+              "dimension": "long-context",
+              "metricKey": "artificialAnalysisComponents.lcr",
+              "status": "passed"
+            }
+          ]
+        },
+        {
+          "model": "gpt-5.6-terra",
+          "effort": "high",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "exact_configuration_evidence_missing"
+            },
+            {
+              "dimension": "reasoning",
+              "metricKey": null,
+              "status": "insufficient_comparison_evidence"
+            },
+            {
+              "dimension": "long-context",
+              "metricKey": "artificialAnalysisComponents.lcr",
+              "status": "outside_quality_band"
+            }
+          ]
+        },
+        {
+          "model": "claude-opus-5",
+          "effort": "medium",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "exact_configuration_evidence_missing"
+            },
+            {
+              "dimension": "reasoning",
+              "metricKey": null,
+              "status": "insufficient_comparison_evidence"
+            },
+            {
+              "dimension": "long-context",
+              "metricKey": "artificialAnalysisComponents.lcr",
+              "status": "passed"
+            }
+          ]
+        },
+        {
+          "model": "claude-sonnet-5.5",
+          "effort": "high",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "exact_configuration_evidence_missing"
+            },
+            {
+              "dimension": "reasoning",
+              "metricKey": null,
+              "status": "insufficient_comparison_evidence"
+            },
+            {
+              "dimension": "long-context",
+              "metricKey": "artificialAnalysisComponents.lcr",
+              "status": "exact_configuration_evidence_missing"
+            }
+          ]
+        },
+        {
+          "model": "gpt-6-luna",
+          "effort": "high",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "outside_quality_band"
+            },
+            {
+              "dimension": "reasoning",
+              "metricKey": null,
+              "status": "insufficient_comparison_evidence"
+            },
+            {
+              "dimension": "long-context",
+              "metricKey": "artificialAnalysisComponents.lcr",
+              "status": "passed"
+            }
+          ]
+        }
+      ],
+      "diagnosticCounts": [
+        {
+          "reason": "alias_not_configured",
+          "count": 114
+        },
+        {
+          "reason": "score_missing_or_invalid",
+          "count": 16
+        }
+      ]
+    },
+    {
+      "profile": "visual-ui",
+      "currentConfiguration": {
+        "model": "gemini-3.8-flash",
+        "effort": "none",
+        "context": "default",
+        "configurationId": "23f0157ab0d0a44e482e37bf7ed8922b604354e25b8223996577321f45e42a4e"
+      },
+      "beforeStatus": "retained_fallback_incumbent_evidence_missing",
+      "afterStatus": "retained_fallback_incumbent_evidence_missing",
+      "finalConfiguration": {
+        "model": "gemini-3.8-flash",
+        "effort": "none",
+        "context": "default",
+        "configurationId": "23f0157ab0d0a44e482e37bf7ed8922b604354e25b8223996577321f45e42a4e"
+      },
+      "selectionUnchanged": true,
+      "beforeEvidenceCount": 27,
+      "afterEvidenceCount": 27,
+      "minimumDistinctModels": 2,
+      "qualifiedConfigurations": [
+        {
+          "model": "gpt-6.1-sol",
+          "effort": "high",
+          "context": "default"
+        }
+      ],
+      "dimensions": [
+        {
+          "dimension": "primary",
+          "metric": "artificialAnalysis.intelligenceIndex",
+          "routeIndex": 1,
+          "distinctEligibleModels": 3,
+          "requiredModels": 2,
+          "referenceConfiguration": {
+            "model": "gpt-6.1-sol",
+            "effort": "high",
+            "context": "default",
+            "score": 50.2
+          },
+          "maximumScoreGap": 3
+        },
+        {
+          "dimension": "visual-understanding",
+          "metric": "artificialAnalysisComponents.mmmuPro",
+          "routeIndex": 0,
+          "distinctEligibleModels": 8,
+          "requiredModels": 2,
+          "referenceConfiguration": {
+            "model": "gpt-6.1-sol",
+            "effort": "high",
+            "context": "default",
+            "score": 0.849132947976879
+          },
+          "maximumScoreGap": 0.03
+        }
+      ],
+      "candidateChecks": [
+        {
+          "model": "grok-4.6",
+          "effort": "high",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "exact_configuration_evidence_missing"
+            },
+            {
+              "dimension": "visual-understanding",
+              "metricKey": "artificialAnalysisComponents.mmmuPro",
+              "status": "exact_configuration_evidence_missing"
+            }
+          ]
+        },
+        {
+          "model": "gpt-6-sol",
+          "effort": "medium",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "exact_configuration_evidence_missing"
+            },
+            {
+              "dimension": "visual-understanding",
+              "metricKey": "artificialAnalysisComponents.mmmuPro",
+              "status": "outside_quality_band"
+            }
+          ]
+        },
+        {
+          "model": "claude-sonnet-5",
+          "effort": "medium",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "exact_configuration_evidence_missing"
+            },
+            {
+              "dimension": "visual-understanding",
+              "metricKey": "artificialAnalysisComponents.mmmuPro",
+              "status": "exact_configuration_evidence_missing"
+            }
+          ]
+        },
+        {
+          "model": "claude-haiku-5.5",
+          "effort": "high",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "outside_quality_band"
+            },
+            {
+              "dimension": "visual-understanding",
+              "metricKey": "artificialAnalysisComponents.mmmuPro",
+              "status": "exact_configuration_evidence_missing"
+            }
+          ]
+        },
+        {
+          "model": "claude-opus-5",
+          "effort": "high",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "exact_configuration_evidence_missing"
+            },
+            {
+              "dimension": "visual-understanding",
+              "metricKey": "artificialAnalysisComponents.mmmuPro",
+              "status": "passed"
+            }
+          ]
+        },
+        {
+          "model": "claude-opus-5.5",
+          "effort": "medium",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "exact_configuration_evidence_missing"
+            },
+            {
+              "dimension": "visual-understanding",
+              "metricKey": "artificialAnalysisComponents.mmmuPro",
+              "status": "exact_configuration_evidence_missing"
+            }
+          ]
+        },
+        {
+          "model": "gemini-3.8-flash",
+          "effort": "none",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "exact_configuration_evidence_missing"
+            },
+            {
+              "dimension": "visual-understanding",
+              "metricKey": "artificialAnalysisComponents.mmmuPro",
+              "status": "exact_configuration_evidence_missing"
+            }
+          ]
+        },
+        {
+          "model": "claude-opus-4.8",
+          "effort": "medium",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "exact_configuration_evidence_missing"
+            },
+            {
+              "dimension": "visual-understanding",
+              "metricKey": "artificialAnalysisComponents.mmmuPro",
+              "status": "exact_configuration_evidence_missing"
+            }
+          ]
+        },
+        {
+          "model": "gpt-5.6-luna",
+          "effort": "high",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "exact_configuration_evidence_missing"
+            },
+            {
+              "dimension": "visual-understanding",
+              "metricKey": "artificialAnalysisComponents.mmmuPro",
+              "status": "outside_quality_band"
+            }
+          ]
+        },
+        {
+          "model": "gpt-5.6-sol",
+          "effort": "medium",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "exact_configuration_evidence_missing"
+            },
+            {
+              "dimension": "visual-understanding",
+              "metricKey": "artificialAnalysisComponents.mmmuPro",
+              "status": "outside_quality_band"
+            }
+          ]
+        },
+        {
+          "model": "claude-haiku-4.5",
+          "effort": "none",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "exact_configuration_evidence_missing"
+            },
+            {
+              "dimension": "visual-understanding",
+              "metricKey": "artificialAnalysisComponents.mmmuPro",
+              "status": "outside_quality_band"
+            }
+          ]
+        },
+        {
+          "model": "claude-opus-4.8",
+          "effort": "high",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "exact_configuration_evidence_missing"
+            },
+            {
+              "dimension": "visual-understanding",
+              "metricKey": "artificialAnalysisComponents.mmmuPro",
+              "status": "exact_configuration_evidence_missing"
+            }
+          ]
+        },
+        {
+          "model": "mai-code-1.1-flash",
+          "effort": "high",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "exact_configuration_evidence_missing"
+            },
+            {
+              "dimension": "visual-understanding",
+              "metricKey": "artificialAnalysisComponents.mmmuPro",
+              "status": "exact_configuration_evidence_missing"
+            }
+          ]
+        },
+        {
+          "model": "gpt-5.6-terra",
+          "effort": "medium",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "exact_configuration_evidence_missing"
+            },
+            {
+              "dimension": "visual-understanding",
+              "metricKey": "artificialAnalysisComponents.mmmuPro",
+              "status": "outside_quality_band"
+            }
+          ]
+        },
+        {
+          "model": "claude-sonnet-5.5",
+          "effort": "medium",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "exact_configuration_evidence_missing"
+            },
+            {
+              "dimension": "visual-understanding",
+              "metricKey": "artificialAnalysisComponents.mmmuPro",
+              "status": "exact_configuration_evidence_missing"
+            }
+          ]
+        },
+        {
+          "model": "gpt-5.6-sol",
+          "effort": "high",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "exact_configuration_evidence_missing"
+            },
+            {
+              "dimension": "visual-understanding",
+              "metricKey": "artificialAnalysisComponents.mmmuPro",
+              "status": "outside_quality_band"
+            }
+          ]
+        },
+        {
+          "model": "gpt-6-luna",
+          "effort": "medium",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "outside_quality_band"
+            },
+            {
+              "dimension": "visual-understanding",
+              "metricKey": "artificialAnalysisComponents.mmmuPro",
+              "status": "outside_quality_band"
+            }
+          ]
+        },
+        {
+          "model": "grok-4.6",
+          "effort": "medium",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "exact_configuration_evidence_missing"
+            },
+            {
+              "dimension": "visual-understanding",
+              "metricKey": "artificialAnalysisComponents.mmmuPro",
+              "status": "exact_configuration_evidence_missing"
+            }
+          ]
+        },
+        {
+          "model": "claude-sonnet-5",
+          "effort": "high",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "exact_configuration_evidence_missing"
+            },
+            {
+              "dimension": "visual-understanding",
+              "metricKey": "artificialAnalysisComponents.mmmuPro",
+              "status": "exact_configuration_evidence_missing"
+            }
+          ]
+        },
+        {
+          "model": "claude-opus-5.5",
+          "effort": "high",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "exact_configuration_evidence_missing"
+            },
+            {
+              "dimension": "visual-understanding",
+              "metricKey": "artificialAnalysisComponents.mmmuPro",
+              "status": "exact_configuration_evidence_missing"
+            }
+          ]
+        },
+        {
+          "model": "gpt-6.1-sol",
+          "effort": "medium",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "outside_quality_band"
+            },
+            {
+              "dimension": "visual-understanding",
+              "metricKey": "artificialAnalysisComponents.mmmuPro",
+              "status": "passed"
+            }
+          ]
+        },
+        {
+          "model": "gemini-4-argon",
+          "effort": "none",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "exact_configuration_evidence_missing"
+            },
+            {
+              "dimension": "visual-understanding",
+              "metricKey": "artificialAnalysisComponents.mmmuPro",
+              "status": "exact_configuration_evidence_missing"
+            }
+          ]
+        },
+        {
+          "model": "mai-code-1.1-flash",
+          "effort": "medium",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "exact_configuration_evidence_missing"
+            },
+            {
+              "dimension": "visual-understanding",
+              "metricKey": "artificialAnalysisComponents.mmmuPro",
+              "status": "exact_configuration_evidence_missing"
+            }
+          ]
+        },
+        {
+          "model": "claude-haiku-5.5",
+          "effort": "medium",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "outside_quality_band"
+            },
+            {
+              "dimension": "visual-understanding",
+              "metricKey": "artificialAnalysisComponents.mmmuPro",
+              "status": "exact_configuration_evidence_missing"
+            }
+          ]
+        },
+        {
+          "model": "gpt-5.6-luna",
+          "effort": "medium",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "exact_configuration_evidence_missing"
+            },
+            {
+              "dimension": "visual-understanding",
+              "metricKey": "artificialAnalysisComponents.mmmuPro",
+              "status": "outside_quality_band"
+            }
+          ]
+        },
+        {
+          "model": "gpt-6.1-sol",
+          "effort": "high",
+          "context": "default",
+          "qualified": true,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "passed"
+            },
+            {
+              "dimension": "visual-understanding",
+              "metricKey": "artificialAnalysisComponents.mmmuPro",
+              "status": "passed"
+            }
+          ]
+        },
+        {
+          "model": "gpt-6-sol",
+          "effort": "high",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "exact_configuration_evidence_missing"
+            },
+            {
+              "dimension": "visual-understanding",
+              "metricKey": "artificialAnalysisComponents.mmmuPro",
+              "status": "passed"
+            }
+          ]
+        },
+        {
+          "model": "gpt-5.6-terra",
+          "effort": "high",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "exact_configuration_evidence_missing"
+            },
+            {
+              "dimension": "visual-understanding",
+              "metricKey": "artificialAnalysisComponents.mmmuPro",
+              "status": "outside_quality_band"
+            }
+          ]
+        },
+        {
+          "model": "claude-opus-5",
+          "effort": "medium",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "exact_configuration_evidence_missing"
+            },
+            {
+              "dimension": "visual-understanding",
+              "metricKey": "artificialAnalysisComponents.mmmuPro",
+              "status": "outside_quality_band"
+            }
+          ]
+        },
+        {
+          "model": "claude-sonnet-5.5",
+          "effort": "high",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "exact_configuration_evidence_missing"
+            },
+            {
+              "dimension": "visual-understanding",
+              "metricKey": "artificialAnalysisComponents.mmmuPro",
+              "status": "exact_configuration_evidence_missing"
+            }
+          ]
+        },
+        {
+          "model": "gpt-6-luna",
+          "effort": "high",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "outside_quality_band"
+            },
+            {
+              "dimension": "visual-understanding",
+              "metricKey": "artificialAnalysisComponents.mmmuPro",
+              "status": "outside_quality_band"
+            }
+          ]
+        }
+      ],
+      "diagnosticCounts": [
+        {
+          "reason": "alias_not_configured",
+          "count": 74
+        },
+        {
+          "reason": "score_missing_or_invalid",
+          "count": 22
+        }
+      ]
+    },
+    {
+      "profile": "mechanical",
+      "currentConfiguration": {
+        "model": "gemini-3.8-flash",
+        "effort": "none",
+        "context": "default",
+        "configurationId": "23f0157ab0d0a44e482e37bf7ed8922b604354e25b8223996577321f45e42a4e"
+      },
+      "beforeStatus": "retained_insufficient_role_evidence",
+      "afterStatus": "retained_insufficient_role_evidence",
+      "finalConfiguration": {
+        "model": "gemini-3.8-flash",
+        "effort": "none",
+        "context": "default",
+        "configurationId": "23f0157ab0d0a44e482e37bf7ed8922b604354e25b8223996577321f45e42a4e"
+      },
+      "selectionUnchanged": true,
+      "beforeEvidenceCount": 14,
+      "afterEvidenceCount": 14,
+      "minimumDistinctModels": 2,
+      "qualifiedConfigurations": [],
+      "dimensions": [
+        {
+          "dimension": "primary",
+          "metric": "artificialAnalysisComponents.automationBench",
+          "routeIndex": 0,
+          "distinctEligibleModels": 7,
+          "requiredModels": 2,
+          "referenceConfiguration": {
+            "model": "gpt-6-sol",
+            "effort": "low",
+            "context": "default",
+            "score": 0.5388999278467668
+          },
+          "maximumScoreGap": 0
+        },
+        {
+          "dimension": "instruction-following",
+          "metric": null,
+          "routeIndex": -1,
+          "distinctEligibleModels": 0,
+          "requiredModels": 2,
+          "referenceConfiguration": null,
+          "maximumScoreGap": null
+        }
+      ],
+      "candidateChecks": [
+        {
+          "model": "mai-code-1.1-flash",
+          "effort": "low",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysisComponents.automationBench",
+              "status": "exact_configuration_evidence_missing"
+            },
+            {
+              "dimension": "instruction-following",
+              "metricKey": null,
+              "status": "insufficient_comparison_evidence"
+            }
+          ]
+        },
+        {
+          "model": "gemini-3.8-flash",
+          "effort": "none",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysisComponents.automationBench",
+              "status": "exact_configuration_evidence_missing"
+            },
+            {
+              "dimension": "instruction-following",
+              "metricKey": null,
+              "status": "insufficient_comparison_evidence"
+            }
+          ]
+        },
+        {
+          "model": "claude-haiku-5.5",
+          "effort": "low",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysisComponents.automationBench",
+              "status": "outside_quality_band"
+            },
+            {
+              "dimension": "instruction-following",
+              "metricKey": null,
+              "status": "insufficient_comparison_evidence"
+            }
+          ]
+        },
+        {
+          "model": "claude-haiku-4.5",
+          "effort": "none",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysisComponents.automationBench",
+              "status": "exact_configuration_evidence_missing"
+            },
+            {
+              "dimension": "instruction-following",
+              "metricKey": null,
+              "status": "insufficient_comparison_evidence"
+            }
+          ]
+        },
+        {
+          "model": "gpt-6-luna",
+          "effort": "low",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysisComponents.automationBench",
+              "status": "outside_quality_band"
+            },
+            {
+              "dimension": "instruction-following",
+              "metricKey": null,
+              "status": "insufficient_comparison_evidence"
+            }
+          ]
+        },
+        {
+          "model": "gpt-6.1-sol",
+          "effort": "low",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysisComponents.automationBench",
+              "status": "outside_quality_band"
+            },
+            {
+              "dimension": "instruction-following",
+              "metricKey": null,
+              "status": "insufficient_comparison_evidence"
+            }
+          ]
+        },
+        {
+          "model": "gpt-5.6-luna",
+          "effort": "low",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysisComponents.automationBench",
+              "status": "outside_quality_band"
+            },
+            {
+              "dimension": "instruction-following",
+              "metricKey": null,
+              "status": "insufficient_comparison_evidence"
+            }
+          ]
+        },
+        {
+          "model": "claude-sonnet-5",
+          "effort": "low",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysisComponents.automationBench",
+              "status": "outside_quality_band"
+            },
+            {
+              "dimension": "instruction-following",
+              "metricKey": null,
+              "status": "insufficient_comparison_evidence"
+            }
+          ]
+        },
+        {
+          "model": "gemini-4-argon",
+          "effort": "none",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysisComponents.automationBench",
+              "status": "exact_configuration_evidence_missing"
+            },
+            {
+              "dimension": "instruction-following",
+              "metricKey": null,
+              "status": "insufficient_comparison_evidence"
+            }
+          ]
+        },
+        {
+          "model": "grok-4.5",
+          "effort": "low",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysisComponents.automationBench",
+              "status": "exact_configuration_evidence_missing"
+            },
+            {
+              "dimension": "instruction-following",
+              "metricKey": null,
+              "status": "insufficient_comparison_evidence"
+            }
+          ]
+        },
+        {
+          "model": "grok-4.6",
+          "effort": "low",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysisComponents.automationBench",
+              "status": "outside_quality_band"
+            },
+            {
+              "dimension": "instruction-following",
+              "metricKey": null,
+              "status": "insufficient_comparison_evidence"
+            }
+          ]
+        },
+        {
+          "model": "gpt-6-sol",
+          "effort": "low",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysisComponents.automationBench",
+              "status": "passed"
+            },
+            {
+              "dimension": "instruction-following",
+              "metricKey": null,
+              "status": "insufficient_comparison_evidence"
+            }
+          ]
+        },
+        {
+          "model": "claude-sonnet-5.5",
+          "effort": "low",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysisComponents.automationBench",
+              "status": "exact_configuration_evidence_missing"
+            },
+            {
+              "dimension": "instruction-following",
+              "metricKey": null,
+              "status": "insufficient_comparison_evidence"
+            }
+          ]
+        }
+      ],
+      "diagnosticCounts": [
+        {
+          "reason": "alias_not_configured",
+          "count": 52
+        },
+        {
+          "reason": "score_missing_or_invalid",
+          "count": 22
+        }
+      ]
+    },
+    {
+      "profile": "triage",
+      "currentConfiguration": {
+        "model": "gpt-6.1-sol",
+        "effort": "low",
+        "context": "default",
+        "configurationId": "5c611e4e967b264150c0fd0b88ce793f4d4ddd8644ed0c3f9621f1b4e98acc3d"
+      },
+      "beforeStatus": "retained_insufficient_role_evidence",
+      "afterStatus": "retained_insufficient_role_evidence",
+      "finalConfiguration": {
+        "model": "gpt-6.1-sol",
+        "effort": "low",
+        "context": "default",
+        "configurationId": "5c611e4e967b264150c0fd0b88ce793f4d4ddd8644ed0c3f9621f1b4e98acc3d"
+      },
+      "selectionUnchanged": true,
+      "beforeEvidenceCount": 7,
+      "afterEvidenceCount": 7,
+      "minimumDistinctModels": 2,
+      "qualifiedConfigurations": [],
+      "dimensions": [
+        {
+          "dimension": "primary",
+          "metric": "artificialAnalysis.intelligenceIndex",
+          "routeIndex": 0,
+          "distinctEligibleModels": 3,
+          "requiredModels": 2,
+          "referenceConfiguration": {
+            "model": "gpt-6.1-sol",
+            "effort": "low",
+            "context": "default",
+            "score": 34.5
+          },
+          "maximumScoreGap": 3
+        },
+        {
+          "dimension": "instruction-following",
+          "metric": null,
+          "routeIndex": -1,
+          "distinctEligibleModels": 0,
+          "requiredModels": 2,
+          "referenceConfiguration": null,
+          "maximumScoreGap": null
+        }
+      ],
+      "candidateChecks": [
+        {
+          "model": "mai-code-1.1-flash",
+          "effort": "low",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "exact_configuration_evidence_missing"
+            },
+            {
+              "dimension": "instruction-following",
+              "metricKey": null,
+              "status": "insufficient_comparison_evidence"
+            }
+          ]
+        },
+        {
+          "model": "gemini-3.8-flash",
+          "effort": "none",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "exact_configuration_evidence_missing"
+            },
+            {
+              "dimension": "instruction-following",
+              "metricKey": null,
+              "status": "insufficient_comparison_evidence"
+            }
+          ]
+        },
+        {
+          "model": "claude-haiku-5.5",
+          "effort": "low",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "outside_quality_band"
+            },
+            {
+              "dimension": "instruction-following",
+              "metricKey": null,
+              "status": "insufficient_comparison_evidence"
+            }
+          ]
+        },
+        {
+          "model": "claude-haiku-4.5",
+          "effort": "none",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "exact_configuration_evidence_missing"
+            },
+            {
+              "dimension": "instruction-following",
+              "metricKey": null,
+              "status": "insufficient_comparison_evidence"
+            }
+          ]
+        },
+        {
+          "model": "gpt-6-luna",
+          "effort": "low",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "outside_quality_band"
+            },
+            {
+              "dimension": "instruction-following",
+              "metricKey": null,
+              "status": "insufficient_comparison_evidence"
+            }
+          ]
+        },
+        {
+          "model": "gpt-6.1-sol",
+          "effort": "low",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "passed"
+            },
+            {
+              "dimension": "instruction-following",
+              "metricKey": null,
+              "status": "insufficient_comparison_evidence"
+            }
+          ]
+        },
+        {
+          "model": "gpt-5.6-luna",
+          "effort": "low",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "exact_configuration_evidence_missing"
+            },
+            {
+              "dimension": "instruction-following",
+              "metricKey": null,
+              "status": "insufficient_comparison_evidence"
+            }
+          ]
+        },
+        {
+          "model": "claude-sonnet-5",
+          "effort": "low",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "exact_configuration_evidence_missing"
+            },
+            {
+              "dimension": "instruction-following",
+              "metricKey": null,
+              "status": "insufficient_comparison_evidence"
+            }
+          ]
+        },
+        {
+          "model": "gemini-4-argon",
+          "effort": "none",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "exact_configuration_evidence_missing"
+            },
+            {
+              "dimension": "instruction-following",
+              "metricKey": null,
+              "status": "insufficient_comparison_evidence"
+            }
+          ]
+        },
+        {
+          "model": "grok-4.5",
+          "effort": "low",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "exact_configuration_evidence_missing"
+            },
+            {
+              "dimension": "instruction-following",
+              "metricKey": null,
+              "status": "insufficient_comparison_evidence"
+            }
+          ]
+        },
+        {
+          "model": "grok-4.6",
+          "effort": "low",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "exact_configuration_evidence_missing"
+            },
+            {
+              "dimension": "instruction-following",
+              "metricKey": null,
+              "status": "insufficient_comparison_evidence"
+            }
+          ]
+        },
+        {
+          "model": "gpt-6-sol",
+          "effort": "low",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "exact_configuration_evidence_missing"
+            },
+            {
+              "dimension": "instruction-following",
+              "metricKey": null,
+              "status": "insufficient_comparison_evidence"
+            }
+          ]
+        },
+        {
+          "model": "claude-sonnet-5.5",
+          "effort": "low",
+          "context": "default",
+          "qualified": false,
+          "checks": [
+            {
+              "dimension": "primary",
+              "metricKey": "artificialAnalysis.intelligenceIndex",
+              "status": "exact_configuration_evidence_missing"
+            },
+            {
+              "dimension": "instruction-following",
+              "metricKey": null,
+              "status": "insufficient_comparison_evidence"
+            }
+          ]
+        }
+      ],
+      "diagnosticCounts": [
+        {
+          "reason": "alias_not_configured",
+          "count": 64
+        },
+        {
+          "reason": "score_missing_or_invalid",
+          "count": 17
+        }
+      ]
+    }
+  ]
+}
