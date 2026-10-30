@@ -2,8 +2,50 @@ Set-StrictMode -Version Latest
 . (Join-Path $PSScriptRoot "model-data-common.ps1")
 . (Join-Path $PSScriptRoot "model-agent-data.ps1")
 
-$script:ArtificialAnalysisLlmModelsApiUrl = "https://artificialanalysis.ai/api/v2/data/llms/models"
+$script:ArtificialAnalysisLlmModelsApiUrl = "https://artificialanalysis.ai/api/v2/language/models/free"
 $script:ArtificialAnalysisCodingAgentsUrl = "https://artificialanalysis.ai/agents/coding-agents"
+$script:ArtificialAnalysisLlmModelsMaxPages = 50
+
+function Get-ArtificialAnalysisPagedUrl {
+    [OutputType([string])]
+    param(
+        [Parameter(Mandatory = $true)][string]$Url,
+        [Parameter(Mandatory = $true)][int]$Page
+    )
+
+    if ($Page -le 1) { return $Url }
+    $separator = if ($Url.Contains("?")) { "&" } else { "?" }
+    return "{0}{1}page={2}" -f $Url, $separator, $Page
+}
+
+function New-ArtificialAnalysisFetchErrorResult {
+    [OutputType([pscustomobject])]
+    param(
+        [Parameter(Mandatory = $true)]$FetchResult,
+        [Parameter(Mandatory = $true)][string]$FetchedAtUtc,
+        [Parameter(Mandatory = $true)][string]$Url,
+        [string]$Message = $null
+    )
+
+    if ([string]::IsNullOrWhiteSpace($Message)) {
+        $Message = "Fetch failed: $($FetchResult.error)"
+        if ((Get-ObjectMemberValue -InputObject $FetchResult -Name "statusCode") -eq 429) {
+            $retryAfter = Get-ObjectMemberValue -InputObject $FetchResult -Name "retryAfterSeconds"
+            if (-not [string]::IsNullOrWhiteSpace([string]$retryAfter)) {
+                $Message = "Fetch failed: Artificial Analysis API rate limited (HTTP 429). Retry-After: $retryAfter seconds."
+            }
+        }
+    }
+
+    return [pscustomobject]@{
+        status = "error"
+        message = $Message
+        models = @{}
+        sourceDate = $null
+        fetchedAtUtc = $FetchedAtUtc
+        sourceUrl = $Url
+    }
+}
 
 function Invoke-ArtificialAnalysisApiFetch {
     [OutputType([pscustomobject])]
@@ -235,34 +277,50 @@ function Get-ArtificialAnalysisIntelligenceIndexData {
     param(
         [string]$Url = $script:ArtificialAnalysisLlmModelsApiUrl,
         [scriptblock]$FetchJson = $null,
-        [string]$ApiKeyEnvVarName = "ARTIFICIAL_ANALYSIS_API_KEY"
+        [string]$ApiKeyEnvVarName = "ARTIFICIAL_ANALYSIS_API_KEY",
+        [int]$MaxPages = $script:ArtificialAnalysisLlmModelsMaxPages
     )
 
     $fetchedAtUtc = (Get-Date).ToUniversalTime().ToString("o")
     if ($null -eq $FetchJson) {
         $FetchJson = { param($u, $envVarName) Invoke-ArtificialAnalysisApiFetch -Url $u -ApiKeyEnvVarName $envVarName -TimeoutSec 30 }
     }
+    if ($MaxPages -lt 1) { $MaxPages = 1 }
 
-    $fetchResult = & $FetchJson $Url $ApiKeyEnvVarName
-    if ($fetchResult.status -ne "ok") {
-        $message = "Fetch failed: $($fetchResult.error)"
-        if ((Get-ObjectMemberValue -InputObject $fetchResult -Name "statusCode") -eq 429) {
-            $retryAfter = Get-ObjectMemberValue -InputObject $fetchResult -Name "retryAfterSeconds"
-            if (-not [string]::IsNullOrWhiteSpace([string]$retryAfter)) {
-                $message = "Fetch failed: Artificial Analysis API rate limited (HTTP 429). Retry-After: $retryAfter seconds."
-            }
+    $mergedRows = New-Object System.Collections.ArrayList
+    $firstValue = $null
+    $pageNumber = 1
+    while ($pageNumber -le $MaxPages) {
+        $requestUrl = Get-ArtificialAnalysisPagedUrl -Url $Url -Page $pageNumber
+        $fetchResult = & $FetchJson $requestUrl $ApiKeyEnvVarName
+        if ($fetchResult.status -ne "ok") {
+            return New-ArtificialAnalysisFetchErrorResult -FetchResult $fetchResult -FetchedAtUtc $fetchedAtUtc -Url $Url
         }
-        return [pscustomobject]@{
-            status = "error"
-            message = $message
-            models = @{}
-            sourceDate = $null
-            fetchedAtUtc = $fetchedAtUtc
-            sourceUrl = $Url
+
+        $value = $fetchResult.value
+        if ($null -eq $firstValue) { $firstValue = $value }
+        foreach ($row in @(Get-ObjectMemberValue -InputObject $value -Name "data")) {
+            if ($null -ne $row) { [void]$mergedRows.Add($row) }
+        }
+
+        $hasMore = Get-ObjectMemberValue -InputObject (Get-ObjectMemberValue -InputObject $value -Name "pagination") -Name "has_more"
+        if ($hasMore -ne $true) { break }
+        $pageNumber++
+        if ($pageNumber -gt $MaxPages) {
+            return New-ArtificialAnalysisFetchErrorResult -FetchResult $fetchResult -FetchedAtUtc $fetchedAtUtc -Url $Url `
+                -Message "Fetch failed: Artificial Analysis API pagination exceeded $MaxPages pages."
         }
     }
 
-    $parsed = Parse-ArtificialAnalysisLlmModelsFromApiResponse -ApiResponse $fetchResult.value -SourceNameForMessages "Artificial Analysis intelligence index"
+    if ($null -ne $firstValue) {
+        if ($firstValue -is [System.Collections.IDictionary]) {
+            $firstValue["data"] = @($mergedRows)
+        } else {
+            $firstValue | Add-Member -MemberType NoteProperty -Name "data" -Value @($mergedRows) -Force
+        }
+    }
+
+    $parsed = Parse-ArtificialAnalysisLlmModelsFromApiResponse -ApiResponse $firstValue -SourceNameForMessages "Artificial Analysis intelligence index"
     $intelligenceVersion = if ($parsed.status -eq "ok") { Get-ModelScoreFingerprint -Models $parsed.models -ScoreProperty "intelligenceIndex" } else { $null }
     $codingVersion = if ($parsed.status -eq "ok") { Get-ModelScoreFingerprint -Models $parsed.models -ScoreProperty "codingIndex" } else { $null }
     return [pscustomobject]@{

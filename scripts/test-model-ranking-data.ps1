@@ -19,6 +19,38 @@ Run-Test "AA API preserves numeric coding/intelligence and record provenance" {
     Assert-True ($result.models["gpt-5-6-sol"].codingIndex -eq 71.5) "AA coding"
     Assert-True ($result.models["gpt-5-6-sol"].evaluations -and $result.sourceVersion) "Provenance"
 }
+Run-Test "AA API uses the supported language models free endpoint" {
+    $script:requestedUrl=$null
+    $data=ConvertFrom-JsonAsHashtableCompat (Fixture "aa-api-llms-models-valid.json")
+    $null=Get-ArtificialAnalysisIntelligenceIndexData -FetchJson {param($u,$envVar) $script:requestedUrl=$u; @{status="ok";value=$data}}
+    Assert-True ($script:requestedUrl -eq "https://artificialanalysis.ai/api/v2/language/models/free") "Legacy /api/v2/data path still used"
+}
+Run-Test "AA API follows pagination and keeps intelligence-only rows" {
+    $page1=@{
+        pagination=@{page=1;page_size=1;total_pages=2;has_more=$true}
+        data=@(@{slug="one";name="One";evaluations=@{artificial_analysis_intelligence_index=10;artificial_analysis_coding_index=$null}})
+    }
+    $page2=@{
+        pagination=@{page=2;page_size=1;total_pages=2;has_more=$false}
+        data=@(@{slug="two";name="Two";evaluations=@{artificial_analysis_intelligence_index=20;artificial_analysis_coding_index=$null}})
+    }
+    $script:requestedUrls=@()
+    $result=Get-ArtificialAnalysisIntelligenceIndexData -Url "https://artificialanalysis.ai/api/v2/language/models/free" -FetchJson {
+        param($u,$envVar)
+        $script:requestedUrls+=$u
+        if ($u -like "*page=2") { return @{status="ok";value=$page2} }
+        return @{status="ok";value=$page1}
+    }
+    Assert-True ($result.status -eq "ok" -and $result.models.Count -eq 2) "Pages not merged"
+    Assert-True ($result.models["one"].intelligenceIndex -eq 10 -and $null -eq $result.models["one"].codingIndex) "Intelligence-only row dropped"
+    Assert-True ($result.models["two"].intelligenceIndex -eq 20) "Second page lost"
+    Assert-True ($script:requestedUrls.Count -eq 2 -and $script:requestedUrls[0] -eq "https://artificialanalysis.ai/api/v2/language/models/free" -and $script:requestedUrls[1].EndsWith("page=2")) "Paging URLs"
+}
+Run-Test "AA API fails closed when pagination does not terminate" {
+    $unbounded=@{pagination=@{has_more=$true};data=@(@{slug="one";name="One";evaluations=@{artificial_analysis_intelligence_index=10}})}
+    $result=Get-ArtificialAnalysisIntelligenceIndexData -MaxPages 2 -FetchJson {param($u,$envVar) @{status="ok";value=$unbounded}}
+    Assert-True ($result.status -eq "error" -and $result.message.Contains("pagination")) "Unbounded paging accepted"
+}
 Run-Test "Malformed AA and unrelated null evaluations are handled safely" {
     $bad=ConvertFrom-JsonAsHashtableCompat (Fixture "aa-api-llms-models-malformed.json")
     Assert-True ((Parse-ArtificialAnalysisLlmModelsFromApiResponse $bad).status -eq "unavailable") "Bad AA accepted"
