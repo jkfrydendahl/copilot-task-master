@@ -368,7 +368,7 @@ Every profile uses `configurationSelection.mode: bounded_effort` and `effortChan
 | Profiles | Allowed efforts |
 |---|---|
 | Quick, Mechanical, Triage | low |
-| Orchestrator | high |
+| Orchestrator | high, xhigh |
 | Default Development, Review, Visual/UI | medium, high |
 | Agentic Implementation, Deep Reasoning | high, xhigh, max |
 
@@ -378,7 +378,7 @@ AA coding-agent variants are resolved automatically from structured page data ra
 
 Every normal optimization fallback, including a fallback used by a required qualification dimension, requires the incumbent's exact configuration in the same usable metric observation. An established stronger primary or qualification basis cannot be downgraded through a weaker fallback, even with force. Primary routes may replace an unscored incumbent; if no authorized route is usable, the non-retired current assignment stays. Mandatory retirement recovery does not require comparable evidence for an unusable incumbent or preserve its stronger optimization basis. The report distinguishes normal qualification from emergency operational migration. Incumbent provenance belongs to the actual model/effort/context, not to its family or profile name. Manual configuration changes do not inherit another configuration's basis.
 
-Orchestrator retains high-only effort and its $3 / $15 ceilings. Changing the deciding metric does not establish reliable Copilot CLI delegation, constraint retention or supervision. All profiles show required metrics, comparison coverage, reference scores, bands and per-candidate pass/fail checks outside collapsed evidence details. Any remaining informational scores are labelled separately.
+Orchestrator alone now authorizes both high and xhigh, within its unchanged $3 / $15 ceilings and workflow, long-document and instruction-following requirements. Max remains unauthorized, and all other profiles retain their existing effort ranges. This authorization change does not directly rewrite `task-profiles.json`; qualified recommendations still use the existing confirmation or explicitly forced review path. Benchmark qualification does not establish reliable Copilot CLI delegation, skill selection, constraint retention or supervision. All profiles show required metrics, comparison coverage, reference scores, bands and per-candidate pass/fail checks outside collapsed evidence details. Any remaining informational scores are labelled separately.
 
 The framework compares **measured configurations**, not the maximum setting by definition: an `xhigh` result can win even if the model supports an unmeasured `max` setting. Each configuration passes its own eligibility gates, and corroboration must match the same model, effort and context. Multiple efforts of one model do not count as independent model coverage. [AA's methodology](https://artificialanalysis.ai/methodology/coding-agents-benchmarking#agent-settings) describes agent variants and normally uses agent-default reasoning settings; it is not a universal maximum-effort comparison. Scores remain external-harness evidence, not Copilot CLI measurements.
 
@@ -416,12 +416,16 @@ public pricing response; the review clock was pinned to the snapshot timestamp.
 The HTML capture remains session-local, not a committed portable replay fixture.
 
 The repairs recover current language-model pricing and one structured agent
-observation, but **do not change any profile selection** in that replay. Orchestrator
-and Default development still have empty fully qualifying intersections; Quick and
+observation, but **did not change any profile selection** in that replay. Under the
+replay's High-only Orchestrator authorization, Orchestrator and Default development
+had empty fully qualifying intersections; Quick and
 Visual/UI lack comparable incumbent evidence on the usable fallback; Agentic retains
 its stronger historical basis; Review, Mechanical and Triage lack sufficient usable
 role comparisons. Deep reasoning remains rankable. The generated repaired tree passed
 all 13 test files before publication.
+
+The later Orchestrator-only high/xhigh authorization is a separate policy correction,
+not part of that unchanged-policy replay.
 
 Missing mappings are not proof that a matching published variant does not exist.
 These blockers need targeted exact-configuration measurements or an explicitly

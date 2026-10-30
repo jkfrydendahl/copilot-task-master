@@ -463,7 +463,7 @@ Run-Test "Exact configuration wins ties and LiveBench cannot corroborate another
     Assert-True ($s.confidence -eq "reduced" -and -not $s.contested) "Different effort counted as corroboration"
 }
 . (Join-Path $PSScriptRoot "model-policy-config.ps1")
-Run-Test "Orchestrator high-only policy requires workflow and qualifying role dimensions" {
+Run-Test "Orchestrator retains qualified High and excludes unauthorized lower efforts" {
     $p = Get-ModelPolicyConfig (Join-Path $PSScriptRoot "..\config\model-policy.json")
     $current = @{key="orchestrator";model="one";effort="medium";context="default"}
     $verdicts = @(foreach ($entry in @(@("one","low"),@("one","medium"),@("one","high"),@("two","high"))) {
