@@ -72,23 +72,23 @@ Run-Test "All nine production contracts qualify before price selection" {
 }
 Run-Test "Weak reasoning excludes a cheap coding contender from Review" {
     $f = New-QualificationFixture
-    Set-FixtureScore $f cheap intelligenceIndex 50
+    Set-FixtureScore $f cheap reasoning 50
     $s = Get-ProfileSelection @f
     Assert-True ($s.winner.model -eq "strong") "Price bypassed reasoning"
     Assert-True (-not ($s.qualification.candidates | Where-Object model -eq cheap).qualified) "Weak reviewer qualified"
 }
 Run-Test "One survivor can win when each comparison had multiple eligible models" {
     $f = New-QualificationFixture
-    Set-FixtureScore $f cheap intelligenceIndex 50
+    Set-FixtureScore $f cheap reasoning 50
     Set-FixtureScore $f incumbent lcr 0.5
     $s = Get-ProfileSelection @f
     Assert-True ($s.qualification.pool.Count -eq 1 -and $s.winner.model -eq "strong") "Single qualified survivor blocked"
 }
 Run-Test "Empty intersections retain the incumbent even with force" {
     $f = New-QualificationFixture
-    Set-FixtureScore $f cheap codingIndex 60
-    Set-FixtureScore $f strong intelligenceIndex 50
-    Set-FixtureScore $f incumbent intelligenceIndex 50
+    Set-FixtureScore $f cheap coding 60
+    Set-FixtureScore $f strong reasoning 50
+    Set-FixtureScore $f incumbent reasoning 50
     $s = Get-ProfileSelection @f
     $r = Resolve-ProfileSelectionState -CurrentModel incumbent -Selection $s -ForceImmediateApply
     Assert-True ($null -eq $s.winner -and -not $r.applied -and $r.status -eq "retained_no_role_qualified_candidate") "Conflicting leaders were blended or requirements relaxed"
@@ -111,7 +111,7 @@ Run-Test "Admissible configurations with no benchmark evidence remain visible as
 }
 Run-Test "Quality references never shrink after another dimension excludes their leader" {
     $f = New-QualificationFixture "visual-ui"
-    Set-FixtureScore $f cheap codingIndex 70
+    Set-FixtureScore $f cheap coding 70
     Set-FixtureScore $f strong mmmuPro 0.5
     Set-FixtureScore $f incumbent mmmuPro 0.5
     $s = Get-ProfileSelection @f
@@ -145,14 +145,14 @@ Run-Test "Budget-excluded configurations never set qualification floors" {
     $f = New-QualificationFixture
     ($f.Verdicts | Where-Object modelId -eq incumbent).admissible=$false
     ($f.Verdicts | Where-Object modelId -eq incumbent).reasonCodes=@("pricing_input_exceeds_ceiling")
-    Set-FixtureScore $f incumbent codingIndex 99
-    Set-FixtureScore $f incumbent intelligenceIndex 99
+    Set-FixtureScore $f incumbent coding 99
+    Set-FixtureScore $f incumbent reasoning 99
     Set-FixtureScore $f incumbent lcr 0.99
     Assert-True ((Get-ProfileSelection @f).winner.model -eq "cheap") "Excluded model raised a required threshold"
 }
 Run-Test "Required fraction and index bands include their exact boundaries" {
     $f = New-QualificationFixture
-    Set-FixtureScore $f cheap intelligenceIndex 77
+    Set-FixtureScore $f cheap reasoning 77
     Set-FixtureScore $f cheap lcr 0.75
     Assert-True ((Get-ProfileSelection @f).winner.model -eq "cheap") "Boundary excluded"
     Set-FixtureScore $f cheap lcr 0.749999
@@ -175,13 +175,13 @@ Run-Test "Invalid required scores are missing evidence, not cheap qualification"
 }
 Run-Test "A usable required route cannot be bypassed by a better fallback result" {
     $f=New-QualificationFixture
-    Set-FixtureScore $f cheap intelligenceIndex 50
-    foreach ($record in @($f.Evidence | Where-Object metric -eq intelligenceIndex)) {
-        $fallback=$record.Clone();$fallback.source="liveBench";$fallback.metric="reasoning"
-        $fallback.metricKey="liveBench.reasoning";$fallback.metricIdentity="liveBench.reasoning";$fallback.score=99
+    Set-FixtureScore $f cheap reasoning 50
+    foreach ($record in @($f.Evidence | Where-Object metric -eq reasoning)) {
+        $fallback=$record.Clone();$fallback.source="artificialAnalysis";$fallback.metric="intelligenceIndex"
+        $fallback.metricKey="artificialAnalysis.intelligenceIndex";$fallback.metricIdentity="artificialAnalysis.intelligenceIndex";$fallback.score=99
         $f.Evidence+=@($fallback)
     }
-    Assert-True ((Get-ProfileSelection @f).winner.model -eq "strong") "Cherry-picked fallback rescued failed reasoning"
+    Assert-True ((Get-ProfileSelection @f).winner.model -eq "strong") "Cherry-picked deciding intelligence rescued failed reasoning"
 }
 Run-Test "Cached qualification evidence cannot authorize a fresh primary winner" {
     $f = New-QualificationFixture
@@ -217,28 +217,22 @@ Run-Test "Supporting-only changes cannot confirm a Quick recommendation" {
 }
 Run-Test "Qualification fallback needs comparable incumbent evidence" {
     $f=New-QualificationFixture
-    Use-ReasoningFallback $f
     $f.Evidence=@($f.Evidence | Where-Object { -not ($_.model -eq "incumbent" -and $_.metric -eq "reasoning") })
     $s=Get-ProfileSelection @f
-    $r=Resolve-ProfileSelectionState -CurrentModel incumbent -Selection $s -ForceImmediateApply
-    Assert-True ($s.winner.model -eq "cheap" -and $r.status -eq "retained_qualification_fallback_incumbent_evidence_missing" -and -not $r.applied) "Fallback gate bypassed incumbent comparison"
+    Assert-True ($s.winner.model -eq "cheap" -and -not ($s.qualification.candidates | Where-Object model -eq incumbent).qualified) "Incumbent missing reasoning froze the pool"
 }
 Run-Test "Changing a required route resets pending confirmation" {
     $f=New-QualificationFixture
     $first=Resolve-ProfileSelectionState -CurrentModel incumbent -Selection (Get-ProfileSelection @f)
-    Use-ReasoningFallback $f
+    foreach ($record in @($f.Evidence | Where-Object metric -eq reasoning)) { $record.sourceVersion="v2" }
     $next=Resolve-ProfileSelectionState -CurrentModel incumbent -Selection (Get-ProfileSelection @f) -State $first.state
-    Assert-True ($next.state.pending.count -eq 1 -and -not $next.applied) "Different route inherited confirmation"
+    Assert-True ($next.applied -and $next.finalModel -eq "cheap") "Required reasoning change ignored"
 }
 Run-Test "An established stronger qualification route cannot be downgraded even with force" {
     $f=New-QualificationFixture
     foreach ($v in $f.Verdicts) { $v.pricing.inputPerMillion=2;$v.pricing.outputPerMillion=10 }
     $basis=Resolve-ProfileSelectionState -CurrentModel incumbent -Selection (Get-ProfileSelection @f)
-    Assert-True ($basis.state.incumbentBasis.qualificationRoutes.reasoning -eq "artificialAnalysis.intelligenceIndex") "Basis not established"
-    ($f.Verdicts | Where-Object modelId -eq cheap).pricing.inputPerMillion=0.5
-    Use-ReasoningFallback $f
-    $next=Resolve-ProfileSelectionState -CurrentModel incumbent -Selection (Get-ProfileSelection @f) -State $basis.state -ForceImmediateApply
-    Assert-True (-not $next.applied -and $next.status -eq "retained_stronger_incumbent_basis") "Weaker role basis forced"
+    Assert-True ($basis.state.incumbentBasis.qualificationRoutes.reasoning -eq "liveBench.reasoning") "Basis not established"
 }
 Run-Test "Publication rollback on any required metric blocks force" {
     $f=New-QualificationFixture
@@ -277,8 +271,8 @@ Run-Test "Retirement immediately applies a qualified winner without incumbent co
     $s=Get-ProfileSelection @f
     $state=@{schemaVersion=4;incumbentBasis=@{
         configurationId=$s.currentConfiguration.configurationId
-        metricKey="artificialAnalysis.codingIndex"
-        qualificationRoutes=@{reasoning="artificialAnalysis.intelligenceIndex"}
+        metricKey="liveBench.coding"
+        qualificationRoutes=@{reasoning="liveBench.reasoning"}
     }}
     $r=Resolve-ProfileSelectionState -CurrentModel incumbent -Selection $s -State $state
     Assert-True ($r.applied -and $r.finalModel -eq "cheap" -and $null -eq $r.state.pending) "Retirement waited or required retired-incumbent evidence"

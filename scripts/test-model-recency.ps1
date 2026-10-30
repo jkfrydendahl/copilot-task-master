@@ -34,7 +34,7 @@ function New-RecencyFixture {
         aliases=@{old=@{artificialAnalysis=@{low="old-low"}};new=@{artificialAnalysis=@{low="new-low"}}}
         sources=@{
             artificialAnalysis=@{status="ok";fetchedAtUtc="2026-09-23Z";sourceDate=$null;models=@{
-                "old-low"=@{codingIndex=80};"new-low"=@{codingIndex=78}
+                "old-low"=@{intelligenceIndex=80};"new-low"=@{intelligenceIndex=78}
             }}
             artificialAnalysisComponents=(Release-Source @((Release-Row old "2026-07-01"),(Release-Row new "2026-09-01")))
         }
@@ -68,7 +68,7 @@ Run-Test "Equally priced newer qualified model beats incumbent despite a lower s
 Run-Test "Newness cannot override price, quality bands or admissibility" {
     foreach ($change in @(
         {param($f) $f.verdicts[1].pricing.inputPerMillion=1.1},
-        {param($f) $f.sources.artificialAnalysis.models["new-low"].codingIndex=76.999},
+        {param($f) $f.sources.artificialAnalysis.models["new-low"].intelligenceIndex=76.999},
         {param($f) $f.verdicts[1].admissible=$false}
     )) {
         $f=New-RecencyFixture;& $change $f;$s=Select-RecencyFixture $f
@@ -179,7 +179,7 @@ Run-Test "Stable recency still requires two distinct observations and respects c
     $first=Resolve-ProfileSelectionState -CurrentModel old -Selection $s -NowUtc $now
     $same=Resolve-ProfileSelectionState -CurrentModel old -Selection $s -State $first.state -NowUtc $now
     Assert-True (-not $same.applied -and $same.state.pending.count -eq 1) "Recency bypassed confirmation"
-    $f.sources.artificialAnalysis.models["new-low"].codingIndex=79
+    $f.sources.artificialAnalysis.models["new-low"].intelligenceIndex=79
     $s=Select-RecencyFixture $f
     Assert-True (Resolve-ProfileSelectionState -CurrentModel old -Selection $s -State $same.state -NowUtc $now).applied "Stable recency prevented confirmation"
     $f.sources.artificialAnalysis.status="cached";$s=Select-RecencyFixture $f

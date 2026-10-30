@@ -21,8 +21,8 @@ Run-Test "Offline review uses same-run pricing, preserves profiles and writes de
         $cap.models.two=$cap.models.one.Clone()
         $cap | ConvertTo-Json -Depth 15 | Set-Content (Join-Path $root "config\model-capabilities.json")
         @{schemaVersion=2;aliases=@{
-            one=@{artificialAnalysis=@{medium="one-medium";high="one-high";low="one-low"};liveBench=@{high="one-high"}}
-            two=@{artificialAnalysis=@{medium="two-medium";high="two-high";low="two-low"};liveBench=@{high="two-high"}}
+            one=@{artificialAnalysis=@{medium="one-medium";high="one-high";low="one-low"};liveBench=@{medium="one-medium";high="one-high";low="one-low"}}
+            two=@{artificialAnalysis=@{medium="two-medium";high="two-high";low="two-low"};liveBench=@{medium="two-medium";high="two-high";low="two-low"}}
         }} | ConvertTo-Json -Depth 10 | Set-Content (Join-Path $root "config\model-ranking-aliases.json")
         @{schemaVersion=1;aliases=@{one="Example One";two="Example Two"}} | ConvertTo-Json | Set-Content (Join-Path $root "config\model-pricing-aliases.json")
         $before=Get-Content (Join-Path $root "task-profiles.json") -Raw | ConvertFrom-Json
@@ -48,7 +48,12 @@ Run-Test "Offline review uses same-run pricing, preserves profiles and writes de
             "two-high"=@(@{date="2026-08-01";releaseId="two";effort="high"})
         }
         $sources.liveBench=@{status="ok";sourceDate=$null;fetchedAtUtc="2026-09-08Z";models=@{
-            "one-high"=@{instructionFollowing=90};"two-high"=@{instructionFollowing=85}
+            "one-medium"=@{coding=90;reasoning=90;instructionFollowing=90}
+            "one-high"=@{coding=90;reasoning=90;instructionFollowing=90}
+            "one-low"=@{coding=90;reasoning=90;instructionFollowing=90}
+            "two-medium"=@{coding=85;reasoning=85;instructionFollowing=85}
+            "two-high"=@{coding=85;reasoning=85;instructionFollowing=85}
+            "two-low"=@{coding=85;reasoning=85;instructionFollowing=85}
         }}
         $fetch={param($url) @{status="ok";content='<table><tr><th>Model</th><th>Input</th><th>Output</th></tr><tr><td>Example One</td><td>$4</td><td>$20</td></tr><tr><td>Example Two</td><td>$4</td><td>$20</td></tr></table>'}}
         $review=Invoke-TaskProfileReview -RepoRoot $root -Availability @{models=@("one","two");verified=$true;source="fixture"} -Sources $sources -FetchPricing $fetch -ForceImmediateApply -NowUtc ([datetime]"2026-09-08Z")
@@ -147,14 +152,15 @@ Run-Test "Reports distinguish fixed authorization from informational incumbent c
             capabilities=@{asOf="2026-09-08"}}
     })
     $records = @(foreach ($model in @("gemini","opus","astra")) {
-        [pscustomobject]@{model=$model;score=@{gemini=46.8;opus=51;astra=54}[$model];source="artificialAnalysis";
-            metric="codingIndex";effort="medium";alias=$model;sourceVersion="v1";sourceDate=$null;
+        [pscustomobject]@{model=$model;score=@{gemini=46.8;opus=51;astra=54}[$model];source="liveBench";
+            metric="coding";effort="medium";alias=$model;sourceVersion="v1";sourceDate=$null;
             publicationAgeUnknown=$true;cached=$false;harness="fixture"}
     })
     foreach ($record in @($records)) {
-        $reasoning=$record | Select-Object *;$reasoning.metric="intelligenceIndex";$reasoning.score=80
+        $reasoning=$record | Select-Object *;$reasoning.metric="reasoning";$reasoning.score=80
+        $intelligence=$record | Select-Object *;$intelligence.source="artificialAnalysis";$intelligence.metric="intelligenceIndex";$intelligence.score=80
         $lcr=$record | Select-Object *;$lcr.source="artificialAnalysisComponents";$lcr.metric="lcr";$lcr.score=0.8
-        $records+=@($reasoning,$lcr)
+        $records+=@($reasoning,$intelligence,$lcr)
     }
     $selection = Get-ProfileSelection -Profile $profile -Evidence $records -Verdicts $verdicts -Policy $policy -Aliases @{}
     $resolution = Resolve-ProfileSelectionState -CurrentModel gemini -Selection $selection -ForceImmediateApply
@@ -188,8 +194,8 @@ Run-Test "Agentic review confirms and applies the complete authorized pair, incl
         Write-ModelJsonAtomic (Join-Path $root "config\model-capabilities.json") @{schemaVersion=2;models=$caps}
         $aliases=@{
             "gpt-one"=@{artificialAnalysis=@{low="one-low";medium="one-medium";high="one-high"};
-                liveBench=@{high="one-high"}}
-            "gpt-two"=@{liveBench=@{xhigh="two-xhigh"}}
+                liveBench=@{low="one-low";medium="one-medium";high="one-high"}}
+            "gpt-two"=@{liveBench=@{xhigh="two-xhigh";medium="two-medium";low="two-low"}}
         }
         Write-ModelJsonAtomic (Join-Path $root "config\model-ranking-aliases.json") @{schemaVersion=2;aliases=$aliases}
         Write-ModelJsonAtomic (Join-Path $root "config\model-pricing-aliases.json") @{schemaVersion=1;aliases=@{"gpt-one"="One";"gpt-two"="Two";"gpt-hidden"="Hidden"}}
@@ -202,7 +208,10 @@ Run-Test "Agentic review confirms and applies the complete authorized pair, incl
                 "hidden-max"=(New-NormalizedAgentFixture hidden-max "GPT-hidden (max)" 0.99)
             }}
             artificialAnalysis=@{status="ok";sourceVersion="aa-v1";sourceDate="2026-09-09";fetchedAtUtc="2026-09-09Z";sourceUrl="https://example.test/aa";models=@{
-                "one-low"=@{codingIndex=80};"one-medium"=@{codingIndex=80};"one-high"=@{codingIndex=80}
+                "one-low"=@{intelligenceIndex=80};"one-medium"=@{intelligenceIndex=80};"one-high"=@{intelligenceIndex=80}
+            }}
+            liveBench=@{status="ok";sourceVersion="lb-v1";sourceDate="2026-09-09";fetchedAtUtc="2026-09-09Z";sourceUrl="https://example.test/lb";models=@{
+                "one-low"=@{coding=80;reasoning=80};"one-medium"=@{coding=80;reasoning=80};"one-high"=@{coding=80;reasoning=80}
             }}
         }
         $fetch={param($u) @{status="ok";content='<table><tr><th>Model</th><th>Input</th><th>Output</th></tr><tr><td>One</td><td>$1</td><td>$5</td></tr><tr><td>Two</td><td>$1</td><td>$5</td></tr><tr><td>Hidden</td><td>$1</td><td>$5</td></tr></table>'}}
@@ -339,15 +348,16 @@ Run-Test "Nine-role offline review confirms binding changes and preserves good c
             @{key=$key;model="gpt-one";effort=$p.selectionPolicy.profiles[$key].configurationSelection.allowedEfforts[0];context="default"}
         })
         Write-ModelJsonAtomic (Join-Path $root "task-profiles.json") $profiles
-        $caps=@{};$aliases=@{};$aaModels=@{};$componentModels=@{};$agentModels=@{}
+        $caps=@{};$aliases=@{};$aaModels=@{};$lbModels=@{};$componentModels=@{};$agentModels=@{}
         foreach($model in @("gpt-one","gpt-two")) {
             $caps[$model]=@{asOf="2026-09-22";capabilitySource="fixture";vision=$true;visionSource="fixture";
                 supportedContexts=@("default");supportedEfforts=@("low","medium","high")}
-            $aliases[$model]=@{artificialAnalysis=@{}}
+            $aliases[$model]=@{artificialAnalysis=@{};liveBench=@{}}
             foreach($effort in @("low","medium","high")) {
-                $slug="$model-$effort";$aliases[$model].artificialAnalysis[$effort]=$slug
+                $slug="$model-$effort";$aliases[$model].artificialAnalysis[$effort]=$slug;$aliases[$model].liveBench[$effort]=$slug
                 $score=if($model -eq "gpt-two"){0.9}else{0.7}
-                $aaModels[$slug]=@{codingIndex=$score*100;intelligenceIndex=$score*100}
+                $aaModels[$slug]=@{intelligenceIndex=$score*100}
+                $lbModels[$slug]=@{coding=$score*100;reasoning=$score*100;instructionFollowing=$score*100;agenticCoding=$score*100}
                 $componentModels[$slug]=@{name=$model;effort=$effort;automationBench=$score;enterpriseOpsGym=$score;
                     lcr=0.7;ifbench=0.8;mmmuPro=0.6}
                 if($effort -eq "high") { $agentModels[$slug]=New-NormalizedAgentFixture $slug "$model ($effort)" $score }
@@ -357,7 +367,7 @@ Run-Test "Nine-role offline review confirms binding changes and preserves good c
         Write-ModelJsonAtomic (Join-Path $root "config\model-ranking-aliases.json") @{schemaVersion=2;aliases=$aliases}
         Write-ModelJsonAtomic (Join-Path $root "config\model-pricing-aliases.json") @{schemaVersion=1;aliases=@{"gpt-one"="One";"gpt-two"="Two"}}
         $sources=@{}
-        foreach($entry in @(@("artificialAnalysis",$aaModels),@("artificialAnalysisComponents",$componentModels),@("artificialAnalysisCodingAgents",$agentModels))) {
+        foreach($entry in @(@("artificialAnalysis",$aaModels),@("liveBench",$lbModels),@("artificialAnalysisComponents",$componentModels),@("artificialAnalysisCodingAgents",$agentModels))) {
             $sources[$entry[0]]=@{status="ok";models=$entry[1];sourceVersion="whole-page-v1";sourceDate=$null;
                 fetchedAtUtc="2026-09-22Z";sourceUrl="https://example.test"}
         }
@@ -372,7 +382,8 @@ Run-Test "Nine-role offline review confirms binding changes and preserves good c
         Assert-True (@($same.results | Where-Object { $_.resolution.applied -and $_.key -in $lcrRoles }).Count -eq 3) "Binding long-context changes did not confirm"
         Assert-True (@($same.results | Where-Object { $_.key -notin $lcrRoles -and ($_.resolution.applied -or $_.resolution.state.pending.count -ne 1) }).Count -eq 0) "Informational churn confirmed a recommendation"
         foreach($slug in @($aaModels.Keys | Where-Object {$_ -like "gpt-two-*"})) {
-            $aaModels[$slug].codingIndex=91;$aaModels[$slug].intelligenceIndex=91
+            $aaModels[$slug].intelligenceIndex=91
+            $lbModels[$slug].coding=91;$lbModels[$slug].reasoning=91
             $componentModels[$slug].automationBench=0.91
         }
         $agentModels["gpt-two-high"].codingAgentIndex=0.91
@@ -386,7 +397,7 @@ Run-Test "Nine-role offline review confirms binding changes and preserves good c
         $sources.artificialAnalysisComponents=@{status="unavailable";message="malformed component observation"}
         $sources.artificialAnalysisCodingAgents=@{status="unavailable";message="incomplete agent observation"}
         $sources.liveBench=@{status="error";message="LiveBench HTTP403"}
-        foreach($slug in @($aaModels.Keys | Where-Object {$_ -like "gpt-one-*"})) { $aaModels[$slug].codingIndex=99 }
+        foreach($slug in @($aaModels.Keys | Where-Object {$_ -like "gpt-one-*"})) { $aaModels[$slug].intelligenceIndex=99; $lbModels[$slug].coding=99 }
         $outage=Invoke-TaskProfileReview @options -ForceImmediateApply
         $mechanical=$outage.results | Where-Object key -eq mechanical
         $orchestrator=$outage.results | Where-Object key -eq orchestrator
