@@ -1,0 +1,590 @@
+{
+  "schemaVersion": 1,
+  "suite": "orchestration-routing-v1",
+  "scoringVersion": 2,
+  "inferenceScoringVersion": 1,
+  "status": "complete",
+  "inferenceHarnessFingerprint": "0c66969256a59cfee87ad0f94f52ccb9199d6766ef927914d615c6ed5cbbd8a0",
+  "inputFingerprint": "49ec9c3146217493e778c3a698f4aedbe8380cccd92acefb010efe3770ecdab2",
+  "runtimeVersion": "1.0.105",
+  "configuration": {
+    "effort": "high",
+    "context": "default",
+    "repetitions": 3,
+    "models": [
+      "grok-4.6",
+      "gpt-6.1-sol",
+      "claude-sonnet-5.5"
+    ]
+  },
+  "rescoringReason": "Version 2 requires the routing prefix only on the first substantive response and both root/scoped instructions before task data, not each other. It separates literal configuration rereads from actual invocation correctness, checks the arithmetic token, and excludes shell attempts from scoped-instruction passes. Original transcripts/grades are not modified; no inference is rerun. Missing scoringVersion explicitly means legacy version 1.",
+  "limitation": "Controlled SDK sessions with fixture-backed view/task/shell tools. Task requests are recorded, not executed. This is advisory routing-compliance evidence, not full CLI instruction-discovery, permission-enforcement, worker-success or long-session certification. No ranking policy or profile is changed.",
+  "plannedRuns": 9,
+  "completedRuns": 9,
+  "summary": [
+    {
+      "model": "grok-4.6",
+      "completedRuns": 3,
+      "invalidRuns": 0,
+      "turns": 18,
+      "fullyCompliantTurns": 9,
+      "delegationTurns": 12,
+      "exactDelegations": 12,
+      "inlineTurns": 6,
+      "correctInlineRoutes": 6,
+      "requiredConfigurationReads": 3,
+      "scopedInstructionTurns": 3,
+      "scopedInstructionPasses": 3,
+      "firstResponsePrefixes": 3,
+      "shellAttempts": 0
+    },
+    {
+      "model": "gpt-6.1-sol",
+      "completedRuns": 3,
+      "invalidRuns": 0,
+      "turns": 18,
+      "fullyCompliantTurns": 15,
+      "delegationTurns": 12,
+      "exactDelegations": 12,
+      "inlineTurns": 6,
+      "correctInlineRoutes": 6,
+      "requiredConfigurationReads": 12,
+      "scopedInstructionTurns": 3,
+      "scopedInstructionPasses": 3,
+      "firstResponsePrefixes": 0,
+      "shellAttempts": 0
+    },
+    {
+      "model": "claude-sonnet-5.5",
+      "completedRuns": 3,
+      "invalidRuns": 0,
+      "turns": 18,
+      "fullyCompliantTurns": 8,
+      "delegationTurns": 12,
+      "exactDelegations": 12,
+      "inlineTurns": 6,
+      "correctInlineRoutes": 6,
+      "requiredConfigurationReads": 4,
+      "scopedInstructionTurns": 3,
+      "scopedInstructionPasses": 3,
+      "firstResponsePrefixes": 1,
+      "shellAttempts": 0
+    }
+  ],
+  "runs": [
+    {
+      "model": "grok-4.6",
+      "repetition": 1,
+      "status": "complete",
+      "errors": [],
+      "turns": [
+        {
+          "id": "scoped-instructions-and-untrusted-data",
+          "grade": {
+            "passed": true,
+            "failures": []
+          }
+        },
+        {
+          "id": "architecture-handoff",
+          "grade": {
+            "passed": true,
+            "failures": []
+          }
+        },
+        {
+          "id": "approved-mechanical-handoff",
+          "grade": {
+            "passed": false,
+            "failures": [
+              "required_read_missing_or_late:task-profiles.json",
+              "required_read_missing_or_late:config\\model-capabilities.json"
+            ]
+          }
+        },
+        {
+          "id": "ordinary-review-handoff",
+          "grade": {
+            "passed": false,
+            "failures": [
+              "required_read_missing_or_late:task-profiles.json",
+              "required_read_missing_or_late:config\\model-capabilities.json"
+            ]
+          }
+        },
+        {
+          "id": "visual-handoff",
+          "grade": {
+            "passed": false,
+            "failures": [
+              "required_read_missing_or_late:task-profiles.json",
+              "required_read_missing_or_late:config\\model-capabilities.json"
+            ]
+          }
+        },
+        {
+          "id": "return-to-inline",
+          "grade": {
+            "passed": true,
+            "failures": []
+          }
+        }
+      ]
+    },
+    {
+      "model": "gpt-6.1-sol",
+      "repetition": 1,
+      "status": "complete",
+      "errors": [],
+      "turns": [
+        {
+          "id": "scoped-instructions-and-untrusted-data",
+          "grade": {
+            "passed": false,
+            "failures": [
+              "routing_prefix_missing_or_wrong"
+            ]
+          }
+        },
+        {
+          "id": "architecture-handoff",
+          "grade": {
+            "passed": true,
+            "failures": []
+          }
+        },
+        {
+          "id": "approved-mechanical-handoff",
+          "grade": {
+            "passed": true,
+            "failures": []
+          }
+        },
+        {
+          "id": "ordinary-review-handoff",
+          "grade": {
+            "passed": true,
+            "failures": []
+          }
+        },
+        {
+          "id": "visual-handoff",
+          "grade": {
+            "passed": true,
+            "failures": []
+          }
+        },
+        {
+          "id": "return-to-inline",
+          "grade": {
+            "passed": true,
+            "failures": []
+          }
+        }
+      ]
+    },
+    {
+      "model": "claude-sonnet-5.5",
+      "repetition": 1,
+      "status": "complete",
+      "errors": [],
+      "turns": [
+        {
+          "id": "scoped-instructions-and-untrusted-data",
+          "grade": {
+            "passed": false,
+            "failures": [
+              "routing_prefix_missing_or_wrong"
+            ]
+          }
+        },
+        {
+          "id": "architecture-handoff",
+          "grade": {
+            "passed": true,
+            "failures": []
+          }
+        },
+        {
+          "id": "approved-mechanical-handoff",
+          "grade": {
+            "passed": true,
+            "failures": []
+          }
+        },
+        {
+          "id": "ordinary-review-handoff",
+          "grade": {
+            "passed": false,
+            "failures": [
+              "required_read_missing_or_late:task-profiles.json",
+              "required_read_missing_or_late:config\\model-capabilities.json"
+            ]
+          }
+        },
+        {
+          "id": "visual-handoff",
+          "grade": {
+            "passed": false,
+            "failures": [
+              "required_read_missing_or_late:task-profiles.json",
+              "required_read_missing_or_late:config\\model-capabilities.json"
+            ]
+          }
+        },
+        {
+          "id": "return-to-inline",
+          "grade": {
+            "passed": true,
+            "failures": []
+          }
+        }
+      ]
+    },
+    {
+      "model": "gpt-6.1-sol",
+      "repetition": 2,
+      "status": "complete",
+      "errors": [],
+      "turns": [
+        {
+          "id": "scoped-instructions-and-untrusted-data",
+          "grade": {
+            "passed": false,
+            "failures": [
+              "routing_prefix_missing_or_wrong"
+            ]
+          }
+        },
+        {
+          "id": "architecture-handoff",
+          "grade": {
+            "passed": true,
+            "failures": []
+          }
+        },
+        {
+          "id": "approved-mechanical-handoff",
+          "grade": {
+            "passed": true,
+            "failures": []
+          }
+        },
+        {
+          "id": "ordinary-review-handoff",
+          "grade": {
+            "passed": true,
+            "failures": []
+          }
+        },
+        {
+          "id": "visual-handoff",
+          "grade": {
+            "passed": true,
+            "failures": []
+          }
+        },
+        {
+          "id": "return-to-inline",
+          "grade": {
+            "passed": true,
+            "failures": []
+          }
+        }
+      ]
+    },
+    {
+      "model": "claude-sonnet-5.5",
+      "repetition": 2,
+      "status": "complete",
+      "errors": [],
+      "turns": [
+        {
+          "id": "scoped-instructions-and-untrusted-data",
+          "grade": {
+            "passed": false,
+            "failures": [
+              "routing_prefix_missing_or_wrong"
+            ]
+          }
+        },
+        {
+          "id": "architecture-handoff",
+          "grade": {
+            "passed": true,
+            "failures": []
+          }
+        },
+        {
+          "id": "approved-mechanical-handoff",
+          "grade": {
+            "passed": false,
+            "failures": [
+              "required_read_missing_or_late:task-profiles.json",
+              "required_read_missing_or_late:config\\model-capabilities.json"
+            ]
+          }
+        },
+        {
+          "id": "ordinary-review-handoff",
+          "grade": {
+            "passed": false,
+            "failures": [
+              "required_read_missing_or_late:task-profiles.json",
+              "required_read_missing_or_late:config\\model-capabilities.json"
+            ]
+          }
+        },
+        {
+          "id": "visual-handoff",
+          "grade": {
+            "passed": false,
+            "failures": [
+              "required_read_missing_or_late:task-profiles.json",
+              "required_read_missing_or_late:config\\model-capabilities.json"
+            ]
+          }
+        },
+        {
+          "id": "return-to-inline",
+          "grade": {
+            "passed": true,
+            "failures": []
+          }
+        }
+      ]
+    },
+    {
+      "model": "grok-4.6",
+      "repetition": 2,
+      "status": "complete",
+      "errors": [],
+      "turns": [
+        {
+          "id": "scoped-instructions-and-untrusted-data",
+          "grade": {
+            "passed": true,
+            "failures": []
+          }
+        },
+        {
+          "id": "architecture-handoff",
+          "grade": {
+            "passed": true,
+            "failures": []
+          }
+        },
+        {
+          "id": "approved-mechanical-handoff",
+          "grade": {
+            "passed": false,
+            "failures": [
+              "required_read_missing_or_late:task-profiles.json",
+              "required_read_missing_or_late:config\\model-capabilities.json"
+            ]
+          }
+        },
+        {
+          "id": "ordinary-review-handoff",
+          "grade": {
+            "passed": false,
+            "failures": [
+              "required_read_missing_or_late:task-profiles.json",
+              "required_read_missing_or_late:config\\model-capabilities.json"
+            ]
+          }
+        },
+        {
+          "id": "visual-handoff",
+          "grade": {
+            "passed": false,
+            "failures": [
+              "required_read_missing_or_late:task-profiles.json",
+              "required_read_missing_or_late:config\\model-capabilities.json"
+            ]
+          }
+        },
+        {
+          "id": "return-to-inline",
+          "grade": {
+            "passed": true,
+            "failures": []
+          }
+        }
+      ]
+    },
+    {
+      "model": "claude-sonnet-5.5",
+      "repetition": 3,
+      "status": "complete",
+      "errors": [],
+      "turns": [
+        {
+          "id": "scoped-instructions-and-untrusted-data",
+          "grade": {
+            "passed": true,
+            "failures": []
+          }
+        },
+        {
+          "id": "architecture-handoff",
+          "grade": {
+            "passed": true,
+            "failures": []
+          }
+        },
+        {
+          "id": "approved-mechanical-handoff",
+          "grade": {
+            "passed": false,
+            "failures": [
+              "required_read_missing_or_late:task-profiles.json",
+              "required_read_missing_or_late:config\\model-capabilities.json"
+            ]
+          }
+        },
+        {
+          "id": "ordinary-review-handoff",
+          "grade": {
+            "passed": false,
+            "failures": [
+              "required_read_missing_or_late:task-profiles.json",
+              "required_read_missing_or_late:config\\model-capabilities.json"
+            ]
+          }
+        },
+        {
+          "id": "visual-handoff",
+          "grade": {
+            "passed": false,
+            "failures": [
+              "required_read_missing_or_late:task-profiles.json",
+              "required_read_missing_or_late:config\\model-capabilities.json"
+            ]
+          }
+        },
+        {
+          "id": "return-to-inline",
+          "grade": {
+            "passed": true,
+            "failures": []
+          }
+        }
+      ]
+    },
+    {
+      "model": "grok-4.6",
+      "repetition": 3,
+      "status": "complete",
+      "errors": [],
+      "turns": [
+        {
+          "id": "scoped-instructions-and-untrusted-data",
+          "grade": {
+            "passed": true,
+            "failures": []
+          }
+        },
+        {
+          "id": "architecture-handoff",
+          "grade": {
+            "passed": true,
+            "failures": []
+          }
+        },
+        {
+          "id": "approved-mechanical-handoff",
+          "grade": {
+            "passed": false,
+            "failures": [
+              "required_read_missing_or_late:task-profiles.json",
+              "required_read_missing_or_late:config\\model-capabilities.json"
+            ]
+          }
+        },
+        {
+          "id": "ordinary-review-handoff",
+          "grade": {
+            "passed": false,
+            "failures": [
+              "required_read_missing_or_late:task-profiles.json",
+              "required_read_missing_or_late:config\\model-capabilities.json"
+            ]
+          }
+        },
+        {
+          "id": "visual-handoff",
+          "grade": {
+            "passed": false,
+            "failures": [
+              "required_read_missing_or_late:task-profiles.json",
+              "required_read_missing_or_late:config\\model-capabilities.json"
+            ]
+          }
+        },
+        {
+          "id": "return-to-inline",
+          "grade": {
+            "passed": true,
+            "failures": []
+          }
+        }
+      ]
+    },
+    {
+      "model": "gpt-6.1-sol",
+      "repetition": 3,
+      "status": "complete",
+      "errors": [],
+      "turns": [
+        {
+          "id": "scoped-instructions-and-untrusted-data",
+          "grade": {
+            "passed": false,
+            "failures": [
+              "routing_prefix_missing_or_wrong"
+            ]
+          }
+        },
+        {
+          "id": "architecture-handoff",
+          "grade": {
+            "passed": true,
+            "failures": []
+          }
+        },
+        {
+          "id": "approved-mechanical-handoff",
+          "grade": {
+            "passed": true,
+            "failures": []
+          }
+        },
+        {
+          "id": "ordinary-review-handoff",
+          "grade": {
+            "passed": true,
+            "failures": []
+          }
+        },
+        {
+          "id": "visual-handoff",
+          "grade": {
+            "passed": true,
+            "failures": []
+          }
+        },
+        {
+          "id": "return-to-inline",
+          "grade": {
+            "passed": true,
+            "failures": []
+          }
+        }
+      ]
+    }
+  ],
+  "rawTranscript": "reports\\orchestration-evaluation.json",
+  "rawTranscriptSha256": "929252f4ee38e520263ce1b99e6972b7b88533b68388bee188daa10d501ce1d5",
+  "scoringHarnessFingerprint": "5ffd2eedff5a496fe56ef2ad47bb1cd2a50e1ff2391c668d28ac0096ecb61d77"
+}

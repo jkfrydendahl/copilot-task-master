@@ -1,0 +1,3 @@
+# Keep evidence fingerprints stable across Windows checkouts.
+scripts/evaluate-orchestration.mjs text eol=lf
+reports/orchestration-evaluation.json text eol=lf

@@ -18,7 +18,8 @@ $testFiles = @(
     (Join-Path $PSScriptRoot "test-model-onboarding.ps1"),
     (Join-Path $PSScriptRoot "test-role-qualification.ps1"),
     (Join-Path $PSScriptRoot "test-model-review.ps1"),
-    (Join-Path $PSScriptRoot "test-model-launch-args.ps1")
+    (Join-Path $PSScriptRoot "test-model-launch-args.ps1"),
+    (Join-Path $PSScriptRoot "test-orchestration-evaluation.mjs")
 )
 
 $failedFiles = [System.Collections.Generic.List[string]]::new()
@@ -27,7 +28,8 @@ foreach ($testFile in $testFiles) {
     # Each test file calls `exit 1` on failure. Run it in its own pwsh
     # process (rather than `&`/dot-sourcing in this process) so that exit
     # code terminates only that test file's run, not this aggregator.
-    & pwsh -NoProfile -File $testFile
+    if ([IO.Path]::GetExtension($testFile) -eq ".mjs") { & node --test $testFile }
+    else { & pwsh -NoProfile -File $testFile }
     if ($LASTEXITCODE -ne 0) {
         $failedFiles.Add((Split-Path $testFile -Leaf))
         Write-Host "==== FAILED: $testFile ====" -ForegroundColor Red
