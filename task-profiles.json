@@ -41,7 +41,7 @@
     "description": "Architecture, unclear/production bugs, integration design, data-model/security/perf-sensitive decisions. NOT for routine builds, deploys, packaging, or known operational steps — even if the target system is complex.",
     "hint": "When you open the chat, describe the problem or decision. Include any relevant constraints or context upfront.",
     "model": "gpt-6.1-sol",
-    "effort": "max",
+    "effort": "xhigh",
     "context": "long_context"
   },
   {
