@@ -4,8 +4,8 @@
     "label": "Orchestrator (route per task)",
     "description": "Mixed or evolving workloads: select execution profiles within the active delivery stage and approved plan, without relaunching.",
     "hint": "Describe the task and active delivery stage. Delegate self-contained work only when separate context adds value.",
-    "model": "grok-4.6",
-    "effort": "high",
+    "model": "gpt-6.1-sol",
+    "effort": "xhigh",
     "context": "default"
   },
   {
