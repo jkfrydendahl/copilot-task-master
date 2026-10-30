@@ -23,7 +23,7 @@ function New-OnboardingFixture {
         PricingAliasConfig=@{schemaVersion=1;aliases=@{old="Old"}}
         PricingFetch=@{status="ok";content='<table><tr><th>Model</th><th>Input</th><th>Output</th></tr><tr><td>Old</td><td>$1</td><td>$5</td></tr><tr><td>Future 1.0</td><td>$0.5</td><td>$2.5</td></tr></table>'}
         Sources=@{
-            artificialAnalysis=@{status="ok";fetchedAtUtc="2026-09-23Z";models=@{"old-low"=@{codingIndex=80};"future-1-0-low"=@{codingIndex=82}}}
+            artificialAnalysis=@{status="ok";fetchedAtUtc="2026-09-23Z";models=@{"old-low"=@{intelligenceIndex=80};"future-1-0-low"=@{intelligenceIndex=82}}}
             artificialAnalysisComponents=@{status="ok";fetchedAtUtc="2026-09-23Z";models=@{};identities=@{
                 "future-1-0-low"=@{status="verified";releaseId="future-1-0";effort="low"}
                 "future-1-0"=@{status="verified";releaseId="future-1-0";effort="high"}
@@ -497,7 +497,7 @@ Run-Test "Local refresh and remote review use a sanitized persistent snapshot wi
             Assert-True ($caps.models["future-1.0"].asOf -eq "2026-09-23Z") "Remote review renewed capability age"
             Assert-True ((Get-Content $path -Raw) -ceq $before) "Review rewrote local observation"
         }
-        $f.Sources.artificialAnalysis.models["old-low"].codingIndex=100
+        $f.Sources.artificialAnalysis.models["old-low"].intelligenceIndex=100
         $r=Invoke-TaskProfileReview -RepoRoot $root -Sources $f.Sources -FetchPricing {param($u)$f.PricingFetch} -ForceImmediateApply -NowUtc $now.AddDays(7).AddSeconds(1)
         Assert-True (-not $r.results[0].resolution.applied -and $r.onboarding.discoverySnapshot.status -eq "expired") "Force bypassed expiry"
         foreach($json in @("{broken","", "null")){

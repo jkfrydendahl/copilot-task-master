@@ -11,7 +11,7 @@ $now=[datetime]"2026-09-08Z"
 $profile=@{key="default-development";effort="medium";context="default"}
 $policy=Get-ModelPolicyConfig (Join-Path $PSScriptRoot "..\config\model-policy.json")
 $aliases=@{one=@{artificialAnalysis=@{medium="one-medium";max="one-max"};liveBench=@{medium="one-lb"}}}
-$aa=@{status="ok";sourceDate=$null;fetchedAtUtc="2026-09-08Z";sourceUrl="https://example.test/aa";sourceVersion="aa-v1";models=@{"one-medium"=@{name="One medium";codingIndex=50;intelligenceIndex=60};"one-max"=@{codingIndex=90}}}
+$aa=@{status="ok";sourceDate=$null;fetchedAtUtc="2026-09-08Z";sourceUrl="https://example.test/aa";sourceVersion="aa-v1";models=@{"one-medium"=@{name="One medium";codingIndex=50;intelligenceIndex=60};"one-max"=@{codingIndex=90;intelligenceIndex=90}}}
 $lb=@{status="ok";sourceDate="2026-09-01";fetchedAtUtc="2026-09-08Z";sourceUrl="https://example.test/lb";sourceVersion="lb-v1";models=@{"one-lb"=@{coding=80}}}
 function Evidence($Sources=@{artificialAnalysis=$aa;liveBench=$lb}, $Mapping=$aliases, $Profile=$profile, $Caps=@{}) {
     Get-ProfileBenchmarkEvidence -Profile $Profile -Models @("one") -Sources $Sources -Aliases $Mapping -Capabilities $Caps -Policy $policy -NowUtc $now
@@ -20,7 +20,7 @@ Run-Test "Fixed effort uses exact variant and carries provenance" {
     $r=Evidence
     Assert-True ($r.records.Count -eq 2) "Expected both sources"
     $e=@($r.records | Where-Object source -eq artificialAnalysis)[0]
-    Assert-True ($e.score -eq 50 -and $e.alias -eq "one-medium") "Used max score"
+    Assert-True ($e.score -eq 60 -and $e.alias -eq "one-medium") "Used max score"
     Assert-True ($e.publicationAgeUnknown -and $e.effort -eq "medium") "Provenance"
 }
 Run-Test "Unmatched configuration is excluded rather than substituted" {
@@ -121,7 +121,7 @@ Run-Test "Explicit configurations retain exact aliases and identities for every 
     $r=Get-ProfileBenchmarkEvidence -Profile $profile -Models @("one") -Configurations $configurations `
         -Sources @{artificialAnalysis=$aa;liveBench=$lb} -Aliases $aliases -Policy $policy -NowUtc $now
     $records=@($r.records | Where-Object source -eq artificialAnalysis)
-    Assert-True ($records.Count -eq 2 -and $records[0].score -eq 50 -and $records[1].score -eq 90) "Effort-specific evidence conflated"
+    Assert-True ($records.Count -eq 2 -and $records[0].score -eq 60 -and $records[1].score -eq 90) "Effort-specific evidence conflated"
     Assert-True ($records[0].configurationId -ne $records[1].configurationId -and $records[1].effort -eq "max") "Configuration provenance missing"
     Assert-True (@($r.records | Where-Object source -eq liveBench).Count -eq 1 -and $r.diagnostics -match "effort 'max'") "Missing max evidence borrowed medium"
 }
@@ -185,10 +185,10 @@ Run-Test "Components never borrow another effort or accept composite model ident
 Run-Test "API aggregate confirmation is independent of other aggregate metrics" {
     $source=ConvertTo-CanonicalModelData $aa
     $first=Evidence -Sources @{artificialAnalysis=$source}
-    $source.sourceVersion="changed-api";$source.models["one-medium"].intelligenceIndex=95
+    $source.sourceVersion="changed-api";$source.models["one-medium"].codingIndex=51
     $second=Evidence -Sources @{artificialAnalysis=$source}
-    Assert-True ($first.records[0].sourceVersion -eq $second.records[0].sourceVersion) "Intelligence change confirmed coding"
-    $source.models["one-medium"].codingIndex=51
+    Assert-True ($first.records[0].sourceVersion -eq $second.records[0].sourceVersion) "Coding change confirmed intelligence"
+    $source.models["one-medium"].intelligenceIndex=61
     $third=Evidence -Sources @{artificialAnalysis=$source}
     Assert-True ($first.records[0].sourceVersion -ne $third.records[0].sourceVersion) "Deciding score change not observed"
 }

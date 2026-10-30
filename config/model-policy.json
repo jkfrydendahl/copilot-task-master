@@ -60,7 +60,7 @@
     "benchmarkMaxPublicationAgeDays": 90
   },
   "selectionPolicy": {
-    "version": 13,
+    "version": 14,
     "costTieBreak": "newest_verified_release",
     "referenceInputTokens": 1000000,
     "referenceOutputTokens": 100000,
@@ -82,11 +82,11 @@
       },
       "quick": {
         "strategy": "value_balanced",
-        "evidenceRoutes": ["artificialAnalysis.codingIndex", "liveBench.coding"],
+        "evidenceRoutes": ["liveBench.coding", "artificialAnalysis.intelligenceIndex"],
         "supportingMetrics": ["artificialAnalysisComponents.ifbench", "liveBench.instructionFollowing"],
         "qualification": { "minimumModels": 2, "dimensions": [] },
         "configurationSelection": { "mode": "bounded_effort", "allowedEfforts": ["low"], "effortChangePolicy": "automatic" },
-        "qualityBands": { "artificialAnalysis.codingIndex": 3, "liveBench.coding": 3 }
+        "qualityBands": { "liveBench.coding": 3, "artificialAnalysis.intelligenceIndex": 3 }
       },
       "mechanical": {
         "strategy": "value_balanced",
@@ -116,7 +116,7 @@
       },
       "default-development": {
         "strategy": "value_balanced",
-        "evidenceRoutes": ["artificialAnalysis.codingIndex", "liveBench.coding"],
+        "evidenceRoutes": ["liveBench.coding", "artificialAnalysis.intelligenceIndex"],
         "supportingMetrics": [],
         "qualification": {
           "minimumModels": 2,
@@ -125,7 +125,7 @@
           ]
         },
         "configurationSelection": { "mode": "bounded_effort", "allowedEfforts": ["medium", "high"], "effortChangePolicy": "automatic" },
-        "qualityBands": { "artificialAnalysis.codingIndex": 3, "liveBench.coding": 3 }
+        "qualityBands": { "liveBench.coding": 3, "artificialAnalysis.intelligenceIndex": 3 }
       },
       "agentic-implementation": {
         "strategy": "value_balanced",
@@ -154,21 +154,21 @@
       },
       "review": {
         "strategy": "value_balanced",
-        "evidenceRoutes": ["artificialAnalysis.codingIndex", "liveBench.coding"],
+        "evidenceRoutes": ["liveBench.coding", "artificialAnalysis.intelligenceIndex"],
         "supportingMetrics": [],
         "qualification": {
           "minimumModels": 2,
           "dimensions": [
-            { "key": "reasoning", "evidenceRoutes": ["artificialAnalysis.intelligenceIndex", "liveBench.reasoning"], "qualityBands": { "artificialAnalysis.intelligenceIndex": 3, "liveBench.reasoning": 3 } },
+            { "key": "reasoning", "evidenceRoutes": ["liveBench.reasoning"], "qualityBands": { "liveBench.reasoning": 3 } },
             { "key": "long-context", "evidenceRoutes": ["artificialAnalysisComponents.lcr"], "qualityBands": { "artificialAnalysisComponents.lcr": 0.05 } }
           ]
         },
         "configurationSelection": { "mode": "bounded_effort", "allowedEfforts": ["medium", "high"], "effortChangePolicy": "automatic" },
-        "qualityBands": { "artificialAnalysis.codingIndex": 3, "liveBench.coding": 3 }
+        "qualityBands": { "liveBench.coding": 3, "artificialAnalysis.intelligenceIndex": 3 }
       },
       "visual-ui": {
         "strategy": "value_balanced",
-        "evidenceRoutes": ["artificialAnalysis.codingIndex", "liveBench.coding"],
+        "evidenceRoutes": ["liveBench.coding", "artificialAnalysis.intelligenceIndex"],
         "supportingMetrics": [],
         "qualification": {
           "minimumModels": 2,
@@ -177,7 +177,7 @@
           ]
         },
         "configurationSelection": { "mode": "bounded_effort", "allowedEfforts": ["medium", "high"], "effortChangePolicy": "automatic" },
-        "qualityBands": { "artificialAnalysis.codingIndex": 3, "liveBench.coding": 3 }
+        "qualityBands": { "liveBench.coding": 3, "artificialAnalysis.intelligenceIndex": 3 }
       }
     }
   }

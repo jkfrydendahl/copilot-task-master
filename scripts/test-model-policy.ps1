@@ -104,8 +104,8 @@ Run-Test "Invalid strategies and incomplete or nonnumeric bands fail validation"
             { param($p) $p.selectionPolicy.profiles.review.qualification.dimensions[0].key = "primary" },
             { param($p) $p.selectionPolicy.profiles.review.qualification.dimensions[1].key = "reasoning" },
             { param($p) $p.selectionPolicy.profiles.review.qualification.dimensions[0].evidenceRoutes = @("unknown.metric") },
-            { param($p) $p.selectionPolicy.profiles.review.qualification.dimensions[0].evidenceRoutes = @("artificialAnalysis.codingIndex") },
-            { param($p) $p.selectionPolicy.profiles.review.qualification.dimensions[0].qualityBands.Remove("artificialAnalysis.intelligenceIndex") },
+            { param($p) $p.selectionPolicy.profiles.review.qualification.dimensions[0].evidenceRoutes = @("liveBench.coding") },
+            { param($p) $p.selectionPolicy.profiles.review.qualification.dimensions[0].qualityBands.Remove("liveBench.reasoning") },
             { param($p) $p.selectionPolicy.profiles.review.qualification.dimensions[1].qualityBands["artificialAnalysisComponents.lcr"] = 3 },
             { param($p) $p.selectionPolicy.profiles.review.qualification.dimensions[1].qualityBands["artificialAnalysisComponents.lcr"] = -1 },
             { param($p) $p.selectionPolicy.profiles.review.qualification.dimensions[1].qualityBands["unknown.metric"] = 0 },
@@ -222,7 +222,7 @@ Run-Test "Published and runtime-verified vision admit the configured Visual/UI v
 }
 Run-Test "Every profile preauthorizes its task-appropriate effort range" {
     $p=Get-ModelPolicyConfig (Join-Path $repo "config\model-policy.json")
-    Assert-True ($p.selectionPolicy.version -eq 13 -and $p.schemaVersion -eq 4) "Retirement recovery contract not versioned"
+    Assert-True ($p.selectionPolicy.version -eq 14 -and $p.schemaVersion -eq 4) "Retirement recovery contract not versioned"
     Assert-True ($p.consensusPolicy.discoveryFreshnessDays -eq 7) "Local discovery validity changed"
     Assert-True ($p.selectionPolicy.costTieBreak -eq "newest_verified_release") "Recency tie policy missing"
     foreach ($key in @("orchestrator","default-development")) {
@@ -241,12 +241,12 @@ Run-Test "Every profile preauthorizes its task-appropriate effort range" {
     Run-Test "All nine deciding routes match the approved role contracts" {
         $p=Get-ModelPolicyConfig (Join-Path $repo "config\model-policy.json")
         $routes=@{
-            quick="artificialAnalysis.codingIndex,liveBench.coding"
-            "default-development"="artificialAnalysis.codingIndex,liveBench.coding"
+            quick="liveBench.coding,artificialAnalysis.intelligenceIndex"
+            "default-development"="liveBench.coding,artificialAnalysis.intelligenceIndex"
             "agentic-implementation"="artificialAnalysisCodingAgents.codingAgentIndex,liveBench.agenticCoding"
             "deep-reasoning"="artificialAnalysis.intelligenceIndex,liveBench.reasoning"
-            review="artificialAnalysis.codingIndex,liveBench.coding"
-            "visual-ui"="artificialAnalysis.codingIndex,liveBench.coding"
+            review="liveBench.coding,artificialAnalysis.intelligenceIndex"
+            "visual-ui"="liveBench.coding,artificialAnalysis.intelligenceIndex"
             mechanical="artificialAnalysisComponents.automationBench,artificialAnalysisComponents.enterpriseOpsGym"
             orchestrator="artificialAnalysisComponents.automationBench,artificialAnalysisComponents.enterpriseOpsGym"
             triage="artificialAnalysis.intelligenceIndex,liveBench.reasoning"
