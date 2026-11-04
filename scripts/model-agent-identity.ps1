@@ -32,7 +32,7 @@ function Resolve-AgentModelIdentities {
             continue
         }
         $effort = $null
-        if ($label -match '^(?<model>[A-Za-z0-9][A-Za-z0-9 ._-]*) \((?<effort>minimal|low|medium|high|xhigh|max)\)$') {
+        if ($label -match '^(?<model>[A-Za-z0-9][A-Za-z0-9 ._-]*) \((?<effort>none|minimal|low|medium|high|xhigh|max)\)$') {
             $name = $Matches.model
             $effort = $Matches.effort.ToLowerInvariant()
         } elseif ($label -cmatch '^[A-Za-z0-9][A-Za-z0-9 ._-]*$') {

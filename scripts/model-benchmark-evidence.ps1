@@ -13,6 +13,13 @@ function Get-SourceMetricObservation {
         methodologyVersion=(Get-ObjectMemberValue $Source "methodologyVersion")
         categoryColumns=(Get-ObjectMemberValue (Get-ObjectMemberValue $Source "categoryColumns") $metric)
     }
+    $benchmark = Get-ObjectMemberValue $Definition "benchmarkId"
+    if ($null -ne $benchmark) {
+        $identity.normalizationVersion = 3
+        $identity.benchmarkId = $benchmark
+        $identity.definition = $Definition
+        $identity.evaluatorRevision = Get-ObjectMemberValue $Source "evaluatorRevision"
+    }
     $scores = @{}
     $models = Get-ObjectMemberValue $Source "models"
     if ($models -is [System.Collections.IDictionary]) {
@@ -24,6 +31,9 @@ function Get-SourceMetricObservation {
                 score=$score;harness=(Get-ObjectMemberValue $record "harness")
                 versions=(Get-ObjectMemberValue $record "versions")
                 suite=(Get-ObjectMemberValue $record "suiteFingerprint")
+            }
+            if ($null -ne $benchmark) {
+                $scores[$alias].publishedIdentity = Get-ObjectMemberValue (Get-ObjectMemberValue $Source "identities") $alias
             }
         }
     }

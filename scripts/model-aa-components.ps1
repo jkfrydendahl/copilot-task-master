@@ -4,7 +4,8 @@ Set-StrictMode -Version Latest
 function Get-AAComponentData {
     param(
         [AllowEmptyCollection()][string[]]$ModelSlugs,
-        [scriptblock]$FetchText = { param($url) Invoke-TextFetch -Url $url }
+        [scriptblock]$FetchText = { param($url) Invoke-TextFetch -Url $url },
+        [switch]$IncludeVersionedBenchmarks
     )
     $anchor = @($ModelSlugs | Where-Object { $_ -match '^[a-z0-9][a-z0-9.-]*$' } | Sort-Object -Unique | Select-Object -First 1)
     $url = if ($anchor.Count) { "https://artificialanalysis.ai/models/$($anchor[0])" } else { $null }
@@ -15,6 +16,11 @@ function Get-AAComponentData {
         publicationDateKind="unknown"; evaluationDate=$null
         methodologyUrl="https://artificialanalysis.ai/methodology/intelligence-benchmarking"
     }
+    if ($IncludeVersionedBenchmarks) {
+        $result.observationSchemaVersion = 2
+        $result.metricDefinitions = ConvertTo-CanonicalModelData $script:AAVersionedComponentDefinitions
+        $result.evaluatorRevision = $null
+    }
     if (-not $anchor.Count) { return [pscustomobject]$result }
     $fetch = & $FetchText $url
     $result.fetchedAtUtc = [datetime]::UtcNow.ToString("o")
@@ -23,17 +29,31 @@ function Get-AAComponentData {
         $result.message = "AA component fetch failed: $($fetch.error)"
         return [pscustomobject]$result
     }
-    $parsed = ConvertFrom-AAComponentPage $fetch.content
+    $parsed = ConvertFrom-AAComponentPage $fetch.content -IncludeVersionedBenchmarks:$IncludeVersionedBenchmarks
     foreach ($field in @("status","message","models","releases","identities","diagnostics")) { $result[$field] = $parsed.$field }
     if ($parsed.status -eq "ok") {
-        foreach ($metric in $script:AAComponentProperties.Keys) {
+        $metrics = @($script:AAComponentProperties.Keys)
+        if ($IncludeVersionedBenchmarks) { $metrics += @($script:AAVersionedComponentDefinitions.Keys) }
+        foreach ($metric in $metrics) {
             $scores = @{}
+            $identities = @{}
             foreach ($slug in $parsed.models.Keys) {
                 $score = $parsed.models[$slug][$metric]
-                if ($null -ne $score) { $scores[$slug] = $score }
+                if ($null -ne $score) {
+                    $scores[$slug] = $score
+                    if ($script:AAVersionedComponentDefinitions.Contains($metric)) {
+                        $identities[$slug] = $parsed.identities[$slug]
+                    }
+                }
             }
             if ($scores.Count) {
-                $result.metricVersions[$metric] = Get-ModelDataFingerprint @{schema=1;metric=$metric;scores=$scores}
+                $observation = @{schema=1;metric=$metric;scores=$scores}
+                if ($script:AAVersionedComponentDefinitions.Contains($metric)) {
+                    $observation.schema = 2
+                    $observation.definition = $result.metricDefinitions[$metric]
+                    $observation.identities = $identities
+                }
+                $result.metricVersions[$metric] = Get-ModelDataFingerprint $observation
             }
         }
         $result.sourceVersion = Get-ModelDataFingerprint $result.metricVersions

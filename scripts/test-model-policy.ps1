@@ -45,7 +45,9 @@ Run-Test "All profiles use explicit source-specific value bands without incumben
         Assert-True (-not $strategy.Contains("maxAutomaticCostIncreasePercent")) "Obsolete incumbent-relative limit for $key"
         foreach ($metric in $strategy.evidenceRoutes) {
             $band = if ($metric -like "artificialAnalysisComponents.*") {
-                if ($key -eq "orchestrator") { 0.03 } else { 0 }
+                if ($key -eq "orchestrator") { 0.03 } else { 0.01 }
+            } elseif ($metric -eq "liveBench.coding" -and $key -in @("review","visual-ui")) {
+                12
             } elseif ($metric -like "artificialAnalysisCodingAgents.*") { 0.03 } else { 3 }
             Assert-True ($strategy.qualityBands[$metric] -eq $band) "Wrong native metric band: $key $metric"
         }
@@ -220,9 +222,9 @@ Run-Test "Published and runtime-verified vision admit the configured Visual/UI v
         Assert-True ($verdict.admissible -and $verdict.warningCodes.Count -eq 0) "Verified vision or approved Visual/UI budget rejected Sol: $($observation.source)"
     }
 }
-Run-Test "Every profile preauthorizes its task-appropriate effort range" {
+Run-Test "Every profile permits evidence-backed selection across all native efforts" {
     $p=Get-ModelPolicyConfig (Join-Path $repo "config\model-policy.json")
-    Assert-True ($p.selectionPolicy.version -eq 15 -and $p.schemaVersion -eq 4) "Orchestrator Xhigh authorization not versioned"
+    Assert-True ($p.selectionPolicy.version -eq 18 -and $p.schemaVersion -eq 4) "Selection policy not versioned"
     Assert-True ($p.consensusPolicy.discoveryFreshnessDays -eq 7) "Local discovery validity changed"
     Assert-True ($p.selectionPolicy.costTieBreak -eq "newest_verified_release") "Recency tie policy missing"
     foreach ($key in @("orchestrator","default-development")) {
@@ -231,12 +233,7 @@ Run-Test "Every profile preauthorizes its task-appropriate effort range" {
     }
     foreach ($metric in $p.selectionPolicy.profiles.orchestrator.qualityBands.Keys) {
         Assert-True ($p.selectionPolicy.profiles.orchestrator.qualityBands[$metric] -eq 0.03) "Orchestrator workflow band"
-        Assert-True ($p.selectionPolicy.profiles.mechanical.qualityBands[$metric] -eq 0) "Mechanical band changed"
-    }
-    $ranges=@{
-        quick="low";mechanical="low";triage="low";orchestrator="high,xhigh"
-        "default-development"="medium,high";review="medium,high";"visual-ui"="medium,high"
-        "agentic-implementation"="high,xhigh,max";"deep-reasoning"="high,xhigh,max"
+        Assert-True ($p.selectionPolicy.profiles.mechanical.qualityBands[$metric] -eq 0.01) "Mechanical workflow band"
     }
     Run-Test "All nine deciding routes match the approved role contracts" {
         $p=Get-ModelPolicyConfig (Join-Path $repo "config\model-policy.json")
@@ -257,10 +254,10 @@ Run-Test "Every profile preauthorizes its task-appropriate effort range" {
             Assert-True ($contract.supportingMetrics -is [array] -and $contract.qualification.minimumModels -eq 2) "Missing role contract: $key"
         }
     }
-    foreach ($key in $ranges.Keys) {
+    foreach ($key in $p.selectionPolicy.profiles.Keys) {
         $selection=$p.selectionPolicy.profiles[$key].configurationSelection
         Assert-True ($selection.mode -eq "bounded_effort" -and $selection.effortChangePolicy -eq "automatic") "Missing automatic authorization: $key"
-        Assert-True (($selection.allowedEfforts -join ",") -eq $ranges[$key]) "Wrong effort range: $key"
+        Assert-True (($selection.allowedEfforts -join ",") -eq "none,minimal,low,medium,high,xhigh,max") "Profile-specific effort restriction remains: $key"
     }
     $orchestrator = Get-Content (Join-Path $repo "task-profiles.json") -Raw | ConvertFrom-Json | Where-Object key -eq "orchestrator"
     Assert-True ($orchestrator.effort -in $p.selectionPolicy.profiles.orchestrator.configurationSelection.allowedEfforts) "Launcher default is outside the authorized Orchestrator range"
@@ -278,7 +275,7 @@ Run-Test "Invalid or obsolete effort policies fail rather than silently changing
             {param($s) $s.allowedEfforts="high"},
             {param($s) $s.allowedEfforts=@("high","high")},
             {param($s) $s.allowedEfforts=@("high","typo")},
-            {param($s) $s.allowedEfforts=@("none")}
+            {param($s) $s.allowedEfforts=@("")}
         )) {
             $p=Get-ModelPolicyConfig (Join-Path $repo "config\model-policy.json")
             $s=@{mode="bounded_effort";effortChangePolicy="automatic";allowedEfforts=@("high","xhigh","max")}
@@ -291,7 +288,7 @@ Run-Test "Invalid or obsolete effort policies fail rather than silently changing
         }
     } finally { if (Test-Path -LiteralPath $path) { Remove-Item -LiteralPath $path } }
 }
-Run-Test "Configuration candidates intersect all task ranges and preserve native no-effort behavior" {
+Run-Test "Configuration candidates use supported efforts without role-specific restrictions" {
     . (Join-Path $PSScriptRoot "model-configuration.ps1")
     $p=Get-ModelPolicyConfig (Join-Path $repo "config\model-policy.json")
     $profile=@{key="agentic-implementation";model="one";effort="high";context="default"}
@@ -301,22 +298,28 @@ Run-Test "Configuration candidates intersect all task ranges and preserve native
         native=@{effortMode="unsupported";supportedEfforts=@()}
     }
     $result=Get-ProfileModelConfigurations -Profile $profile -Models @("one","two","native","unknown") -Capabilities $caps -Policy $p
-    Assert-True ($result.configurations.Count -eq 5) "Unsupported efforts invented or native configuration lost"
-    Assert-True (@($result.configurations | Where-Object model -eq "one").Count -eq 1) "High-only model expanded beyond capabilities"
+    Assert-True ($result.configurations.Count -eq 7) "Supported efforts omitted or unsupported efforts invented"
+    Assert-True ((@($result.configurations | Where-Object model -eq "one" | ForEach-Object effort) -join ",") -eq "low,high") "Model-specific effort support was not preserved"
     Assert-True (($result.configurations | Where-Object model -eq "native").effort -eq "none") "No-effort model invented a flag"
     Assert-True ($result.diagnostics -match "unknown.*capabilities_missing") "Missing capability diagnostic"
-    Assert-True (@($result.configurations.configurationId | Select-Object -Unique).Count -eq 5) "Configuration identity collision"
+    Assert-True (@($result.configurations.configurationId | Select-Object -Unique).Count -eq 7) "Configuration identity collision"
     $profile.key="review"
     $review=Get-ProfileModelConfigurations -Profile $profile -Models @("one","two","native") -Capabilities $caps -Policy $p
-    Assert-True ($review.configurations.Count -eq 4 -and @($review.configurations | Where-Object effort -eq "medium").Count -eq 1) "Review did not expand its allowed range"
-    $caps.all=@{supportedEfforts=@("minimal","low","medium","high","xhigh","max")}
+    Assert-True ($review.configurations.Count -eq 7 -and @($review.configurations | Where-Object effort -eq "max").Count -eq 1) "Review still restricts supported efforts"
+    $caps.all=@{effortMode="supported";supportedEfforts=@("none","minimal","low","medium","high","xhigh","max")}
     foreach ($key in $p.selectionPolicy.profiles.Keys) {
         $profile.key=$key
         $range=$p.selectionPolicy.profiles[$key].configurationSelection.allowedEfforts
         $expanded=Get-ProfileModelConfigurations -Profile $profile -Models @("all","native") -Capabilities $caps -Policy $p
         Assert-True ($expanded.configurations.Count -eq $range.Count+1) "Incorrect candidate count: $key"
         Assert-True (@($expanded.configurations | Where-Object {$_.effort -ne "none" -and $_.effort -notin $range}).Count -eq 0) "Unauthorized effort: $key"
+        $controlledNone=@($expanded.configurations | Where-Object { $_.model -eq "all" -and $_.effort -eq "none" })
+        Assert-True ($controlledNone.Count -eq 1) "Explicit supported none setting omitted: $key"
     }
+    $p.selectionPolicy.profiles.review.configurationSelection.allowedEfforts=@("high")
+    $profile.key="review"
+    $bounded=Get-ProfileModelConfigurations -Profile $profile -Models @("one","two","native") -Capabilities $caps -Policy $p
+    Assert-True ($bounded.configurations.Count -eq 3 -and @($bounded.configurations | Where-Object effort -notin @("high","none")).Count -eq 0) "Explicit bounded policy compatibility lost"
     $empty=Get-ProfileModelConfigurations -Profile $profile -Models @() -Capabilities $caps -Policy $p
     Assert-True ($empty.configurations.Count -eq 0) "Empty model list became a candidate"
 }

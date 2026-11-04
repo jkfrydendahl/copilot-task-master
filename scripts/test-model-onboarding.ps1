@@ -221,6 +221,23 @@ Run-Test "Native and singleton effort capabilities survive persistence and catal
         if(Test-Path -LiteralPath $path){Remove-Item -LiteralPath $path}
     }
 }
+Run-Test "Explicit none aliases require advertised support and do not infer unspecified effort" {
+    foreach($supported in @($true,$false)){
+        $f=New-OnboardingFixture
+        if($supported){$f.RuntimeCatalog.models[0].supportedReasoningEfforts=@("none","high")}
+        else{$f.RuntimeCatalog.models[0].supportedReasoningEfforts=@("high")}
+        $f.Sources.liveBench.models=@{"future-1.0-none"=@{coding=80};"future-1.0"=@{coding=99}}
+        $r=Resolve-ModelOnboarding @f
+        $cap=$r.capabilities.models["future-1.0"]
+        Assert-True ($cap.effortMode -eq "supported") "Controlled none became native no-effort mode"
+        $mapping=$r.aliases.aliases["future-1.0"]
+        if($supported){
+            Assert-True ($mapping.liveBench.none -eq "future-1.0-none" -and $mapping.liveBench.Count -eq 1) "Explicit supported none alias missing or unspecified effort inferred"
+        }else{
+            Assert-True (-not $mapping.Contains("liveBench")) "Unadvertised none effort acquired a benchmark alias"
+        }
+    }
+}
 Run-Test "Incomplete revalidation cannot refresh older long-context or vision facts" {
     $f=New-OnboardingFixture
     $f.CapabilityCatalog.models["future-1.0"]=@{asOf="2026-09-01";capabilitySource="prior";vision=$true;visionSource="prior";supportedEfforts=@("low","high");supportedContexts=@("default","long_context")}

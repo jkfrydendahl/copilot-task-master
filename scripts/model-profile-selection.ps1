@@ -120,6 +120,7 @@ function Get-ProfileSelection {
             policyFingerprint = $fingerprint
             observation = $null
             freshObservation = $false
+            incumbentEvidenceGaps = @()
             metricKey = $null
             decidingMetric = $null
             evidenceRoutes = $contract.evidenceRoutes
@@ -211,26 +212,15 @@ function Get-ProfileSelection {
         $reducedConfidence = $true
     }
     $hasVersion = -not [string]::IsNullOrWhiteSpace([string]$winner.sourceVersion)
-    $promotionBlockReason = $null
-    if ($null -eq $retirementRecovery -and $role.routeIndex -gt 0 -and
-        $winner.configurationId -ne $currentConfiguration.configurationId) {
-        $matchedIncumbent = @($comparisonEvidence | Where-Object {
-            $_.configurationId -eq $currentConfiguration.configurationId -and (Test-BenchmarkEvidenceComparable $_ $winner)
-        })
-        if (-not $hasVersion -or -not $matchedIncumbent.Count) {
-            $promotionBlockReason = "retained_fallback_incumbent_evidence_missing"
+    $incumbentReferences = if ($qualification.enabled) { @($qualification.governingEvidence) } else { @($winner) }
+    $incumbentEvidenceGaps = @(foreach ($reference in $incumbentReferences) {
+        if (-not @($comparisonEvidence | Where-Object {
+            $_.configurationId -eq $currentConfiguration.configurationId -and (Test-BenchmarkEvidenceComparable $_ $reference)
+        }).Count) {
+            "$($reference.source).$($reference.metric)"
         }
-    }
-    if ($null -eq $retirementRecovery -and $qualification.enabled -and $winner.configurationId -ne $currentConfiguration.configurationId) {
-        foreach ($dimension in @($qualification.dimensions | Where-Object { $_.key -ne "primary" -and $_.routeIndex -gt 0 })) {
-            $reference = $dimension.reference
-            if (-not @($comparisonEvidence | Where-Object {
-                $_.configurationId -eq $currentConfiguration.configurationId -and (Test-BenchmarkEvidenceComparable $_ $reference)
-            }).Count) {
-                $promotionBlockReason = "retained_qualification_fallback_incumbent_evidence_missing"
-            }
-        }
-    }
+    })
+    if ($incumbentEvidenceGaps.Count) { $reducedConfidence = $true }
     $observation = Get-ModelDataFingerprint @{
         source = $decidingSource
         metric = $winner.metric
@@ -269,7 +259,7 @@ function Get-ProfileSelection {
         policyFingerprint = $fingerprint
         observation = $observation
         freshObservation = -not $winner.cached -and $hasVersion -and $qualification.fresh
-        promotionBlockReason = $promotionBlockReason
+        incumbentEvidenceGaps = $incumbentEvidenceGaps
         evidenceIdentity = $evidenceIdentity
         metricKey = $role.metricKey
         decidingMetric = $winner.metric
@@ -436,11 +426,6 @@ function Resolve-ProfileSelectionState {
     }
     $source = $Selection.decidingSource
     $metricKey = $Selection.metricKey
-    $promotionBlockReason = Get-ObjectMemberValue $Selection "promotionBlockReason"
-    if ($null -ne $promotionBlockReason) {
-        $result.status = $promotionBlockReason
-        return $result
-    }
     $basisIndex = [array]::IndexOf(@($Selection.evidenceRoutes), (Get-ObjectMemberValue $next.incumbentBasis "metricKey"))
     $winnerBasis = New-ProfileSelectionBasis -Configuration $winnerConfiguration -Selection $Selection -NowUtc $NowUtc
     $weakerQualification = $false
