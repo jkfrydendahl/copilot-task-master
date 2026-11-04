@@ -11,7 +11,7 @@ function Run-Test($Name, [scriptblock]$Action) {
 function New-QualificationFixture($Key = "review") {
     $policy = Get-ModelPolicyConfig (Join-Path $PSScriptRoot "..\config\model-policy.json")
     $contract = $policy.selectionPolicy.profiles[$Key]
-    $effort = $contract.configurationSelection.allowedEfforts[0]
+    $effort = "high"
     $profile = @{key=$Key;model="incumbent";effort=$effort;context="default"}
     $metrics = @($contract.evidenceRoutes[0]) + @($contract.qualification.dimensions | ForEach-Object { $_.evidenceRoutes[0] })
     $records = @(foreach ($model in @("cheap","strong","incumbent")) {
@@ -44,6 +44,13 @@ function Use-ReasoningFallback($Fixture) {
         $record.metricIdentity="liveBench.reasoning"
     }
 }
+function Use-InstructionFollowingFallback($Fixture) {
+    foreach ($record in @($Fixture.Evidence | Where-Object metric -eq "ifbench")) {
+        $record.source="liveBench";$record.metric="instructionFollowing"
+        $record.metricKey="liveBench.instructionFollowing";$record.metricIdentity="liveBench.instructionFollowing"
+        $record.score*=100
+    }
+}
 function Set-RetiredFixtureIncumbent($Fixture) {
     foreach ($verdict in $Fixture.Verdicts) {
         $verdict.lifecycle=@{status="not_listed";name=$verdict.modelId}
@@ -68,6 +75,36 @@ Run-Test "All nine production contracts qualify before price selection" {
         $s = Get-ProfileSelection @f
         Assert-True ($s.qualification.status -eq "qualified" -and $null -ne $s.winner) "No qualified selection for $key"
         Assert-True (Resolve-ProfileSelectionState -CurrentModel incumbent -Selection $s -ForceImmediateApply).applied "Qualified $key did not apply"
+    }
+}
+Run-Test "Review and Visual/UI coding bands include exactly 12 points, never more" {
+    foreach ($key in @("review","visual-ui")) {
+        $f=New-QualificationFixture $key
+        Set-FixtureScore $f cheap coding 68
+        $s=Get-ProfileSelection @f
+        $primary=$s.qualification.dimensions[0]
+        Assert-True ($primary.reference.score -eq 80 -and $primary.maxScoreGap -eq 12 -and
+            $primary.minimumScore -eq 68 -and $s.winner.model -eq "cheap") "Exact coding boundary rejected: $key"
+        Set-FixtureScore $f cheap coding 67.999999
+        $s=Get-ProfileSelection @f
+        $candidate=$s.qualification.candidates | Where-Object model -eq cheap
+        Assert-True ($s.winner.model -eq "strong" -and -not $candidate.qualified -and
+            ($candidate.checks | Where-Object dimension -eq primary).status -eq "outside_quality_band") "Coding band exceeded: $key"
+    }
+}
+Run-Test "Wider Review and Visual/UI coding bands preserve every other required dimension" {
+    foreach ($key in @("review","visual-ui")) {
+        $fixture=New-QualificationFixture $key
+        foreach ($dimension in $fixture.Policy.selectionPolicy.profiles[$key].qualification.dimensions) {
+            $f=New-QualificationFixture $key
+            Set-FixtureScore $f cheap coding 68
+            $metric=$f.Policy.evidenceMetrics[$dimension.evidenceRoutes[0]].metric
+            Set-FixtureScore $f cheap $metric 0
+            $s=Get-ProfileSelection @f
+            $candidate=$s.qualification.candidates | Where-Object model -eq cheap
+            Assert-True ($s.winner.model -eq "strong" -and -not $candidate.qualified -and
+                ($candidate.checks | Where-Object dimension -eq $dimension.key).status -eq "outside_quality_band") "Coding band bypassed $($dimension.key): $key"
+        }
     }
 }
 Run-Test "Weak reasoning excludes a cheap coding contender from Review" {
@@ -111,7 +148,8 @@ Run-Test "Admissible configurations with no benchmark evidence remain visible as
 }
 Run-Test "Quality references never shrink after another dimension excludes their leader" {
     $f = New-QualificationFixture "visual-ui"
-    Set-FixtureScore $f cheap coding 70
+    $band = $f.Policy.selectionPolicy.profiles["visual-ui"].qualityBands["liveBench.coding"]
+    Set-FixtureScore $f cheap coding (80 - $band - 1)
     Set-FixtureScore $f strong mmmuPro 0.5
     Set-FixtureScore $f incumbent mmmuPro 0.5
     $s = Get-ProfileSelection @f
@@ -136,8 +174,8 @@ Run-Test "Multiple efforts of one model cannot satisfy minimum comparison covera
     $f = New-QualificationFixture
     $f.Evidence = @($f.Evidence | Where-Object model -eq strong)
     $f.Verdicts = @($f.Verdicts | Where-Object modelId -eq strong)
-    $copy = @($f.Evidence | ForEach-Object { $r=$_.Clone();$r.effort="high";$r })
-    $v=$f.Verdicts[0].Clone();$v.effort="high"
+    $copy = @($f.Evidence | ForEach-Object { $r=$_.Clone();$r.effort="xhigh";$r })
+    $v=$f.Verdicts[0].Clone();$v.effort="xhigh"
     $f.Evidence += $copy;$f.Verdicts += $v
     Assert-True ($null -eq (Get-ProfileSelection @f).winner) "Efforts counted as independent models"
 }
@@ -162,7 +200,7 @@ Run-Test "Other efforts or contexts cannot satisfy a candidate's required dimens
     foreach ($field in @("effort","context")) {
         $f=New-QualificationFixture
         $record=$f.Evidence | Where-Object { $_.model -eq "cheap" -and $_.metric -eq "lcr" }
-        $record[$field]=if($field -eq "effort"){"high"}else{"long_context"}
+        $record[$field]=if($field -eq "effort"){"xhigh"}else{"long_context"}
         Assert-True ((Get-ProfileSelection @f).winner.model -eq "strong") "Borrowed $field evidence"
     }
 }
@@ -215,7 +253,7 @@ Run-Test "Supporting-only changes cannot confirm a Quick recommendation" {
     $same=Resolve-ProfileSelectionState -CurrentModel incumbent -Selection (Get-ProfileSelection @f) -State $first.state
     Assert-True ($same.state.pending.count -eq 1 -and -not $same.applied) "Informational evidence confirmed"
 }
-Run-Test "Qualification fallback needs comparable incumbent evidence" {
+Run-Test "Missing incumbent evidence on a primary qualification route does not freeze peers" {
     $f=New-QualificationFixture
     $f.Evidence=@($f.Evidence | Where-Object { -not ($_.model -eq "incumbent" -and $_.metric -eq "reasoning") })
     $s=Get-ProfileSelection @f
@@ -228,11 +266,21 @@ Run-Test "Changing a required route resets pending confirmation" {
     $next=Resolve-ProfileSelectionState -CurrentModel incumbent -Selection (Get-ProfileSelection @f) -State $first.state
     Assert-True ($next.applied -and $next.finalModel -eq "cheap") "Required reasoning change ignored"
 }
-Run-Test "An established stronger qualification route cannot be downgraded even with force" {
-    $f=New-QualificationFixture
+Run-Test "An established stronger qualification route remains protected without incumbent fallback scores" {
+    $f=New-QualificationFixture mechanical
     foreach ($v in $f.Verdicts) { $v.pricing.inputPerMillion=2;$v.pricing.outputPerMillion=10 }
     $basis=Resolve-ProfileSelectionState -CurrentModel incumbent -Selection (Get-ProfileSelection @f)
-    Assert-True ($basis.state.incumbentBasis.qualificationRoutes.reasoning -eq "liveBench.reasoning") "Basis not established"
+    Assert-True ($basis.state.incumbentBasis.qualificationRoutes["instruction-following"] -eq "artificialAnalysisComponents.ifbench") "Basis not established"
+    ($f.Verdicts | Where-Object modelId -eq cheap).pricing.inputPerMillion=0.5
+    Use-InstructionFollowingFallback $f
+    $f.Evidence=@($f.Evidence | Where-Object { -not ($_.model -eq "incumbent" -and $_.metric -eq "instructionFollowing") })
+    $s=Get-ProfileSelection @f
+    $blocked=Resolve-ProfileSelectionState -CurrentModel incumbent -Selection $s -State $basis.state -ForceImmediateApply
+    Assert-True ($s.winner.model -eq "cheap" -and $s.qualification.status -eq "qualified" -and
+        $s.incumbentEvidenceGaps -contains "liveBench.instructionFollowing") "Fallback fixture was not fully qualified and unscored"
+    Assert-True (-not $blocked.applied -and $blocked.status -eq "retained_stronger_incumbent_basis") "Unscored incumbent erased stronger qualification basis"
+    $blocked.state.incumbentBasis.configurationId="another-configuration"
+    Assert-True (Resolve-ProfileSelectionState -CurrentModel incumbent -Selection $s -State $blocked.state -ForceImmediateApply).applied "Another configuration's basis blocked an unscored incumbent"
 }
 Run-Test "Publication rollback on any required metric blocks force" {
     $f=New-QualificationFixture
@@ -262,6 +310,56 @@ Run-Test "Orchestrator workflow tolerates exactly 0.03, never more" {
     Assert-True ((Get-ProfileSelection @f).winner.model -eq "cheap") "Exact workflow boundary rejected"
     Set-FixtureScore $f cheap automationBench 0.769999
     Assert-True ((Get-ProfileSelection @f).winner.model -ne "cheap") "Workflow tolerance widened"
+}
+Run-Test "Both Mechanical workflow routes tolerate exactly 0.01, never more" {
+    foreach ($metric in @("automationBench","enterpriseOpsGym")) {
+        $f=New-QualificationFixture mechanical
+        foreach ($record in @($f.Evidence | Where-Object metric -eq automationBench)) {
+            $record.metric=$metric;$record.metricKey="artificialAnalysisComponents.$metric";$record.metricIdentity=$record.metricKey
+        }
+        Set-FixtureScore $f cheap $metric 0.79
+        $s=Get-ProfileSelection @f
+        Assert-True ($s.winner.model -eq "cheap" -and $s.valueDecision.maxScoreGap -eq 0.01) "Exact Mechanical boundary rejected: $metric"
+        Set-FixtureScore $f cheap $metric 0.789999
+        $s=Get-ProfileSelection @f
+        Assert-True ($s.winner.model -ne "cheap" -and
+            -not ($s.qualification.candidates | Where-Object model -eq cheap).qualified) "Mechanical tolerance exceeded: $metric"
+    }
+}
+Run-Test "Mechanical's qualified fallback replaces an unscored incumbent only after confirmation" {
+    $f=New-QualificationFixture mechanical
+    Use-InstructionFollowingFallback $f
+    $f.Evidence=@($f.Evidence | Where-Object { -not ($_.model -eq "incumbent" -and $_.metric -eq "instructionFollowing") })
+    $s=Get-ProfileSelection @f
+    Assert-True ($s.winner.model -eq "cheap" -and $s.qualification.status -eq "qualified" -and
+        $s.confidence -eq "reduced" -and $s.incumbentEvidenceGaps.Count -eq 1 -and
+        $s.incumbentEvidenceGaps[0] -eq "liveBench.instructionFollowing") "Qualified fallback or incumbent uncertainty was lost"
+    $first=Resolve-ProfileSelectionState -CurrentModel incumbent -Selection $s
+    $same=Resolve-ProfileSelectionState -CurrentModel incumbent -Selection $s -State $first.state
+    Assert-True (-not $same.applied -and $same.state.pending.count -eq 1) "Missing incumbent evidence bypassed distinct-observation confirmation"
+    foreach ($verdict in $f.Verdicts) { $verdict.warningCodes=@();$verdict.capabilities=@{asOf="2026-09-22"} }
+    foreach ($record in $f.Evidence) { $record.harness="fixture" }
+    $report=(Get-ProfileReviewReportLines @{
+        key="mechanical";selection=$s;resolution=$first;requirement=$f.Policy.profileRequirements.mechanical
+        fallback=$null;verdicts=$f.Verdicts;evidence=@{records=$f.Evidence}
+    }) -join "`n"
+    Assert-True ($report.Contains("**Incumbent evidence gap:**") -and $report.Contains("liveBench.instructionFollowing") -and
+        $report.Contains("missing incumbent evidence alone is not a veto") -and
+        $report.Contains("No measured improvement is claimed for these comparisons.")) "Missing qualification comparison was hidden or claimed as an improvement"
+    foreach ($record in @($f.Evidence | Where-Object metric -eq instructionFollowing)) { $record.sourceVersion="v2" }
+    $confirmed=Resolve-ProfileSelectionState -CurrentModel incumbent -Selection (Get-ProfileSelection @f) -State $same.state
+    Assert-True ($confirmed.applied -and $confirmed.finalConfiguration.model -eq "cheap" -and
+        $confirmed.finalConfiguration.effort -eq "high" -and $confirmed.finalConfiguration.context -eq "default") "Qualified unscored-incumbent fallback failed complete-configuration confirmation"
+}
+Run-Test "An unversioned required fallback cannot replace an unscored incumbent even with force" {
+    $f=New-QualificationFixture mechanical
+    Use-InstructionFollowingFallback $f
+    $f.Evidence=@($f.Evidence | Where-Object { -not ($_.model -eq "incumbent" -and $_.metric -eq "instructionFollowing") })
+    foreach ($record in @($f.Evidence | Where-Object metric -eq instructionFollowing)) { $record.sourceVersion=$null }
+    $s=Get-ProfileSelection @f
+    $r=Resolve-ProfileSelectionState -CurrentModel incumbent -Selection $s -ForceImmediateApply
+    Assert-True ($null -ne $s.winner -and $s.qualification.status -eq "qualified" -and
+        -not $s.freshObservation -and -not $r.applied) "Missing incumbent comparison bypassed the candidate's versioned-evidence requirement"
 }
 Run-Test "Orchestrator Xhigh resolves High-only evidence gaps without bypassing confirmation or exact effort" {
     $f=New-QualificationFixture "orchestrator"
@@ -316,7 +414,7 @@ Run-Test "Retirement immediately applies a qualified winner without incumbent co
 Run-Test "Retirement uses primary value ranking before the official successor without certifying missing dimensions" {
     $f=New-QualificationFixture triage
     Set-RetiredFixtureIncumbent $f
-    $f.Evidence=@($f.Evidence | Where-Object metric -eq intelligenceIndex)
+    $f.Evidence=@($f.Evidence | Where-Object { $_.metric -eq "intelligenceIndex" -and $_.model -ne "incumbent" })
     $s=Get-ProfileSelection @f
     $r=Resolve-ProfileSelectionState -CurrentModel incumbent -Selection $s
     Assert-True ($r.applied -and $r.finalModel -eq "cheap" -and $r.status -eq "applied_retirement_primary_fallback") "Benchmark-led recovery did not use primary value rules"
@@ -326,6 +424,15 @@ Run-Test "Retirement uses primary value ranking before the official successor wi
     Assert-True ($null -eq (Get-ObjectMemberValue $r.state.incumbentBasis "qualificationRoutes")) "Failed dimensions became an established qualification basis"
     $text=(Get-RoleQualificationReportLines @{selection=$s}) -join "`n"
     Assert-True ($text.Contains("Emergency replacement, not certified") -and -not $text.Contains("Current configuration retained")) "Emergency migration misreported as ordinary retention"
+    foreach ($verdict in $f.Verdicts) { $verdict.warningCodes=@();$verdict.capabilities=@{asOf="2026-09-22"} }
+    foreach ($record in $f.Evidence) { $record.harness="fixture" }
+    $profileText=(Get-ProfileReviewReportLines @{
+        key="triage";selection=$s;resolution=$r;requirement=$f.Policy.profileRequirements.triage
+        fallback=$null;verdicts=$f.Verdicts;evidence=@{records=$f.Evidence}
+    }) -join "`n"
+    Assert-True ($profileText.Contains("**Incumbent evidence gap:**") -and
+        $profileText.Contains("Mandatory retirement recovery replaces the unusable incumbent without a confirmation wait") -and
+        -not $profileText.Contains("Candidate qualification, normal confirmation and stronger-basis protection remain binding.")) "Emergency evidence warning claimed normal qualification or confirmation"
     $f.Profile.model="cheap"
     $next=Resolve-ProfileSelectionState -CurrentModel cheap -Selection (Get-ProfileSelection @f) -State $r.state
     Assert-True (-not $next.applied -and $next.finalModel -eq "cheap" -and
@@ -340,7 +447,7 @@ Run-Test "An exact official successor repairs retirement only when benchmark ran
     Assert-True ($r.applied -and $r.finalModel -eq "strong" -and $r.status -eq "applied_retirement_official_successor") "Official successor did not recover unrankable retirement"
     Assert-True ($null -eq $s.winner -and $null -eq $r.state.incumbentBasis -and
         $s.retirementRecovery.mode -eq "official_successor" -and -not $s.retirementRecovery.roleQualified) "Successor guidance became synthetic benchmark evidence"
-    Assert-True ($s.candidateReferenceAic -eq 150 -and $r.finalConfiguration.effort -eq "low") "Successor price or authorized configuration lost"
+    Assert-True ($s.candidateReferenceAic -eq 150 -and $r.finalConfiguration.effort -eq $f.Profile.effort) "Successor price or authorized configuration lost"
 }
 Run-Test "Retirement can use admissible cached primary evidence without claiming fresh qualification" {
     $f=New-QualificationFixture triage
@@ -370,7 +477,10 @@ Run-Test "Retirement recovery never admits a hard-excluded or unauthorized succe
         $f.Evidence=@()
         ($f.Verdicts | Where-Object modelId -eq cheap).admissible=$false
         $successor=$f.Verdicts | Where-Object modelId -eq strong
-        if ($reason -eq "wrong_effort") { $successor.effort="max" }
+        if ($reason -eq "wrong_effort") {
+            $f.Policy.selectionPolicy.profiles.triage.configurationSelection.allowedEfforts=@("high")
+            $successor.effort="max"
+        }
         elseif ($reason -eq "wrong_context") { $successor.context="long_context" }
         else { $successor.admissible=$false;$successor.reasonCodes=@($reason) }
         $failed=$false

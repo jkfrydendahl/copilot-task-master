@@ -155,8 +155,9 @@ Run-Test "Reports distinguish fixed authorization from informational incumbent c
             pricing=@{inputPerMillion=$rate;outputPerMillion=$rate*5;tier="default";verifiedAtUtc="2026-09-08"};
             capabilities=@{asOf="2026-09-08"}}
     })
+    $incumbentScore=51 - $policy.selectionPolicy.profiles.review.qualityBands["liveBench.coding"] - 1
     $records = @(foreach ($model in @("gemini","opus","astra")) {
-        [pscustomobject]@{model=$model;score=@{gemini=46.8;opus=51;astra=54}[$model];source="liveBench";
+        [pscustomobject]@{model=$model;score=@{gemini=$incumbentScore;opus=51;astra=54}[$model];source="liveBench";
             metric="coding";effort="medium";alias=$model;sourceVersion="v1";sourceDate=$null;
             publicationAgeUnknown=$true;cached=$false;harness="fixture"}
     })
@@ -174,7 +175,7 @@ Run-Test "Reports distinguish fixed authorization from informational incumbent c
     foreach ($term in @("candidate **750 AIC**; incumbent **112.5 AIC**",
         "Candidate cost change: **566.666666667%**", "informational, not an incumbent-relative limit",
         "Fixed hard ceilings authorize spending; they never rise automatically",
-        "authorized efforts: medium, high", "Matched incumbent score", "Budget: **hard**, input 5 / output 30")) {
+        "authorized efforts: none, minimal, low, medium, high, xhigh, max", "Matched incumbent score", "Budget: **hard**, input 5 / output 30")) {
         Assert-True ($report.Contains($term)) "Missing escalation explanation: $term"
     }
     Assert-True ($resolution.finalModel -eq "opus" -and $selection.qualityWinner.model -eq "astra") "Authorized candidate or excluded quality leader lost"
@@ -237,7 +238,7 @@ Run-Test "Agentic review confirms and applies the complete authorized pair, incl
             } else {
                 Assert-True ((Get-Content -LiteralPath $profilePath -Raw) -ceq $before -and $agentic.resolution.state.pending.count -eq 1) "Unconfirmed configuration was applied or counted twice"
             }
-            Assert-True (@($agentic.verdicts | Where-Object modelId -eq "gpt-two").Count -eq 3) "Configuration eligibility was flattened"
+            Assert-True (@($agentic.verdicts | Where-Object modelId -eq "gpt-two").Count -eq $caps["gpt-two"].supportedEfforts.Count) "Configuration eligibility was flattened or expanded beyond native support"
             $report=Get-Content (Join-Path $root "reports\task-profile-review.md") -Raw
             foreach ($term in @("gpt-one / high / default","gpt-two / xhigh / default","automatic bounded effort","task cost and latency are unknown","candidate **150 AIC**; incumbent **150 AIC**","0.03","informational only","variant two-xhigh")) {
                 Assert-True ($report.Contains($term)) "Report omitted configuration or cost uncertainty: $term"
@@ -260,7 +261,7 @@ Run-Test "Agentic review confirms and applies the complete authorized pair, incl
             $fallbackRun=Invoke-TaskProfileReview -RepoRoot $root -Availability @{models=@("gpt-one","gpt-two");verified=$true;source="fixture"} `
                 -Sources $sources -FetchPricing $fetch -ForceImmediateApply -NowUtc ([datetime]"2026-09-09Z")
             $agentic=$fallbackRun.results | Where-Object key -eq "agentic-implementation"
-            Assert-True ($agentic.resolution.applied -eq $matched) "Legacy/general coding or unmatched incumbent authorized fallback"
+            Assert-True ($agentic.resolution.applied -eq $matched) "Legacy/general coding or insufficient distinct-model coverage authorized fallback"
             if ($matched) { Assert-True ($agentic.selection.decidingSource -eq "liveBench") "Valid fallback not selected" }
             Assert-True ($agentic.evidence.diagnostics -match "identity_metadata_missing") "Legacy cache explanation lost"
             $text=Get-Content (Join-Path $root "reports\task-profile-review.md") -Raw
@@ -342,29 +343,30 @@ Run-Test "Generic supporting scores are visible, configuration matched and clear
     $result.selection.winner=$null
     Assert-True (((Get-RoleSupportingEvidenceReportLines $result) -join "`n").Contains("no eligible recommendation")) "No-winner report failed"
 }
-Run-Test "Nine-role offline review confirms binding changes and preserves good component caches" {
+Run-Test "Nine-role offline review writes the measured Xhigh pair and preserves binding confirmations and caches" {
     $root=Join-Path ([IO.Path]::GetTempPath()) ([guid]::NewGuid().ToString("N"))
     foreach($dir in @("config","data","reports")) { New-Item -ItemType Directory (Join-Path $root $dir) -Force | Out-Null }
     try {
         Copy-Item (Join-Path $repo "config\model-policy.json") (Join-Path $root "config")
         $p=Get-ModelPolicyConfig (Join-Path $root "config\model-policy.json")
         $profiles=@(foreach($key in $p.selectionPolicy.profiles.Keys) {
-            @{key=$key;model="gpt-one";effort=$p.selectionPolicy.profiles[$key].configurationSelection.allowedEfforts[0];context="default"}
+            @{key=$key;model="gpt-one";effort="high";context="default"}
         })
         Write-ModelJsonAtomic (Join-Path $root "task-profiles.json") $profiles
         $caps=@{};$aliases=@{};$aaModels=@{};$lbModels=@{};$componentModels=@{};$agentModels=@{}
         foreach($model in @("gpt-one","gpt-two")) {
             $caps[$model]=@{asOf="2026-09-22";capabilitySource="fixture";vision=$true;visionSource="fixture";
-                supportedContexts=@("default");supportedEfforts=@("low","medium","high")}
+                supportedContexts=@("default");supportedEfforts=@("low","medium","high","xhigh")}
             $aliases[$model]=@{artificialAnalysis=@{};liveBench=@{}}
-            foreach($effort in @("low","medium","high")) {
+            foreach($effort in @("low","medium","high","xhigh")) {
                 $slug="$model-$effort";$aliases[$model].artificialAnalysis[$effort]=$slug;$aliases[$model].liveBench[$effort]=$slug
                 $score=if($model -eq "gpt-two"){0.9}else{0.7}
+                if($model -eq "gpt-two" -and $effort -eq "xhigh") { $score=0.91 }
                 $aaModels[$slug]=@{intelligenceIndex=$score*100}
                 $lbModels[$slug]=@{coding=$score*100;reasoning=$score*100;instructionFollowing=$score*100;agenticCoding=$score*100}
                 $componentModels[$slug]=@{name=$model;effort=$effort;automationBench=$score;enterpriseOpsGym=$score;
                     lcr=0.7;ifbench=0.8;mmmuPro=0.6}
-                if($effort -eq "high") { $agentModels[$slug]=New-NormalizedAgentFixture $slug "$model ($effort)" $score }
+                if($effort -in @("high","xhigh")) { $agentModels[$slug]=New-NormalizedAgentFixture $slug "$model ($effort)" $score }
             }
         }
         Write-ModelJsonAtomic (Join-Path $root "config\model-capabilities.json") @{schemaVersion=2;models=$caps}
@@ -386,14 +388,18 @@ Run-Test "Nine-role offline review confirms binding changes and preserves good c
         Assert-True (@($same.results | Where-Object { $_.resolution.applied -and $_.key -in $lcrRoles }).Count -eq 3) "Binding long-context changes did not confirm"
         Assert-True (@($same.results | Where-Object { $_.key -notin $lcrRoles -and ($_.resolution.applied -or $_.resolution.state.pending.count -ne 1) }).Count -eq 0) "Informational churn confirmed a recommendation"
         foreach($slug in @($aaModels.Keys | Where-Object {$_ -like "gpt-two-*"})) {
-            $aaModels[$slug].intelligenceIndex=91
-            $lbModels[$slug].coding=91;$lbModels[$slug].reasoning=91
-            $componentModels[$slug].automationBench=0.91
+            $score=if($slug -like "*-xhigh"){92}else{91}
+            $aaModels[$slug].intelligenceIndex=$score
+            $lbModels[$slug].coding=$score;$lbModels[$slug].reasoning=$score
+            $componentModels[$slug].automationBench=$score/100
         }
         $agentModels["gpt-two-high"].codingAgentIndex=0.91
+        $agentModels["gpt-two-xhigh"].codingAgentIndex=0.92
         $confirmed=Invoke-TaskProfileReview @options
         Assert-True (@($confirmed.results | Where-Object { $_.finalModel -eq "gpt-two" }).Count -eq 9 -and
             @($confirmed.results | Where-Object { $_.resolution.applied }).Count -eq 6) "Deciding changes failed to confirm remaining roles"
+        $written=@(Get-Content -LiteralPath (Join-Path $root "task-profiles.json") -Raw | ConvertFrom-Json)
+        Assert-True ($written.Count -eq 9 -and @($written | Where-Object { $_.model -ne "gpt-two" -or $_.effort -ne "xhigh" -or $_.context -ne "default" }).Count -eq 0) "Profile writer detached the measured effort from its selected model"
         $legacy=ConvertTo-CanonicalModelData $confirmed.snapshot
         $legacy.schemaVersion=3
         $legacy.sources.liveBench=@{status="ok";sourceDate="2026-06-25";fetchedAtUtc="2026-09-22Z";models=@{one=@{coding=99}}}

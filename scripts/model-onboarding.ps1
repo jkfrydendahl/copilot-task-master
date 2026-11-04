@@ -212,7 +212,7 @@ function Resolve-ModelOnboarding {
                         (Test-ModelDataFresh (Get-ObjectMemberValue $lb "fetchedAtUtc") $Policy.consensusPolicy.staleAfterDays $NowUtc)) {
                         foreach ($alias in $lb.models.Keys) {
                             $base = $alias; $effort = $null
-                            if ($alias -match '^(?<model>.+)-(?<effort>minimal|low|medium|high|xhigh|max)(?:-effort)?$') {
+                            if ($alias -match '^(?<model>.+)-(?<effort>none|minimal|low|medium|high|xhigh|max)(?:-effort)?$') {
                                 $base=$Matches.model; $effort=$Matches.effort
                             } elseif ((Get-ObjectMemberValue $cap "effortMode") -eq "unsupported") { $effort="none" }
                             if ((Get-OnboardingIdentityKey $base) -eq $modelKey -and $null -ne $effort -and

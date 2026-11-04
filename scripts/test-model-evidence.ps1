@@ -195,7 +195,7 @@ Run-Test "API aggregates reject fallback identities and published effort mismatc
     Assert-True ($r.records.Count -eq 0) "Native configuration borrowed published High"
 }
 Run-Test "Agent effort casing is normalized without admitting fallback or native conflicts" {
-    foreach ($effort in @("Max","Xhigh","HIGH")) {
+    foreach ($effort in @("None","Max","Xhigh","HIGH")) {
         $row=New-NormalizedAgentFixture one "GPT-one ($effort)" 0.7 openai
         $r=Resolve-AgentModelIdentities -Records @{one=$row} -KnownModels @("gpt-one")
         Assert-True ($r.records.Count -eq 1 -and $r.records[0].effort -ceq $effort.ToLowerInvariant()) "Effort casing not normalized"
@@ -207,6 +207,20 @@ Run-Test "Agent effort casing is normalized without admitting fallback or native
     $r=Resolve-AgentModelIdentities -Records @{one=(New-NormalizedAgentFixture one "Gemini 3.8 Flash (High)" 0.7 google)} `
         -KnownModels @("gemini-3.8-flash") -Capabilities @{"gemini-3.8-flash"=@{effortMode="unsupported"}}
     Assert-True ($r.records.Count -eq 0 -and $r.diagnostics -match "explicit_effort_conflicts_with_native_model") "Native mismatch admitted"
+}
+Run-Test "Explicit controlled none agent evidence remains distinct from native no-effort invocation" {
+    $row=New-NormalizedAgentFixture one "GPT-one (none)" 0.7 openai
+    $policy=Get-ModelPolicyConfig (Join-Path $PSScriptRoot "..\config\model-policy.json")
+    $profile=@{key="agentic-implementation";model="gpt-one";effort="high";context="default"}
+    $caps=@{"gpt-one"=@{effortMode="supported";supportedEfforts=@("none","high")}}
+    $configuration=New-ModelConfiguration -Model gpt-one -Effort none -Context default -CapabilityRecord $caps["gpt-one"]
+    $source=@{status="ok";fetchedAtUtc="2026-09-08Z";sourceDate=$null;models=@{one=$row}}
+    $result=Get-ProfileBenchmarkEvidence -Profile $profile -Configurations @($configuration) `
+        -Sources @{artificialAnalysisCodingAgents=$source} -Aliases @{} -Capabilities $caps -Policy $policy -NowUtc ([datetime]"2026-09-08Z")
+    Assert-True ($result.records.Count -eq 1 -and $result.records[0].effort -eq "none") "Explicit supported none agent variant was discarded"
+    $native=Resolve-AgentModelIdentities -Records @{one=$row} -KnownModels @("gpt-one") `
+        -Capabilities @{"gpt-one"=@{effortMode="unsupported"}}
+    Assert-True ($native.records.Count -eq 0 -and $native.diagnostics -match "explicit_effort_conflicts_with_native_model") "Controlled none was silently relabelled as native invocation"
 }
 Run-Test "API aggregate confirmation is independent of other aggregate metrics" {
     $source=ConvertTo-CanonicalModelData $aa
@@ -225,6 +239,23 @@ Run-Test "Invalid unrelated scores do not change a usable metric observation" {
     $source.models["one-max"].codingIndex="invalid-two"
     $second=Evidence -Sources @{artificialAnalysis=$source}
     Assert-True ($first.records[0].sourceVersion -eq $second.records[0].sourceVersion) "Invalid row churn became confirmation evidence"
+}
+Run-Test "Inactive versioned metrics fingerprint benchmark and published configuration identity" {
+    $definition=@{source="artificialAnalysisComponents";metric="frontierCode20";benchmarkId="frontiercode-2-0";min=0;max=1}
+    $legacyDefinition=@{source="artificialAnalysisComponents";metric="lcr";min=0;max=1}
+    $source=@{models=@{"one-high"=@{frontierCode20=0.5;lcr=0.8}};
+        identities=@{"one-high"=@{status="verified";releaseId="one";effort="high"}};evaluatorRevision=$null}
+    $first=Get-SourceMetricObservation $source $definition
+    $legacy=Get-SourceMetricObservation $source $legacyDefinition
+    $source.identities["one-high"].releaseId="one-revised"
+    $changed=Get-SourceMetricObservation $source $definition
+    Assert-True ($changed.version -ne $first.version -and $changed.identity -eq $first.identity) "Published configuration identity ignored"
+    Assert-True ((Get-SourceMetricObservation $source $legacyDefinition).version -eq $legacy.version) "Inactive identity data changed legacy observations"
+    $definition.benchmarkId="frontiercode-3-0"
+    Assert-True ((Get-SourceMetricObservation $source $definition).identity -ne $changed.identity) "Different benchmark generation reused an identity"
+    $source.evaluatorRevision="verified-revision"
+    Assert-True ((Get-SourceMetricObservation $source $definition).identity -ne
+        (Get-SourceMetricObservation @{models=$source.models;identities=$source.identities} $definition).identity) "Known evaluator revision ignored"
 }
 Run-Test "Ambiguous aliases and invalid artifact dates cannot authorize evidence" {
     $mapping=@{one=@{artificialAnalysis=@{medium="one-medium";max="one-medium"}}}

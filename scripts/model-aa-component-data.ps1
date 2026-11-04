@@ -9,8 +9,40 @@ $script:AAComponentProperties = [ordered]@{
     mmmuPro = "mmmuPro"
 }
 
+$script:AAVersionedComponentDefinitions = [ordered]@{
+    frontierCode20 = @{
+        source="artificialAnalysisComponents";metric="frontierCode20";benchmarkId="frontiercode-2-0"
+        label="FrontierCode 2.0 (AA)";min=0;max=1;scale="score fraction"
+        lineage=@("aa-intelligence","aa-intelligence-v5","frontiercode-2-0")
+        limitation="Repository-change benchmark with tests and rubric grading; external harness, not Copilot CLI."
+    }
+    terminalBench40 = @{
+        source="artificialAnalysisComponents";metric="terminalBench40";benchmarkId="terminalbench-4-0"
+        label="Terminal-Bench 4.0 (AA)";min=0;max=1;scale="score fraction"
+        lineage=@("aa-intelligence","aa-intelligence-v5","terminalbench-4-0")
+        limitation="Terminal-task benchmark; AA measurement, not independent corroboration of its aggregate."
+    }
+    critPtV2Hard = @{
+        source="artificialAnalysisComponents";metric="critPtV2Hard";benchmarkId="critpt-v2-hard"
+        label="CritPt v2 Hard (AA)";min=0;max=1;scale="score fraction"
+        lineage=@("aa-intelligence","aa-intelligence-v5","critpt-v2-hard")
+        limitation="Scientific problem-solving proxy, not direct defect-finding evidence."
+    }
+}
+
 function ConvertFrom-AAComponentPage {
-    param([AllowEmptyString()][string]$Html)
+    param(
+        [AllowEmptyString()][string]$Html,
+        [switch]$IncludeVersionedBenchmarks
+    )
+    $metrics = @($script:AAComponentProperties.Keys)
+    $benchmarkMetrics = @{}
+    if ($IncludeVersionedBenchmarks) {
+        $metrics += @($script:AAVersionedComponentDefinitions.Keys)
+        foreach ($metric in $script:AAVersionedComponentDefinitions.Keys) {
+            $benchmarkMetrics[$script:AAVersionedComponentDefinitions[$metric].benchmarkId] = $metric
+        }
+    }
     $models = @{}
     $releases = @{}
     $identities = @{}
@@ -26,6 +58,7 @@ function ConvertFrom-AAComponentPage {
         foreach ($row in $rows) {
             if ($row -isnot [System.Collections.IDictionary] -or
                 (-not @($script:AAComponentProperties.Values | Where-Object { $row.Contains($_) }).Count -and
+                    -not ($IncludeVersionedBenchmarks -and $row.Contains("intelligenceIndexEvaluations")) -and
                     -not $row.Contains("releaseDate") -and -not $row.Contains("release"))) { continue }
             $slug = Get-ObjectMemberValue $row "slug"
             $name = Get-ObjectMemberValue $row "name"
@@ -64,9 +97,46 @@ function ConvertFrom-AAComponentPage {
                 } else { $identities[$slug] = $identity }
             }
             $record = [ordered]@{ name = $name; effort = $effort }
+            $versionedScores = @{}
+            if ($IncludeVersionedBenchmarks) {
+                $evaluations = $row["intelligenceIndexEvaluations"]
+                if ($null -ne $evaluations -and $evaluations -isnot [System.Collections.IList]) {
+                    $diagnostics.Add("${slug}: versioned_components_array_invalid")
+                    foreach ($metric in $script:AAVersionedComponentDefinitions.Keys) {
+                        $blockedScores["$slug.$metric"] = $true
+                    }
+                } else {
+                    foreach ($evaluation in @($evaluations | Where-Object { $null -ne $_ })) {
+                        $benchmark = Get-ObjectMemberValue $evaluation "slug"
+                        if ($benchmark -isnot [string]) {
+                            $diagnostics.Add("${slug}: versioned_component_identity_missing")
+                            continue
+                        }
+                        if (-not $benchmarkMetrics.ContainsKey($benchmark)) { continue }
+                        $metric = $benchmarkMetrics[$benchmark]
+                        if ($benchmark -cne $script:AAVersionedComponentDefinitions[$metric].benchmarkId) {
+                            $diagnostics.Add("${slug}: ${metric} benchmark_identity_invalid")
+                            continue
+                        }
+                        $score = Get-ObjectMemberValue $evaluation "score"
+                        if ($null -eq $score) { continue }
+                        if (-not (Test-ModelScore $score 0 1)) {
+                            $diagnostics.Add("${slug}: ${metric} score_invalid")
+                            $blockedScores["$slug.$metric"] = $true
+                            continue
+                        }
+                        if ($versionedScores.ContainsKey($metric) -and $versionedScores[$metric] -ne $score) {
+                            throw [FormatException]::new("Conflicting component score: $slug.$metric")
+                        }
+                        $versionedScores[$metric] = [double]$score
+                    }
+                }
+            }
             $hasScore = $false
-            foreach ($metric in $script:AAComponentProperties.Keys) {
-                $score = Get-ObjectMemberValue $row $script:AAComponentProperties[$metric]
+            foreach ($metric in $metrics) {
+                $score = if ($script:AAComponentProperties.Contains($metric)) {
+                    Get-ObjectMemberValue $row $script:AAComponentProperties[$metric]
+                } else { Get-ObjectMemberValue $versionedScores $metric }
                 if ($metric -eq "automationBench") {
                     $breakdown = Get-ObjectMemberValue $row "automationBenchBreakdown"
                     if ((Get-ObjectMemberValue $breakdown "fallbackServedTurnCount") -gt 0 -or
@@ -88,7 +158,7 @@ function ConvertFrom-AAComponentPage {
                     throw [FormatException]::new("Conflicting component effort: $slug")
                 }
                 if ($null -ne $effort) { $previous.effort = $effort }
-                foreach ($metric in $script:AAComponentProperties.Keys) {
+                foreach ($metric in $metrics) {
                     if ($null -ne $record[$metric] -and $null -ne $previous[$metric] -and $record[$metric] -ne $previous[$metric]) {
                         throw [FormatException]::new("Conflicting component score: $slug.$metric")
                     }
@@ -107,10 +177,16 @@ function ConvertFrom-AAComponentPage {
     }
     foreach ($slug in @($models.Keys)) {
         if ($blockedModels.ContainsKey($slug)) { $models.Remove($slug); continue }
-        foreach ($metric in $script:AAComponentProperties.Keys) {
+        foreach ($metric in $metrics) {
             if ($blockedScores.ContainsKey("$slug.$metric")) { $models[$slug][$metric] = $null }
+            if ($IncludeVersionedBenchmarks -and $script:AAVersionedComponentDefinitions.Contains($metric) -and
+                $null -ne $models[$slug][$metric] -and
+                (-not $identities.ContainsKey($slug) -or $identities[$slug].status -ne "verified")) {
+                $diagnostics.Add("${slug}: ${metric} published_configuration_unverified")
+                $models[$slug][$metric] = $null
+            }
         }
-        if (-not @($script:AAComponentProperties.Keys | Where-Object { $null -ne $models[$slug][$_] }).Count) {
+        if (-not @($metrics | Where-Object { $null -ne $models[$slug][$_] }).Count) {
             $models.Remove($slug)
         }
     }

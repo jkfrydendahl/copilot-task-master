@@ -67,7 +67,7 @@ function Get-ModelPolicyConfig {
         }
         $efforts = $configuration["allowedEfforts"]
         if ($efforts -isnot [array] -or -not $efforts.Count -or
-            @($efforts | Where-Object { $_ -isnot [string] -or $_ -notin @("minimal","low","medium","high","xhigh","max") }).Count -or
+            @($efforts | Where-Object { $_ -isnot [string] -or $_ -notin @("none","minimal","low","medium","high","xhigh","max") }).Count -or
             @($efforts | Select-Object -Unique).Count -ne $efforts.Count) {
             throw "Invalid allowedEfforts for '$key'; specify unique supported effort names."
         }

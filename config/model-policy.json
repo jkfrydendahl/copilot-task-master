@@ -60,7 +60,7 @@
     "benchmarkMaxPublicationAgeDays": 90
   },
   "selectionPolicy": {
-    "version": 15,
+    "version": 18,
     "costTieBreak": "newest_verified_release",
     "referenceInputTokens": 1000000,
     "referenceOutputTokens": 100000,
@@ -77,7 +77,7 @@
             { "key": "instruction-following", "evidenceRoutes": ["liveBench.instructionFollowing", "artificialAnalysisComponents.ifbench"], "qualityBands": { "artificialAnalysisComponents.ifbench": 0.03, "liveBench.instructionFollowing": 3 } }
           ]
         },
-        "configurationSelection": { "mode": "bounded_effort", "allowedEfforts": ["high", "xhigh"], "effortChangePolicy": "automatic" },
+        "configurationSelection": { "mode": "bounded_effort", "allowedEfforts": ["none", "minimal", "low", "medium", "high", "xhigh", "max"], "effortChangePolicy": "automatic" },
         "qualityBands": { "artificialAnalysisComponents.automationBench": 0.03, "artificialAnalysisComponents.enterpriseOpsGym": 0.03 }
       },
       "quick": {
@@ -85,7 +85,7 @@
         "evidenceRoutes": ["liveBench.coding", "artificialAnalysis.intelligenceIndex"],
         "supportingMetrics": ["artificialAnalysisComponents.ifbench", "liveBench.instructionFollowing"],
         "qualification": { "minimumModels": 2, "dimensions": [] },
-        "configurationSelection": { "mode": "bounded_effort", "allowedEfforts": ["low"], "effortChangePolicy": "automatic" },
+        "configurationSelection": { "mode": "bounded_effort", "allowedEfforts": ["none", "minimal", "low", "medium", "high", "xhigh", "max"], "effortChangePolicy": "automatic" },
         "qualityBands": { "liveBench.coding": 3, "artificialAnalysis.intelligenceIndex": 3 }
       },
       "mechanical": {
@@ -98,8 +98,8 @@
             { "key": "instruction-following", "evidenceRoutes": ["artificialAnalysisComponents.ifbench", "liveBench.instructionFollowing"], "qualityBands": { "artificialAnalysisComponents.ifbench": 0.03, "liveBench.instructionFollowing": 3 } }
           ]
         },
-        "configurationSelection": { "mode": "bounded_effort", "allowedEfforts": ["low"], "effortChangePolicy": "automatic" },
-        "qualityBands": { "artificialAnalysisComponents.automationBench": 0, "artificialAnalysisComponents.enterpriseOpsGym": 0 }
+        "configurationSelection": { "mode": "bounded_effort", "allowedEfforts": ["none", "minimal", "low", "medium", "high", "xhigh", "max"], "effortChangePolicy": "automatic" },
+        "qualityBands": { "artificialAnalysisComponents.automationBench": 0.01, "artificialAnalysisComponents.enterpriseOpsGym": 0.01 }
       },
       "triage": {
         "strategy": "value_balanced",
@@ -111,7 +111,7 @@
             { "key": "instruction-following", "evidenceRoutes": ["artificialAnalysisComponents.ifbench", "liveBench.instructionFollowing"], "qualityBands": { "artificialAnalysisComponents.ifbench": 0.03, "liveBench.instructionFollowing": 3 } }
           ]
         },
-        "configurationSelection": { "mode": "bounded_effort", "allowedEfforts": ["low"], "effortChangePolicy": "automatic" },
+        "configurationSelection": { "mode": "bounded_effort", "allowedEfforts": ["none", "minimal", "low", "medium", "high", "xhigh", "max"], "effortChangePolicy": "automatic" },
         "qualityBands": { "artificialAnalysis.intelligenceIndex": 3, "liveBench.reasoning": 3 }
       },
       "default-development": {
@@ -124,7 +124,7 @@
             { "key": "instruction-following", "evidenceRoutes": ["liveBench.instructionFollowing", "artificialAnalysisComponents.ifbench"], "qualityBands": { "artificialAnalysisComponents.ifbench": 0.03, "liveBench.instructionFollowing": 3 } }
           ]
         },
-        "configurationSelection": { "mode": "bounded_effort", "allowedEfforts": ["medium", "high"], "effortChangePolicy": "automatic" },
+        "configurationSelection": { "mode": "bounded_effort", "allowedEfforts": ["none", "minimal", "low", "medium", "high", "xhigh", "max"], "effortChangePolicy": "automatic" },
         "qualityBands": { "liveBench.coding": 3, "artificialAnalysis.intelligenceIndex": 3 }
       },
       "agentic-implementation": {
@@ -134,7 +134,7 @@
         "qualification": { "minimumModels": 2, "dimensions": [] },
         "configurationSelection": {
           "mode": "bounded_effort",
-          "allowedEfforts": ["high", "xhigh", "max"],
+          "allowedEfforts": ["none", "minimal", "low", "medium", "high", "xhigh", "max"],
           "effortChangePolicy": "automatic"
         },
         "qualityBands": { "artificialAnalysisCodingAgents.codingAgentIndex": 0.03, "liveBench.agenticCoding": 3 }
@@ -149,7 +149,7 @@
             { "key": "long-context", "evidenceRoutes": ["artificialAnalysisComponents.lcr"], "qualityBands": { "artificialAnalysisComponents.lcr": 0.05 } }
           ]
         },
-        "configurationSelection": { "mode": "bounded_effort", "allowedEfforts": ["high", "xhigh", "max"], "effortChangePolicy": "automatic" },
+        "configurationSelection": { "mode": "bounded_effort", "allowedEfforts": ["none", "minimal", "low", "medium", "high", "xhigh", "max"], "effortChangePolicy": "automatic" },
         "qualityBands": { "artificialAnalysis.intelligenceIndex": 3, "liveBench.reasoning": 3 }
       },
       "review": {
@@ -163,8 +163,8 @@
             { "key": "long-context", "evidenceRoutes": ["artificialAnalysisComponents.lcr"], "qualityBands": { "artificialAnalysisComponents.lcr": 0.05 } }
           ]
         },
-        "configurationSelection": { "mode": "bounded_effort", "allowedEfforts": ["medium", "high"], "effortChangePolicy": "automatic" },
-        "qualityBands": { "liveBench.coding": 3, "artificialAnalysis.intelligenceIndex": 3 }
+        "configurationSelection": { "mode": "bounded_effort", "allowedEfforts": ["none", "minimal", "low", "medium", "high", "xhigh", "max"], "effortChangePolicy": "automatic" },
+        "qualityBands": { "liveBench.coding": 12, "artificialAnalysis.intelligenceIndex": 3 }
       },
       "visual-ui": {
         "strategy": "value_balanced",
@@ -176,8 +176,8 @@
             { "key": "visual-understanding", "evidenceRoutes": ["artificialAnalysisComponents.mmmuPro"], "qualityBands": { "artificialAnalysisComponents.mmmuPro": 0.03 } }
           ]
         },
-        "configurationSelection": { "mode": "bounded_effort", "allowedEfforts": ["medium", "high"], "effortChangePolicy": "automatic" },
-        "qualityBands": { "liveBench.coding": 3, "artificialAnalysis.intelligenceIndex": 3 }
+        "configurationSelection": { "mode": "bounded_effort", "allowedEfforts": ["none", "minimal", "low", "medium", "high", "xhigh", "max"], "effortChangePolicy": "automatic" },
+        "qualityBands": { "liveBench.coding": 12, "artificialAnalysis.intelligenceIndex": 3 }
       }
     }
   }

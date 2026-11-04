@@ -181,7 +181,6 @@ function Get-ProfileReviewReportLines {
     $lines.Add("Budget: **$mode**, input $($r.requirement.inputCeilingPerMillion) / output $($r.requirement.outputCeilingPerMillion) USD per million. Deciding source: $source.")
     $lines.Add("Quality leader before hard-budget exclusions: $leader. Family fallback (informational, not a winner): $fallback.")
     $lines.Add("Strategy: **$($r.selection.strategy)**.")
-    $promotionBlockReason = Get-ObjectMemberValue $r.selection "promotionBlockReason"
     $routes = @($r.selection.evidenceRoutes | ForEach-Object { $r.selection.metricDefinitions[$_].label })
     $lines.Add("Authorized deciding routes, strongest first: **$($routes -join ' > ')**. Supporting metrics are informational only.")
     $lines.Add("Task fit: external-harness proxy, not a measurement of Copilot CLI task success.")
@@ -199,8 +198,8 @@ function Get-ProfileReviewReportLines {
         $definition = $r.selection.metricDefinitions[$key]
         $lines.Add("$($definition.label) ($($definition.scale)): $($definition.limitation)")
     }
-    if ($null -ne $promotionBlockReason -or $r.resolution.status -match "retained_stronger_incumbent_basis") {
-        $lines.Add("**Fallback replacement blocked:** comparable exact-incumbent evidence is required, and a weaker route cannot displace an established stronger basis. The candidate is informational only; force cannot bypass this requirement.")
+    if ($r.resolution.status -eq "retained_stronger_incumbent_basis") {
+        $lines.Add("**Fallback replacement blocked:** a weaker primary or qualification route cannot displace an established stronger incumbent basis. The candidate is informational only; force cannot bypass this protection.")
     }
     if ($r.selection.configurationMode -eq "bounded_effort") {
         $candidateAic = Format-ModelReportNumber $r.selection.candidateReferenceAic
@@ -247,13 +246,17 @@ function Get-ProfileReviewReportLines {
         if ($null -eq $value.incumbentReferenceAic) {
             $lines.Add("**Cost comparison unavailable:** fresh, valid incumbent pricing is missing; savings or a premium cannot be established. The candidate's own fresh pricing and hard-budget eligibility still govern promotion.")
         }
-        if (-not $value.incumbentEvidenceAvailable) {
-            $action = if ($null -ne $promotionBlockReason) { "The fallback replacement is blocked." } else { "An authorized candidate may proceed." }
-            $lines.Add("**Incumbent evidence gap:** no configuration-matched score in this deciding-source observation. $action No measured quality improvement over the incumbent is claimed.")
-        } else {
+        if ($value.incumbentEvidenceAvailable) {
             $incumbentScore = Format-ModelReportNumber $value.incumbentScore
             $lines.Add("Matched incumbent score in this deciding-source observation: **$incumbentScore**.")
         }
+    }
+    $incumbentGaps = @(Get-ObjectMemberValue $r.selection "incumbentEvidenceGaps" | Where-Object { $null -ne $_ })
+    if ($incumbentGaps.Count) {
+        $requirements = if ($null -ne $recovery) {
+            "Mandatory retirement recovery replaces the unusable incumbent without a confirmation wait; hard limits and source integrity remain binding."
+        } else { "Candidate qualification, normal confirmation and stronger-basis protection remain binding." }
+        $lines.Add("**Incumbent evidence gap:** no configuration-matched score for: $($incumbentGaps -join ', '). Decision confidence is reduced, but missing incumbent evidence alone is not a veto. $requirements No measured improvement is claimed for these comparisons.")
     }
     if ($r.selection.contested) {
         $lines.Add("**Warning: an independent fallback metric disagrees under this profile's quality rule; the authorized primary route still decides.**")
@@ -378,7 +381,7 @@ function Get-TaskProfileReviewReport {
     $lines.Add("Normal recommendations require the intersection of each profile's explicit qualification dimensions, not one global model ranking. Price decides only among configurations passing every required band. Every comparison needs at least two distinct eligible models; multiple efforts do not inflate coverage. Empty intersections or insufficient evidence retain a non-retired current configuration without certifying it. Supporting-only scores never blend, rank or veto; overlapping benchmark lineage is not independent corroboration. Unknown publication age, cached evidence, single-source coverage and external harnesses reduce confidence. A context capability is not a benchmark measurement at that context length.")
     $lines.Add("An effectively retired incumbent triggers mandatory recovery without waiting for confirmation or comparable incumbent evidence: a fully qualified winner first, otherwise the existing primary benchmark/value rules, otherwise an exact GitHub-suggested successor. Emergency migrations are not certified role-qualified winners. All hard admissibility and authorized configuration limits remain binding; no safe replacement fails the review instead of publishing a retained retired model.")
     $lines.Add("Value-balanced profiles minimize reference AIC within a source-specific gap of their best eligible score, under fixed hard input/output price ceilings. Bands are policy tolerances, not capability percentages or proof of task success. Token-price ceilings are not total session-spend limits.")
-    $lines.Add("Orchestrator workflow metrics allow a 0.03 absolute gap; Mechanical retains zero workflow tolerance. For normal optimization every other required dimension must also pass, so the intersection may be empty. These are policy tolerances, not statistical significance claims. Normal fallback replacements require comparable incumbent evidence and cannot weaken an established primary or qualification basis.")
+    $lines.Add("Orchestrator workflow metrics allow a 0.03 absolute gap; Mechanical allows 0.01. For normal optimization every other required dimension must also pass, so the intersection may be empty. These are policy tolerances, not statistical significance claims. Missing incumbent evidence reduces confidence, not candidate requirements, and does not alone block a qualified fallback replacement. An established stronger primary or qualification basis remains protected.")
     $lines.Add("Configuration cells show model / effective effort / context; 'none' means the model exposes no effort control. Allowed effort ranges are standing authorization: model and effort changes apply together after confirmation, except mandatory retirement recovery. Force bypasses only the normal confirmation wait, never hard budgets, allowed ranges, availability, capabilities or evidence requirements.")
     $lines.Add("")
     $lines.Add("## Pricing refresh")

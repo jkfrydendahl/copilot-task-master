@@ -177,7 +177,8 @@ function Get-PageJsonPayload {
 function Write-ModelJsonAtomic {
     param(
         [Parameter(Mandatory = $true)][string]$SnapshotPath,
-        [Parameter(Mandatory = $true)]$SnapshotObject
+        [Parameter(Mandatory = $true)]$SnapshotObject,
+        [switch]$NoClobber
     )
     $directory = Split-Path -Path $SnapshotPath -Parent
     if (-not (Test-Path $directory)) {
@@ -187,7 +188,13 @@ function Write-ModelJsonAtomic {
     $json = $SnapshotObject | ConvertTo-Json -Depth 20
     try {
         Set-Content -LiteralPath $tempPath -Value $json -Encoding UTF8 -ErrorAction Stop
-        Move-Item -LiteralPath $tempPath -Destination $SnapshotPath -Force -ErrorAction Stop
+        if ($NoClobber) {
+            $sourceFile = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($tempPath)
+            $destinationFile = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($SnapshotPath)
+            [IO.File]::Move($sourceFile, $destinationFile)
+        } else {
+            Move-Item -LiteralPath $tempPath -Destination $SnapshotPath -Force -ErrorAction Stop
+        }
     } finally {
         if (Test-Path -LiteralPath $tempPath) { Remove-Item -LiteralPath $tempPath -ErrorAction Stop }
     }

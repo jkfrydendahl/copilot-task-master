@@ -376,6 +376,98 @@ Run-Test "AA component acquisition uses one deterministic anchor and stable metr
     $bad=Get-AAComponentData -ModelSlugs @("one-high") -FetchText {param($u) @{status="error";error="HTTP503"}}
     Assert-True ($bad.status -eq "error" -and $bad.message -match "HTTP503") "Fetch failure hidden"
 }
+Run-Test "Versioned AA components are opt-in and preserve native scores and configuration identity" {
+    . (Join-Path $PSScriptRoot "model-aa-component-data.ps1")
+    $row=@{slug="one-high";name="One (high)";effort=@{slug="high"};release=@{slug="one"};
+        intelligenceIndexEvaluations=@(
+            @{slug="frontiercode-2-0";score=0},
+            @{slug="terminalbench-4-0";score=1},
+            @{slug="critpt-v2-hard";score=0.675},
+            @{slug="aa-briefcase";score=1441.2},
+            @{slug="terminalbench-2-0";score=0.9})}
+    $html=Component-Html @{models=@($row)}
+    Assert-True ((ConvertFrom-AAComponentPage $html).status -eq "unavailable") "Default parser activated new benchmarks"
+    $r=ConvertFrom-AAComponentPage $html -IncludeVersionedBenchmarks
+    Assert-True ($r.status -eq "ok" -and $r.models.Count -eq 1) "Array-only model was lost"
+    $record=$r.models["one-high"]
+    Assert-True ($record.frontierCode20 -eq 0 -and $record.terminalBench40 -eq 1 -and $record.critPtV2Hard -eq 0.675) "Native versioned scores changed"
+    Assert-True ($record.effort -eq "high" -and $r.identities["one-high"].releaseId -eq "one") "Exact published identity lost"
+    Assert-True ($null -eq $record.ifbench -and -not $record.Contains("aa-briefcase") -and $null -eq $r.sourceDate) "Unrelated scale, metric or publication date invented"
+}
+Run-Test "Versioned AA duplicate scores are stable or explicitly rejected" {
+    . (Join-Path $PSScriptRoot "model-aa-component-data.ps1")
+    $evaluation=@{slug="frontiercode-2-0";score=0.5}
+    $row=@{slug="one-high";name="One";effort="high";release=@{slug="one"};
+        intelligenceIndexEvaluations=@($evaluation,$evaluation)}
+    $r=ConvertFrom-AAComponentPage (Component-Html @{currentModel=$row;models=@($row)}) -IncludeVersionedBenchmarks
+    Assert-True ($r.status -eq "ok" -and $r.models["one-high"].frontierCode20 -eq 0.5) "Identical duplicate rejected"
+    $row.intelligenceIndexEvaluations+=@(@{slug="frontiercode-2-0";score=0.6})
+    $r=ConvertFrom-AAComponentPage (Component-Html @{models=@($row)}) -IncludeVersionedBenchmarks
+    Assert-True ($r.status -eq "unavailable" -and $r.message -match "Conflicting component score") "Conflicting array entries accepted"
+}
+Run-Test "Invalid versioned AA scores cannot be revived by duplicate entries" {
+    . (Join-Path $PSScriptRoot "model-aa-component-data.ps1")
+    foreach ($bad in @("0.5",-0.01,1.01)) {
+        foreach ($reverse in @($false,$true)) {
+            $evaluations=@(@{slug="frontiercode-2-0";score=$bad},@{slug="frontiercode-2-0";score=0.5})
+            if ($reverse) { [array]::Reverse($evaluations) }
+            $row=@{slug="one-high";name="One";effort="high";release=@{slug="one"};lcr=0.8;
+                intelligenceIndexEvaluations=$evaluations}
+            $r=ConvertFrom-AAComponentPage (Component-Html @{models=@($row)}) -IncludeVersionedBenchmarks
+            Assert-True ($r.status -eq "ok" -and $null -eq $r.models["one-high"].frontierCode20 -and
+                $r.models["one-high"].lcr -eq 0.8 -and $r.diagnostics -match "score_invalid") "Invalid score revived or legacy score lost"
+        }
+    }
+}
+Run-Test "Malformed versioned AA arrays leave legacy measurements usable" {
+    . (Join-Path $PSScriptRoot "model-aa-component-data.ps1")
+    foreach ($bad in @("not-an-array",@{slug="frontiercode-2-0";score=0.5})) {
+        $row=@{slug="one-high";name="One";effort="high";release=@{slug="one"};lcr=0.8;
+            intelligenceIndexEvaluations=$bad}
+        $r=ConvertFrom-AAComponentPage (Component-Html @{models=@($row)}) -IncludeVersionedBenchmarks
+        Assert-True ($r.status -eq "ok" -and $r.models["one-high"].lcr -eq 0.8 -and
+            $null -eq $r.models["one-high"].frontierCode20 -and $r.diagnostics -match "array_invalid") "Malformed array silently accepted"
+    }
+}
+Run-Test "Versioned AA measurements require a verified published release and effort" {
+    . (Join-Path $PSScriptRoot "model-aa-component-data.ps1")
+    foreach ($fields in @(@{},@{effort="high"},@{release=@{slug="one"}})) {
+        $row=@{slug="one-high";name="One";lcr=0.8;intelligenceIndexEvaluations=@(@{slug="frontiercode-2-0";score=0.5})}
+        foreach ($key in $fields.Keys) { $row[$key]=$fields[$key] }
+        $r=ConvertFrom-AAComponentPage (Component-Html @{models=@($row)}) -IncludeVersionedBenchmarks
+        Assert-True ($r.status -eq "ok" -and $null -eq $r.models["one-high"].frontierCode20 -and
+            $r.diagnostics -match "configuration_unverified") "Unknown release/effort counted as exact configuration"
+    }
+    $native=@{slug="one";name="One";effort="none";release=@{slug="one"};
+        intelligenceIndexEvaluations=@(@{slug="frontiercode-2-0";score=0.5})}
+    $r=ConvertFrom-AAComponentPage (Component-Html @{models=@($native)}) -IncludeVersionedBenchmarks
+    Assert-True ($r.status -eq "ok" -and $r.models.one.effort -eq "none") "Explicit native configuration lost"
+    $native.name="One with fallback"
+    $r=ConvertFrom-AAComponentPage (Component-Html @{models=@($native)}) -IncludeVersionedBenchmarks
+    Assert-True ($r.status -eq "unavailable" -and $r.diagnostics -match "identity") "Composite array-only identity accepted"
+}
+Run-Test "Versioned AA acquisition isolates metric fingerprints and stays inactive by default" {
+    . (Join-Path $PSScriptRoot "model-aa-components.ps1")
+    $row=@{slug="one-high";name="One";effort="high";release=@{slug="one"};lcr=0.8;
+        intelligenceIndexEvaluations=@(@{slug="frontiercode-2-0";score=0.5},@{slug="critpt-v2-hard";score=0.675})}
+    $fetch={param($u) @{status="ok";content=(Component-Html @{models=@($row)})}}
+    $legacy=Get-AAComponentData -ModelSlugs @("one-high") -FetchText $fetch
+    $first=Get-AAComponentData -ModelSlugs @("one-high") -FetchText $fetch -IncludeVersionedBenchmarks
+    Assert-True ($legacy.observationSchemaVersion -eq 1 -and -not $legacy.metricVersions.ContainsKey("frontierCode20")) "Default acquisition changed"
+    Assert-True ($first.observationSchemaVersion -eq 2 -and $first.metricDefinitions.frontierCode20.benchmarkId -eq "frontiercode-2-0" -and
+        $first.metricDefinitions.frontierCode20.max -eq 1 -and $first.metricDefinitions.critPtV2Hard.lineage -contains "aa-intelligence-v5" -and
+        $first.metricDefinitions.critPtV2Hard.lineage -contains "aa-intelligence" -and $null -eq $first.evaluatorRevision) "Version/scale/lineage lost"
+    Assert-True ($legacy.metricVersions.lcr -eq $first.metricVersions.lcr) "Opt-in data changed a legacy metric fingerprint"
+    $row.intelligenceIndexEvaluations[0].score=0.6
+    $changed=Get-AAComponentData -ModelSlugs @("one-high") -FetchText $fetch -IncludeVersionedBenchmarks
+    Assert-True ($changed.metricVersions.frontierCode20 -ne $first.metricVersions.frontierCode20 -and
+        $changed.metricVersions.critPtV2Hard -eq $first.metricVersions.critPtV2Hard -and
+        $changed.metricVersions.lcr -eq $first.metricVersions.lcr) "Unrelated data became a metric observation"
+    $row.release.slug="one-revised"
+    $identityChanged=Get-AAComponentData -ModelSlugs @("one-high") -FetchText $fetch -IncludeVersionedBenchmarks
+    Assert-True ($identityChanged.metricVersions.frontierCode20 -ne $changed.metricVersions.frontierCode20 -and
+        $identityChanged.metricVersions.lcr -eq $changed.metricVersions.lcr) "Published identity change ignored or changed legacy observations"
+}
 Run-Test "LiveBench rejects incomplete or invalid category scores without dropping other categories" {
     foreach($bad in @("", "NaN", "-1", "101")) {
         $csv="model,code_generation,code_completion,python`none,80,$bad,70"
