@@ -1,6 +1,6 @@
 # Monthly task profile review (2026-11-04)
 
-Availability: **True** (local model-discovery snapshot; status=valid; observed=2026-11-04T12:31:37.443Z; validity=7 days; not live-verified by this review; recorded runtime reconciled); manual confirmation override: **True**.
+Availability: **True** (local model-discovery snapshot; status=valid; observed=2026-11-04T12:31:37.443Z; validity=7 days; not live-verified by this review; recorded runtime reconciled); manual confirmation override: **False**.
 
 ## Model discovery and onboarding
 
@@ -66,7 +66,7 @@ Verified catalog facts are updated before comparison. Ready for comparison is no
 | GPT-6.1 Terra | False | False | n/a | n/a | discovered_only | unmapped_public_pricing_identity; runtime identity required |
 | Grok 4.7 | False | False | n/a | n/a | discovered_only | unmapped_public_pricing_identity; runtime identity required |
 
-Catalog changes: 16. Unmapped benchmark variants: 579; complete discovery details are retained in `data/model-onboarding-snapshot.json`. Such variants may be unrelated to Copilot and are not automatically admitted.
+Catalog changes: 0. Unmapped benchmark variants: 579; complete discovery details are retained in `data/model-onboarding-snapshot.json`. Such variants may be unrelated to Copilot and are not automatically admitted.
 </details>
 
 
@@ -75,28 +75,30 @@ Catalog changes: 16. Unmapped benchmark variants: 579; complete discovery detail
 | Profile | Strategy | Current configuration | Recommended configuration | Applied/current after run | Outcome | Confidence |
 |---|---|---|---|---|---|---|
 | orchestrator | value_balanced | gpt-6.1-sol / xhigh / default | gpt-6.1-sol / xhigh / default | gpt-6.1-sol / xhigh / default | budget_constrained_choice | reduced |
-| quick | value_balanced | gemini-3.8-flash / none / default | claude-sonnet-5.5 / max / default | claude-sonnet-5.5 / max / default | applied_value_balanced_choice | reduced |
+| quick | value_balanced | claude-sonnet-5.5 / max / default | claude-sonnet-5.5 / max / default | claude-sonnet-5.5 / max / default | value_balanced_choice | reduced |
 | default-development | value_balanced | gemini-3.8-flash / none / default | n/a | gemini-3.8-flash / none / default | retained_no_role_qualified_candidate | none |
-| agentic-implementation | value_balanced | claude-sonnet-5.5 / max / default | gpt-6.1-sol / max / default | gpt-6.1-sol / max / default | applied_value_balanced_choice | reduced |
+| agentic-implementation | value_balanced | gpt-6.1-sol / max / default | gpt-6.1-sol / max / default | gpt-6.1-sol / max / default | value_balanced_choice | reduced |
 | deep-reasoning | value_balanced | gpt-6.1-sol / xhigh / long_context | gpt-6.1-sol / xhigh / long_context | gpt-6.1-sol / xhigh / long_context | budget_constrained_choice | reduced |
-| review | value_balanced | claude-opus-5 / high / default | gpt-6.1-sol / xhigh / default | gpt-6.1-sol / xhigh / default | applied_value_balanced_choice | reduced |
-| visual-ui | value_balanced | gemini-3.8-flash / none / default | gpt-6.1-sol / xhigh / default | gpt-6.1-sol / xhigh / default | applied_value_balanced_choice | reduced |
-| mechanical | value_balanced | gemini-3.8-flash / none / default | gpt-6.1-sol / xhigh / default | gpt-6.1-sol / xhigh / default | applied_budget_constrained_choice | reduced |
-| triage | value_balanced | gpt-6.1-sol / low / default | gpt-6.1-sol / max / default | gpt-6.1-sol / max / default | applied_budget_constrained_choice | reduced |
+| review | value_balanced | gpt-6.1-sol / xhigh / default | gpt-6.1-sol / xhigh / default | gpt-6.1-sol / xhigh / default | value_balanced_choice | reduced |
+| visual-ui | value_balanced | gpt-6.1-sol / xhigh / default | gpt-6.1-sol / xhigh / default | gpt-6.1-sol / xhigh / default | value_balanced_choice | reduced |
+| mechanical | value_balanced | gpt-6.1-sol / xhigh / default | gpt-6.1-sol / xhigh / default | gpt-6.1-sol / xhigh / default | budget_constrained_choice | reduced |
+| triage | value_balanced | gpt-6.1-sol / max / default | gpt-6.1-sol / xhigh / default | gpt-6.1-sol / max / default | pending_budget_constrained_choice | reduced |
 
 Normal recommendations require the intersection of each profile's explicit qualification dimensions, not one global model ranking. Price decides only among configurations passing every required band. Every comparison needs at least two distinct eligible models; multiple efforts do not inflate coverage. Empty intersections or insufficient evidence retain a non-retired current configuration without certifying it. Supporting-only scores never blend, rank or veto; overlapping benchmark lineage is not independent corroboration. Unknown publication age, cached evidence, single-source coverage and external harnesses reduce confidence. A context capability is not a benchmark measurement at that context length.
 An effectively retired incumbent triggers mandatory recovery without waiting for confirmation or comparable incumbent evidence: a fully qualified winner first, otherwise the existing primary benchmark/value rules, otherwise an exact GitHub-suggested successor. Emergency migrations are not certified role-qualified winners. All hard admissibility and authorized configuration limits remain binding; no safe replacement fails the review instead of publishing a retained retired model.
 Value-balanced profiles minimize reference AIC within a source-specific gap of their best eligible score, under fixed hard input/output price ceilings. Bands are policy tolerances, not capability percentages or proof of task success. Token-price ceilings are not total session-spend limits.
+Cost basis is decided per profile, once, over its qualified configurations: when every one has valid, fresh, comparable measured input/output token totals on the same pinned benchmark workload, ranking uses those totals repriced as uncached tokens at current GitHub rates (reasoning is already inside output; no effort multiplier). If any qualified configuration lacks such usage, the entire profile uses the fixed reference basket and says why; measured and fixed costs are never mixed, and unqualified configurations cannot disable measured ranking. Measured cost is an external benchmark-workload proxy, not predicted Copilot task spend, latency or cache behavior. It never lowers a quality band or bypasses a safeguard.
 Orchestrator workflow metrics allow a 0.03 absolute gap; Mechanical allows 0.01. For normal optimization every other required dimension must also pass, so the intersection may be empty. These are policy tolerances, not statistical significance claims. Missing incumbent evidence reduces confidence, not candidate requirements, and does not alone block a qualified fallback replacement. An established stronger primary or qualification basis remains protected.
 Configuration cells show model / effective effort / context; 'none' means the model exposes no effort control. Allowed effort ranges are standing authorization: model and effort changes apply together after confirmation, except mandatory retirement recovery. Force bypasses only the normal confirmation wait, never hard budgets, allowed ranges, availability, capabilities or evidence requirements.
 
 ## Pricing refresh
 
 - Status: **partial**. Source: https://docs.github.com/en/copilot/reference/copilot-billing/models-and-pricing
-- Last successful page fetch: 2026-11-04T12:39:07.4830375Z. Per-model verification ages govern eligibility.
+- Last successful page fetch: 2026-11-04T14:51:34.5035467Z. Per-model verification ages govern eligibility.
 - Freshness limit: 45 days. Missing rows retain their original timestamps. Capabilities are never refreshed by pricing.
 - Reference-cost comparison: Aggregate uncached usage across requests within the selected context tier, not a single 1M-token request or predicted task cost. Cache reads/writes are excluded.
 - Reference tokens: input 1000000, output 100000.
+- Measured-cost basis: enabled; workload `aa-intelligence-index-canonical-v1`; missing-usage policy `profile_fallback` (the fixed reference basket above applies to the entire profile). Among configurations that already pass every quality requirement, rank by the measured input/output tokens each consumed on one common Artificial Analysis whole-suite benchmark workload, repriced uncached at current GitHub rates (reasoning is already part of output and is not charged again). This is an external benchmark-workload cost proxy, not predicted Copilot task spend, latency or quality, and it never relaxes a quality band. If any qualified competitor lacks valid, fresh, comparable measured usage, the entire profile uses the fixed reference basket instead; measured and fixed costs are never mixed.
 
 | Changed model | Tier | Previous input / output USD per M | Current input / output USD per M | Previous cached input / cache write | Current cached input / cache write |
 |---|---|---|---|---|---|
@@ -120,10 +122,10 @@ Configuration cells show model / effective effort / context; 'none' means the mo
 
 | Source | Status | Results published | Suite label | Artifact updated | Retrieved | Raw observation identity |
 |---|---|---|---|---|---|---|
-| artificialAnalysis | ok | n/a | n/a | n/a | 2026-11-04T12:39:01.1758189Z | 80d1d2cd76920ff213cf34acb382b5a45ae4920ac2660602ed5f1b8017bd2d69&#124; |
-| artificialAnalysisCodingAgents | ok | n/a | n/a | n/a | 2026-11-04T12:39:03.1079424Z | 496ece77d36aa0f436dbf59d3243de7b678eecab476330cffd04d90a782cd592 |
-| artificialAnalysisComponents | ok | n/a | n/a | n/a | 2026-11-04T12:39:04.7741023Z | 33aa6e419b058008c425cd335f72a0f614cc0e3ba0ae5d6ab25ab8d498246ea9 |
-| liveBench | ok | n/a | 2026-06-25 | 2026-10-30T22:21:40.0000000Z | 2026-11-04T12:39:06.2593358Z | a8d2183fc195b3177c396c0fbe6ac80040e2a4090717d391c9a2c6ec3243207d |
+| artificialAnalysis | ok | n/a | n/a | n/a | 2026-11-04T14:51:27.7064345Z | 80d1d2cd76920ff213cf34acb382b5a45ae4920ac2660602ed5f1b8017bd2d69&#124; |
+| artificialAnalysisCodingAgents | ok | n/a | n/a | n/a | 2026-11-04T14:51:29.5546607Z | 496ece77d36aa0f436dbf59d3243de7b678eecab476330cffd04d90a782cd592 |
+| artificialAnalysisComponents | ok | n/a | n/a | n/a | 2026-11-04T14:51:31.3194991Z | 33aa6e419b058008c425cd335f72a0f614cc0e3ba0ae5d6ab25ab8d498246ea9 |
+| liveBench | ok | n/a | 2026-06-25 | 2026-10-30T22:21:40.0000000Z | 2026-11-04T14:51:33.4240012Z | a8d2183fc195b3177c396c0fbe6ac80040e2a4090717d391c9a2c6ec3243207d |
 
 Confirmation uses metric-scoped observations, not the raw page fingerprint. Suite labels, artifact updates, row evaluation ages and retrieval times are distinct: an artifact update does not make every row newly evaluated. Unknown dates or methodology versions are not fabricated. AA public components remain separate from API aggregates; public pricing is never imported. Data attribution: https://artificialanalysis.ai and https://livebench.ai (LiveBench 1.x data; not LiveBench 2.0).
 
@@ -715,6 +717,7 @@ Confirmation uses metric-scoped observations, not the raw page fingerprint. Suit
 Budget: **hard**, input 3 / output 15 USD per million. Deciding source: artificialAnalysisComponents.
 Quality leader before hard-budget exclusions: gpt-6-astra / max / default. Family fallback (informational, not a winner): claude-sonnet-5.5.
 Strategy: **value_balanced**.
+**Cost basis: measured benchmark workload** (`aa-intelligence-index-canonical-v1`). Every qualified configuration has valid, fresh, comparable measured input/output token totals on the same workload, repriced as uncached tokens at current GitHub rates; output already includes reasoning. This is an external benchmark-workload cost proxy, not predicted Copilot task spend, latency or cache behavior. Task-specific quality bands are separate from this whole-suite cost workload.
 Authorized deciding routes, strongest first: **AutomationBench-AA > EnterpriseOps-Gym-AA**. Supporting metrics are informational only.
 Task fit: external-harness proxy, not a measurement of Copilot CLI task success.
 Decision status: **budget_constrained_choice**. Deciding metric: artificialAnalysisComponents.automationBench.
@@ -722,10 +725,10 @@ Incumbent selection basis (applied/current after run): artificialAnalysisCompone
 AutomationBench-AA (guardrail-adjusted objective fraction): Workflow/tool-use proxy; clarifying questions prohibited. Not interactive orchestration or conversation-memory evidence.
 EnterpriseOps-Gym-AA (strict pass@1 fraction): AA oracle-tool workflow harness; tools supplied. Not tool-discovery evidence or the original paper's scores.
 Configuration selection: **automatic bounded effort**; authorized efforts: none, minimal, low, medium, high, xhigh, max. Models without effort controls use their native configuration; context remains fixed.
-Reference usage: candidate **300 AIC**; incumbent **300 AIC**.
-Reference AIC uses a fixed token basket, not measured consumption. Effort-related changes in token usage, task cost and latency are unknown; equal reference AIC does not establish equal task cost.
+Benchmark-workload usage: candidate **355872.8918 AIC**; incumbent **355872.8918 AIC**.
+Benchmark-workload AIC reprices each configuration's own measured input/output tokens at current GitHub rates, uncached, with reasoning already inside output. It compares configurations on one external benchmark workload; it does not predict Copilot task cost or latency.
 Eligible quality reference: grok-4.6 / xhigh / default (0.669973683618). Candidate gap: **0.00423646948189 / 0.03** absolute automationBench score points.
-Lowest reference cost among configurations passing every required band wins; equal-cost model ties prefer the newest verified release. Reference usage: candidate **300 AIC**; incumbent **300 AIC** (1 AIC = USD 0.01).
+Lowest measured benchmark-workload cost among configurations passing every required band wins; equal-cost model ties prefer the newest verified release. Benchmark-workload usage: candidate **355872.8918 AIC**; incumbent **355872.8918 AIC** (1 AIC = USD 0.01).
 Candidate cost change: **0%** (informational, not an incumbent-relative limit). Fixed hard ceilings authorize spending; they never rise automatically. A percentage is n/a when incumbent cost is unknown or a free incumbent would become paid.
 Matched incumbent score in this deciding-source observation: **0.665737214136**.
 
@@ -821,102 +824,102 @@ None: the configured role dimensions are binding qualification requirements.
 
 | Configuration (model / effort / context) | Budget/capability eligible | Exclusions | Advisory warnings | Price tier | Input / output USD per M | Price verified | Capability as-of |
 |---|---|---|---|---|---|---|---|
-| claude-haiku-4.5 / none / default | True | n/a | n/a | default | 1 / 5 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-haiku-5.5 / high / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-haiku-5.5 / low / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-haiku-5.5 / max / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-haiku-5.5 / medium / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-haiku-5.5 / xhigh / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-4.8 / high / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-4.8 / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-4.8 / max / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-4.8 / medium / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-4.8 / xhigh / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-4.8-fast / high / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-4.8-fast / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-4.8-fast / max / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-4.8-fast / medium / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-4.8-fast / xhigh / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-5 / high / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-5 / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-5 / max / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-5 / medium / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-5 / xhigh / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-5.5 / high / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 4 / 20 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-5.5 / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 4 / 20 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-5.5 / max / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 4 / 20 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-5.5 / medium / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 4 / 20 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-5.5 / xhigh / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 4 / 20 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-sonnet-4.6 / high / default | False | capabilities_stale | model_retirement_scope_unconfirmed | default | 3 / 15 | 2026-11-04T12:39:07.4830375Z | 2026-07-30 |
-| claude-sonnet-4.6 / low / default | False | capabilities_stale | model_retirement_scope_unconfirmed | default | 3 / 15 | 2026-11-04T12:39:07.4830375Z | 2026-07-30 |
-| claude-sonnet-4.6 / max / default | False | capabilities_stale | model_retirement_scope_unconfirmed | default | 3 / 15 | 2026-11-04T12:39:07.4830375Z | 2026-07-30 |
-| claude-sonnet-4.6 / medium / default | False | capabilities_stale | model_retirement_scope_unconfirmed | default | 3 / 15 | 2026-11-04T12:39:07.4830375Z | 2026-07-30 |
-| claude-sonnet-5 / high / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-sonnet-5 / low / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-sonnet-5 / max / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-sonnet-5 / medium / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-sonnet-5 / xhigh / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-sonnet-5.5 / high / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-sonnet-5.5 / low / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-sonnet-5.5 / max / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-sonnet-5.5 / medium / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-sonnet-5.5 / xhigh / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gemini-3.8-flash / none / default | True | n/a | n/a | default | 0.75 / 3.75 | 2026-11-04T12:39:07.4830375Z | 2026-10-30T08:37:00.782Z |
-| gemini-4-argon / none / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-10-30T08:37:00.782Z |
-| gpt-5.3-codex / high / default | True | n/a | n/a | default | 1.75 / 14 | 2026-11-04T12:39:07.4830375Z | 2026-09-08 |
-| gpt-5.3-codex / low / default | True | n/a | n/a | default | 1.75 / 14 | 2026-11-04T12:39:07.4830375Z | 2026-09-08 |
-| gpt-5.3-codex / medium / default | True | n/a | n/a | default | 1.75 / 14 | 2026-11-04T12:39:07.4830375Z | 2026-09-08 |
-| gpt-5.3-codex / xhigh / default | True | n/a | n/a | default | 1.75 / 14 | 2026-11-04T12:39:07.4830375Z | 2026-09-08 |
-| gpt-5.6-luna / high / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-luna / low / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-luna / max / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-luna / medium / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-luna / none / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-luna / xhigh / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-sol / high / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 4 / 20 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-sol / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 4 / 20 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-sol / max / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 4 / 20 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-sol / medium / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 4 / 20 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-sol / none / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 4 / 20 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-sol / xhigh / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 4 / 20 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-terra / high / default | True | n/a | n/a | default | 2 / 12 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-terra / low / default | True | n/a | n/a | default | 2 / 12 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-terra / max / default | True | n/a | n/a | default | 2 / 12 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-terra / medium / default | True | n/a | n/a | default | 2 / 12 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-terra / none / default | True | n/a | n/a | default | 2 / 12 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-terra / xhigh / default | True | n/a | n/a | default | 2 / 12 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-astra / high / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-astra / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-astra / max / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-astra / medium / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-astra / xhigh / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-luna / high / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-luna / low / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-luna / max / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-luna / medium / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-luna / none / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-luna / xhigh / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-sol / high / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-sol / low / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-sol / max / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-sol / medium / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-sol / none / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-sol / xhigh / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6.1-sol / high / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6.1-sol / low / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6.1-sol / max / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6.1-sol / medium / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6.1-sol / xhigh / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| grok-4.5 / high / default | True | n/a | n/a | default | 2 / 6 | 2026-11-04T12:39:07.4830375Z | 2026-09-08 |
-| grok-4.5 / low / default | True | n/a | n/a | default | 2 / 6 | 2026-11-04T12:39:07.4830375Z | 2026-09-08 |
-| grok-4.5 / medium / default | True | n/a | n/a | default | 2 / 6 | 2026-11-04T12:39:07.4830375Z | 2026-09-08 |
-| grok-4.6 / high / default | True | n/a | n/a | default | 2 / 6 | 2026-11-04T12:39:07.4830375Z | 2026-09-08 |
-| grok-4.6 / low / default | True | n/a | n/a | default | 2 / 6 | 2026-11-04T12:39:07.4830375Z | 2026-09-08 |
-| grok-4.6 / medium / default | True | n/a | n/a | default | 2 / 6 | 2026-11-04T12:39:07.4830375Z | 2026-09-08 |
-| grok-4.6 / xhigh / default | True | n/a | n/a | default | 2 / 6 | 2026-11-04T12:39:07.4830375Z | 2026-09-08 |
-| mai-code-1.1-flash / high / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| mai-code-1.1-flash / low / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| mai-code-1.1-flash / medium / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
+| claude-haiku-4.5 / none / default | True | n/a | n/a | default | 1 / 5 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-haiku-5.5 / high / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-haiku-5.5 / low / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-haiku-5.5 / max / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-haiku-5.5 / medium / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-haiku-5.5 / xhigh / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-4.8 / high / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-4.8 / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-4.8 / max / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-4.8 / medium / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-4.8 / xhigh / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-4.8-fast / high / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-4.8-fast / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-4.8-fast / max / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-4.8-fast / medium / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-4.8-fast / xhigh / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-5 / high / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-5 / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-5 / max / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-5 / medium / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-5 / xhigh / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-5.5 / high / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 4 / 20 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-5.5 / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 4 / 20 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-5.5 / max / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 4 / 20 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-5.5 / medium / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 4 / 20 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-5.5 / xhigh / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 4 / 20 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-sonnet-4.6 / high / default | False | capabilities_stale | model_retirement_scope_unconfirmed | default | 3 / 15 | 2026-11-04T14:51:34.5035467Z | 2026-07-30 |
+| claude-sonnet-4.6 / low / default | False | capabilities_stale | model_retirement_scope_unconfirmed | default | 3 / 15 | 2026-11-04T14:51:34.5035467Z | 2026-07-30 |
+| claude-sonnet-4.6 / max / default | False | capabilities_stale | model_retirement_scope_unconfirmed | default | 3 / 15 | 2026-11-04T14:51:34.5035467Z | 2026-07-30 |
+| claude-sonnet-4.6 / medium / default | False | capabilities_stale | model_retirement_scope_unconfirmed | default | 3 / 15 | 2026-11-04T14:51:34.5035467Z | 2026-07-30 |
+| claude-sonnet-5 / high / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-sonnet-5 / low / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-sonnet-5 / max / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-sonnet-5 / medium / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-sonnet-5 / xhigh / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-sonnet-5.5 / high / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-sonnet-5.5 / low / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-sonnet-5.5 / max / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-sonnet-5.5 / medium / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-sonnet-5.5 / xhigh / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gemini-3.8-flash / none / default | True | n/a | n/a | default | 0.75 / 3.75 | 2026-11-04T14:51:34.5035467Z | 2026-10-30T08:37:00.782Z |
+| gemini-4-argon / none / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-10-30T08:37:00.782Z |
+| gpt-5.3-codex / high / default | True | n/a | n/a | default | 1.75 / 14 | 2026-11-04T14:51:34.5035467Z | 2026-09-08 |
+| gpt-5.3-codex / low / default | True | n/a | n/a | default | 1.75 / 14 | 2026-11-04T14:51:34.5035467Z | 2026-09-08 |
+| gpt-5.3-codex / medium / default | True | n/a | n/a | default | 1.75 / 14 | 2026-11-04T14:51:34.5035467Z | 2026-09-08 |
+| gpt-5.3-codex / xhigh / default | True | n/a | n/a | default | 1.75 / 14 | 2026-11-04T14:51:34.5035467Z | 2026-09-08 |
+| gpt-5.6-luna / high / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-luna / low / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-luna / max / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-luna / medium / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-luna / none / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-luna / xhigh / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-sol / high / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 4 / 20 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-sol / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 4 / 20 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-sol / max / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 4 / 20 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-sol / medium / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 4 / 20 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-sol / none / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 4 / 20 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-sol / xhigh / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 4 / 20 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-terra / high / default | True | n/a | n/a | default | 2 / 12 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-terra / low / default | True | n/a | n/a | default | 2 / 12 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-terra / max / default | True | n/a | n/a | default | 2 / 12 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-terra / medium / default | True | n/a | n/a | default | 2 / 12 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-terra / none / default | True | n/a | n/a | default | 2 / 12 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-terra / xhigh / default | True | n/a | n/a | default | 2 / 12 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-astra / high / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-astra / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-astra / max / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-astra / medium / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-astra / xhigh / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-luna / high / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-luna / low / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-luna / max / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-luna / medium / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-luna / none / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-luna / xhigh / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-sol / high / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-sol / low / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-sol / max / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-sol / medium / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-sol / none / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-sol / xhigh / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6.1-sol / high / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6.1-sol / low / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6.1-sol / max / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6.1-sol / medium / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6.1-sol / xhigh / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| grok-4.5 / high / default | True | n/a | n/a | default | 2 / 6 | 2026-11-04T14:51:34.5035467Z | 2026-09-08 |
+| grok-4.5 / low / default | True | n/a | n/a | default | 2 / 6 | 2026-11-04T14:51:34.5035467Z | 2026-09-08 |
+| grok-4.5 / medium / default | True | n/a | n/a | default | 2 / 6 | 2026-11-04T14:51:34.5035467Z | 2026-09-08 |
+| grok-4.6 / high / default | True | n/a | n/a | default | 2 / 6 | 2026-11-04T14:51:34.5035467Z | 2026-09-08 |
+| grok-4.6 / low / default | True | n/a | n/a | default | 2 / 6 | 2026-11-04T14:51:34.5035467Z | 2026-09-08 |
+| grok-4.6 / medium / default | True | n/a | n/a | default | 2 / 6 | 2026-11-04T14:51:34.5035467Z | 2026-09-08 |
+| grok-4.6 / xhigh / default | True | n/a | n/a | default | 2 / 6 | 2026-11-04T14:51:34.5035467Z | 2026-09-08 |
+| mai-code-1.1-flash / high / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| mai-code-1.1-flash / low / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| mai-code-1.1-flash / medium / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
 
 | Model | Source | Exact alias / source label | Effort | Metric | Score | Publication age unknown | Cached | Harness | Role |
 |---|---|---|---|---|---|---|---|---|---|
@@ -1087,19 +1090,21 @@ Evidence gaps are grouped by affected profile in [Coverage and exclusions](#cove
 Budget: **hard**, input 2 / output 10 USD per million. Deciding source: liveBench.
 Quality leader before hard-budget exclusions: claude-sonnet-5.5 / max / default. Family fallback (informational, not a winner): claude-haiku-5.5.
 Strategy: **value_balanced**.
+**Cost basis: fixed reference basket (profile fallback).** Measured benchmark-workload usage (`aa-intelligence-index-canonical-v1`) is unavailable or not comparable for at least one qualified configuration (usage_alias_not_configured), so the entire profile is ranked on the fixed basket. Measured and fixed costs are never mixed, and no qualified configuration is dropped to improve coverage.
+Qualified configurations without valid measured usage: claude-sonnet-5.5 / xhigh / default (usage_alias_not_configured); claude-sonnet-5.5 / max / default (usage_alias_not_configured).
 Authorized deciding routes, strongest first: **LiveBench Coding > AA Intelligence Index**. Supporting metrics are informational only.
 Task fit: external-harness proxy, not a measurement of Copilot CLI task success.
-Decision status: **applied_value_balanced_choice**. Deciding metric: liveBench.coding.
+Decision status: **value_balanced_choice**. Deciding metric: liveBench.coding.
 Incumbent selection basis (applied/current after run): liveBench.coding.
 LiveBench Coding (percentage points): Coding proxy, not direct review or UI implementation evidence.
 AA Intelligence Index (index points): General reasoning proxy; overlaps component benchmarks, not independent corroboration.
 Configuration selection: **automatic bounded effort**; authorized efforts: none, minimal, low, medium, high, xhigh, max. Models without effort controls use their native configuration; context remains fixed.
-Reference usage: candidate **300 AIC**; incumbent **112.5 AIC**.
+Reference usage: candidate **300 AIC**; incumbent **300 AIC**.
 Reference AIC uses a fixed token basket, not measured consumption. Effort-related changes in token usage, task cost and latency are unknown; equal reference AIC does not establish equal task cost.
 Eligible quality reference: claude-sonnet-5.5 / max / default (91.366). Candidate gap: **0 / 3** absolute coding score points.
-Lowest reference cost among configurations passing every required band wins; equal-cost model ties prefer the newest verified release. Reference usage: candidate **300 AIC**; incumbent **112.5 AIC** (1 AIC = USD 0.01).
-Candidate cost change: **166.666666667%** (informational, not an incumbent-relative limit). Fixed hard ceilings authorize spending; they never rise automatically. A percentage is n/a when incumbent cost is unknown or a free incumbent would become paid.
-**Incumbent evidence gap:** no configuration-matched score for: liveBench.coding. Decision confidence is reduced, but missing incumbent evidence alone is not a veto. Candidate qualification, normal confirmation and stronger-basis protection remain binding. No measured improvement is claimed for these comparisons.
+Lowest reference cost among configurations passing every required band wins; equal-cost model ties prefer the newest verified release. Reference usage: candidate **300 AIC**; incumbent **300 AIC** (1 AIC = USD 0.01).
+Candidate cost change: **0%** (informational, not an incumbent-relative limit). Fixed hard ceilings authorize spending; they never rise automatically. A percentage is n/a when incumbent cost is unknown or a free incumbent would become paid.
+Matched incumbent score in this deciding-source observation: **91.366**.
 
 **Role qualification:** qualified. Every required dimension must pass independently; then the cheapest qualified configuration wins. At least 2 distinct eligible models are required per comparison, not per surviving intersection.
 References are fixed before intersecting dimensions. Missing evidence is not zero or a pass; no cross-benchmark or cross-effort score substitution. These are proxy-based policy tolerances, not statistical equivalence or direct task-success measurements.
@@ -1171,7 +1176,7 @@ AA Intelligence Index: General reasoning proxy; overlaps component benchmarks, n
 | Metric | Configuration (model / effort / context) | Exact alias | Score | Native units | Results published | Retrieved | Cached |
 |---|---|---|---|---|---|---|---|
 | IFBench (AA) | claude-sonnet-5.5 / max / default | n/a | n/a (missing or invalid) | accuracy fraction | n/a | n/a | n/a |
-| LiveBench Instruction Following | claude-sonnet-5.5 / max / default | claude-sonnet-5-5-max-effort | 56.78775 | percentage points | n/a | 2026-11-04T12:39:06.2593358Z | False |
+| LiveBench Instruction Following | claude-sonnet-5.5 / max / default | claude-sonnet-5-5-max-effort | 56.78775 | percentage points | n/a | 2026-11-04T14:51:33.4240012Z | False |
 
 Separate metrics, not a blended ranking or hidden veto. n/a means no usable, exact-configuration evidence; it is not zero and other efforts are not substituted. Cached evidence cannot authorize a switch; unknown publication age remains unknown.
 IFBench (AA): Single-turn instruction following, not multi-turn retention.
@@ -1182,102 +1187,102 @@ LiveBench Instruction Following: Instruction following, not end-to-end workflow 
 
 | Configuration (model / effort / context) | Budget/capability eligible | Exclusions | Advisory warnings | Price tier | Input / output USD per M | Price verified | Capability as-of |
 |---|---|---|---|---|---|---|---|
-| claude-haiku-4.5 / none / default | True | n/a | n/a | default | 1 / 5 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-haiku-5.5 / high / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-haiku-5.5 / low / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-haiku-5.5 / max / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-haiku-5.5 / medium / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-haiku-5.5 / xhigh / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-4.8 / high / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-4.8 / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-4.8 / max / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-4.8 / medium / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-4.8 / xhigh / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-4.8-fast / high / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-4.8-fast / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-4.8-fast / max / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-4.8-fast / medium / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-4.8-fast / xhigh / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-5 / high / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-5 / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-5 / max / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-5 / medium / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-5 / xhigh / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-5.5 / high / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 4 / 20 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-5.5 / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 4 / 20 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-5.5 / max / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 4 / 20 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-5.5 / medium / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 4 / 20 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-5.5 / xhigh / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 4 / 20 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-sonnet-4.6 / high / default | False | capabilities_stale, pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | model_retirement_scope_unconfirmed | default | 3 / 15 | 2026-11-04T12:39:07.4830375Z | 2026-07-30 |
-| claude-sonnet-4.6 / low / default | False | capabilities_stale, pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | model_retirement_scope_unconfirmed | default | 3 / 15 | 2026-11-04T12:39:07.4830375Z | 2026-07-30 |
-| claude-sonnet-4.6 / max / default | False | capabilities_stale, pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | model_retirement_scope_unconfirmed | default | 3 / 15 | 2026-11-04T12:39:07.4830375Z | 2026-07-30 |
-| claude-sonnet-4.6 / medium / default | False | capabilities_stale, pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | model_retirement_scope_unconfirmed | default | 3 / 15 | 2026-11-04T12:39:07.4830375Z | 2026-07-30 |
-| claude-sonnet-5 / high / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-sonnet-5 / low / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-sonnet-5 / max / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-sonnet-5 / medium / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-sonnet-5 / xhigh / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-sonnet-5.5 / high / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-sonnet-5.5 / low / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-sonnet-5.5 / max / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-sonnet-5.5 / medium / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-sonnet-5.5 / xhigh / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gemini-3.8-flash / none / default | True | n/a | n/a | default | 0.75 / 3.75 | 2026-11-04T12:39:07.4830375Z | 2026-10-30T08:37:00.782Z |
-| gemini-4-argon / none / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-10-30T08:37:00.782Z |
-| gpt-5.3-codex / high / default | False | pricing_output_exceeds_ceiling | n/a | default | 1.75 / 14 | 2026-11-04T12:39:07.4830375Z | 2026-09-08 |
-| gpt-5.3-codex / low / default | False | pricing_output_exceeds_ceiling | n/a | default | 1.75 / 14 | 2026-11-04T12:39:07.4830375Z | 2026-09-08 |
-| gpt-5.3-codex / medium / default | False | pricing_output_exceeds_ceiling | n/a | default | 1.75 / 14 | 2026-11-04T12:39:07.4830375Z | 2026-09-08 |
-| gpt-5.3-codex / xhigh / default | False | pricing_output_exceeds_ceiling | n/a | default | 1.75 / 14 | 2026-11-04T12:39:07.4830375Z | 2026-09-08 |
-| gpt-5.6-luna / high / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-luna / low / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-luna / max / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-luna / medium / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-luna / none / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-luna / xhigh / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-sol / high / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 4 / 20 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-sol / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 4 / 20 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-sol / max / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 4 / 20 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-sol / medium / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 4 / 20 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-sol / none / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 4 / 20 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-sol / xhigh / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 4 / 20 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-terra / high / default | False | pricing_output_exceeds_ceiling | n/a | default | 2 / 12 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-terra / low / default | False | pricing_output_exceeds_ceiling | n/a | default | 2 / 12 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-terra / max / default | False | pricing_output_exceeds_ceiling | n/a | default | 2 / 12 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-terra / medium / default | False | pricing_output_exceeds_ceiling | n/a | default | 2 / 12 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-terra / none / default | False | pricing_output_exceeds_ceiling | n/a | default | 2 / 12 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-terra / xhigh / default | False | pricing_output_exceeds_ceiling | n/a | default | 2 / 12 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-astra / high / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-astra / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-astra / max / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-astra / medium / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-astra / xhigh / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-luna / high / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-luna / low / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-luna / max / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-luna / medium / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-luna / none / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-luna / xhigh / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-sol / high / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-sol / low / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-sol / max / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-sol / medium / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-sol / none / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-sol / xhigh / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6.1-sol / high / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6.1-sol / low / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6.1-sol / max / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6.1-sol / medium / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6.1-sol / xhigh / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| grok-4.5 / high / default | True | n/a | n/a | default | 2 / 6 | 2026-11-04T12:39:07.4830375Z | 2026-09-08 |
-| grok-4.5 / low / default | True | n/a | n/a | default | 2 / 6 | 2026-11-04T12:39:07.4830375Z | 2026-09-08 |
-| grok-4.5 / medium / default | True | n/a | n/a | default | 2 / 6 | 2026-11-04T12:39:07.4830375Z | 2026-09-08 |
-| grok-4.6 / high / default | True | n/a | n/a | default | 2 / 6 | 2026-11-04T12:39:07.4830375Z | 2026-09-08 |
-| grok-4.6 / low / default | True | n/a | n/a | default | 2 / 6 | 2026-11-04T12:39:07.4830375Z | 2026-09-08 |
-| grok-4.6 / medium / default | True | n/a | n/a | default | 2 / 6 | 2026-11-04T12:39:07.4830375Z | 2026-09-08 |
-| grok-4.6 / xhigh / default | True | n/a | n/a | default | 2 / 6 | 2026-11-04T12:39:07.4830375Z | 2026-09-08 |
-| mai-code-1.1-flash / high / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| mai-code-1.1-flash / low / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| mai-code-1.1-flash / medium / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
+| claude-haiku-4.5 / none / default | True | n/a | n/a | default | 1 / 5 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-haiku-5.5 / high / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-haiku-5.5 / low / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-haiku-5.5 / max / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-haiku-5.5 / medium / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-haiku-5.5 / xhigh / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-4.8 / high / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-4.8 / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-4.8 / max / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-4.8 / medium / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-4.8 / xhigh / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-4.8-fast / high / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-4.8-fast / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-4.8-fast / max / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-4.8-fast / medium / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-4.8-fast / xhigh / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-5 / high / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-5 / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-5 / max / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-5 / medium / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-5 / xhigh / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-5.5 / high / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 4 / 20 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-5.5 / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 4 / 20 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-5.5 / max / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 4 / 20 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-5.5 / medium / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 4 / 20 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-5.5 / xhigh / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 4 / 20 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-sonnet-4.6 / high / default | False | capabilities_stale, pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | model_retirement_scope_unconfirmed | default | 3 / 15 | 2026-11-04T14:51:34.5035467Z | 2026-07-30 |
+| claude-sonnet-4.6 / low / default | False | capabilities_stale, pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | model_retirement_scope_unconfirmed | default | 3 / 15 | 2026-11-04T14:51:34.5035467Z | 2026-07-30 |
+| claude-sonnet-4.6 / max / default | False | capabilities_stale, pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | model_retirement_scope_unconfirmed | default | 3 / 15 | 2026-11-04T14:51:34.5035467Z | 2026-07-30 |
+| claude-sonnet-4.6 / medium / default | False | capabilities_stale, pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | model_retirement_scope_unconfirmed | default | 3 / 15 | 2026-11-04T14:51:34.5035467Z | 2026-07-30 |
+| claude-sonnet-5 / high / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-sonnet-5 / low / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-sonnet-5 / max / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-sonnet-5 / medium / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-sonnet-5 / xhigh / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-sonnet-5.5 / high / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-sonnet-5.5 / low / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-sonnet-5.5 / max / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-sonnet-5.5 / medium / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-sonnet-5.5 / xhigh / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gemini-3.8-flash / none / default | True | n/a | n/a | default | 0.75 / 3.75 | 2026-11-04T14:51:34.5035467Z | 2026-10-30T08:37:00.782Z |
+| gemini-4-argon / none / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-10-30T08:37:00.782Z |
+| gpt-5.3-codex / high / default | False | pricing_output_exceeds_ceiling | n/a | default | 1.75 / 14 | 2026-11-04T14:51:34.5035467Z | 2026-09-08 |
+| gpt-5.3-codex / low / default | False | pricing_output_exceeds_ceiling | n/a | default | 1.75 / 14 | 2026-11-04T14:51:34.5035467Z | 2026-09-08 |
+| gpt-5.3-codex / medium / default | False | pricing_output_exceeds_ceiling | n/a | default | 1.75 / 14 | 2026-11-04T14:51:34.5035467Z | 2026-09-08 |
+| gpt-5.3-codex / xhigh / default | False | pricing_output_exceeds_ceiling | n/a | default | 1.75 / 14 | 2026-11-04T14:51:34.5035467Z | 2026-09-08 |
+| gpt-5.6-luna / high / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-luna / low / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-luna / max / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-luna / medium / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-luna / none / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-luna / xhigh / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-sol / high / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 4 / 20 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-sol / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 4 / 20 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-sol / max / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 4 / 20 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-sol / medium / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 4 / 20 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-sol / none / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 4 / 20 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-sol / xhigh / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 4 / 20 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-terra / high / default | False | pricing_output_exceeds_ceiling | n/a | default | 2 / 12 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-terra / low / default | False | pricing_output_exceeds_ceiling | n/a | default | 2 / 12 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-terra / max / default | False | pricing_output_exceeds_ceiling | n/a | default | 2 / 12 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-terra / medium / default | False | pricing_output_exceeds_ceiling | n/a | default | 2 / 12 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-terra / none / default | False | pricing_output_exceeds_ceiling | n/a | default | 2 / 12 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-terra / xhigh / default | False | pricing_output_exceeds_ceiling | n/a | default | 2 / 12 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-astra / high / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-astra / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-astra / max / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-astra / medium / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-astra / xhigh / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-luna / high / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-luna / low / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-luna / max / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-luna / medium / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-luna / none / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-luna / xhigh / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-sol / high / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-sol / low / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-sol / max / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-sol / medium / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-sol / none / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-sol / xhigh / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6.1-sol / high / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6.1-sol / low / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6.1-sol / max / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6.1-sol / medium / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6.1-sol / xhigh / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| grok-4.5 / high / default | True | n/a | n/a | default | 2 / 6 | 2026-11-04T14:51:34.5035467Z | 2026-09-08 |
+| grok-4.5 / low / default | True | n/a | n/a | default | 2 / 6 | 2026-11-04T14:51:34.5035467Z | 2026-09-08 |
+| grok-4.5 / medium / default | True | n/a | n/a | default | 2 / 6 | 2026-11-04T14:51:34.5035467Z | 2026-09-08 |
+| grok-4.6 / high / default | True | n/a | n/a | default | 2 / 6 | 2026-11-04T14:51:34.5035467Z | 2026-09-08 |
+| grok-4.6 / low / default | True | n/a | n/a | default | 2 / 6 | 2026-11-04T14:51:34.5035467Z | 2026-09-08 |
+| grok-4.6 / medium / default | True | n/a | n/a | default | 2 / 6 | 2026-11-04T14:51:34.5035467Z | 2026-09-08 |
+| grok-4.6 / xhigh / default | True | n/a | n/a | default | 2 / 6 | 2026-11-04T14:51:34.5035467Z | 2026-09-08 |
+| mai-code-1.1-flash / high / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| mai-code-1.1-flash / low / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| mai-code-1.1-flash / medium / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
 
 | Model | Source | Exact alias / source label | Effort | Metric | Score | Publication age unknown | Cached | Harness | Role |
 |---|---|---|---|---|---|---|---|---|---|
@@ -1363,6 +1368,7 @@ Evidence gaps are grouped by affected profile in [Coverage and exclusions](#cove
 Budget: **hard**, input 4 / output 20 USD per million. Deciding source: n/a.
 Quality leader before hard-budget exclusions: n/a. Family fallback (informational, not a winner): claude-sonnet-5.5.
 Strategy: **value_balanced**.
+**Cost basis: fixed reference basket.** No qualified configuration was ranked, so no measured comparison applies.
 Authorized deciding routes, strongest first: **LiveBench Coding > AA Intelligence Index**. Supporting metrics are informational only.
 Task fit: external-harness proxy, not a measurement of Copilot CLI task success.
 Decision status: **retained_no_role_qualified_candidate**. Deciding metric: n/a.
@@ -1474,102 +1480,102 @@ None: the configured role dimensions are binding qualification requirements.
 
 | Configuration (model / effort / context) | Budget/capability eligible | Exclusions | Advisory warnings | Price tier | Input / output USD per M | Price verified | Capability as-of |
 |---|---|---|---|---|---|---|---|
-| claude-haiku-4.5 / none / default | True | n/a | n/a | default | 1 / 5 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-haiku-5.5 / high / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-haiku-5.5 / low / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-haiku-5.5 / max / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-haiku-5.5 / medium / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-haiku-5.5 / xhigh / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-4.8 / high / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-4.8 / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-4.8 / max / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-4.8 / medium / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-4.8 / xhigh / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-4.8-fast / high / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-4.8-fast / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-4.8-fast / max / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-4.8-fast / medium / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-4.8-fast / xhigh / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-5 / high / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-5 / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-5 / max / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-5 / medium / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-5 / xhigh / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-5.5 / high / default | True | n/a | n/a | default | 4 / 20 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-5.5 / low / default | True | n/a | n/a | default | 4 / 20 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-5.5 / max / default | True | n/a | n/a | default | 4 / 20 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-5.5 / medium / default | True | n/a | n/a | default | 4 / 20 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-5.5 / xhigh / default | True | n/a | n/a | default | 4 / 20 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-sonnet-4.6 / high / default | False | capabilities_stale | model_retirement_scope_unconfirmed | default | 3 / 15 | 2026-11-04T12:39:07.4830375Z | 2026-07-30 |
-| claude-sonnet-4.6 / low / default | False | capabilities_stale | model_retirement_scope_unconfirmed | default | 3 / 15 | 2026-11-04T12:39:07.4830375Z | 2026-07-30 |
-| claude-sonnet-4.6 / max / default | False | capabilities_stale | model_retirement_scope_unconfirmed | default | 3 / 15 | 2026-11-04T12:39:07.4830375Z | 2026-07-30 |
-| claude-sonnet-4.6 / medium / default | False | capabilities_stale | model_retirement_scope_unconfirmed | default | 3 / 15 | 2026-11-04T12:39:07.4830375Z | 2026-07-30 |
-| claude-sonnet-5 / high / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-sonnet-5 / low / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-sonnet-5 / max / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-sonnet-5 / medium / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-sonnet-5 / xhigh / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-sonnet-5.5 / high / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-sonnet-5.5 / low / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-sonnet-5.5 / max / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-sonnet-5.5 / medium / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-sonnet-5.5 / xhigh / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gemini-3.8-flash / none / default | True | n/a | n/a | default | 0.75 / 3.75 | 2026-11-04T12:39:07.4830375Z | 2026-10-30T08:37:00.782Z |
-| gemini-4-argon / none / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-10-30T08:37:00.782Z |
-| gpt-5.3-codex / high / default | True | n/a | n/a | default | 1.75 / 14 | 2026-11-04T12:39:07.4830375Z | 2026-09-08 |
-| gpt-5.3-codex / low / default | True | n/a | n/a | default | 1.75 / 14 | 2026-11-04T12:39:07.4830375Z | 2026-09-08 |
-| gpt-5.3-codex / medium / default | True | n/a | n/a | default | 1.75 / 14 | 2026-11-04T12:39:07.4830375Z | 2026-09-08 |
-| gpt-5.3-codex / xhigh / default | True | n/a | n/a | default | 1.75 / 14 | 2026-11-04T12:39:07.4830375Z | 2026-09-08 |
-| gpt-5.6-luna / high / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-luna / low / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-luna / max / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-luna / medium / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-luna / none / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-luna / xhigh / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-sol / high / default | True | n/a | n/a | default | 4 / 20 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-sol / low / default | True | n/a | n/a | default | 4 / 20 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-sol / max / default | True | n/a | n/a | default | 4 / 20 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-sol / medium / default | True | n/a | n/a | default | 4 / 20 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-sol / none / default | True | n/a | n/a | default | 4 / 20 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-sol / xhigh / default | True | n/a | n/a | default | 4 / 20 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-terra / high / default | True | n/a | n/a | default | 2 / 12 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-terra / low / default | True | n/a | n/a | default | 2 / 12 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-terra / max / default | True | n/a | n/a | default | 2 / 12 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-terra / medium / default | True | n/a | n/a | default | 2 / 12 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-terra / none / default | True | n/a | n/a | default | 2 / 12 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-terra / xhigh / default | True | n/a | n/a | default | 2 / 12 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-astra / high / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-astra / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-astra / max / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-astra / medium / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-astra / xhigh / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-luna / high / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-luna / low / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-luna / max / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-luna / medium / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-luna / none / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-luna / xhigh / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-sol / high / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-sol / low / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-sol / max / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-sol / medium / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-sol / none / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-sol / xhigh / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6.1-sol / high / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6.1-sol / low / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6.1-sol / max / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6.1-sol / medium / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6.1-sol / xhigh / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| grok-4.5 / high / default | True | n/a | n/a | default | 2 / 6 | 2026-11-04T12:39:07.4830375Z | 2026-09-08 |
-| grok-4.5 / low / default | True | n/a | n/a | default | 2 / 6 | 2026-11-04T12:39:07.4830375Z | 2026-09-08 |
-| grok-4.5 / medium / default | True | n/a | n/a | default | 2 / 6 | 2026-11-04T12:39:07.4830375Z | 2026-09-08 |
-| grok-4.6 / high / default | True | n/a | n/a | default | 2 / 6 | 2026-11-04T12:39:07.4830375Z | 2026-09-08 |
-| grok-4.6 / low / default | True | n/a | n/a | default | 2 / 6 | 2026-11-04T12:39:07.4830375Z | 2026-09-08 |
-| grok-4.6 / medium / default | True | n/a | n/a | default | 2 / 6 | 2026-11-04T12:39:07.4830375Z | 2026-09-08 |
-| grok-4.6 / xhigh / default | True | n/a | n/a | default | 2 / 6 | 2026-11-04T12:39:07.4830375Z | 2026-09-08 |
-| mai-code-1.1-flash / high / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| mai-code-1.1-flash / low / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| mai-code-1.1-flash / medium / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
+| claude-haiku-4.5 / none / default | True | n/a | n/a | default | 1 / 5 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-haiku-5.5 / high / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-haiku-5.5 / low / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-haiku-5.5 / max / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-haiku-5.5 / medium / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-haiku-5.5 / xhigh / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-4.8 / high / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-4.8 / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-4.8 / max / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-4.8 / medium / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-4.8 / xhigh / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-4.8-fast / high / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-4.8-fast / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-4.8-fast / max / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-4.8-fast / medium / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-4.8-fast / xhigh / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-5 / high / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-5 / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-5 / max / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-5 / medium / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-5 / xhigh / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-5.5 / high / default | True | n/a | n/a | default | 4 / 20 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-5.5 / low / default | True | n/a | n/a | default | 4 / 20 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-5.5 / max / default | True | n/a | n/a | default | 4 / 20 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-5.5 / medium / default | True | n/a | n/a | default | 4 / 20 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-5.5 / xhigh / default | True | n/a | n/a | default | 4 / 20 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-sonnet-4.6 / high / default | False | capabilities_stale | model_retirement_scope_unconfirmed | default | 3 / 15 | 2026-11-04T14:51:34.5035467Z | 2026-07-30 |
+| claude-sonnet-4.6 / low / default | False | capabilities_stale | model_retirement_scope_unconfirmed | default | 3 / 15 | 2026-11-04T14:51:34.5035467Z | 2026-07-30 |
+| claude-sonnet-4.6 / max / default | False | capabilities_stale | model_retirement_scope_unconfirmed | default | 3 / 15 | 2026-11-04T14:51:34.5035467Z | 2026-07-30 |
+| claude-sonnet-4.6 / medium / default | False | capabilities_stale | model_retirement_scope_unconfirmed | default | 3 / 15 | 2026-11-04T14:51:34.5035467Z | 2026-07-30 |
+| claude-sonnet-5 / high / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-sonnet-5 / low / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-sonnet-5 / max / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-sonnet-5 / medium / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-sonnet-5 / xhigh / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-sonnet-5.5 / high / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-sonnet-5.5 / low / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-sonnet-5.5 / max / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-sonnet-5.5 / medium / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-sonnet-5.5 / xhigh / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gemini-3.8-flash / none / default | True | n/a | n/a | default | 0.75 / 3.75 | 2026-11-04T14:51:34.5035467Z | 2026-10-30T08:37:00.782Z |
+| gemini-4-argon / none / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-10-30T08:37:00.782Z |
+| gpt-5.3-codex / high / default | True | n/a | n/a | default | 1.75 / 14 | 2026-11-04T14:51:34.5035467Z | 2026-09-08 |
+| gpt-5.3-codex / low / default | True | n/a | n/a | default | 1.75 / 14 | 2026-11-04T14:51:34.5035467Z | 2026-09-08 |
+| gpt-5.3-codex / medium / default | True | n/a | n/a | default | 1.75 / 14 | 2026-11-04T14:51:34.5035467Z | 2026-09-08 |
+| gpt-5.3-codex / xhigh / default | True | n/a | n/a | default | 1.75 / 14 | 2026-11-04T14:51:34.5035467Z | 2026-09-08 |
+| gpt-5.6-luna / high / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-luna / low / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-luna / max / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-luna / medium / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-luna / none / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-luna / xhigh / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-sol / high / default | True | n/a | n/a | default | 4 / 20 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-sol / low / default | True | n/a | n/a | default | 4 / 20 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-sol / max / default | True | n/a | n/a | default | 4 / 20 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-sol / medium / default | True | n/a | n/a | default | 4 / 20 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-sol / none / default | True | n/a | n/a | default | 4 / 20 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-sol / xhigh / default | True | n/a | n/a | default | 4 / 20 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-terra / high / default | True | n/a | n/a | default | 2 / 12 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-terra / low / default | True | n/a | n/a | default | 2 / 12 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-terra / max / default | True | n/a | n/a | default | 2 / 12 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-terra / medium / default | True | n/a | n/a | default | 2 / 12 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-terra / none / default | True | n/a | n/a | default | 2 / 12 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-terra / xhigh / default | True | n/a | n/a | default | 2 / 12 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-astra / high / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-astra / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-astra / max / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-astra / medium / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-astra / xhigh / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-luna / high / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-luna / low / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-luna / max / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-luna / medium / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-luna / none / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-luna / xhigh / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-sol / high / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-sol / low / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-sol / max / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-sol / medium / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-sol / none / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-sol / xhigh / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6.1-sol / high / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6.1-sol / low / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6.1-sol / max / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6.1-sol / medium / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6.1-sol / xhigh / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| grok-4.5 / high / default | True | n/a | n/a | default | 2 / 6 | 2026-11-04T14:51:34.5035467Z | 2026-09-08 |
+| grok-4.5 / low / default | True | n/a | n/a | default | 2 / 6 | 2026-11-04T14:51:34.5035467Z | 2026-09-08 |
+| grok-4.5 / medium / default | True | n/a | n/a | default | 2 / 6 | 2026-11-04T14:51:34.5035467Z | 2026-09-08 |
+| grok-4.6 / high / default | True | n/a | n/a | default | 2 / 6 | 2026-11-04T14:51:34.5035467Z | 2026-09-08 |
+| grok-4.6 / low / default | True | n/a | n/a | default | 2 / 6 | 2026-11-04T14:51:34.5035467Z | 2026-09-08 |
+| grok-4.6 / medium / default | True | n/a | n/a | default | 2 / 6 | 2026-11-04T14:51:34.5035467Z | 2026-09-08 |
+| grok-4.6 / xhigh / default | True | n/a | n/a | default | 2 / 6 | 2026-11-04T14:51:34.5035467Z | 2026-09-08 |
+| mai-code-1.1-flash / high / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| mai-code-1.1-flash / low / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| mai-code-1.1-flash / medium / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
 
 | Model | Source | Exact alias / source label | Effort | Metric | Score | Publication age unknown | Cached | Harness | Role |
 |---|---|---|---|---|---|---|---|---|---|
@@ -1655,19 +1661,20 @@ Evidence gaps are grouped by affected profile in [Coverage and exclusions](#cove
 Budget: **hard**, input 10 / output 50 USD per million. Deciding source: artificialAnalysisCodingAgents.
 Quality leader before hard-budget exclusions: gpt-6-astra / max / default. Family fallback (informational, not a winner): gpt-5.3-codex.
 Strategy: **value_balanced**.
+**Cost basis: measured benchmark workload** (`aa-intelligence-index-canonical-v1`). Every qualified configuration has valid, fresh, comparable measured input/output token totals on the same workload, repriced as uncached tokens at current GitHub rates; output already includes reasoning. This is an external benchmark-workload cost proxy, not predicted Copilot task spend, latency or cache behavior. Task-specific quality bands are separate from this whole-suite cost workload.
 Authorized deciding routes, strongest first: **AA Coding Agent Index > LiveBench Agentic Coding**. Supporting metrics are informational only.
 Task fit: external-harness proxy, not a measurement of Copilot CLI task success.
-Decision status: **applied_value_balanced_choice**. Deciding metric: artificialAnalysisCodingAgents.codingAgentIndex.
+Decision status: **value_balanced_choice**. Deciding metric: artificialAnalysisCodingAgents.codingAgentIndex.
 Incumbent selection basis (applied/current after run): artificialAnalysisCodingAgents.codingAgentIndex.
 AA Coding Agent Index (fraction): External coding-agent harness, not Copilot CLI.
 LiveBench Agentic Coding (percentage points): External agentic coding evaluation, not the local orchestration workflow.
 Configuration selection: **automatic bounded effort**; authorized efforts: none, minimal, low, medium, high, xhigh, max. Models without effort controls use their native configuration; context remains fixed.
-Reference usage: candidate **300 AIC**; incumbent **300 AIC**.
-Reference AIC uses a fixed token basket, not measured consumption. Effort-related changes in token usage, task cost and latency are unknown; equal reference AIC does not establish equal task cost.
+Benchmark-workload usage: candidate **446894.9268 AIC**; incumbent **446894.9268 AIC**.
+Benchmark-workload AIC reprices each configuration's own measured input/output tokens at current GitHub rates, uncached, with reasoning already inside output. It compares configurations on one external benchmark workload; it does not predict Copilot task cost or latency.
 Eligible quality reference: gpt-6-astra / max / default (0.546635690562). Candidate gap: **0.00535589193005 / 0.03** absolute codingAgentIndex score points.
-Lowest reference cost among configurations passing every required band wins; equal-cost model ties prefer the newest verified release. Reference usage: candidate **300 AIC**; incumbent **300 AIC** (1 AIC = USD 0.01).
+Lowest measured benchmark-workload cost among configurations passing every required band wins; equal-cost model ties prefer the newest verified release. Benchmark-workload usage: candidate **446894.9268 AIC**; incumbent **446894.9268 AIC** (1 AIC = USD 0.01).
 Candidate cost change: **0%** (informational, not an incumbent-relative limit). Fixed hard ceilings authorize spending; they never rise automatically. A percentage is n/a when incumbent cost is unknown or a free incumbent would become paid.
-**Incumbent evidence gap:** no configuration-matched score for: artificialAnalysisCodingAgents.codingAgentIndex. Decision confidence is reduced, but missing incumbent evidence alone is not a veto. Candidate qualification, normal confirmation and stronger-basis protection remain binding. No measured improvement is claimed for these comparisons.
+Matched incumbent score in this deciding-source observation: **0.541279798631**.
 
 **Role qualification:** qualified. Every required dimension must pass independently; then the cheapest qualified configuration wins. At least 2 distinct eligible models are required per comparison, not per surviving intersection.
 References are fixed before intersecting dimensions. Missing evidence is not zero or a pass; no cross-benchmark or cross-effort score substitution. These are proxy-based policy tolerances, not statistical equivalence or direct task-success measurements.
@@ -1779,7 +1786,7 @@ LiveBench Agentic Coding: External agentic coding evaluation, not the local orch
 
 | Metric | Configuration (model / effort / context) | Exact alias | Score | Native units | Results published | Retrieved | Cached |
 |---|---|---|---|---|---|---|---|
-| AutomationBench-AA | gpt-6.1-sol / max / default | gpt-6-1-sol | 0.64868448824 | guardrail-adjusted objective fraction | n/a | 2026-11-04T12:39:04.7741023Z | False |
+| AutomationBench-AA | gpt-6.1-sol / max / default | gpt-6-1-sol | 0.64868448824 | guardrail-adjusted objective fraction | n/a | 2026-11-04T14:51:31.3194991Z | False |
 | EnterpriseOps-Gym-AA | gpt-6.1-sol / max / default | n/a | n/a (missing or invalid) | strict pass@1 fraction | n/a | n/a | n/a |
 
 Separate metrics, not a blended ranking or hidden veto. n/a means no usable, exact-configuration evidence; it is not zero and other efforts are not substituted. Cached evidence cannot authorize a switch; unknown publication age remains unknown.
@@ -1791,102 +1798,102 @@ EnterpriseOps-Gym-AA: AA oracle-tool workflow harness; tools supplied. Not tool-
 
 | Configuration (model / effort / context) | Budget/capability eligible | Exclusions | Advisory warnings | Price tier | Input / output USD per M | Price verified | Capability as-of |
 |---|---|---|---|---|---|---|---|
-| claude-haiku-4.5 / none / default | True | n/a | n/a | default | 1 / 5 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-haiku-5.5 / high / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-haiku-5.5 / low / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-haiku-5.5 / max / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-haiku-5.5 / medium / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-haiku-5.5 / xhigh / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-4.8 / high / default | True | n/a | n/a | default | 5 / 25 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-4.8 / low / default | True | n/a | n/a | default | 5 / 25 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-4.8 / max / default | True | n/a | n/a | default | 5 / 25 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-4.8 / medium / default | True | n/a | n/a | default | 5 / 25 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-4.8 / xhigh / default | True | n/a | n/a | default | 5 / 25 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-4.8-fast / high / default | True | n/a | n/a | default | 10 / 50 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-4.8-fast / low / default | True | n/a | n/a | default | 10 / 50 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-4.8-fast / max / default | True | n/a | n/a | default | 10 / 50 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-4.8-fast / medium / default | True | n/a | n/a | default | 10 / 50 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-4.8-fast / xhigh / default | True | n/a | n/a | default | 10 / 50 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-5 / high / default | True | n/a | n/a | default | 5 / 25 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-5 / low / default | True | n/a | n/a | default | 5 / 25 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-5 / max / default | True | n/a | n/a | default | 5 / 25 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-5 / medium / default | True | n/a | n/a | default | 5 / 25 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-5 / xhigh / default | True | n/a | n/a | default | 5 / 25 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-5.5 / high / default | True | n/a | n/a | default | 4 / 20 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-5.5 / low / default | True | n/a | n/a | default | 4 / 20 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-5.5 / max / default | True | n/a | n/a | default | 4 / 20 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-5.5 / medium / default | True | n/a | n/a | default | 4 / 20 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-5.5 / xhigh / default | True | n/a | n/a | default | 4 / 20 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-sonnet-4.6 / high / default | False | capabilities_stale | model_retirement_scope_unconfirmed | default | 3 / 15 | 2026-11-04T12:39:07.4830375Z | 2026-07-30 |
-| claude-sonnet-4.6 / low / default | False | capabilities_stale | model_retirement_scope_unconfirmed | default | 3 / 15 | 2026-11-04T12:39:07.4830375Z | 2026-07-30 |
-| claude-sonnet-4.6 / max / default | False | capabilities_stale | model_retirement_scope_unconfirmed | default | 3 / 15 | 2026-11-04T12:39:07.4830375Z | 2026-07-30 |
-| claude-sonnet-4.6 / medium / default | False | capabilities_stale | model_retirement_scope_unconfirmed | default | 3 / 15 | 2026-11-04T12:39:07.4830375Z | 2026-07-30 |
-| claude-sonnet-5 / high / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-sonnet-5 / low / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-sonnet-5 / max / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-sonnet-5 / medium / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-sonnet-5 / xhigh / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-sonnet-5.5 / high / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-sonnet-5.5 / low / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-sonnet-5.5 / max / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-sonnet-5.5 / medium / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-sonnet-5.5 / xhigh / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gemini-3.8-flash / none / default | True | n/a | n/a | default | 0.75 / 3.75 | 2026-11-04T12:39:07.4830375Z | 2026-10-30T08:37:00.782Z |
-| gemini-4-argon / none / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-10-30T08:37:00.782Z |
-| gpt-5.3-codex / high / default | True | n/a | n/a | default | 1.75 / 14 | 2026-11-04T12:39:07.4830375Z | 2026-09-08 |
-| gpt-5.3-codex / low / default | True | n/a | n/a | default | 1.75 / 14 | 2026-11-04T12:39:07.4830375Z | 2026-09-08 |
-| gpt-5.3-codex / medium / default | True | n/a | n/a | default | 1.75 / 14 | 2026-11-04T12:39:07.4830375Z | 2026-09-08 |
-| gpt-5.3-codex / xhigh / default | True | n/a | n/a | default | 1.75 / 14 | 2026-11-04T12:39:07.4830375Z | 2026-09-08 |
-| gpt-5.6-luna / high / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-luna / low / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-luna / max / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-luna / medium / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-luna / none / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-luna / xhigh / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-sol / high / default | True | n/a | n/a | default | 4 / 20 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-sol / low / default | True | n/a | n/a | default | 4 / 20 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-sol / max / default | True | n/a | n/a | default | 4 / 20 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-sol / medium / default | True | n/a | n/a | default | 4 / 20 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-sol / none / default | True | n/a | n/a | default | 4 / 20 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-sol / xhigh / default | True | n/a | n/a | default | 4 / 20 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-terra / high / default | True | n/a | n/a | default | 2 / 12 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-terra / low / default | True | n/a | n/a | default | 2 / 12 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-terra / max / default | True | n/a | n/a | default | 2 / 12 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-terra / medium / default | True | n/a | n/a | default | 2 / 12 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-terra / none / default | True | n/a | n/a | default | 2 / 12 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-terra / xhigh / default | True | n/a | n/a | default | 2 / 12 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-astra / high / default | True | n/a | n/a | default | 10 / 50 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-astra / low / default | True | n/a | n/a | default | 10 / 50 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-astra / max / default | True | n/a | n/a | default | 10 / 50 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-astra / medium / default | True | n/a | n/a | default | 10 / 50 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-astra / xhigh / default | True | n/a | n/a | default | 10 / 50 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-luna / high / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-luna / low / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-luna / max / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-luna / medium / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-luna / none / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-luna / xhigh / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-sol / high / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-sol / low / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-sol / max / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-sol / medium / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-sol / none / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-sol / xhigh / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6.1-sol / high / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6.1-sol / low / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6.1-sol / max / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6.1-sol / medium / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6.1-sol / xhigh / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| grok-4.5 / high / default | True | n/a | n/a | default | 2 / 6 | 2026-11-04T12:39:07.4830375Z | 2026-09-08 |
-| grok-4.5 / low / default | True | n/a | n/a | default | 2 / 6 | 2026-11-04T12:39:07.4830375Z | 2026-09-08 |
-| grok-4.5 / medium / default | True | n/a | n/a | default | 2 / 6 | 2026-11-04T12:39:07.4830375Z | 2026-09-08 |
-| grok-4.6 / high / default | True | n/a | n/a | default | 2 / 6 | 2026-11-04T12:39:07.4830375Z | 2026-09-08 |
-| grok-4.6 / low / default | True | n/a | n/a | default | 2 / 6 | 2026-11-04T12:39:07.4830375Z | 2026-09-08 |
-| grok-4.6 / medium / default | True | n/a | n/a | default | 2 / 6 | 2026-11-04T12:39:07.4830375Z | 2026-09-08 |
-| grok-4.6 / xhigh / default | True | n/a | n/a | default | 2 / 6 | 2026-11-04T12:39:07.4830375Z | 2026-09-08 |
-| mai-code-1.1-flash / high / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| mai-code-1.1-flash / low / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| mai-code-1.1-flash / medium / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
+| claude-haiku-4.5 / none / default | True | n/a | n/a | default | 1 / 5 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-haiku-5.5 / high / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-haiku-5.5 / low / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-haiku-5.5 / max / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-haiku-5.5 / medium / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-haiku-5.5 / xhigh / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-4.8 / high / default | True | n/a | n/a | default | 5 / 25 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-4.8 / low / default | True | n/a | n/a | default | 5 / 25 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-4.8 / max / default | True | n/a | n/a | default | 5 / 25 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-4.8 / medium / default | True | n/a | n/a | default | 5 / 25 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-4.8 / xhigh / default | True | n/a | n/a | default | 5 / 25 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-4.8-fast / high / default | True | n/a | n/a | default | 10 / 50 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-4.8-fast / low / default | True | n/a | n/a | default | 10 / 50 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-4.8-fast / max / default | True | n/a | n/a | default | 10 / 50 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-4.8-fast / medium / default | True | n/a | n/a | default | 10 / 50 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-4.8-fast / xhigh / default | True | n/a | n/a | default | 10 / 50 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-5 / high / default | True | n/a | n/a | default | 5 / 25 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-5 / low / default | True | n/a | n/a | default | 5 / 25 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-5 / max / default | True | n/a | n/a | default | 5 / 25 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-5 / medium / default | True | n/a | n/a | default | 5 / 25 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-5 / xhigh / default | True | n/a | n/a | default | 5 / 25 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-5.5 / high / default | True | n/a | n/a | default | 4 / 20 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-5.5 / low / default | True | n/a | n/a | default | 4 / 20 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-5.5 / max / default | True | n/a | n/a | default | 4 / 20 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-5.5 / medium / default | True | n/a | n/a | default | 4 / 20 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-5.5 / xhigh / default | True | n/a | n/a | default | 4 / 20 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-sonnet-4.6 / high / default | False | capabilities_stale | model_retirement_scope_unconfirmed | default | 3 / 15 | 2026-11-04T14:51:34.5035467Z | 2026-07-30 |
+| claude-sonnet-4.6 / low / default | False | capabilities_stale | model_retirement_scope_unconfirmed | default | 3 / 15 | 2026-11-04T14:51:34.5035467Z | 2026-07-30 |
+| claude-sonnet-4.6 / max / default | False | capabilities_stale | model_retirement_scope_unconfirmed | default | 3 / 15 | 2026-11-04T14:51:34.5035467Z | 2026-07-30 |
+| claude-sonnet-4.6 / medium / default | False | capabilities_stale | model_retirement_scope_unconfirmed | default | 3 / 15 | 2026-11-04T14:51:34.5035467Z | 2026-07-30 |
+| claude-sonnet-5 / high / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-sonnet-5 / low / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-sonnet-5 / max / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-sonnet-5 / medium / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-sonnet-5 / xhigh / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-sonnet-5.5 / high / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-sonnet-5.5 / low / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-sonnet-5.5 / max / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-sonnet-5.5 / medium / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-sonnet-5.5 / xhigh / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gemini-3.8-flash / none / default | True | n/a | n/a | default | 0.75 / 3.75 | 2026-11-04T14:51:34.5035467Z | 2026-10-30T08:37:00.782Z |
+| gemini-4-argon / none / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-10-30T08:37:00.782Z |
+| gpt-5.3-codex / high / default | True | n/a | n/a | default | 1.75 / 14 | 2026-11-04T14:51:34.5035467Z | 2026-09-08 |
+| gpt-5.3-codex / low / default | True | n/a | n/a | default | 1.75 / 14 | 2026-11-04T14:51:34.5035467Z | 2026-09-08 |
+| gpt-5.3-codex / medium / default | True | n/a | n/a | default | 1.75 / 14 | 2026-11-04T14:51:34.5035467Z | 2026-09-08 |
+| gpt-5.3-codex / xhigh / default | True | n/a | n/a | default | 1.75 / 14 | 2026-11-04T14:51:34.5035467Z | 2026-09-08 |
+| gpt-5.6-luna / high / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-luna / low / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-luna / max / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-luna / medium / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-luna / none / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-luna / xhigh / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-sol / high / default | True | n/a | n/a | default | 4 / 20 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-sol / low / default | True | n/a | n/a | default | 4 / 20 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-sol / max / default | True | n/a | n/a | default | 4 / 20 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-sol / medium / default | True | n/a | n/a | default | 4 / 20 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-sol / none / default | True | n/a | n/a | default | 4 / 20 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-sol / xhigh / default | True | n/a | n/a | default | 4 / 20 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-terra / high / default | True | n/a | n/a | default | 2 / 12 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-terra / low / default | True | n/a | n/a | default | 2 / 12 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-terra / max / default | True | n/a | n/a | default | 2 / 12 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-terra / medium / default | True | n/a | n/a | default | 2 / 12 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-terra / none / default | True | n/a | n/a | default | 2 / 12 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-terra / xhigh / default | True | n/a | n/a | default | 2 / 12 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-astra / high / default | True | n/a | n/a | default | 10 / 50 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-astra / low / default | True | n/a | n/a | default | 10 / 50 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-astra / max / default | True | n/a | n/a | default | 10 / 50 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-astra / medium / default | True | n/a | n/a | default | 10 / 50 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-astra / xhigh / default | True | n/a | n/a | default | 10 / 50 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-luna / high / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-luna / low / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-luna / max / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-luna / medium / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-luna / none / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-luna / xhigh / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-sol / high / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-sol / low / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-sol / max / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-sol / medium / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-sol / none / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-sol / xhigh / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6.1-sol / high / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6.1-sol / low / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6.1-sol / max / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6.1-sol / medium / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6.1-sol / xhigh / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| grok-4.5 / high / default | True | n/a | n/a | default | 2 / 6 | 2026-11-04T14:51:34.5035467Z | 2026-09-08 |
+| grok-4.5 / low / default | True | n/a | n/a | default | 2 / 6 | 2026-11-04T14:51:34.5035467Z | 2026-09-08 |
+| grok-4.5 / medium / default | True | n/a | n/a | default | 2 / 6 | 2026-11-04T14:51:34.5035467Z | 2026-09-08 |
+| grok-4.6 / high / default | True | n/a | n/a | default | 2 / 6 | 2026-11-04T14:51:34.5035467Z | 2026-09-08 |
+| grok-4.6 / low / default | True | n/a | n/a | default | 2 / 6 | 2026-11-04T14:51:34.5035467Z | 2026-09-08 |
+| grok-4.6 / medium / default | True | n/a | n/a | default | 2 / 6 | 2026-11-04T14:51:34.5035467Z | 2026-09-08 |
+| grok-4.6 / xhigh / default | True | n/a | n/a | default | 2 / 6 | 2026-11-04T14:51:34.5035467Z | 2026-09-08 |
+| mai-code-1.1-flash / high / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| mai-code-1.1-flash / low / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| mai-code-1.1-flash / medium / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
 
 | Model | Source | Exact alias / source label | Effort | Metric | Score | Publication age unknown | Cached | Harness | Role |
 |---|---|---|---|---|---|---|---|---|---|
@@ -1988,6 +1995,7 @@ Evidence gaps are grouped by affected profile in [Coverage and exclusions](#cove
 Budget: **hard**, input 10 / output 45 USD per million. Deciding source: artificialAnalysis.
 Quality leader before hard-budget exclusions: gpt-6-astra / max / long_context. Family fallback (informational, not a winner): claude-opus-5.5.
 Strategy: **value_balanced**.
+**Cost basis: measured benchmark workload** (`aa-intelligence-index-canonical-v1`). Every qualified configuration has valid, fresh, comparable measured input/output token totals on the same workload, repriced as uncached tokens at current GitHub rates; output already includes reasoning. This is an external benchmark-workload cost proxy, not predicted Copilot task spend, latency or cache behavior. Task-specific quality bands are separate from this whole-suite cost workload.
 Authorized deciding routes, strongest first: **AA Intelligence Index > LiveBench Reasoning**. Supporting metrics are informational only.
 Task fit: external-harness proxy, not a measurement of Copilot CLI task success.
 Decision status: **budget_constrained_choice**. Deciding metric: artificialAnalysis.intelligenceIndex.
@@ -1995,10 +2003,10 @@ Incumbent selection basis (applied/current after run): artificialAnalysis.intell
 AA Intelligence Index (index points): General reasoning proxy; overlaps component benchmarks, not independent corroboration.
 LiveBench Reasoning (percentage points): Reasoning proxy; does not establish interactive triage skill.
 Configuration selection: **automatic bounded effort**; authorized efforts: none, minimal, low, medium, high, xhigh, max. Models without effort controls use their native configuration; context remains fixed.
-Reference usage: candidate **550 AIC**; incumbent **550 AIC**.
-Reference AIC uses a fixed token basket, not measured consumption. Effort-related changes in token usage, task cost and latency are unknown; equal reference AIC does not establish equal task cost.
+Benchmark-workload usage: candidate **695102.6421 AIC**; incumbent **695102.6421 AIC**.
+Benchmark-workload AIC reprices each configuration's own measured input/output tokens at current GitHub rates, uncached, with reasoning already inside output. It compares configurations on one external benchmark workload; it does not predict Copilot task cost or latency.
 Eligible quality reference: gpt-6.1-sol / max / long_context (54.6). Candidate gap: **2.1 / 3** absolute intelligenceIndex score points.
-Lowest reference cost among configurations passing every required band wins; equal-cost model ties prefer the newest verified release. Reference usage: candidate **550 AIC**; incumbent **550 AIC** (1 AIC = USD 0.01).
+Lowest measured benchmark-workload cost among configurations passing every required band wins; equal-cost model ties prefer the newest verified release. Benchmark-workload usage: candidate **695102.6421 AIC**; incumbent **695102.6421 AIC** (1 AIC = USD 0.01).
 Candidate cost change: **0%** (informational, not an incumbent-relative limit). Fixed hard ceilings authorize spending; they never rise automatically. A percentage is n/a when incumbent cost is unknown or a free incumbent would become paid.
 Matched incumbent score in this deciding-source observation: **52.5**.
 
@@ -2102,102 +2110,102 @@ None: the configured role dimensions are binding qualification requirements.
 
 | Configuration (model / effort / context) | Budget/capability eligible | Exclusions | Advisory warnings | Price tier | Input / output USD per M | Price verified | Capability as-of |
 |---|---|---|---|---|---|---|---|
-| claude-haiku-4.5 / none / long_context | False | context_unsupported | n/a | default | 1 / 5 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-haiku-5.5 / high / long_context | True | n/a | n/a | long_context | 0.5 / 2.5 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-haiku-5.5 / low / long_context | True | n/a | n/a | long_context | 0.5 / 2.5 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-haiku-5.5 / max / long_context | True | n/a | n/a | long_context | 0.5 / 2.5 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-haiku-5.5 / medium / long_context | True | n/a | n/a | long_context | 0.5 / 2.5 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-haiku-5.5 / xhigh / long_context | True | n/a | n/a | long_context | 0.5 / 2.5 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-4.8 / high / long_context | True | n/a | n/a | default | 5 / 25 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-4.8 / low / long_context | True | n/a | n/a | default | 5 / 25 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-4.8 / max / long_context | True | n/a | n/a | default | 5 / 25 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-4.8 / medium / long_context | True | n/a | n/a | default | 5 / 25 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-4.8 / xhigh / long_context | True | n/a | n/a | default | 5 / 25 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-4.8-fast / high / long_context | False | pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-4.8-fast / low / long_context | False | pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-4.8-fast / max / long_context | False | pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-4.8-fast / medium / long_context | False | pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-4.8-fast / xhigh / long_context | False | pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-5 / high / long_context | True | n/a | n/a | default | 5 / 25 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-5 / low / long_context | True | n/a | n/a | default | 5 / 25 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-5 / max / long_context | True | n/a | n/a | default | 5 / 25 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-5 / medium / long_context | True | n/a | n/a | default | 5 / 25 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-5 / xhigh / long_context | True | n/a | n/a | default | 5 / 25 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-5.5 / high / long_context | True | n/a | n/a | default | 4 / 20 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-5.5 / low / long_context | True | n/a | n/a | default | 4 / 20 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-5.5 / max / long_context | True | n/a | n/a | default | 4 / 20 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-5.5 / medium / long_context | True | n/a | n/a | default | 4 / 20 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-5.5 / xhigh / long_context | True | n/a | n/a | default | 4 / 20 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-sonnet-4.6 / high / long_context | False | capabilities_stale | model_retirement_scope_unconfirmed | default | 3 / 15 | 2026-11-04T12:39:07.4830375Z | 2026-07-30 |
-| claude-sonnet-4.6 / low / long_context | False | capabilities_stale | model_retirement_scope_unconfirmed | default | 3 / 15 | 2026-11-04T12:39:07.4830375Z | 2026-07-30 |
-| claude-sonnet-4.6 / max / long_context | False | capabilities_stale | model_retirement_scope_unconfirmed | default | 3 / 15 | 2026-11-04T12:39:07.4830375Z | 2026-07-30 |
-| claude-sonnet-4.6 / medium / long_context | False | capabilities_stale | model_retirement_scope_unconfirmed | default | 3 / 15 | 2026-11-04T12:39:07.4830375Z | 2026-07-30 |
-| claude-sonnet-5 / high / long_context | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-sonnet-5 / low / long_context | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-sonnet-5 / max / long_context | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-sonnet-5 / medium / long_context | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-sonnet-5 / xhigh / long_context | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-sonnet-5.5 / high / long_context | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-sonnet-5.5 / low / long_context | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-sonnet-5.5 / max / long_context | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-sonnet-5.5 / medium / long_context | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-sonnet-5.5 / xhigh / long_context | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gemini-3.8-flash / none / long_context | True | n/a | n/a | default | 0.75 / 3.75 | 2026-11-04T12:39:07.4830375Z | 2026-10-30T08:37:00.782Z |
-| gemini-4-argon / none / long_context | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-10-30T08:37:00.782Z |
-| gpt-5.3-codex / high / long_context | False | context_unsupported | n/a | default | 1.75 / 14 | 2026-11-04T12:39:07.4830375Z | 2026-09-08 |
-| gpt-5.3-codex / low / long_context | False | context_unsupported | n/a | default | 1.75 / 14 | 2026-11-04T12:39:07.4830375Z | 2026-09-08 |
-| gpt-5.3-codex / medium / long_context | False | context_unsupported | n/a | default | 1.75 / 14 | 2026-11-04T12:39:07.4830375Z | 2026-09-08 |
-| gpt-5.3-codex / xhigh / long_context | False | context_unsupported | n/a | default | 1.75 / 14 | 2026-11-04T12:39:07.4830375Z | 2026-09-08 |
-| gpt-5.6-luna / high / long_context | True | n/a | n/a | long_context | 0.4 / 1.8 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-luna / low / long_context | True | n/a | n/a | long_context | 0.4 / 1.8 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-luna / max / long_context | True | n/a | n/a | long_context | 0.4 / 1.8 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-luna / medium / long_context | True | n/a | n/a | long_context | 0.4 / 1.8 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-luna / none / long_context | True | n/a | n/a | long_context | 0.4 / 1.8 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-luna / xhigh / long_context | True | n/a | n/a | long_context | 0.4 / 1.8 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-sol / high / long_context | True | n/a | n/a | long_context | 8 / 30 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-sol / low / long_context | True | n/a | n/a | long_context | 8 / 30 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-sol / max / long_context | True | n/a | n/a | long_context | 8 / 30 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-sol / medium / long_context | True | n/a | n/a | long_context | 8 / 30 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-sol / none / long_context | True | n/a | n/a | long_context | 8 / 30 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-sol / xhigh / long_context | True | n/a | n/a | long_context | 8 / 30 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-terra / high / long_context | True | n/a | n/a | long_context | 4 / 18 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-terra / low / long_context | True | n/a | n/a | long_context | 4 / 18 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-terra / max / long_context | True | n/a | n/a | long_context | 4 / 18 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-terra / medium / long_context | True | n/a | n/a | long_context | 4 / 18 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-terra / none / long_context | True | n/a | n/a | long_context | 4 / 18 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-terra / xhigh / long_context | True | n/a | n/a | long_context | 4 / 18 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-astra / high / long_context | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | long_context | 20 / 75 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-astra / low / long_context | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | long_context | 20 / 75 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-astra / max / long_context | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | long_context | 20 / 75 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-astra / medium / long_context | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | long_context | 20 / 75 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-astra / xhigh / long_context | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | long_context | 20 / 75 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-luna / high / long_context | True | n/a | n/a | long_context | 0.2 / 0.75 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-luna / low / long_context | True | n/a | n/a | long_context | 0.2 / 0.75 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-luna / max / long_context | True | n/a | n/a | long_context | 0.2 / 0.75 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-luna / medium / long_context | True | n/a | n/a | long_context | 0.2 / 0.75 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-luna / none / long_context | True | n/a | n/a | long_context | 0.2 / 0.75 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-luna / xhigh / long_context | True | n/a | n/a | long_context | 0.2 / 0.75 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-sol / high / long_context | True | n/a | n/a | long_context | 4 / 15 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-sol / low / long_context | True | n/a | n/a | long_context | 4 / 15 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-sol / max / long_context | True | n/a | n/a | long_context | 4 / 15 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-sol / medium / long_context | True | n/a | n/a | long_context | 4 / 15 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-sol / none / long_context | True | n/a | n/a | long_context | 4 / 15 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-sol / xhigh / long_context | True | n/a | n/a | long_context | 4 / 15 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6.1-sol / high / long_context | True | n/a | n/a | long_context | 4 / 15 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6.1-sol / low / long_context | True | n/a | n/a | long_context | 4 / 15 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6.1-sol / max / long_context | True | n/a | n/a | long_context | 4 / 15 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6.1-sol / medium / long_context | True | n/a | n/a | long_context | 4 / 15 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6.1-sol / xhigh / long_context | True | n/a | n/a | long_context | 4 / 15 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| grok-4.5 / high / long_context | True | n/a | n/a | long_context | 4 / 12 | 2026-11-04T12:39:07.4830375Z | 2026-09-08 |
-| grok-4.5 / low / long_context | True | n/a | n/a | long_context | 4 / 12 | 2026-11-04T12:39:07.4830375Z | 2026-09-08 |
-| grok-4.5 / medium / long_context | True | n/a | n/a | long_context | 4 / 12 | 2026-11-04T12:39:07.4830375Z | 2026-09-08 |
-| grok-4.6 / high / long_context | True | n/a | n/a | long_context | 4 / 12 | 2026-11-04T12:39:07.4830375Z | 2026-09-08 |
-| grok-4.6 / low / long_context | True | n/a | n/a | long_context | 4 / 12 | 2026-11-04T12:39:07.4830375Z | 2026-09-08 |
-| grok-4.6 / medium / long_context | True | n/a | n/a | long_context | 4 / 12 | 2026-11-04T12:39:07.4830375Z | 2026-09-08 |
-| grok-4.6 / xhigh / long_context | True | n/a | n/a | long_context | 4 / 12 | 2026-11-04T12:39:07.4830375Z | 2026-09-08 |
-| mai-code-1.1-flash / high / long_context | False | context_unsupported | n/a | default | 0.2 / 1.2 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| mai-code-1.1-flash / low / long_context | False | context_unsupported | n/a | default | 0.2 / 1.2 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| mai-code-1.1-flash / medium / long_context | False | context_unsupported | n/a | default | 0.2 / 1.2 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
+| claude-haiku-4.5 / none / long_context | False | context_unsupported | n/a | default | 1 / 5 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-haiku-5.5 / high / long_context | True | n/a | n/a | long_context | 0.5 / 2.5 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-haiku-5.5 / low / long_context | True | n/a | n/a | long_context | 0.5 / 2.5 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-haiku-5.5 / max / long_context | True | n/a | n/a | long_context | 0.5 / 2.5 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-haiku-5.5 / medium / long_context | True | n/a | n/a | long_context | 0.5 / 2.5 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-haiku-5.5 / xhigh / long_context | True | n/a | n/a | long_context | 0.5 / 2.5 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-4.8 / high / long_context | True | n/a | n/a | default | 5 / 25 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-4.8 / low / long_context | True | n/a | n/a | default | 5 / 25 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-4.8 / max / long_context | True | n/a | n/a | default | 5 / 25 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-4.8 / medium / long_context | True | n/a | n/a | default | 5 / 25 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-4.8 / xhigh / long_context | True | n/a | n/a | default | 5 / 25 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-4.8-fast / high / long_context | False | pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-4.8-fast / low / long_context | False | pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-4.8-fast / max / long_context | False | pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-4.8-fast / medium / long_context | False | pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-4.8-fast / xhigh / long_context | False | pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-5 / high / long_context | True | n/a | n/a | default | 5 / 25 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-5 / low / long_context | True | n/a | n/a | default | 5 / 25 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-5 / max / long_context | True | n/a | n/a | default | 5 / 25 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-5 / medium / long_context | True | n/a | n/a | default | 5 / 25 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-5 / xhigh / long_context | True | n/a | n/a | default | 5 / 25 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-5.5 / high / long_context | True | n/a | n/a | default | 4 / 20 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-5.5 / low / long_context | True | n/a | n/a | default | 4 / 20 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-5.5 / max / long_context | True | n/a | n/a | default | 4 / 20 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-5.5 / medium / long_context | True | n/a | n/a | default | 4 / 20 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-5.5 / xhigh / long_context | True | n/a | n/a | default | 4 / 20 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-sonnet-4.6 / high / long_context | False | capabilities_stale | model_retirement_scope_unconfirmed | default | 3 / 15 | 2026-11-04T14:51:34.5035467Z | 2026-07-30 |
+| claude-sonnet-4.6 / low / long_context | False | capabilities_stale | model_retirement_scope_unconfirmed | default | 3 / 15 | 2026-11-04T14:51:34.5035467Z | 2026-07-30 |
+| claude-sonnet-4.6 / max / long_context | False | capabilities_stale | model_retirement_scope_unconfirmed | default | 3 / 15 | 2026-11-04T14:51:34.5035467Z | 2026-07-30 |
+| claude-sonnet-4.6 / medium / long_context | False | capabilities_stale | model_retirement_scope_unconfirmed | default | 3 / 15 | 2026-11-04T14:51:34.5035467Z | 2026-07-30 |
+| claude-sonnet-5 / high / long_context | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-sonnet-5 / low / long_context | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-sonnet-5 / max / long_context | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-sonnet-5 / medium / long_context | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-sonnet-5 / xhigh / long_context | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-sonnet-5.5 / high / long_context | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-sonnet-5.5 / low / long_context | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-sonnet-5.5 / max / long_context | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-sonnet-5.5 / medium / long_context | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-sonnet-5.5 / xhigh / long_context | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gemini-3.8-flash / none / long_context | True | n/a | n/a | default | 0.75 / 3.75 | 2026-11-04T14:51:34.5035467Z | 2026-10-30T08:37:00.782Z |
+| gemini-4-argon / none / long_context | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-10-30T08:37:00.782Z |
+| gpt-5.3-codex / high / long_context | False | context_unsupported | n/a | default | 1.75 / 14 | 2026-11-04T14:51:34.5035467Z | 2026-09-08 |
+| gpt-5.3-codex / low / long_context | False | context_unsupported | n/a | default | 1.75 / 14 | 2026-11-04T14:51:34.5035467Z | 2026-09-08 |
+| gpt-5.3-codex / medium / long_context | False | context_unsupported | n/a | default | 1.75 / 14 | 2026-11-04T14:51:34.5035467Z | 2026-09-08 |
+| gpt-5.3-codex / xhigh / long_context | False | context_unsupported | n/a | default | 1.75 / 14 | 2026-11-04T14:51:34.5035467Z | 2026-09-08 |
+| gpt-5.6-luna / high / long_context | True | n/a | n/a | long_context | 0.4 / 1.8 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-luna / low / long_context | True | n/a | n/a | long_context | 0.4 / 1.8 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-luna / max / long_context | True | n/a | n/a | long_context | 0.4 / 1.8 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-luna / medium / long_context | True | n/a | n/a | long_context | 0.4 / 1.8 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-luna / none / long_context | True | n/a | n/a | long_context | 0.4 / 1.8 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-luna / xhigh / long_context | True | n/a | n/a | long_context | 0.4 / 1.8 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-sol / high / long_context | True | n/a | n/a | long_context | 8 / 30 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-sol / low / long_context | True | n/a | n/a | long_context | 8 / 30 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-sol / max / long_context | True | n/a | n/a | long_context | 8 / 30 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-sol / medium / long_context | True | n/a | n/a | long_context | 8 / 30 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-sol / none / long_context | True | n/a | n/a | long_context | 8 / 30 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-sol / xhigh / long_context | True | n/a | n/a | long_context | 8 / 30 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-terra / high / long_context | True | n/a | n/a | long_context | 4 / 18 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-terra / low / long_context | True | n/a | n/a | long_context | 4 / 18 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-terra / max / long_context | True | n/a | n/a | long_context | 4 / 18 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-terra / medium / long_context | True | n/a | n/a | long_context | 4 / 18 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-terra / none / long_context | True | n/a | n/a | long_context | 4 / 18 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-terra / xhigh / long_context | True | n/a | n/a | long_context | 4 / 18 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-astra / high / long_context | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | long_context | 20 / 75 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-astra / low / long_context | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | long_context | 20 / 75 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-astra / max / long_context | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | long_context | 20 / 75 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-astra / medium / long_context | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | long_context | 20 / 75 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-astra / xhigh / long_context | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | long_context | 20 / 75 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-luna / high / long_context | True | n/a | n/a | long_context | 0.2 / 0.75 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-luna / low / long_context | True | n/a | n/a | long_context | 0.2 / 0.75 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-luna / max / long_context | True | n/a | n/a | long_context | 0.2 / 0.75 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-luna / medium / long_context | True | n/a | n/a | long_context | 0.2 / 0.75 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-luna / none / long_context | True | n/a | n/a | long_context | 0.2 / 0.75 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-luna / xhigh / long_context | True | n/a | n/a | long_context | 0.2 / 0.75 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-sol / high / long_context | True | n/a | n/a | long_context | 4 / 15 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-sol / low / long_context | True | n/a | n/a | long_context | 4 / 15 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-sol / max / long_context | True | n/a | n/a | long_context | 4 / 15 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-sol / medium / long_context | True | n/a | n/a | long_context | 4 / 15 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-sol / none / long_context | True | n/a | n/a | long_context | 4 / 15 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-sol / xhigh / long_context | True | n/a | n/a | long_context | 4 / 15 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6.1-sol / high / long_context | True | n/a | n/a | long_context | 4 / 15 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6.1-sol / low / long_context | True | n/a | n/a | long_context | 4 / 15 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6.1-sol / max / long_context | True | n/a | n/a | long_context | 4 / 15 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6.1-sol / medium / long_context | True | n/a | n/a | long_context | 4 / 15 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6.1-sol / xhigh / long_context | True | n/a | n/a | long_context | 4 / 15 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| grok-4.5 / high / long_context | True | n/a | n/a | long_context | 4 / 12 | 2026-11-04T14:51:34.5035467Z | 2026-09-08 |
+| grok-4.5 / low / long_context | True | n/a | n/a | long_context | 4 / 12 | 2026-11-04T14:51:34.5035467Z | 2026-09-08 |
+| grok-4.5 / medium / long_context | True | n/a | n/a | long_context | 4 / 12 | 2026-11-04T14:51:34.5035467Z | 2026-09-08 |
+| grok-4.6 / high / long_context | True | n/a | n/a | long_context | 4 / 12 | 2026-11-04T14:51:34.5035467Z | 2026-09-08 |
+| grok-4.6 / low / long_context | True | n/a | n/a | long_context | 4 / 12 | 2026-11-04T14:51:34.5035467Z | 2026-09-08 |
+| grok-4.6 / medium / long_context | True | n/a | n/a | long_context | 4 / 12 | 2026-11-04T14:51:34.5035467Z | 2026-09-08 |
+| grok-4.6 / xhigh / long_context | True | n/a | n/a | long_context | 4 / 12 | 2026-11-04T14:51:34.5035467Z | 2026-09-08 |
+| mai-code-1.1-flash / high / long_context | False | context_unsupported | n/a | default | 0.2 / 1.2 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| mai-code-1.1-flash / low / long_context | False | context_unsupported | n/a | default | 0.2 / 1.2 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| mai-code-1.1-flash / medium / long_context | False | context_unsupported | n/a | default | 0.2 / 1.2 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
 
 | Model | Source | Exact alias / source label | Effort | Metric | Score | Publication age unknown | Cached | Harness | Role |
 |---|---|---|---|---|---|---|---|---|---|
@@ -2310,19 +2318,21 @@ Evidence gaps are grouped by affected profile in [Coverage and exclusions](#cove
 Budget: **hard**, input 5 / output 30 USD per million. Deciding source: liveBench.
 Quality leader before hard-budget exclusions: claude-sonnet-5.5 / max / default. Family fallback (informational, not a winner): claude-sonnet-5.5.
 Strategy: **value_balanced**.
+**Cost basis: fixed reference basket (profile fallback).** Measured benchmark-workload usage (`aa-intelligence-index-canonical-v1`) is unavailable or not comparable for at least one qualified configuration (usage_missing), so the entire profile is ranked on the fixed basket. Measured and fixed costs are never mixed, and no qualified configuration is dropped to improve coverage.
+Qualified configurations without valid measured usage: claude-opus-5 / max / default (usage_missing); gpt-5.6-sol / max / default (usage_missing).
 Authorized deciding routes, strongest first: **LiveBench Coding > AA Intelligence Index**. Supporting metrics are informational only.
 Task fit: external-harness proxy, not a measurement of Copilot CLI task success.
-Decision status: **applied_value_balanced_choice**. Deciding metric: liveBench.coding.
+Decision status: **value_balanced_choice**. Deciding metric: liveBench.coding.
 Incumbent selection basis (applied/current after run): liveBench.coding.
 LiveBench Coding (percentage points): Coding proxy, not direct review or UI implementation evidence.
 AA Intelligence Index (index points): General reasoning proxy; overlaps component benchmarks, not independent corroboration.
 Configuration selection: **automatic bounded effort**; authorized efforts: none, minimal, low, medium, high, xhigh, max. Models without effort controls use their native configuration; context remains fixed.
-Reference usage: candidate **300 AIC**; incumbent **750 AIC**.
+Reference usage: candidate **300 AIC**; incumbent **300 AIC**.
 Reference AIC uses a fixed token basket, not measured consumption. Effort-related changes in token usage, task cost and latency are unknown; equal reference AIC does not establish equal task cost.
 Eligible quality reference: claude-sonnet-5.5 / max / default (91.366). Candidate gap: **10.625 / 12** absolute coding score points.
-Lowest reference cost among configurations passing every required band wins; equal-cost model ties prefer the newest verified release. Reference usage: candidate **300 AIC**; incumbent **750 AIC** (1 AIC = USD 0.01).
-Candidate cost change: **-60%** (informational, not an incumbent-relative limit). Fixed hard ceilings authorize spending; they never rise automatically. A percentage is n/a when incumbent cost is unknown or a free incumbent would become paid.
-**Incumbent evidence gap:** no configuration-matched score for: liveBench.coding, liveBench.reasoning. Decision confidence is reduced, but missing incumbent evidence alone is not a veto. Candidate qualification, normal confirmation and stronger-basis protection remain binding. No measured improvement is claimed for these comparisons.
+Lowest reference cost among configurations passing every required band wins; equal-cost model ties prefer the newest verified release. Reference usage: candidate **300 AIC**; incumbent **300 AIC** (1 AIC = USD 0.01).
+Candidate cost change: **0%** (informational, not an incumbent-relative limit). Fixed hard ceilings authorize spending; they never rise automatically. A percentage is n/a when incumbent cost is unknown or a free incumbent would become paid.
+Matched incumbent score in this deciding-source observation: **80.741**.
 
 **Role qualification:** qualified. Every required dimension must pass independently; then the cheapest qualified configuration wins. At least 2 distinct eligible models are required per comparison, not per surviving intersection.
 References are fixed before intersecting dimensions. Missing evidence is not zero or a pass; no cross-benchmark or cross-effort score substitution. These are proxy-based policy tolerances, not statistical equivalence or direct task-success measurements.
@@ -2436,102 +2446,102 @@ None: the configured role dimensions are binding qualification requirements.
 
 | Configuration (model / effort / context) | Budget/capability eligible | Exclusions | Advisory warnings | Price tier | Input / output USD per M | Price verified | Capability as-of |
 |---|---|---|---|---|---|---|---|
-| claude-haiku-4.5 / none / default | True | n/a | n/a | default | 1 / 5 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-haiku-5.5 / high / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-haiku-5.5 / low / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-haiku-5.5 / max / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-haiku-5.5 / medium / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-haiku-5.5 / xhigh / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-4.8 / high / default | True | n/a | n/a | default | 5 / 25 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-4.8 / low / default | True | n/a | n/a | default | 5 / 25 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-4.8 / max / default | True | n/a | n/a | default | 5 / 25 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-4.8 / medium / default | True | n/a | n/a | default | 5 / 25 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-4.8 / xhigh / default | True | n/a | n/a | default | 5 / 25 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-4.8-fast / high / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-4.8-fast / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-4.8-fast / max / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-4.8-fast / medium / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-4.8-fast / xhigh / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-5 / high / default | True | n/a | n/a | default | 5 / 25 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-5 / low / default | True | n/a | n/a | default | 5 / 25 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-5 / max / default | True | n/a | n/a | default | 5 / 25 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-5 / medium / default | True | n/a | n/a | default | 5 / 25 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-5 / xhigh / default | True | n/a | n/a | default | 5 / 25 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-5.5 / high / default | True | n/a | n/a | default | 4 / 20 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-5.5 / low / default | True | n/a | n/a | default | 4 / 20 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-5.5 / max / default | True | n/a | n/a | default | 4 / 20 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-5.5 / medium / default | True | n/a | n/a | default | 4 / 20 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-5.5 / xhigh / default | True | n/a | n/a | default | 4 / 20 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-sonnet-4.6 / high / default | False | capabilities_stale | model_retirement_scope_unconfirmed | default | 3 / 15 | 2026-11-04T12:39:07.4830375Z | 2026-07-30 |
-| claude-sonnet-4.6 / low / default | False | capabilities_stale | model_retirement_scope_unconfirmed | default | 3 / 15 | 2026-11-04T12:39:07.4830375Z | 2026-07-30 |
-| claude-sonnet-4.6 / max / default | False | capabilities_stale | model_retirement_scope_unconfirmed | default | 3 / 15 | 2026-11-04T12:39:07.4830375Z | 2026-07-30 |
-| claude-sonnet-4.6 / medium / default | False | capabilities_stale | model_retirement_scope_unconfirmed | default | 3 / 15 | 2026-11-04T12:39:07.4830375Z | 2026-07-30 |
-| claude-sonnet-5 / high / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-sonnet-5 / low / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-sonnet-5 / max / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-sonnet-5 / medium / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-sonnet-5 / xhigh / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-sonnet-5.5 / high / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-sonnet-5.5 / low / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-sonnet-5.5 / max / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-sonnet-5.5 / medium / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-sonnet-5.5 / xhigh / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gemini-3.8-flash / none / default | True | n/a | n/a | default | 0.75 / 3.75 | 2026-11-04T12:39:07.4830375Z | 2026-10-30T08:37:00.782Z |
-| gemini-4-argon / none / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-10-30T08:37:00.782Z |
-| gpt-5.3-codex / high / default | True | n/a | n/a | default | 1.75 / 14 | 2026-11-04T12:39:07.4830375Z | 2026-09-08 |
-| gpt-5.3-codex / low / default | True | n/a | n/a | default | 1.75 / 14 | 2026-11-04T12:39:07.4830375Z | 2026-09-08 |
-| gpt-5.3-codex / medium / default | True | n/a | n/a | default | 1.75 / 14 | 2026-11-04T12:39:07.4830375Z | 2026-09-08 |
-| gpt-5.3-codex / xhigh / default | True | n/a | n/a | default | 1.75 / 14 | 2026-11-04T12:39:07.4830375Z | 2026-09-08 |
-| gpt-5.6-luna / high / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-luna / low / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-luna / max / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-luna / medium / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-luna / none / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-luna / xhigh / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-sol / high / default | True | n/a | n/a | default | 4 / 20 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-sol / low / default | True | n/a | n/a | default | 4 / 20 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-sol / max / default | True | n/a | n/a | default | 4 / 20 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-sol / medium / default | True | n/a | n/a | default | 4 / 20 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-sol / none / default | True | n/a | n/a | default | 4 / 20 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-sol / xhigh / default | True | n/a | n/a | default | 4 / 20 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-terra / high / default | True | n/a | n/a | default | 2 / 12 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-terra / low / default | True | n/a | n/a | default | 2 / 12 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-terra / max / default | True | n/a | n/a | default | 2 / 12 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-terra / medium / default | True | n/a | n/a | default | 2 / 12 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-terra / none / default | True | n/a | n/a | default | 2 / 12 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-terra / xhigh / default | True | n/a | n/a | default | 2 / 12 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-astra / high / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-astra / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-astra / max / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-astra / medium / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-astra / xhigh / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-luna / high / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-luna / low / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-luna / max / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-luna / medium / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-luna / none / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-luna / xhigh / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-sol / high / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-sol / low / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-sol / max / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-sol / medium / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-sol / none / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-sol / xhigh / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6.1-sol / high / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6.1-sol / low / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6.1-sol / max / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6.1-sol / medium / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6.1-sol / xhigh / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| grok-4.5 / high / default | True | n/a | n/a | default | 2 / 6 | 2026-11-04T12:39:07.4830375Z | 2026-09-08 |
-| grok-4.5 / low / default | True | n/a | n/a | default | 2 / 6 | 2026-11-04T12:39:07.4830375Z | 2026-09-08 |
-| grok-4.5 / medium / default | True | n/a | n/a | default | 2 / 6 | 2026-11-04T12:39:07.4830375Z | 2026-09-08 |
-| grok-4.6 / high / default | True | n/a | n/a | default | 2 / 6 | 2026-11-04T12:39:07.4830375Z | 2026-09-08 |
-| grok-4.6 / low / default | True | n/a | n/a | default | 2 / 6 | 2026-11-04T12:39:07.4830375Z | 2026-09-08 |
-| grok-4.6 / medium / default | True | n/a | n/a | default | 2 / 6 | 2026-11-04T12:39:07.4830375Z | 2026-09-08 |
-| grok-4.6 / xhigh / default | True | n/a | n/a | default | 2 / 6 | 2026-11-04T12:39:07.4830375Z | 2026-09-08 |
-| mai-code-1.1-flash / high / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| mai-code-1.1-flash / low / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| mai-code-1.1-flash / medium / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
+| claude-haiku-4.5 / none / default | True | n/a | n/a | default | 1 / 5 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-haiku-5.5 / high / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-haiku-5.5 / low / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-haiku-5.5 / max / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-haiku-5.5 / medium / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-haiku-5.5 / xhigh / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-4.8 / high / default | True | n/a | n/a | default | 5 / 25 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-4.8 / low / default | True | n/a | n/a | default | 5 / 25 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-4.8 / max / default | True | n/a | n/a | default | 5 / 25 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-4.8 / medium / default | True | n/a | n/a | default | 5 / 25 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-4.8 / xhigh / default | True | n/a | n/a | default | 5 / 25 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-4.8-fast / high / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-4.8-fast / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-4.8-fast / max / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-4.8-fast / medium / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-4.8-fast / xhigh / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-5 / high / default | True | n/a | n/a | default | 5 / 25 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-5 / low / default | True | n/a | n/a | default | 5 / 25 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-5 / max / default | True | n/a | n/a | default | 5 / 25 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-5 / medium / default | True | n/a | n/a | default | 5 / 25 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-5 / xhigh / default | True | n/a | n/a | default | 5 / 25 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-5.5 / high / default | True | n/a | n/a | default | 4 / 20 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-5.5 / low / default | True | n/a | n/a | default | 4 / 20 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-5.5 / max / default | True | n/a | n/a | default | 4 / 20 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-5.5 / medium / default | True | n/a | n/a | default | 4 / 20 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-5.5 / xhigh / default | True | n/a | n/a | default | 4 / 20 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-sonnet-4.6 / high / default | False | capabilities_stale | model_retirement_scope_unconfirmed | default | 3 / 15 | 2026-11-04T14:51:34.5035467Z | 2026-07-30 |
+| claude-sonnet-4.6 / low / default | False | capabilities_stale | model_retirement_scope_unconfirmed | default | 3 / 15 | 2026-11-04T14:51:34.5035467Z | 2026-07-30 |
+| claude-sonnet-4.6 / max / default | False | capabilities_stale | model_retirement_scope_unconfirmed | default | 3 / 15 | 2026-11-04T14:51:34.5035467Z | 2026-07-30 |
+| claude-sonnet-4.6 / medium / default | False | capabilities_stale | model_retirement_scope_unconfirmed | default | 3 / 15 | 2026-11-04T14:51:34.5035467Z | 2026-07-30 |
+| claude-sonnet-5 / high / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-sonnet-5 / low / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-sonnet-5 / max / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-sonnet-5 / medium / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-sonnet-5 / xhigh / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-sonnet-5.5 / high / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-sonnet-5.5 / low / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-sonnet-5.5 / max / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-sonnet-5.5 / medium / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-sonnet-5.5 / xhigh / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gemini-3.8-flash / none / default | True | n/a | n/a | default | 0.75 / 3.75 | 2026-11-04T14:51:34.5035467Z | 2026-10-30T08:37:00.782Z |
+| gemini-4-argon / none / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-10-30T08:37:00.782Z |
+| gpt-5.3-codex / high / default | True | n/a | n/a | default | 1.75 / 14 | 2026-11-04T14:51:34.5035467Z | 2026-09-08 |
+| gpt-5.3-codex / low / default | True | n/a | n/a | default | 1.75 / 14 | 2026-11-04T14:51:34.5035467Z | 2026-09-08 |
+| gpt-5.3-codex / medium / default | True | n/a | n/a | default | 1.75 / 14 | 2026-11-04T14:51:34.5035467Z | 2026-09-08 |
+| gpt-5.3-codex / xhigh / default | True | n/a | n/a | default | 1.75 / 14 | 2026-11-04T14:51:34.5035467Z | 2026-09-08 |
+| gpt-5.6-luna / high / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-luna / low / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-luna / max / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-luna / medium / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-luna / none / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-luna / xhigh / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-sol / high / default | True | n/a | n/a | default | 4 / 20 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-sol / low / default | True | n/a | n/a | default | 4 / 20 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-sol / max / default | True | n/a | n/a | default | 4 / 20 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-sol / medium / default | True | n/a | n/a | default | 4 / 20 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-sol / none / default | True | n/a | n/a | default | 4 / 20 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-sol / xhigh / default | True | n/a | n/a | default | 4 / 20 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-terra / high / default | True | n/a | n/a | default | 2 / 12 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-terra / low / default | True | n/a | n/a | default | 2 / 12 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-terra / max / default | True | n/a | n/a | default | 2 / 12 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-terra / medium / default | True | n/a | n/a | default | 2 / 12 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-terra / none / default | True | n/a | n/a | default | 2 / 12 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-terra / xhigh / default | True | n/a | n/a | default | 2 / 12 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-astra / high / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-astra / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-astra / max / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-astra / medium / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-astra / xhigh / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-luna / high / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-luna / low / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-luna / max / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-luna / medium / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-luna / none / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-luna / xhigh / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-sol / high / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-sol / low / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-sol / max / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-sol / medium / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-sol / none / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-sol / xhigh / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6.1-sol / high / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6.1-sol / low / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6.1-sol / max / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6.1-sol / medium / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6.1-sol / xhigh / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| grok-4.5 / high / default | True | n/a | n/a | default | 2 / 6 | 2026-11-04T14:51:34.5035467Z | 2026-09-08 |
+| grok-4.5 / low / default | True | n/a | n/a | default | 2 / 6 | 2026-11-04T14:51:34.5035467Z | 2026-09-08 |
+| grok-4.5 / medium / default | True | n/a | n/a | default | 2 / 6 | 2026-11-04T14:51:34.5035467Z | 2026-09-08 |
+| grok-4.6 / high / default | True | n/a | n/a | default | 2 / 6 | 2026-11-04T14:51:34.5035467Z | 2026-09-08 |
+| grok-4.6 / low / default | True | n/a | n/a | default | 2 / 6 | 2026-11-04T14:51:34.5035467Z | 2026-09-08 |
+| grok-4.6 / medium / default | True | n/a | n/a | default | 2 / 6 | 2026-11-04T14:51:34.5035467Z | 2026-09-08 |
+| grok-4.6 / xhigh / default | True | n/a | n/a | default | 2 / 6 | 2026-11-04T14:51:34.5035467Z | 2026-09-08 |
+| mai-code-1.1-flash / high / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| mai-code-1.1-flash / low / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| mai-code-1.1-flash / medium / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
 
 | Model | Source | Exact alias / source label | Effort | Metric | Score | Publication age unknown | Cached | Harness | Role |
 |---|---|---|---|---|---|---|---|---|---|
@@ -2662,19 +2672,21 @@ Evidence gaps are grouped by affected profile in [Coverage and exclusions](#cove
 Budget: **hard**, input 5 / output 25 USD per million. Deciding source: liveBench.
 Quality leader before hard-budget exclusions: claude-sonnet-5.5 / max / default. Family fallback (informational, not a winner): claude-sonnet-5.5.
 Strategy: **value_balanced**.
+**Cost basis: fixed reference basket (profile fallback).** Measured benchmark-workload usage (`aa-intelligence-index-canonical-v1`) is unavailable or not comparable for at least one qualified configuration (usage_missing), so the entire profile is ranked on the fixed basket. Measured and fixed costs are never mixed, and no qualified configuration is dropped to improve coverage.
+Qualified configurations without valid measured usage: claude-opus-5 / max / default (usage_missing); gpt-5.6-sol / max / default (usage_missing).
 Authorized deciding routes, strongest first: **LiveBench Coding > AA Intelligence Index**. Supporting metrics are informational only.
 Task fit: external-harness proxy, not a measurement of Copilot CLI task success.
-Decision status: **applied_value_balanced_choice**. Deciding metric: liveBench.coding.
+Decision status: **value_balanced_choice**. Deciding metric: liveBench.coding.
 Incumbent selection basis (applied/current after run): liveBench.coding.
 LiveBench Coding (percentage points): Coding proxy, not direct review or UI implementation evidence.
 AA Intelligence Index (index points): General reasoning proxy; overlaps component benchmarks, not independent corroboration.
 Configuration selection: **automatic bounded effort**; authorized efforts: none, minimal, low, medium, high, xhigh, max. Models without effort controls use their native configuration; context remains fixed.
-Reference usage: candidate **300 AIC**; incumbent **112.5 AIC**.
+Reference usage: candidate **300 AIC**; incumbent **300 AIC**.
 Reference AIC uses a fixed token basket, not measured consumption. Effort-related changes in token usage, task cost and latency are unknown; equal reference AIC does not establish equal task cost.
 Eligible quality reference: claude-sonnet-5.5 / max / default (91.366). Candidate gap: **10.625 / 12** absolute coding score points.
-Lowest reference cost among configurations passing every required band wins; equal-cost model ties prefer the newest verified release. Reference usage: candidate **300 AIC**; incumbent **112.5 AIC** (1 AIC = USD 0.01).
-Candidate cost change: **166.666666667%** (informational, not an incumbent-relative limit). Fixed hard ceilings authorize spending; they never rise automatically. A percentage is n/a when incumbent cost is unknown or a free incumbent would become paid.
-**Incumbent evidence gap:** no configuration-matched score for: liveBench.coding, artificialAnalysisComponents.mmmuPro. Decision confidence is reduced, but missing incumbent evidence alone is not a veto. Candidate qualification, normal confirmation and stronger-basis protection remain binding. No measured improvement is claimed for these comparisons.
+Lowest reference cost among configurations passing every required band wins; equal-cost model ties prefer the newest verified release. Reference usage: candidate **300 AIC**; incumbent **300 AIC** (1 AIC = USD 0.01).
+Candidate cost change: **0%** (informational, not an incumbent-relative limit). Fixed hard ceilings authorize spending; they never rise automatically. A percentage is n/a when incumbent cost is unknown or a free incumbent would become paid.
+Matched incumbent score in this deciding-source observation: **80.741**.
 
 **Role qualification:** qualified. Every required dimension must pass independently; then the cheapest qualified configuration wins. At least 2 distinct eligible models are required per comparison, not per surviving intersection.
 References are fixed before intersecting dimensions. Missing evidence is not zero or a pass; no cross-benchmark or cross-effort score substitution. These are proxy-based policy tolerances, not statistical equivalence or direct task-success measurements.
@@ -2777,102 +2789,102 @@ None: the configured role dimensions are binding qualification requirements.
 
 | Configuration (model / effort / context) | Budget/capability eligible | Exclusions | Advisory warnings | Price tier | Input / output USD per M | Price verified | Capability as-of |
 |---|---|---|---|---|---|---|---|
-| claude-haiku-4.5 / none / default | True | n/a | n/a | default | 1 / 5 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-haiku-5.5 / high / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-haiku-5.5 / low / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-haiku-5.5 / max / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-haiku-5.5 / medium / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-haiku-5.5 / xhigh / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-4.8 / high / default | True | n/a | n/a | default | 5 / 25 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-4.8 / low / default | True | n/a | n/a | default | 5 / 25 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-4.8 / max / default | True | n/a | n/a | default | 5 / 25 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-4.8 / medium / default | True | n/a | n/a | default | 5 / 25 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-4.8 / xhigh / default | True | n/a | n/a | default | 5 / 25 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-4.8-fast / high / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-4.8-fast / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-4.8-fast / max / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-4.8-fast / medium / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-4.8-fast / xhigh / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-5 / high / default | True | n/a | n/a | default | 5 / 25 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-5 / low / default | True | n/a | n/a | default | 5 / 25 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-5 / max / default | True | n/a | n/a | default | 5 / 25 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-5 / medium / default | True | n/a | n/a | default | 5 / 25 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-5 / xhigh / default | True | n/a | n/a | default | 5 / 25 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-5.5 / high / default | True | n/a | n/a | default | 4 / 20 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-5.5 / low / default | True | n/a | n/a | default | 4 / 20 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-5.5 / max / default | True | n/a | n/a | default | 4 / 20 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-5.5 / medium / default | True | n/a | n/a | default | 4 / 20 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-5.5 / xhigh / default | True | n/a | n/a | default | 4 / 20 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-sonnet-4.6 / high / default | False | capabilities_stale | model_retirement_scope_unconfirmed | default | 3 / 15 | 2026-11-04T12:39:07.4830375Z | 2026-07-30 |
-| claude-sonnet-4.6 / low / default | False | capabilities_stale | model_retirement_scope_unconfirmed | default | 3 / 15 | 2026-11-04T12:39:07.4830375Z | 2026-07-30 |
-| claude-sonnet-4.6 / max / default | False | capabilities_stale | model_retirement_scope_unconfirmed | default | 3 / 15 | 2026-11-04T12:39:07.4830375Z | 2026-07-30 |
-| claude-sonnet-4.6 / medium / default | False | capabilities_stale | model_retirement_scope_unconfirmed | default | 3 / 15 | 2026-11-04T12:39:07.4830375Z | 2026-07-30 |
-| claude-sonnet-5 / high / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-sonnet-5 / low / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-sonnet-5 / max / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-sonnet-5 / medium / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-sonnet-5 / xhigh / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-sonnet-5.5 / high / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-sonnet-5.5 / low / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-sonnet-5.5 / max / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-sonnet-5.5 / medium / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-sonnet-5.5 / xhigh / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gemini-3.8-flash / none / default | True | n/a | n/a | default | 0.75 / 3.75 | 2026-11-04T12:39:07.4830375Z | 2026-10-30T08:37:00.782Z |
-| gemini-4-argon / none / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-10-30T08:37:00.782Z |
-| gpt-5.3-codex / high / default | False | vision_unknown | n/a | default | 1.75 / 14 | 2026-11-04T12:39:07.4830375Z | 2026-09-08 |
-| gpt-5.3-codex / low / default | False | vision_unknown | n/a | default | 1.75 / 14 | 2026-11-04T12:39:07.4830375Z | 2026-09-08 |
-| gpt-5.3-codex / medium / default | False | vision_unknown | n/a | default | 1.75 / 14 | 2026-11-04T12:39:07.4830375Z | 2026-09-08 |
-| gpt-5.3-codex / xhigh / default | False | vision_unknown | n/a | default | 1.75 / 14 | 2026-11-04T12:39:07.4830375Z | 2026-09-08 |
-| gpt-5.6-luna / high / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-luna / low / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-luna / max / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-luna / medium / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-luna / none / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-luna / xhigh / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-sol / high / default | True | n/a | n/a | default | 4 / 20 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-sol / low / default | True | n/a | n/a | default | 4 / 20 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-sol / max / default | True | n/a | n/a | default | 4 / 20 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-sol / medium / default | True | n/a | n/a | default | 4 / 20 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-sol / none / default | True | n/a | n/a | default | 4 / 20 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-sol / xhigh / default | True | n/a | n/a | default | 4 / 20 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-terra / high / default | True | n/a | n/a | default | 2 / 12 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-terra / low / default | True | n/a | n/a | default | 2 / 12 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-terra / max / default | True | n/a | n/a | default | 2 / 12 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-terra / medium / default | True | n/a | n/a | default | 2 / 12 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-terra / none / default | True | n/a | n/a | default | 2 / 12 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-terra / xhigh / default | True | n/a | n/a | default | 2 / 12 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-astra / high / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-astra / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-astra / max / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-astra / medium / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-astra / xhigh / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-luna / high / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-luna / low / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-luna / max / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-luna / medium / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-luna / none / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-luna / xhigh / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-sol / high / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-sol / low / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-sol / max / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-sol / medium / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-sol / none / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-sol / xhigh / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6.1-sol / high / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6.1-sol / low / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6.1-sol / max / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6.1-sol / medium / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6.1-sol / xhigh / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| grok-4.5 / high / default | False | vision_unknown | n/a | default | 2 / 6 | 2026-11-04T12:39:07.4830375Z | 2026-09-08 |
-| grok-4.5 / low / default | False | vision_unknown | n/a | default | 2 / 6 | 2026-11-04T12:39:07.4830375Z | 2026-09-08 |
-| grok-4.5 / medium / default | False | vision_unknown | n/a | default | 2 / 6 | 2026-11-04T12:39:07.4830375Z | 2026-09-08 |
-| grok-4.6 / high / default | True | n/a | n/a | default | 2 / 6 | 2026-11-04T12:39:07.4830375Z | 2026-09-08 |
-| grok-4.6 / low / default | True | n/a | n/a | default | 2 / 6 | 2026-11-04T12:39:07.4830375Z | 2026-09-08 |
-| grok-4.6 / medium / default | True | n/a | n/a | default | 2 / 6 | 2026-11-04T12:39:07.4830375Z | 2026-09-08 |
-| grok-4.6 / xhigh / default | True | n/a | n/a | default | 2 / 6 | 2026-11-04T12:39:07.4830375Z | 2026-09-08 |
-| mai-code-1.1-flash / high / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| mai-code-1.1-flash / low / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| mai-code-1.1-flash / medium / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
+| claude-haiku-4.5 / none / default | True | n/a | n/a | default | 1 / 5 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-haiku-5.5 / high / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-haiku-5.5 / low / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-haiku-5.5 / max / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-haiku-5.5 / medium / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-haiku-5.5 / xhigh / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-4.8 / high / default | True | n/a | n/a | default | 5 / 25 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-4.8 / low / default | True | n/a | n/a | default | 5 / 25 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-4.8 / max / default | True | n/a | n/a | default | 5 / 25 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-4.8 / medium / default | True | n/a | n/a | default | 5 / 25 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-4.8 / xhigh / default | True | n/a | n/a | default | 5 / 25 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-4.8-fast / high / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-4.8-fast / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-4.8-fast / max / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-4.8-fast / medium / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-4.8-fast / xhigh / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-5 / high / default | True | n/a | n/a | default | 5 / 25 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-5 / low / default | True | n/a | n/a | default | 5 / 25 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-5 / max / default | True | n/a | n/a | default | 5 / 25 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-5 / medium / default | True | n/a | n/a | default | 5 / 25 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-5 / xhigh / default | True | n/a | n/a | default | 5 / 25 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-5.5 / high / default | True | n/a | n/a | default | 4 / 20 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-5.5 / low / default | True | n/a | n/a | default | 4 / 20 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-5.5 / max / default | True | n/a | n/a | default | 4 / 20 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-5.5 / medium / default | True | n/a | n/a | default | 4 / 20 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-5.5 / xhigh / default | True | n/a | n/a | default | 4 / 20 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-sonnet-4.6 / high / default | False | capabilities_stale | model_retirement_scope_unconfirmed | default | 3 / 15 | 2026-11-04T14:51:34.5035467Z | 2026-07-30 |
+| claude-sonnet-4.6 / low / default | False | capabilities_stale | model_retirement_scope_unconfirmed | default | 3 / 15 | 2026-11-04T14:51:34.5035467Z | 2026-07-30 |
+| claude-sonnet-4.6 / max / default | False | capabilities_stale | model_retirement_scope_unconfirmed | default | 3 / 15 | 2026-11-04T14:51:34.5035467Z | 2026-07-30 |
+| claude-sonnet-4.6 / medium / default | False | capabilities_stale | model_retirement_scope_unconfirmed | default | 3 / 15 | 2026-11-04T14:51:34.5035467Z | 2026-07-30 |
+| claude-sonnet-5 / high / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-sonnet-5 / low / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-sonnet-5 / max / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-sonnet-5 / medium / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-sonnet-5 / xhigh / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-sonnet-5.5 / high / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-sonnet-5.5 / low / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-sonnet-5.5 / max / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-sonnet-5.5 / medium / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-sonnet-5.5 / xhigh / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gemini-3.8-flash / none / default | True | n/a | n/a | default | 0.75 / 3.75 | 2026-11-04T14:51:34.5035467Z | 2026-10-30T08:37:00.782Z |
+| gemini-4-argon / none / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-10-30T08:37:00.782Z |
+| gpt-5.3-codex / high / default | False | vision_unknown | n/a | default | 1.75 / 14 | 2026-11-04T14:51:34.5035467Z | 2026-09-08 |
+| gpt-5.3-codex / low / default | False | vision_unknown | n/a | default | 1.75 / 14 | 2026-11-04T14:51:34.5035467Z | 2026-09-08 |
+| gpt-5.3-codex / medium / default | False | vision_unknown | n/a | default | 1.75 / 14 | 2026-11-04T14:51:34.5035467Z | 2026-09-08 |
+| gpt-5.3-codex / xhigh / default | False | vision_unknown | n/a | default | 1.75 / 14 | 2026-11-04T14:51:34.5035467Z | 2026-09-08 |
+| gpt-5.6-luna / high / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-luna / low / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-luna / max / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-luna / medium / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-luna / none / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-luna / xhigh / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-sol / high / default | True | n/a | n/a | default | 4 / 20 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-sol / low / default | True | n/a | n/a | default | 4 / 20 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-sol / max / default | True | n/a | n/a | default | 4 / 20 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-sol / medium / default | True | n/a | n/a | default | 4 / 20 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-sol / none / default | True | n/a | n/a | default | 4 / 20 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-sol / xhigh / default | True | n/a | n/a | default | 4 / 20 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-terra / high / default | True | n/a | n/a | default | 2 / 12 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-terra / low / default | True | n/a | n/a | default | 2 / 12 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-terra / max / default | True | n/a | n/a | default | 2 / 12 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-terra / medium / default | True | n/a | n/a | default | 2 / 12 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-terra / none / default | True | n/a | n/a | default | 2 / 12 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-terra / xhigh / default | True | n/a | n/a | default | 2 / 12 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-astra / high / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-astra / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-astra / max / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-astra / medium / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-astra / xhigh / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-luna / high / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-luna / low / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-luna / max / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-luna / medium / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-luna / none / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-luna / xhigh / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-sol / high / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-sol / low / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-sol / max / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-sol / medium / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-sol / none / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-sol / xhigh / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6.1-sol / high / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6.1-sol / low / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6.1-sol / max / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6.1-sol / medium / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6.1-sol / xhigh / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| grok-4.5 / high / default | False | vision_unknown | n/a | default | 2 / 6 | 2026-11-04T14:51:34.5035467Z | 2026-09-08 |
+| grok-4.5 / low / default | False | vision_unknown | n/a | default | 2 / 6 | 2026-11-04T14:51:34.5035467Z | 2026-09-08 |
+| grok-4.5 / medium / default | False | vision_unknown | n/a | default | 2 / 6 | 2026-11-04T14:51:34.5035467Z | 2026-09-08 |
+| grok-4.6 / high / default | True | n/a | n/a | default | 2 / 6 | 2026-11-04T14:51:34.5035467Z | 2026-09-08 |
+| grok-4.6 / low / default | True | n/a | n/a | default | 2 / 6 | 2026-11-04T14:51:34.5035467Z | 2026-09-08 |
+| grok-4.6 / medium / default | True | n/a | n/a | default | 2 / 6 | 2026-11-04T14:51:34.5035467Z | 2026-09-08 |
+| grok-4.6 / xhigh / default | True | n/a | n/a | default | 2 / 6 | 2026-11-04T14:51:34.5035467Z | 2026-09-08 |
+| mai-code-1.1-flash / high / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| mai-code-1.1-flash / low / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| mai-code-1.1-flash / medium / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
 
 | Model | Source | Exact alias / source label | Effort | Metric | Score | Publication age unknown | Cached | Harness | Role |
 |---|---|---|---|---|---|---|---|---|---|
@@ -2971,19 +2983,20 @@ Evidence gaps are grouped by affected profile in [Coverage and exclusions](#cove
 Budget: **hard**, input 2 / output 10 USD per million. Deciding source: artificialAnalysisComponents.
 Quality leader before hard-budget exclusions: gpt-6-astra / max / default. Family fallback (informational, not a winner): claude-haiku-5.5.
 Strategy: **value_balanced**.
+**Cost basis: measured benchmark workload** (`aa-intelligence-index-canonical-v1`). Every qualified configuration has valid, fresh, comparable measured input/output token totals on the same workload, repriced as uncached tokens at current GitHub rates; output already includes reasoning. This is an external benchmark-workload cost proxy, not predicted Copilot task spend, latency or cache behavior. Task-specific quality bands are separate from this whole-suite cost workload.
 Authorized deciding routes, strongest first: **AutomationBench-AA > EnterpriseOps-Gym-AA**. Supporting metrics are informational only.
 Task fit: external-harness proxy, not a measurement of Copilot CLI task success.
-Decision status: **applied_budget_constrained_choice**. Deciding metric: artificialAnalysisComponents.automationBench.
+Decision status: **budget_constrained_choice**. Deciding metric: artificialAnalysisComponents.automationBench.
 Incumbent selection basis (applied/current after run): artificialAnalysisComponents.automationBench.
 AutomationBench-AA (guardrail-adjusted objective fraction): Workflow/tool-use proxy; clarifying questions prohibited. Not interactive orchestration or conversation-memory evidence.
 EnterpriseOps-Gym-AA (strict pass@1 fraction): AA oracle-tool workflow harness; tools supplied. Not tool-discovery evidence or the original paper's scores.
 Configuration selection: **automatic bounded effort**; authorized efforts: none, minimal, low, medium, high, xhigh, max. Models without effort controls use their native configuration; context remains fixed.
-Reference usage: candidate **300 AIC**; incumbent **112.5 AIC**.
-Reference AIC uses a fixed token basket, not measured consumption. Effort-related changes in token usage, task cost and latency are unknown; equal reference AIC does not establish equal task cost.
+Benchmark-workload usage: candidate **355872.8918 AIC**; incumbent **355872.8918 AIC**.
+Benchmark-workload AIC reprices each configuration's own measured input/output tokens at current GitHub rates, uncached, with reasoning already inside output. It compares configurations on one external benchmark workload; it does not predict Copilot task cost or latency.
 Eligible quality reference: grok-4.6 / xhigh / default (0.669973683618). Candidate gap: **0.00423646948189 / 0.01** absolute automationBench score points.
-Lowest reference cost among configurations passing every required band wins; equal-cost model ties prefer the newest verified release. Reference usage: candidate **300 AIC**; incumbent **112.5 AIC** (1 AIC = USD 0.01).
-Candidate cost change: **166.666666667%** (informational, not an incumbent-relative limit). Fixed hard ceilings authorize spending; they never rise automatically. A percentage is n/a when incumbent cost is unknown or a free incumbent would become paid.
-**Incumbent evidence gap:** no configuration-matched score for: artificialAnalysisComponents.automationBench, liveBench.instructionFollowing. Decision confidence is reduced, but missing incumbent evidence alone is not a veto. Candidate qualification, normal confirmation and stronger-basis protection remain binding. No measured improvement is claimed for these comparisons.
+Lowest measured benchmark-workload cost among configurations passing every required band wins; equal-cost model ties prefer the newest verified release. Benchmark-workload usage: candidate **355872.8918 AIC**; incumbent **355872.8918 AIC** (1 AIC = USD 0.01).
+Candidate cost change: **0%** (informational, not an incumbent-relative limit). Fixed hard ceilings authorize spending; they never rise automatically. A percentage is n/a when incumbent cost is unknown or a free incumbent would become paid.
+Matched incumbent score in this deciding-source observation: **0.665737214136**.
 
 **Role qualification:** qualified. Every required dimension must pass independently; then the cheapest qualified configuration wins. At least 2 distinct eligible models are required per comparison, not per surviving intersection.
 References are fixed before intersecting dimensions. Missing evidence is not zero or a pass; no cross-benchmark or cross-effort score substitution. These are proxy-based policy tolerances, not statistical equivalence or direct task-success measurements.
@@ -3063,102 +3076,102 @@ None: the configured role dimensions are binding qualification requirements.
 
 | Configuration (model / effort / context) | Budget/capability eligible | Exclusions | Advisory warnings | Price tier | Input / output USD per M | Price verified | Capability as-of |
 |---|---|---|---|---|---|---|---|
-| claude-haiku-4.5 / none / default | True | n/a | n/a | default | 1 / 5 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-haiku-5.5 / high / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-haiku-5.5 / low / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-haiku-5.5 / max / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-haiku-5.5 / medium / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-haiku-5.5 / xhigh / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-4.8 / high / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-4.8 / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-4.8 / max / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-4.8 / medium / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-4.8 / xhigh / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-4.8-fast / high / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-4.8-fast / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-4.8-fast / max / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-4.8-fast / medium / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-4.8-fast / xhigh / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-5 / high / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-5 / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-5 / max / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-5 / medium / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-5 / xhigh / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-5.5 / high / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 4 / 20 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-5.5 / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 4 / 20 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-5.5 / max / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 4 / 20 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-5.5 / medium / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 4 / 20 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-5.5 / xhigh / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 4 / 20 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-sonnet-4.6 / high / default | False | capabilities_stale, pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | model_retirement_scope_unconfirmed | default | 3 / 15 | 2026-11-04T12:39:07.4830375Z | 2026-07-30 |
-| claude-sonnet-4.6 / low / default | False | capabilities_stale, pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | model_retirement_scope_unconfirmed | default | 3 / 15 | 2026-11-04T12:39:07.4830375Z | 2026-07-30 |
-| claude-sonnet-4.6 / max / default | False | capabilities_stale, pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | model_retirement_scope_unconfirmed | default | 3 / 15 | 2026-11-04T12:39:07.4830375Z | 2026-07-30 |
-| claude-sonnet-4.6 / medium / default | False | capabilities_stale, pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | model_retirement_scope_unconfirmed | default | 3 / 15 | 2026-11-04T12:39:07.4830375Z | 2026-07-30 |
-| claude-sonnet-5 / high / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-sonnet-5 / low / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-sonnet-5 / max / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-sonnet-5 / medium / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-sonnet-5 / xhigh / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-sonnet-5.5 / high / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-sonnet-5.5 / low / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-sonnet-5.5 / max / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-sonnet-5.5 / medium / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-sonnet-5.5 / xhigh / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gemini-3.8-flash / none / default | True | n/a | n/a | default | 0.75 / 3.75 | 2026-11-04T12:39:07.4830375Z | 2026-10-30T08:37:00.782Z |
-| gemini-4-argon / none / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-10-30T08:37:00.782Z |
-| gpt-5.3-codex / high / default | False | pricing_output_exceeds_ceiling | n/a | default | 1.75 / 14 | 2026-11-04T12:39:07.4830375Z | 2026-09-08 |
-| gpt-5.3-codex / low / default | False | pricing_output_exceeds_ceiling | n/a | default | 1.75 / 14 | 2026-11-04T12:39:07.4830375Z | 2026-09-08 |
-| gpt-5.3-codex / medium / default | False | pricing_output_exceeds_ceiling | n/a | default | 1.75 / 14 | 2026-11-04T12:39:07.4830375Z | 2026-09-08 |
-| gpt-5.3-codex / xhigh / default | False | pricing_output_exceeds_ceiling | n/a | default | 1.75 / 14 | 2026-11-04T12:39:07.4830375Z | 2026-09-08 |
-| gpt-5.6-luna / high / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-luna / low / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-luna / max / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-luna / medium / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-luna / none / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-luna / xhigh / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-sol / high / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 4 / 20 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-sol / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 4 / 20 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-sol / max / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 4 / 20 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-sol / medium / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 4 / 20 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-sol / none / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 4 / 20 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-sol / xhigh / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 4 / 20 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-terra / high / default | False | pricing_output_exceeds_ceiling | n/a | default | 2 / 12 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-terra / low / default | False | pricing_output_exceeds_ceiling | n/a | default | 2 / 12 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-terra / max / default | False | pricing_output_exceeds_ceiling | n/a | default | 2 / 12 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-terra / medium / default | False | pricing_output_exceeds_ceiling | n/a | default | 2 / 12 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-terra / none / default | False | pricing_output_exceeds_ceiling | n/a | default | 2 / 12 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-terra / xhigh / default | False | pricing_output_exceeds_ceiling | n/a | default | 2 / 12 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-astra / high / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-astra / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-astra / max / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-astra / medium / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-astra / xhigh / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-luna / high / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-luna / low / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-luna / max / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-luna / medium / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-luna / none / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-luna / xhigh / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-sol / high / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-sol / low / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-sol / max / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-sol / medium / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-sol / none / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-sol / xhigh / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6.1-sol / high / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6.1-sol / low / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6.1-sol / max / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6.1-sol / medium / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6.1-sol / xhigh / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| grok-4.5 / high / default | True | n/a | n/a | default | 2 / 6 | 2026-11-04T12:39:07.4830375Z | 2026-09-08 |
-| grok-4.5 / low / default | True | n/a | n/a | default | 2 / 6 | 2026-11-04T12:39:07.4830375Z | 2026-09-08 |
-| grok-4.5 / medium / default | True | n/a | n/a | default | 2 / 6 | 2026-11-04T12:39:07.4830375Z | 2026-09-08 |
-| grok-4.6 / high / default | True | n/a | n/a | default | 2 / 6 | 2026-11-04T12:39:07.4830375Z | 2026-09-08 |
-| grok-4.6 / low / default | True | n/a | n/a | default | 2 / 6 | 2026-11-04T12:39:07.4830375Z | 2026-09-08 |
-| grok-4.6 / medium / default | True | n/a | n/a | default | 2 / 6 | 2026-11-04T12:39:07.4830375Z | 2026-09-08 |
-| grok-4.6 / xhigh / default | True | n/a | n/a | default | 2 / 6 | 2026-11-04T12:39:07.4830375Z | 2026-09-08 |
-| mai-code-1.1-flash / high / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| mai-code-1.1-flash / low / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| mai-code-1.1-flash / medium / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
+| claude-haiku-4.5 / none / default | True | n/a | n/a | default | 1 / 5 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-haiku-5.5 / high / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-haiku-5.5 / low / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-haiku-5.5 / max / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-haiku-5.5 / medium / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-haiku-5.5 / xhigh / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-4.8 / high / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-4.8 / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-4.8 / max / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-4.8 / medium / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-4.8 / xhigh / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-4.8-fast / high / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-4.8-fast / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-4.8-fast / max / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-4.8-fast / medium / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-4.8-fast / xhigh / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-5 / high / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-5 / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-5 / max / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-5 / medium / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-5 / xhigh / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-5.5 / high / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 4 / 20 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-5.5 / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 4 / 20 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-5.5 / max / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 4 / 20 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-5.5 / medium / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 4 / 20 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-5.5 / xhigh / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 4 / 20 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-sonnet-4.6 / high / default | False | capabilities_stale, pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | model_retirement_scope_unconfirmed | default | 3 / 15 | 2026-11-04T14:51:34.5035467Z | 2026-07-30 |
+| claude-sonnet-4.6 / low / default | False | capabilities_stale, pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | model_retirement_scope_unconfirmed | default | 3 / 15 | 2026-11-04T14:51:34.5035467Z | 2026-07-30 |
+| claude-sonnet-4.6 / max / default | False | capabilities_stale, pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | model_retirement_scope_unconfirmed | default | 3 / 15 | 2026-11-04T14:51:34.5035467Z | 2026-07-30 |
+| claude-sonnet-4.6 / medium / default | False | capabilities_stale, pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | model_retirement_scope_unconfirmed | default | 3 / 15 | 2026-11-04T14:51:34.5035467Z | 2026-07-30 |
+| claude-sonnet-5 / high / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-sonnet-5 / low / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-sonnet-5 / max / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-sonnet-5 / medium / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-sonnet-5 / xhigh / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-sonnet-5.5 / high / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-sonnet-5.5 / low / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-sonnet-5.5 / max / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-sonnet-5.5 / medium / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-sonnet-5.5 / xhigh / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gemini-3.8-flash / none / default | True | n/a | n/a | default | 0.75 / 3.75 | 2026-11-04T14:51:34.5035467Z | 2026-10-30T08:37:00.782Z |
+| gemini-4-argon / none / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-10-30T08:37:00.782Z |
+| gpt-5.3-codex / high / default | False | pricing_output_exceeds_ceiling | n/a | default | 1.75 / 14 | 2026-11-04T14:51:34.5035467Z | 2026-09-08 |
+| gpt-5.3-codex / low / default | False | pricing_output_exceeds_ceiling | n/a | default | 1.75 / 14 | 2026-11-04T14:51:34.5035467Z | 2026-09-08 |
+| gpt-5.3-codex / medium / default | False | pricing_output_exceeds_ceiling | n/a | default | 1.75 / 14 | 2026-11-04T14:51:34.5035467Z | 2026-09-08 |
+| gpt-5.3-codex / xhigh / default | False | pricing_output_exceeds_ceiling | n/a | default | 1.75 / 14 | 2026-11-04T14:51:34.5035467Z | 2026-09-08 |
+| gpt-5.6-luna / high / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-luna / low / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-luna / max / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-luna / medium / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-luna / none / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-luna / xhigh / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-sol / high / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 4 / 20 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-sol / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 4 / 20 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-sol / max / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 4 / 20 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-sol / medium / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 4 / 20 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-sol / none / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 4 / 20 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-sol / xhigh / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 4 / 20 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-terra / high / default | False | pricing_output_exceeds_ceiling | n/a | default | 2 / 12 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-terra / low / default | False | pricing_output_exceeds_ceiling | n/a | default | 2 / 12 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-terra / max / default | False | pricing_output_exceeds_ceiling | n/a | default | 2 / 12 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-terra / medium / default | False | pricing_output_exceeds_ceiling | n/a | default | 2 / 12 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-terra / none / default | False | pricing_output_exceeds_ceiling | n/a | default | 2 / 12 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-terra / xhigh / default | False | pricing_output_exceeds_ceiling | n/a | default | 2 / 12 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-astra / high / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-astra / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-astra / max / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-astra / medium / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-astra / xhigh / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-luna / high / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-luna / low / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-luna / max / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-luna / medium / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-luna / none / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-luna / xhigh / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-sol / high / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-sol / low / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-sol / max / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-sol / medium / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-sol / none / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-sol / xhigh / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6.1-sol / high / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6.1-sol / low / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6.1-sol / max / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6.1-sol / medium / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6.1-sol / xhigh / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| grok-4.5 / high / default | True | n/a | n/a | default | 2 / 6 | 2026-11-04T14:51:34.5035467Z | 2026-09-08 |
+| grok-4.5 / low / default | True | n/a | n/a | default | 2 / 6 | 2026-11-04T14:51:34.5035467Z | 2026-09-08 |
+| grok-4.5 / medium / default | True | n/a | n/a | default | 2 / 6 | 2026-11-04T14:51:34.5035467Z | 2026-09-08 |
+| grok-4.6 / high / default | True | n/a | n/a | default | 2 / 6 | 2026-11-04T14:51:34.5035467Z | 2026-09-08 |
+| grok-4.6 / low / default | True | n/a | n/a | default | 2 / 6 | 2026-11-04T14:51:34.5035467Z | 2026-09-08 |
+| grok-4.6 / medium / default | True | n/a | n/a | default | 2 / 6 | 2026-11-04T14:51:34.5035467Z | 2026-09-08 |
+| grok-4.6 / xhigh / default | True | n/a | n/a | default | 2 / 6 | 2026-11-04T14:51:34.5035467Z | 2026-09-08 |
+| mai-code-1.1-flash / high / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| mai-code-1.1-flash / low / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| mai-code-1.1-flash / medium / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
 
 | Model | Source | Exact alias / source label | Effort | Metric | Score | Publication age unknown | Cached | Harness | Role |
 |---|---|---|---|---|---|---|---|---|---|
@@ -3270,20 +3283,20 @@ Evidence gaps are grouped by affected profile in [Coverage and exclusions](#cove
 Budget: **hard**, input 2 / output 10 USD per million. Deciding source: artificialAnalysis.
 Quality leader before hard-budget exclusions: gpt-6-astra / max / default. Family fallback (informational, not a winner): claude-sonnet-5.5.
 Strategy: **value_balanced**.
+**Cost basis: measured benchmark workload** (`aa-intelligence-index-canonical-v1`). Every qualified configuration has valid, fresh, comparable measured input/output token totals on the same workload, repriced as uncached tokens at current GitHub rates; output already includes reasoning. This is an external benchmark-workload cost proxy, not predicted Copilot task spend, latency or cache behavior. Task-specific quality bands are separate from this whole-suite cost workload.
 Authorized deciding routes, strongest first: **AA Intelligence Index > LiveBench Reasoning**. Supporting metrics are informational only.
 Task fit: external-harness proxy, not a measurement of Copilot CLI task success.
-Decision status: **applied_budget_constrained_choice**. Deciding metric: artificialAnalysis.intelligenceIndex.
+Decision status: **pending_budget_constrained_choice**. Deciding metric: artificialAnalysis.intelligenceIndex.
 Incumbent selection basis (applied/current after run): artificialAnalysis.intelligenceIndex.
 AA Intelligence Index (index points): General reasoning proxy; overlaps component benchmarks, not independent corroboration.
 LiveBench Reasoning (percentage points): Reasoning proxy; does not establish interactive triage skill.
 Configuration selection: **automatic bounded effort**; authorized efforts: none, minimal, low, medium, high, xhigh, max. Models without effort controls use their native configuration; context remains fixed.
-Reference usage: candidate **300 AIC**; incumbent **300 AIC**.
-Reference AIC uses a fixed token basket, not measured consumption. Effort-related changes in token usage, task cost and latency are unknown; equal reference AIC does not establish equal task cost.
-Eligible quality reference: gpt-6.1-sol / max / default (54.6). Candidate gap: **0 / 3** absolute intelligenceIndex score points.
-Lowest reference cost among configurations passing every required band wins; equal-cost model ties prefer the newest verified release. Reference usage: candidate **300 AIC**; incumbent **300 AIC** (1 AIC = USD 0.01).
-Candidate cost change: **0%** (informational, not an incumbent-relative limit). Fixed hard ceilings authorize spending; they never rise automatically. A percentage is n/a when incumbent cost is unknown or a free incumbent would become paid.
-Matched incumbent score in this deciding-source observation: **34.8**.
-**Incumbent evidence gap:** no configuration-matched score for: liveBench.instructionFollowing. Decision confidence is reduced, but missing incumbent evidence alone is not a veto. Candidate qualification, normal confirmation and stronger-basis protection remain binding. No measured improvement is claimed for these comparisons.
+Benchmark-workload usage: candidate **355872.8918 AIC**; incumbent **446894.9268 AIC**.
+Benchmark-workload AIC reprices each configuration's own measured input/output tokens at current GitHub rates, uncached, with reasoning already inside output. It compares configurations on one external benchmark workload; it does not predict Copilot task cost or latency.
+Eligible quality reference: gpt-6.1-sol / max / default (54.6). Candidate gap: **2.1 / 3** absolute intelligenceIndex score points.
+Lowest measured benchmark-workload cost among configurations passing every required band wins; equal-cost model ties prefer the newest verified release. Benchmark-workload usage: candidate **355872.8918 AIC**; incumbent **446894.9268 AIC** (1 AIC = USD 0.01).
+Candidate cost change: **-20.3676590495%** (informational, not an incumbent-relative limit). Fixed hard ceilings authorize spending; they never rise automatically. A percentage is n/a when incumbent cost is unknown or a free incumbent would become paid.
+Matched incumbent score in this deciding-source observation: **54.6**.
 
 **Role qualification:** qualified. Every required dimension must pass independently; then the cheapest qualified configuration wins. At least 2 distinct eligible models are required per comparison, not per surviving intersection.
 References are fixed before intersecting dimensions. Missing evidence is not zero or a pass; no cross-benchmark or cross-effort score substitution. These are proxy-based policy tolerances, not statistical equivalence or direct task-success measurements.
@@ -3357,108 +3370,109 @@ LiveBench Instruction Following: Instruction following, not end-to-end workflow 
 
 **Supporting evidence** (informational only; for the recommended configuration, not necessarily the applied configuration):
 None: the configured role dimensions are binding qualification requirements.
+Pending distinct decision-evidence observations for gpt-6.1-sol / xhigh / default (artificialAnalysis): 1 / 2.
 
 <details>
 <summary>Eligibility and exact benchmark evidence</summary>
 
 | Configuration (model / effort / context) | Budget/capability eligible | Exclusions | Advisory warnings | Price tier | Input / output USD per M | Price verified | Capability as-of |
 |---|---|---|---|---|---|---|---|
-| claude-haiku-4.5 / none / default | True | n/a | n/a | default | 1 / 5 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-haiku-5.5 / high / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-haiku-5.5 / low / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-haiku-5.5 / max / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-haiku-5.5 / medium / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-haiku-5.5 / xhigh / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-4.8 / high / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-4.8 / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-4.8 / max / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-4.8 / medium / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-4.8 / xhigh / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-4.8-fast / high / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-4.8-fast / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-4.8-fast / max / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-4.8-fast / medium / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-4.8-fast / xhigh / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-5 / high / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-5 / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-5 / max / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-5 / medium / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-5 / xhigh / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-5.5 / high / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 4 / 20 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-5.5 / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 4 / 20 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-5.5 / max / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 4 / 20 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-5.5 / medium / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 4 / 20 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-opus-5.5 / xhigh / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 4 / 20 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-sonnet-4.6 / high / default | False | capabilities_stale, pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | model_retirement_scope_unconfirmed | default | 3 / 15 | 2026-11-04T12:39:07.4830375Z | 2026-07-30 |
-| claude-sonnet-4.6 / low / default | False | capabilities_stale, pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | model_retirement_scope_unconfirmed | default | 3 / 15 | 2026-11-04T12:39:07.4830375Z | 2026-07-30 |
-| claude-sonnet-4.6 / max / default | False | capabilities_stale, pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | model_retirement_scope_unconfirmed | default | 3 / 15 | 2026-11-04T12:39:07.4830375Z | 2026-07-30 |
-| claude-sonnet-4.6 / medium / default | False | capabilities_stale, pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | model_retirement_scope_unconfirmed | default | 3 / 15 | 2026-11-04T12:39:07.4830375Z | 2026-07-30 |
-| claude-sonnet-5 / high / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-sonnet-5 / low / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-sonnet-5 / max / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-sonnet-5 / medium / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-sonnet-5 / xhigh / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-sonnet-5.5 / high / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-sonnet-5.5 / low / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-sonnet-5.5 / max / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-sonnet-5.5 / medium / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| claude-sonnet-5.5 / xhigh / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gemini-3.8-flash / none / default | True | n/a | n/a | default | 0.75 / 3.75 | 2026-11-04T12:39:07.4830375Z | 2026-10-30T08:37:00.782Z |
-| gemini-4-argon / none / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-10-30T08:37:00.782Z |
-| gpt-5.3-codex / high / default | False | pricing_output_exceeds_ceiling | n/a | default | 1.75 / 14 | 2026-11-04T12:39:07.4830375Z | 2026-09-08 |
-| gpt-5.3-codex / low / default | False | pricing_output_exceeds_ceiling | n/a | default | 1.75 / 14 | 2026-11-04T12:39:07.4830375Z | 2026-09-08 |
-| gpt-5.3-codex / medium / default | False | pricing_output_exceeds_ceiling | n/a | default | 1.75 / 14 | 2026-11-04T12:39:07.4830375Z | 2026-09-08 |
-| gpt-5.3-codex / xhigh / default | False | pricing_output_exceeds_ceiling | n/a | default | 1.75 / 14 | 2026-11-04T12:39:07.4830375Z | 2026-09-08 |
-| gpt-5.6-luna / high / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-luna / low / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-luna / max / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-luna / medium / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-luna / none / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-luna / xhigh / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-sol / high / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 4 / 20 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-sol / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 4 / 20 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-sol / max / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 4 / 20 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-sol / medium / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 4 / 20 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-sol / none / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 4 / 20 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-sol / xhigh / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 4 / 20 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-terra / high / default | False | pricing_output_exceeds_ceiling | n/a | default | 2 / 12 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-terra / low / default | False | pricing_output_exceeds_ceiling | n/a | default | 2 / 12 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-terra / max / default | False | pricing_output_exceeds_ceiling | n/a | default | 2 / 12 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-terra / medium / default | False | pricing_output_exceeds_ceiling | n/a | default | 2 / 12 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-terra / none / default | False | pricing_output_exceeds_ceiling | n/a | default | 2 / 12 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-5.6-terra / xhigh / default | False | pricing_output_exceeds_ceiling | n/a | default | 2 / 12 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-astra / high / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-astra / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-astra / max / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-astra / medium / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-astra / xhigh / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-luna / high / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-luna / low / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-luna / max / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-luna / medium / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-luna / none / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-luna / xhigh / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-sol / high / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-sol / low / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-sol / max / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-sol / medium / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-sol / none / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6-sol / xhigh / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6.1-sol / high / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6.1-sol / low / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6.1-sol / max / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6.1-sol / medium / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| gpt-6.1-sol / xhigh / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| grok-4.5 / high / default | True | n/a | n/a | default | 2 / 6 | 2026-11-04T12:39:07.4830375Z | 2026-09-08 |
-| grok-4.5 / low / default | True | n/a | n/a | default | 2 / 6 | 2026-11-04T12:39:07.4830375Z | 2026-09-08 |
-| grok-4.5 / medium / default | True | n/a | n/a | default | 2 / 6 | 2026-11-04T12:39:07.4830375Z | 2026-09-08 |
-| grok-4.6 / high / default | True | n/a | n/a | default | 2 / 6 | 2026-11-04T12:39:07.4830375Z | 2026-09-08 |
-| grok-4.6 / low / default | True | n/a | n/a | default | 2 / 6 | 2026-11-04T12:39:07.4830375Z | 2026-09-08 |
-| grok-4.6 / medium / default | True | n/a | n/a | default | 2 / 6 | 2026-11-04T12:39:07.4830375Z | 2026-09-08 |
-| grok-4.6 / xhigh / default | True | n/a | n/a | default | 2 / 6 | 2026-11-04T12:39:07.4830375Z | 2026-09-08 |
-| mai-code-1.1-flash / high / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| mai-code-1.1-flash / low / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
-| mai-code-1.1-flash / medium / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T12:39:07.4830375Z | 2026-11-04T12:31:37.443Z |
+| claude-haiku-4.5 / none / default | True | n/a | n/a | default | 1 / 5 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-haiku-5.5 / high / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-haiku-5.5 / low / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-haiku-5.5 / max / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-haiku-5.5 / medium / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-haiku-5.5 / xhigh / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-4.8 / high / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-4.8 / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-4.8 / max / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-4.8 / medium / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-4.8 / xhigh / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-4.8-fast / high / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-4.8-fast / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-4.8-fast / max / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-4.8-fast / medium / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-4.8-fast / xhigh / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-5 / high / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-5 / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-5 / max / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-5 / medium / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-5 / xhigh / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 5 / 25 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-5.5 / high / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 4 / 20 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-5.5 / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 4 / 20 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-5.5 / max / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 4 / 20 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-5.5 / medium / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 4 / 20 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-opus-5.5 / xhigh / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 4 / 20 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-sonnet-4.6 / high / default | False | capabilities_stale, pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | model_retirement_scope_unconfirmed | default | 3 / 15 | 2026-11-04T14:51:34.5035467Z | 2026-07-30 |
+| claude-sonnet-4.6 / low / default | False | capabilities_stale, pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | model_retirement_scope_unconfirmed | default | 3 / 15 | 2026-11-04T14:51:34.5035467Z | 2026-07-30 |
+| claude-sonnet-4.6 / max / default | False | capabilities_stale, pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | model_retirement_scope_unconfirmed | default | 3 / 15 | 2026-11-04T14:51:34.5035467Z | 2026-07-30 |
+| claude-sonnet-4.6 / medium / default | False | capabilities_stale, pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | model_retirement_scope_unconfirmed | default | 3 / 15 | 2026-11-04T14:51:34.5035467Z | 2026-07-30 |
+| claude-sonnet-5 / high / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-sonnet-5 / low / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-sonnet-5 / max / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-sonnet-5 / medium / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-sonnet-5 / xhigh / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-sonnet-5.5 / high / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-sonnet-5.5 / low / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-sonnet-5.5 / max / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-sonnet-5.5 / medium / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| claude-sonnet-5.5 / xhigh / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gemini-3.8-flash / none / default | True | n/a | n/a | default | 0.75 / 3.75 | 2026-11-04T14:51:34.5035467Z | 2026-10-30T08:37:00.782Z |
+| gemini-4-argon / none / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-10-30T08:37:00.782Z |
+| gpt-5.3-codex / high / default | False | pricing_output_exceeds_ceiling | n/a | default | 1.75 / 14 | 2026-11-04T14:51:34.5035467Z | 2026-09-08 |
+| gpt-5.3-codex / low / default | False | pricing_output_exceeds_ceiling | n/a | default | 1.75 / 14 | 2026-11-04T14:51:34.5035467Z | 2026-09-08 |
+| gpt-5.3-codex / medium / default | False | pricing_output_exceeds_ceiling | n/a | default | 1.75 / 14 | 2026-11-04T14:51:34.5035467Z | 2026-09-08 |
+| gpt-5.3-codex / xhigh / default | False | pricing_output_exceeds_ceiling | n/a | default | 1.75 / 14 | 2026-11-04T14:51:34.5035467Z | 2026-09-08 |
+| gpt-5.6-luna / high / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-luna / low / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-luna / max / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-luna / medium / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-luna / none / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-luna / xhigh / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-sol / high / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 4 / 20 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-sol / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 4 / 20 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-sol / max / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 4 / 20 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-sol / medium / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 4 / 20 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-sol / none / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 4 / 20 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-sol / xhigh / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 4 / 20 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-terra / high / default | False | pricing_output_exceeds_ceiling | n/a | default | 2 / 12 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-terra / low / default | False | pricing_output_exceeds_ceiling | n/a | default | 2 / 12 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-terra / max / default | False | pricing_output_exceeds_ceiling | n/a | default | 2 / 12 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-terra / medium / default | False | pricing_output_exceeds_ceiling | n/a | default | 2 / 12 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-terra / none / default | False | pricing_output_exceeds_ceiling | n/a | default | 2 / 12 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-5.6-terra / xhigh / default | False | pricing_output_exceeds_ceiling | n/a | default | 2 / 12 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-astra / high / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-astra / low / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-astra / max / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-astra / medium / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-astra / xhigh / default | False | pricing_input_exceeds_ceiling, pricing_output_exceeds_ceiling | n/a | default | 10 / 50 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-luna / high / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-luna / low / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-luna / max / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-luna / medium / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-luna / none / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-luna / xhigh / default | True | n/a | n/a | default | 0.1 / 0.5 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-sol / high / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-sol / low / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-sol / max / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-sol / medium / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-sol / none / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6-sol / xhigh / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6.1-sol / high / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6.1-sol / low / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6.1-sol / max / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6.1-sol / medium / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| gpt-6.1-sol / xhigh / default | True | n/a | n/a | default | 2 / 10 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| grok-4.5 / high / default | True | n/a | n/a | default | 2 / 6 | 2026-11-04T14:51:34.5035467Z | 2026-09-08 |
+| grok-4.5 / low / default | True | n/a | n/a | default | 2 / 6 | 2026-11-04T14:51:34.5035467Z | 2026-09-08 |
+| grok-4.5 / medium / default | True | n/a | n/a | default | 2 / 6 | 2026-11-04T14:51:34.5035467Z | 2026-09-08 |
+| grok-4.6 / high / default | True | n/a | n/a | default | 2 / 6 | 2026-11-04T14:51:34.5035467Z | 2026-09-08 |
+| grok-4.6 / low / default | True | n/a | n/a | default | 2 / 6 | 2026-11-04T14:51:34.5035467Z | 2026-09-08 |
+| grok-4.6 / medium / default | True | n/a | n/a | default | 2 / 6 | 2026-11-04T14:51:34.5035467Z | 2026-09-08 |
+| grok-4.6 / xhigh / default | True | n/a | n/a | default | 2 / 6 | 2026-11-04T14:51:34.5035467Z | 2026-09-08 |
+| mai-code-1.1-flash / high / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| mai-code-1.1-flash / low / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
+| mai-code-1.1-flash / medium / default | True | n/a | n/a | default | 0.2 / 1.2 | 2026-11-04T14:51:34.5035467Z | 2026-11-04T12:31:37.443Z |
 
 | Model | Source | Exact alias / source label | Effort | Metric | Score | Publication age unknown | Cached | Harness | Role |
 |---|---|---|---|---|---|---|---|---|---|
