@@ -77,7 +77,7 @@
     "description": "Not sure what class to use — runs an inline estimate of your task and recommends which class to relaunch as.",
     "hint": "When you open the chat, describe your task and the agent will estimate the scope and recommend the right class before doing any work.",
     "model": "gpt-6.1-sol",
-    "effort": "max",
+    "effort": "xhigh",
     "context": "default"
   }
 ]
