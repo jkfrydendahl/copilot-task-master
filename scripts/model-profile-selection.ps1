@@ -9,7 +9,8 @@ function Get-ProfileSelection {
         [AllowEmptyCollection()][object[]]$Evidence,
         [AllowEmptyCollection()][object[]]$Verdicts,
         [Parameter(Mandatory)][hashtable]$Policy,
-        [Parameter(Mandatory)][hashtable]$Aliases
+        [Parameter(Mandatory)][hashtable]$Aliases,
+        $Usage = $null
     )
     $strategy = $Policy.selectionPolicy.profiles[$Profile.key].strategy
     $configurationPolicy = Get-ObjectMemberValue $Policy.selectionPolicy.profiles[$Profile.key] "configurationSelection"
@@ -23,7 +24,7 @@ function Get-ProfileSelection {
     $incumbentVerdict = @($Verdicts | Where-Object modelId -eq $Profile.model | Select-Object -First 1)
     $incumbentCapability = if ($incumbentVerdict.Count) { Get-ObjectMemberValue $incumbentVerdict[0] "capabilities" } else { $null }
     $currentConfiguration = New-ModelConfiguration -Model $Profile.model -Effort $Profile.effort -Context $Profile.context -CapabilityRecord $incumbentCapability
-    $incumbentCost = Get-ModelReferenceCost $byConfiguration[$currentConfiguration.configurationId] $Policy.selectionPolicy
+    $incumbentFixedCost = Get-ModelReferenceCost $byConfiguration[$currentConfiguration.configurationId] $Policy.selectionPolicy
     $Evidence = @(foreach ($record in $Evidence) {
         $configuration = Get-RecordModelConfiguration -Record $record -Profile $Profile -RequireExplicitEffort:($configurationMode -eq "bounded_effort")
         $normalized = [pscustomobject]$record | Select-Object -Property *
@@ -108,7 +109,9 @@ function Get-ProfileSelection {
             candidateReferenceAic = $(if ($null -ne $retirementRecovery) {
                 (Get-ModelReferenceCost $byConfiguration[$retirementRecovery.configuration.configurationId] $Policy.selectionPolicy) * 100
             } else { $null })
-            incumbentReferenceAic = $(if ($null -ne $incumbentCost) { $incumbentCost * 100 } else { $null })
+            incumbentReferenceAic = $(if ($null -ne $incumbentFixedCost) { $incumbentFixedCost * 100 } else { $null })
+            costBasis = Resolve-ReferenceCostBasis -SelectionPolicy $Policy.selectionPolicy -Competitors @() `
+                -VerdictsByConfiguration $byConfiguration -Strategy $strategy
             strategy = $strategy
             valueDecision = $null
             qualityWinner = $null
@@ -133,11 +136,22 @@ function Get-ProfileSelection {
         }
     }
 
+    # One cost basis for the whole profile, decided over exactly the configurations the value decision will compare.
+    $qualityReference = if ($strategy -eq "value_balanced" -and $qualification.enabled) { $qualification.dimensions[0].reference } else { $null }
+    $competitors = if ($strategy -eq "value_balanced") {
+        @((Get-ValueQualifiedEvidence $Profile @($pool | Sort-Object -Property @{ Expression = { $_.score }; Descending = $true }) `
+            $Policy.selectionPolicy $qualityReference).qualified)
+    } else { @($pool) }
+    $costBasis = Resolve-ReferenceCostBasis -SelectionPolicy $Policy.selectionPolicy -Competitors $competitors `
+        -VerdictsByConfiguration $byConfiguration -Usage $Usage -Strategy $strategy
+    $incumbentCost = Get-BasisReferenceCost $costBasis $byConfiguration[$currentConfiguration.configurationId] `
+        $currentConfiguration.configurationId $Policy.selectionPolicy
+
     $sortOrder = @(
         @{ Expression = { $_.score }; Descending = $true }
         @{
             Expression = {
-                Get-ModelReferenceCost $byConfiguration[$_.configurationId] $Policy.selectionPolicy
+                Get-BasisSortCost $costBasis $byConfiguration $_.configurationId $Policy.selectionPolicy
             }
         }
         @{ Expression = { if ($_.configurationId -eq $currentConfiguration.configurationId) { 0 } else { 1 } } }
@@ -149,8 +163,7 @@ function Get-ProfileSelection {
     $winner = $ranked[0]
     $valueDecision = $null
     if ($strategy -eq "value_balanced") {
-        $qualityReference = if ($qualification.enabled) { $qualification.dimensions[0].reference } else { $null }
-        $valueDecision = Get-ValueBalancedSelection $Profile $ranked $byConfiguration $Policy.selectionPolicy $comparisonEvidence $currentConfiguration $qualityReference
+        $valueDecision = Get-ValueBalancedSelection $Profile $ranked $byConfiguration $Policy.selectionPolicy $comparisonEvidence $currentConfiguration $qualityReference $costBasis
         $winner = $valueDecision.winner
     }
     $definition = $Policy.evidenceMetrics[$role.metricKey]
@@ -227,7 +240,7 @@ function Get-ProfileSelection {
         sourceVersion = $winner.sourceVersion
     }
     $metadata = Get-ObjectMemberValue $winner "sourceMetadata"
-    $evidenceIdentity = Get-ModelDataFingerprint @{
+    $identityFields = @{
         metricKey=$role.metricKey
         metricIdentity=(Get-ObjectMemberValue $winner "metricIdentity")
         variantId=(Get-ObjectMemberValue $metadata "variantId")
@@ -237,8 +250,12 @@ function Get-ProfileSelection {
         qualificationIdentity=$qualification.identity
         recencyIdentity=(Get-ObjectMemberValue (Get-ObjectMemberValue $valueDecision "recencyDecision") "identity")
     }
+    # Only measured consumption joins the decision identity (fixed-basket identities are unchanged), so a pending
+    # observation made on one cost basis or one set of usage can never confirm a decision made on another.
+    if ($costBasis.mode -eq "measured_workload") { $identityFields.costIdentity = $costBasis.identity }
+    $evidenceIdentity = Get-ModelDataFingerprint $identityFields
     if ($qualification.enabled) { $observation = $qualification.observation }
-    $candidateCost = Get-ModelReferenceCost $byConfiguration[$winner.configurationId] $Policy.selectionPolicy
+    $candidateCost = Get-BasisReferenceCost $costBasis $byConfiguration[$winner.configurationId] $winner.configurationId $Policy.selectionPolicy
     if ($null -ne $retirementRecovery) {
         $retirementRecovery.configuration = Get-RecordModelConfiguration -Record $winner -Profile $Profile
     }
@@ -249,6 +266,7 @@ function Get-ProfileSelection {
         allowedEfforts = @(Get-ObjectMemberValue $configurationPolicy "allowedEfforts")
         candidateReferenceAic = $(if ($null -ne $candidateCost) { $candidateCost * 100 } else { $null })
         incumbentReferenceAic = $(if ($null -ne $incumbentCost) { $incumbentCost * 100 } else { $null })
+        costBasis = $costBasis
         strategy = $strategy
         valueDecision = $valueDecision
         qualityWinner = $qualityWinner

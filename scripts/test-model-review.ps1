@@ -435,4 +435,208 @@ Run-Test "Nine-role offline review writes the measured Xhigh pair and preserves 
         Remove-Item -LiteralPath $root
     }
 }
+# Measured-cost end to end: AA page -> real parser -> captured source -> evidence -> selection -> report -> written profile.
+# The cost workload is a pinned whole-suite proxy that is independent of the production constant, so drift in either copy fails here.
+$script:E2EUsageTasks=[ordered]@{"aa-briefcase"=91;"automationbench-aa"=657;"terminalbench-4-0"=66;"frontiercode-2-0"=132;
+    "omniscience"=3000;"gdp-pdf"=100;"hle-diamond"=1000;"critpt-v2-hard"=40;"terminal-bench-science"=70}
+function New-E2EUsagePage {
+    param([Parameter(Mandatory)][object[]]$Rows)
+    $tasks=[long](($script:E2EUsageTasks.Values | Measure-Object -Sum).Sum)
+    $models=@(foreach($row in $Rows) {
+        $perTask=[long]$row.perTask
+        $output=$perTask*$tasks
+        @{
+            slug=$row.slug;name=$row.name;effort=@{slug=$row.effort};release=@{slug=$row.release};releaseDate="2026-09-01";lcr=0.8
+            canonicalIntelligenceIndexTokenCount=@{input=[long]$row.input;output=$output;answer=($output-[long]$row.reasoning);reasoning=[long]$row.reasoning}
+            intelligenceIndexEvaluations=@(foreach($task in $script:E2EUsageTasks.Keys) {
+                @{slug=$task;score=0.5;outputTokensPerTask=$perTask;costPerTask=1.5;timePerTask=10}
+            })
+        }
+    })
+    $json="x:"+(@{initialModels=$models} | ConvertTo-Json -Depth 20 -Compress)
+    $cut=[int]($json.Length/2)
+    return '<script>self.__next_f.push([1,'+(ConvertTo-Json -InputObject $json.Substring(0,$cut) -Compress)+
+        ']);self.__next_f.push([1,'+(ConvertTo-Json -InputObject $json.Substring($cut) -Compress)+'])</script>'
+}
+function New-E2ECostRoot {
+    param([string]$Model="alpha",[string]$Effort="max")
+    $root=Join-Path ([IO.Path]::GetTempPath()) ([guid]::NewGuid().ToString("N"))
+    foreach($dir in @("config","data","reports")) { New-Item -ItemType Directory (Join-Path $root $dir) -Force | Out-Null }
+    Copy-Item (Join-Path $repo "config\model-policy.json") (Join-Path $root "config")
+    Write-ModelJsonAtomic (Join-Path $root "task-profiles.json") @(
+        @{key="quick";model=$Model;effort=$Effort;context="default";label="Preserve me"}
+        @{key="review";model="beta";effort="high";context="default"}
+    )
+    $supported=@{alpha=@("xhigh","max");beta=@("high");gamma=@("high")}
+    $caps=@{};$aliases=@{}
+    foreach($name in $supported.Keys) {
+        $caps[$name]=@{asOf="2026-09-22";capabilitySource="fixture";vision=$true;visionSource="fixture";supportedContexts=@("default");supportedEfforts=$supported[$name]}
+        $aliases[$name]=@{artificialAnalysis=@{};liveBench=@{}}
+        foreach($effort in $supported[$name]) {
+            $aliases[$name].artificialAnalysis[$effort]="$name-$effort"
+            $aliases[$name].liveBench[$effort]="$name-$effort"
+        }
+    }
+    Write-ModelJsonAtomic (Join-Path $root "config\model-capabilities.json") @{schemaVersion=2;models=$caps}
+    Write-ModelJsonAtomic (Join-Path $root "config\model-ranking-aliases.json") @{schemaVersion=2;aliases=$aliases}
+    Write-ModelJsonAtomic (Join-Path $root "config\model-pricing-aliases.json") @{schemaVersion=1;aliases=@{alpha="Alpha";beta="Beta";gamma="Gamma"}}
+    return $root
+}
+function Remove-E2ECostRoot($Root) {
+    if (-not (Test-Path -LiteralPath $Root)) { return }
+    Get-ChildItem -LiteralPath $Root -File -Recurse | Remove-Item
+    foreach($dir in @("config","data","reports")) { if (Test-Path -LiteralPath (Join-Path $Root $dir)) { Remove-Item -LiteralPath (Join-Path $Root $dir) } }
+    Remove-Item -LiteralPath $Root
+}
+function New-E2ECostSources {
+    param([Parameter(Mandatory)][object[]]$UsageRows,[Parameter(Mandatory)][hashtable]$Coding)
+    $script:e2eUsagePage=New-E2EUsagePage $UsageRows
+    $components=Get-AAComponentData -ModelSlugs @($UsageRows[0].slug) -FetchText {param($u) @{status="ok";content=$script:e2eUsagePage}}
+    $components.fetchedAtUtc="2026-09-22Z"
+    $models=@{}
+    foreach($slug in $Coding.Keys) { $models[$slug]=@{coding=$Coding[$slug]} }
+    return @{
+        artificialAnalysisComponents=$components
+        liveBench=@{status="ok";sourceVersion="lb-v1";sourceDate="2026-09-22";fetchedAtUtc="2026-09-22Z";sourceUrl="https://example.test/lb";models=$models}
+    }
+}
+function Get-E2EPendingCount($Result) {
+    $pending=$Result.resolution.state.pending
+    if ($null -eq $pending) { return 0 }
+    return [int]$pending.count
+}
+function Get-E2EReportSection($Report,$Key) {
+    $match=[regex]::Match($Report,"(?ms)^### $([regex]::Escape($Key))\r?\n.*?(?=^#{1,3} |\z)")
+    if (-not $match.Success) { throw "The report has no section for $Key" }
+    return $match.Value
+}
+$e2eRates='<table><tr><th>Model</th><th>Input</th><th>Output</th></tr><tr><td>Alpha</td><td>$1.50</td><td>$6.00</td></tr><tr><td>Beta</td><td>$1.50</td><td>$6.00</td></tr><tr><td>Gamma</td><td>$1.00</td><td>$4.00</td></tr></table>'
+$e2eFetch={param($u) @{status="ok";content=$e2eRates}}
+# xhigh: 1.0e9 input / 51.56e6 output (30e6 of it reasoning); max: 1.2e9 input / 103.12e6 output (80e6 of it reasoning).
+$e2eAlphaRows=@(
+    @{slug="alpha-xhigh";name="Alpha (xhigh)";effort="xhigh";release="alpha";input=1000000000;perTask=10000;reasoning=30000000}
+    @{slug="alpha-max";name="Alpha (max)";effort="max";release="alpha";input=1200000000;perTask=20000;reasoning=80000000}
+)
+Run-Test "Review reads captured AA usage end to end: the lower-consumption effort is confirmed, forced and written to a temporary profile only" {
+    $workspaceProfiles=Join-Path $repo "task-profiles.json"
+    $workspaceHash=(Get-FileHash -LiteralPath $workspaceProfiles -Algorithm SHA256).Hash
+    $roots=@()
+    try {
+        $root=New-E2ECostRoot -Model alpha -Effort max
+        $roots+=$root
+        $profilePath=Join-Path $root "task-profiles.json"
+        $sources=New-E2ECostSources -UsageRows $e2eAlphaRows -Coding @{"alpha-xhigh"=80;"alpha-max"=82;"beta-high"=50}
+        $options=@{RepoRoot=$root;Availability=@{models=@("alpha","beta");verified=$true;source="fixture"};Sources=$sources;FetchPricing=$e2eFetch;NowUtc=[datetime]"2026-09-22Z"}
+        $before=Get-Content -LiteralPath $profilePath -Raw
+        $first=Invoke-TaskProfileReview @options
+        $quick=$first.results | Where-Object key -eq "quick"
+        $basis=$quick.selection.costBasis
+        Assert-True ($basis.mode -eq "measured_workload" -and $basis.workloadId -eq "aa-intelligence-index-canonical-v1" -and
+            $basis.competitorCount -eq 2 -and $basis.unavailable.Count -eq 0) "The normal review did not use the captured usage (an unqualified model without usage must not disable it)"
+        Assert-True ($quick.selection.winner.model -eq "alpha" -and $quick.selection.winner.effort -eq "xhigh" -and
+            $quick.selection.qualityWinner.effort -eq "max") "Lower consumption did not beat the higher-scoring effort at one GitHub rate"
+        Assert-True ($quick.selection.candidateReferenceAic -eq 180936d -and $quick.selection.incumbentReferenceAic -eq 241872d) "Wrong repriced benchmark-workload AIC: $($quick.selection.candidateReferenceAic) / $($quick.selection.incumbentReferenceAic)"
+        Assert-True (-not $quick.resolution.applied -and (Get-E2EPendingCount $quick) -eq 1 -and (Get-Content -LiteralPath $profilePath -Raw) -ceq $before) "The first observation was applied or counted twice"
+        $snapshot=Get-Content -LiteralPath (Join-Path $root "data\model-ranking-snapshot.json") -Raw | ConvertFrom-Json
+        $captured=$snapshot.sources.artificialAnalysisComponents.usage.models.'alpha-xhigh'
+        Assert-True ($captured.inputTokens -eq 1000000000 -and $captured.outputTokens -eq 51560000 -and $captured.reasoningTokens -eq 30000000 -and
+            $captured.status -eq "verified") "Captured usage was not persisted with the source"
+        $report=Get-Content (Join-Path $root "reports\task-profile-review.md") -Raw
+        $section=Get-E2EReportSection $report "quick"
+        Assert-True ($report.Contains("Measured-cost basis: enabled")) "The policy section omitted the measured-cost basis"
+        foreach($term in @("**Cost basis: measured benchmark workload**","Benchmark-workload usage: candidate **180936 AIC**; incumbent **241872 AIC**.",
+            "not predicted Copilot task spend","alpha / xhigh / default")) {
+            Assert-True ($section.Contains($term)) "The quick section omitted the measured basis: $term"
+        }
+        Assert-True (-not $section.Contains("Reference usage: candidate")) "The quick profile reported the fixed basket while ranking on measured usage"
+        $same=Invoke-TaskProfileReview @options
+        Assert-True (-not (($same.results | Where-Object key -eq "quick").resolution.applied) -and (Get-E2EPendingCount ($same.results | Where-Object key -eq "quick")) -eq 1) "Retrieving the same usage again manufactured a confirmation"
+        $sources.liveBench.models["beta-high"].coding=49
+        $second=Invoke-TaskProfileReview @options
+        $quick=$second.results | Where-Object key -eq "quick"
+        Assert-True ($quick.resolution.applied -and $quick.selection.costBasis.mode -eq "measured_workload") "A distinct observation did not confirm the measured decision"
+        $saved=@(Get-Content -LiteralPath $profilePath -Raw | ConvertFrom-Json)
+        $savedQuick=$saved | Where-Object key -eq "quick"
+        Assert-True ($savedQuick.model -eq "alpha" -and $savedQuick.effort -eq "xhigh" -and $savedQuick.context -eq "default" -and $savedQuick.label -eq "Preserve me" -and
+            ($saved | Where-Object key -eq "review").model -eq "beta" -and ($saved | Where-Object key -eq "review").effort -eq "high") "The written task profile did not take the lower-consumption pair together"
+        Assert-True ($quick.resolution.state.activeOverride.effort -eq "xhigh") "Active state lost the measured effort"
+        $adopted=Invoke-TaskProfileReview @options
+        $quick=$adopted.results | Where-Object key -eq "quick"
+        Assert-True (-not $quick.resolution.applied -and $quick.finalConfiguration.effort -eq "xhigh" -and
+            $quick.selection.candidateReferenceAic -eq 180936d -and $quick.selection.incumbentReferenceAic -eq 180936d) "The adopted measured configuration churned or compared unlike costs"
+        $forcedRoot=New-E2ECostRoot -Model alpha -Effort max
+        $roots+=$forcedRoot
+        $forcedSources=New-E2ECostSources -UsageRows $e2eAlphaRows -Coding @{"alpha-xhigh"=80;"alpha-max"=82;"beta-high"=50}
+        $forced=Invoke-TaskProfileReview -RepoRoot $forcedRoot -Availability @{models=@("alpha","beta");verified=$true;source="fixture"} -Sources $forcedSources `
+            -FetchPricing $e2eFetch -ForceImmediateApply -NowUtc ([datetime]"2026-09-22Z")
+        $forcedQuick=@(Get-Content -LiteralPath (Join-Path $forcedRoot "task-profiles.json") -Raw | ConvertFrom-Json) | Where-Object key -eq "quick"
+        Assert-True (($forced.results | Where-Object key -eq "quick").resolution.applied -and $forcedQuick.model -eq "alpha" -and $forcedQuick.effort -eq "xhigh") "Approved force did not write the measured pair"
+        Assert-True ((Get-FileHash -LiteralPath $workspaceProfiles -Algorithm SHA256).Hash -eq $workspaceHash) "The real workspace task-profiles.json was touched"
+    } finally {
+        foreach($created in $roots) { Remove-E2ECostRoot $created }
+    }
+}
+Run-Test "Review falls back to the fixed basket for the whole profile when a qualified configuration has no captured usage" {
+    $roots=@()
+    try {
+        $root=New-E2ECostRoot -Model alpha -Effort max
+        $roots+=$root
+        $sources=New-E2ECostSources -UsageRows $e2eAlphaRows -Coding @{"alpha-xhigh"=80;"alpha-max"=82;"beta-high"=50;"gamma-high"=81}
+        $run=Invoke-TaskProfileReview -RepoRoot $root -Availability @{models=@("alpha","beta","gamma");verified=$true;source="fixture"} -Sources $sources `
+            -FetchPricing $e2eFetch -ForceImmediateApply -NowUtc ([datetime]"2026-09-22Z")
+        $quick=$run.results | Where-Object key -eq "quick"
+        $basis=$quick.selection.costBasis
+        Assert-True ($basis.mode -eq "fixed_basket" -and $basis.fallback -and $basis.reasons -contains "usage_missing" -and $basis.competitorCount -eq 3 -and
+            $basis.unavailable.Count -eq 1 -and $basis.unavailable[0].model -eq "gamma") "A qualified configuration without usage was dropped instead of triggering the profile fallback"
+        Assert-True ($quick.selection.winner.model -eq "gamma" -and $quick.selection.candidateReferenceAic -eq 140 -and $quick.selection.incumbentReferenceAic -eq 210) "The fixed basket did not rank the whole qualified pool"
+        $saved=@(Get-Content -LiteralPath (Join-Path $root "task-profiles.json") -Raw | ConvertFrom-Json) | Where-Object key -eq "quick"
+        Assert-True ($quick.resolution.applied -and $saved.model -eq "gamma" -and $saved.effort -eq "high") "The forced fixed-basket decision was not written"
+        $section=Get-E2EReportSection (Get-Content (Join-Path $root "reports\task-profile-review.md") -Raw) "quick"
+        foreach($term in @("**Cost basis: fixed reference basket (profile fallback).**","usage_missing","gamma / high / default (usage_missing)","never mixed","Reference usage: candidate **140 AIC**; incumbent **210 AIC**.")) {
+            Assert-True ($section.Contains($term)) "The quick section omitted the fallback basis: $term"
+        }
+        Assert-True (-not $section.Contains("Benchmark-workload usage: candidate")) "A fallback profile reported measured costs"
+    } finally {
+        foreach($created in $roots) { Remove-E2ECostRoot $created }
+    }
+}
+Run-Test "Cached usage is never measured evidence, and returning to the same fresh usage cannot manufacture a confirmation" {
+    $roots=@()
+    try {
+        $root=New-E2ECostRoot -Model alpha -Effort max
+        $roots+=$root
+        $profilePath=Join-Path $root "task-profiles.json"
+        $sources=New-E2ECostSources -UsageRows $e2eAlphaRows -Coding @{"alpha-xhigh"=80;"alpha-max"=82;"beta-high"=50}
+        $options=@{RepoRoot=$root;Availability=@{models=@("alpha","beta");verified=$true;source="fixture"};FetchPricing=$e2eFetch;NowUtc=[datetime]"2026-09-22Z"}
+        $before=Get-Content -LiteralPath $profilePath -Raw
+        $measured=Invoke-TaskProfileReview @options -Sources $sources
+        $quick=$measured.results | Where-Object key -eq "quick"
+        Assert-True ($quick.selection.costBasis.mode -eq "measured_workload" -and $quick.selection.winner.effort -eq "xhigh" -and
+            (Get-E2EPendingCount $quick) -eq 1) "Fixture should start with a measured xhigh candidate awaiting confirmation"
+        $outageSources=@{artificialAnalysisComponents=@{status="error";message="AA HTTP503"};liveBench=$sources.liveBench}
+        $outage=Invoke-TaskProfileReview @options -Sources $outageSources
+        $quick=$outage.results | Where-Object key -eq "quick"
+        Assert-True ($outage.snapshot.sources.artificialAnalysisComponents.status -eq "cached" -and
+            $outage.snapshot.sources.artificialAnalysisComponents.usage.models["alpha-xhigh"].inputTokens -eq 1000000000) "The outage did not fall back to the cached component source"
+        Assert-True ($quick.selection.costBasis.mode -eq "fixed_basket" -and $quick.selection.costBasis.fallback -and
+            $quick.selection.costBasis.reasons -contains "usage_source_cached") "Cached usage was treated as fresh measured evidence"
+        Assert-True ($quick.selection.winner.effort -eq "max" -and $quick.selection.candidateReferenceAic -eq 210 -and $quick.selection.incumbentReferenceAic -eq 210 -and
+            -not $quick.resolution.applied -and (Get-E2EPendingCount $quick) -eq 0 -and (Get-Content -LiteralPath $profilePath -Raw) -ceq $before) "The fixed-basket fallback moved the profile or kept the measured pending decision"
+        $restored=Invoke-TaskProfileReview @options -Sources $sources
+        $quick=$restored.results | Where-Object key -eq "quick"
+        Assert-True ($quick.selection.costBasis.mode -eq "measured_workload" -and $quick.selection.winner.effort -eq "xhigh" -and
+            -not $quick.resolution.applied -and (Get-E2EPendingCount $quick) -eq 0) "Returning to the same fresh usage manufactured a distinct observation"
+        $sources.liveBench.models["beta-high"].coding=49
+        $distinct=Invoke-TaskProfileReview @options -Sources $sources
+        $quick=$distinct.results | Where-Object key -eq "quick"
+        Assert-True (-not $quick.resolution.applied -and (Get-E2EPendingCount $quick) -eq 1 -and (Get-Content -LiteralPath $profilePath -Raw) -ceq $before) "The first distinct observation after the fallback was applied or miscounted"
+        $sources.liveBench.models["beta-high"].coding=48
+        $confirmed=Invoke-TaskProfileReview @options -Sources $sources
+        $quick=$confirmed.results | Where-Object key -eq "quick"
+        $saved=@(Get-Content -LiteralPath $profilePath -Raw | ConvertFrom-Json) | Where-Object key -eq "quick"
+        Assert-True ($quick.resolution.applied -and $quick.selection.costBasis.mode -eq "measured_workload" -and $saved.model -eq "alpha" -and $saved.effort -eq "xhigh") "The second distinct observation did not confirm the measured pair"
+    } finally {
+        foreach($created in $roots) { Remove-E2ECostRoot $created }
+    }
+}
 if ($script:Failed) { exit 1 }

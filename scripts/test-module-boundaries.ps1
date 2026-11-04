@@ -67,4 +67,13 @@ Run-Test "Component normalization and role qualification load without acquisitio
     Assert-True (-not (Get-Command Resolve-ProfileSelectionState -ErrorAction SilentlyContinue)) "Role module imported persistence"
     Assert-True ([bool](Get-Command Get-ModelReleaseEvidence)) "Pure release metadata helper missing"
 }
+
+Run-Test "Consumption matching loads as a pure helper without acquisition, selection or state writers" {
+    . (Join-Path $PSScriptRoot "model-usage-evidence.ps1")
+    Assert-True ([bool](Get-Command Get-ProfileUsageEvidence) -and [bool](Get-Command Get-MeasuredCostPolicy)) "Usage evidence helpers missing"
+    foreach ($name in @("Get-AAComponentData","ConvertFrom-AAComponentPage","Get-ProfileBenchmarkEvidence","Get-ProfileSelection",
+        "Get-ValueBalancedSelection","Resolve-ProfileSelectionState","Invoke-TaskProfileReview")) {
+        Assert-True (-not (Get-Command $name -ErrorAction SilentlyContinue)) "Usage evidence imported $name"
+    }
+}
 if ($script:Failed) { exit 1 }

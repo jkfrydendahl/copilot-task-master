@@ -297,4 +297,126 @@ Run-Test "Coverage audit aliases preserve all nineteen exact published model eff
     Assert-True (-not $aliases["gemini-3.5-flash"].artificialAnalysis.Contains("low")) "Minimal borrowed as low"
     Assert-True (-not $aliases["claude-opus-4.7"].artificialAnalysis.Contains("high")) "Contradictory non-reasoning mapping"
 }
+$usageWorkload=@{id=$policy.selectionPolicy.measuredCost.workload;fingerprint="workload-fingerprint"}
+$usageMedium=New-ModelConfiguration one medium default
+$usageMax=New-ModelConfiguration one max default
+function Usage-Row([string]$Effort,[long]$InputTokens,[long]$OutputTokens,[long]$Reasoning) {
+    @{status="verified";name="One ($Effort)";effort=$Effort;releaseId="one";inputTokens=$InputTokens;outputTokens=$OutputTokens
+        answerTokens=$OutputTokens-$Reasoning;reasoningTokens=$Reasoning;workloadFingerprint=$usageWorkload.fingerprint}
+}
+function Usage-Source {
+    @{
+        status="ok";sourceDate=$null;fetchedAtUtc="2026-09-08Z";sourceUrl="https://example.test/components";sourceVersion="page1"
+        models=@{"one-medium"=@{name="One medium";automationBench=0.6;enterpriseOpsGym=0.4;lcr=0.8;ifbench=0.7}
+            "one-max"=@{name="One max";automationBench=0.7;enterpriseOpsGym=0.5;lcr=0.85;ifbench=0.75}}
+        identities=@{"one-medium"=@{status="verified";releaseId="one";effort="medium"};"one-max"=@{status="verified";releaseId="one";effort="max"}}
+        releases=@{"one-medium"=@(@{date="2026-08-01";releaseId="one";effort="medium"});"one-max"=@(@{date="2026-08-01";releaseId="one";effort="max"})}
+        usage=@{schemaVersion=1;workload=@{id=$usageWorkload.id;fingerprint=$usageWorkload.fingerprint}
+            models=@{"one-medium"=(Usage-Row medium 1000000 100000 20000);"one-max"=(Usage-Row max 2000000 400000 300000)}}
+    }
+}
+function Usage-For($Source,$Mapping=$aliases,$UsagePolicy=$policy) {
+    Get-ProfileUsageEvidence -Configurations @($usageMedium,$usageMax) -Source $Source -Aliases $Mapping -Policy $UsagePolicy -NowUtc $now
+}
+Run-Test "Usage evidence is matched to each exact configuration and keeps the workload identity" {
+    $u=Usage-For (Usage-Source)
+    Assert-True ($u.enabled -and $u.workload.id -eq $policy.selectionPolicy.measuredCost.workload -and $u.workload.fingerprint -eq "workload-fingerprint") "Workload identity missing"
+    $medium=$u.configurations[$usageMedium.configurationId]
+    $max=$u.configurations[$usageMax.configurationId]
+    Assert-True ($medium.status -eq "valid" -and $medium.alias -eq "one-medium" -and $medium.inputTokens -eq 1000000 -and
+        $medium.outputTokens -eq 100000 -and $medium.reasons.Count -eq 0 -and $medium.workloadId -eq $usageWorkload.id) "Medium usage was not matched to its own alias"
+    Assert-True ($max.status -eq "valid" -and $max.alias -eq "one-max" -and $max.inputTokens -eq 2000000 -and $max.outputTokens -eq 400000) "Max usage borrowed another effort's consumption"
+}
+Run-Test "Every unusable consumption condition is explicit and scoped to the configuration it affects" {
+    $cases=@(
+        @{name="cached source";reason="usage_source_cached";scope="all";mutate={param($s) $s.status="cached"}}
+        @{name="failed source";reason="usage_source_unavailable";scope="all";mutate={param($s) $s.status="error"}}
+        @{name="stale retrieval";reason="usage_source_stale";scope="all";mutate={param($s) $s.fetchedAtUtc="2026-01-01"}}
+        @{name="stale publication";reason="usage_source_stale";scope="all";mutate={param($s) $s.sourceDate="2026-01-01"}}
+        @{name="no usage section";reason="usage_missing";scope="all";mutate={param($s) $s.Remove("usage")}}
+        @{name="no usage table";reason="usage_missing";scope="all";mutate={param($s) $s.usage.Remove("models")}}
+        @{name="workload id mismatch";reason="usage_workload_mismatch";scope="all";mutate={param($s) $s.usage.workload.id="other-workload"}}
+        @{name="blank workload fingerprint";reason="usage_workload_mismatch";scope="all";mutate={param($s) $s.usage.workload.fingerprint=" "}}
+        @{name="conflicting release dates";reason="usage_identity_unverified";scope="all";mutate={param($s) $s.releases["one-max"]=@(@{date="2026-08-02";releaseId="one";effort="max"})}}
+        @{name="missing row";reason="usage_missing";scope="max";mutate={param($s) $s.usage.models.Remove("one-max")}}
+        @{name="row workload fingerprint";reason="usage_workload_mismatch";scope="max";mutate={param($s) $s.usage.models["one-max"].workloadFingerprint="stale"}}
+        @{name="parser conflict";reason="usage_conflicting";scope="max";mutate={param($s) $s.usage.models["one-max"]=@{status="invalid";name="One";reasons=@("usage_conflicting")}}}
+        @{name="parser workload mismatch";reason="usage_workload_mismatch";scope="max";mutate={param($s) $s.usage.models["one-max"]=@{status="invalid";reasons=@("usage_workload_mismatch")}}}
+        @{name="parser invalid counts";reason="usage_counts_invalid";scope="max";mutate={param($s) $s.usage.models["one-max"]=@{status="invalid";reasons=@("usage_counts_invalid")}}}
+        @{name="parser invalid without reason";reason="usage_counts_invalid";scope="max";mutate={param($s) $s.usage.models["one-max"]=@{status="invalid"}}}
+        @{name="NaN input";reason="usage_counts_invalid";scope="max";mutate={param($s) $s.usage.models["one-max"].inputTokens=[double]::NaN}}
+        @{name="infinite input";reason="usage_counts_invalid";scope="max";mutate={param($s) $s.usage.models["one-max"].inputTokens=[double]::PositiveInfinity}}
+        @{name="negative input";reason="usage_counts_invalid";scope="max";mutate={param($s) $s.usage.models["one-max"].inputTokens=-5}}
+        @{name="zero input";reason="usage_counts_invalid";scope="max";mutate={param($s) $s.usage.models["one-max"].inputTokens=0}}
+        @{name="fractional input";reason="usage_counts_invalid";scope="max";mutate={param($s) $s.usage.models["one-max"].inputTokens=1.5}}
+        @{name="text input";reason="usage_counts_invalid";scope="max";mutate={param($s) $s.usage.models["one-max"].inputTokens="100"}}
+        @{name="null input";reason="usage_counts_invalid";scope="max";mutate={param($s) $s.usage.models["one-max"].inputTokens=$null}}
+        @{name="NaN output";reason="usage_counts_invalid";scope="max";mutate={param($s) $s.usage.models["one-max"].outputTokens=[double]::NaN}}
+        @{name="negative reasoning";reason="usage_counts_invalid";scope="max";mutate={param($s) $s.usage.models["one-max"].reasoningTokens=-1}}
+        @{name="answer plus reasoning differs from output";reason="usage_counts_invalid";scope="max";mutate={param($s) $s.usage.models["one-max"].answerTokens=1}}
+        @{name="conflicting identity";reason="usage_identity_unverified";scope="max";mutate={param($s) $s.identities["one-max"].status="conflicting"}}
+        @{name="published effort differs";reason="usage_identity_unverified";scope="max";mutate={param($s) $s.identities["one-max"].effort="high"}}
+        @{name="blank release id";reason="usage_identity_unverified";scope="max";mutate={param($s) $s.identities["one-max"].releaseId=" "}}
+        @{name="no identity";reason="usage_identity_unverified";scope="max";mutate={param($s) $s.identities.Remove("one-max")}}
+        @{name="row effort differs";reason="usage_identity_unverified";scope="max";mutate={param($s) $s.usage.models["one-max"].effort="high"}}
+        @{name="row release differs";reason="usage_identity_unverified";scope="max";mutate={param($s) $s.usage.models["one-max"].releaseId="two"}}
+        @{name="named effort differs";reason="usage_identity_unverified";scope="max";mutate={param($s) $s.usage.models["one-max"].name="One (high)"}}
+        @{name="fallback composite";reason="usage_identity_unverified";scope="max";mutate={param($s) $s.usage.models["one-max"].name="One (Max, Default Fallback)"}}
+        @{name="combined models";reason="usage_identity_unverified";scope="max";mutate={param($s) $s.usage.models["one-max"].name="One + Two"}}
+    )
+    foreach ($case in $cases) {
+        $source=Usage-Source
+        & $case.mutate $source
+        $u=Usage-For $source
+        $medium=$u.configurations[$usageMedium.configurationId]
+        $max=$u.configurations[$usageMax.configurationId]
+        Assert-True ($max.status -eq "invalid" -and @($max.reasons).Count -eq 1 -and $max.reasons[0] -eq $case.reason -and
+            $null -eq $max.inputTokens -and $null -eq $max.outputTokens) "$($case.name): expected only $($case.reason), got '$(@($max.reasons) -join ',')'"
+        if ($case.scope -eq "all") {
+            Assert-True ($medium.status -eq "invalid" -and $medium.reasons -contains $case.reason) "$($case.name): source-wide defect left a usable configuration"
+        } else {
+            Assert-True ($medium.status -eq "valid" -and $medium.inputTokens -eq 1000000) "$($case.name): one configuration's defect invalidated another"
+        }
+    }
+}
+Run-Test "Usage evidence never guesses an alias or lets two configurations share one row" {
+    $u=Usage-For (Usage-Source) @{one=@{artificialAnalysis=@{medium="one-medium"}}}
+    Assert-True ($u.configurations[$usageMedium.configurationId].status -eq "valid" -and
+        $u.configurations[$usageMax.configurationId].reasons -contains "usage_alias_not_configured") "A missing max alias borrowed another effort"
+    $u=Usage-For (Usage-Source) @{one=@{artificialAnalysis=@{medium="one-medium";max="one-medium"}}}
+    Assert-True (@($u.configurations.Values | Where-Object { $_.reasons -contains "usage_alias_ambiguous" }).Count -eq 2) "One row supplied different efforts"
+    $u=Usage-For (Usage-Source) @{one=$aliases.one;two=@{artificialAnalysis=@{max="one-max"}}}
+    Assert-True ($u.configurations[$usageMax.configurationId].status -eq "invalid" -and
+        $u.configurations[$usageMax.configurationId].reasons -contains "usage_alias_ambiguous") "An alias shared across models was accepted"
+}
+Run-Test "Usage evidence is inert without an enabled measured-cost policy" {
+    $absent=$policy.Clone()
+    $absent.selectionPolicy=$policy.selectionPolicy.Clone()
+    $absent.selectionPolicy.Remove("measuredCost")
+    $disabled=$policy.Clone()
+    $disabled.selectionPolicy=$policy.selectionPolicy.Clone()
+    $disabled.selectionPolicy.measuredCost=@{enabled=$false;workload=$usageWorkload.id;missingUsagePolicy="profile_fallback";description="off"}
+    Assert-True ($null -eq (Usage-For (Usage-Source) $aliases $absent)) "Usage produced without a measured-cost policy"
+    Assert-True ($null -eq (Usage-For (Usage-Source) $aliases $disabled)) "Usage produced while measured cost is disabled"
+}
+Run-Test "Benchmark evidence carries captured usage without turning it into a score observation" {
+    $current=@{key="orchestrator";effort="medium";context="default"}
+    $read={
+        param($source,$activePolicy=$policy)
+        Get-ProfileBenchmarkEvidence -Profile $current -Configurations @($usageMedium,$usageMax) -Sources @{artificialAnalysisComponents=$source} `
+            -Aliases $aliases -Policy $activePolicy -NowUtc $now
+    }
+    $source=Usage-Source
+    $first=& $read $source
+    Assert-True ($first.usage.configurations[$usageMax.configurationId].status -eq "valid" -and
+        $first.usage.configurations[$usageMax.configurationId].outputTokens -eq 400000) "Evidence did not carry usage"
+    $source.usage.models["one-max"].inputTokens=3000000
+    $second=& $read $source
+    Assert-True ($second.usage.configurations[$usageMax.configurationId].inputTokens -eq 3000000) "Changed usage was not carried"
+    Assert-True ((Get-ModelDataFingerprint $first.records) -eq (Get-ModelDataFingerprint $second.records)) "A usage-only change altered the benchmark observations"
+    $absent=$policy.Clone()
+    $absent.selectionPolicy=$policy.selectionPolicy.Clone()
+    $absent.selectionPolicy.Remove("measuredCost")
+    Assert-True ($null -eq (& $read $source $absent).usage) "Usage was built without a measured-cost policy"
+}
 if ($script:Failed) { exit 1 }

@@ -149,6 +149,19 @@ function Get-ModelPolicyConfig {
     if ((Get-ObjectMemberValue $p.selectionPolicy "costTieBreak") -ne "newest_verified_release") {
         throw "selectionPolicy.costTieBreak must be newest_verified_release."
     }
+    $measuredCost = Get-ObjectMemberValue $p.selectionPolicy "measuredCost"
+    if ($null -ne $measuredCost) {
+        # Optional: absent means the fixed reference basket only. Missing usage always falls back for the whole profile.
+        if ($measuredCost -isnot [System.Collections.IDictionary] -or
+            (Get-ObjectMemberValue $measuredCost "enabled") -isnot [bool] -or
+            (Get-ObjectMemberValue $measuredCost "workload") -isnot [string] -or
+            [string]::IsNullOrWhiteSpace((Get-ObjectMemberValue $measuredCost "workload")) -or
+            (Get-ObjectMemberValue $measuredCost "missingUsagePolicy") -ne "profile_fallback" -or
+            (Get-ObjectMemberValue $measuredCost "description") -isnot [string] -or
+            [string]::IsNullOrWhiteSpace((Get-ObjectMemberValue $measuredCost "description"))) {
+            throw "selectionPolicy.measuredCost requires boolean enabled, a workload id, missingUsagePolicy profile_fallback and a description."
+        }
+    }
     return $p
 }
 

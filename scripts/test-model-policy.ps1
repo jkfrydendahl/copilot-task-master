@@ -4,6 +4,7 @@ $ErrorActionPreference="Stop"
 . (Join-Path $PSScriptRoot "model-availability.ps1")
 . (Join-Path $PSScriptRoot "model-selection-policy.ps1")
 . (Join-Path $PSScriptRoot "model-admissibility.ps1")
+. (Join-Path $PSScriptRoot "model-aa-component-data.ps1")
 $repo=Split-Path $PSScriptRoot -Parent
 $script:Failed=0
 function Assert-True($Condition,$Message) { if (-not $Condition) { throw $Message } }
@@ -112,7 +113,17 @@ Run-Test "Invalid strategies and incomplete or nonnumeric bands fail validation"
             { param($p) $p.selectionPolicy.profiles.review.qualification.dimensions[1].qualityBands["artificialAnalysisComponents.lcr"] = -1 },
             { param($p) $p.selectionPolicy.profiles.review.qualification.dimensions[1].qualityBands["unknown.metric"] = 0 },
             { param($p) $p.selectionPolicy.profiles.review.supportingMetrics = @("artificialAnalysisComponents.lcr") },
-            { param($p) $p.selectionPolicy.profiles["typo"] = @{strategy="quality_first"} }
+            { param($p) $p.selectionPolicy.profiles["typo"] = @{strategy="quality_first"} },
+            { param($p) $p.selectionPolicy.measuredCost = "enabled" },
+            { param($p) $p.selectionPolicy.measuredCost.Remove("enabled") },
+            { param($p) $p.selectionPolicy.measuredCost.enabled = "true" },
+            { param($p) $p.selectionPolicy.measuredCost.workload = " " },
+            { param($p) $p.selectionPolicy.measuredCost.workload = 1 },
+            { param($p) $p.selectionPolicy.measuredCost.Remove("workload") },
+            { param($p) $p.selectionPolicy.measuredCost.missingUsagePolicy = "drop_candidate" },
+            { param($p) $p.selectionPolicy.measuredCost.Remove("missingUsagePolicy") },
+            { param($p) $p.selectionPolicy.measuredCost.description = " " },
+            { param($p) $p.selectionPolicy.measuredCost.Remove("description") }
         )) {
             $p = Get-ModelPolicyConfig (Join-Path $repo "config\model-policy.json")
             & $mutate $p
@@ -121,6 +132,22 @@ Run-Test "Invalid strategies and incomplete or nonnumeric bands fail validation"
             try { Get-ModelPolicyConfig $path | Out-Null } catch { $threw = $true }
             Assert-True $threw "Invalid selection policy accepted"
         }
+    } finally {
+        if (Test-Path -LiteralPath $path) { Remove-Item -LiteralPath $path }
+    }
+}
+Run-Test "Measured cost ranking is approved, profile-wide fallback, pinned to the parser workload and optional" {
+    $path = Join-Path ([IO.Path]::GetTempPath()) "$([guid]::NewGuid().ToString('N')).json"
+    try {
+        $p = Get-ModelPolicyConfig (Join-Path $repo "config\model-policy.json")
+        $measured = $p.selectionPolicy.measuredCost
+        Assert-True ($measured.enabled -eq $true -and $measured.missingUsagePolicy -eq "profile_fallback") "Approved missing-usage policy changed"
+        Assert-True ($measured.workload -eq $script:AAUsageWorkload.id) "Policy workload id diverged from the parser's pinned workload"
+        Assert-True ($measured.description -match "not predicted Copilot task spend" -and $measured.description -match "entire profile") "Proxy and fallback caveats missing from the policy"
+        Assert-True ($p.selectionPolicy.referenceInputTokens -eq 1000000 -and $p.selectionPolicy.referenceOutputTokens -eq 100000) "Fixed fallback basket changed"
+        $p.selectionPolicy.Remove("measuredCost")
+        $p | ConvertTo-Json -Depth 15 | Set-Content -LiteralPath $path
+        Assert-True ($null -eq (Get-ModelPolicyConfig $path).selectionPolicy["measuredCost"]) "A policy without measuredCost must remain valid (fixed basket only)"
     } finally {
         if (Test-Path -LiteralPath $path) { Remove-Item -LiteralPath $path }
     }
@@ -224,7 +251,7 @@ Run-Test "Published and runtime-verified vision admit the configured Visual/UI v
 }
 Run-Test "Every profile permits evidence-backed selection across all native efforts" {
     $p=Get-ModelPolicyConfig (Join-Path $repo "config\model-policy.json")
-    Assert-True ($p.selectionPolicy.version -eq 18 -and $p.schemaVersion -eq 4) "Selection policy not versioned"
+    Assert-True ($p.selectionPolicy.version -eq 19 -and $p.schemaVersion -eq 4) "Selection policy not versioned"
     Assert-True ($p.consensusPolicy.discoveryFreshnessDays -eq 7) "Local discovery validity changed"
     Assert-True ($p.selectionPolicy.costTieBreak -eq "newest_verified_release") "Recency tie policy missing"
     foreach ($key in @("orchestrator","default-development")) {

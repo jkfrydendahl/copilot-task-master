@@ -166,6 +166,31 @@ function Get-RoleQualificationReportLines {
     return @($lines)
 }
 
+function Get-CostBasisReportLines {
+    # Which cost basis ranked this profile. Measured consumption is an external benchmark-workload proxy, never Copilot
+    # task spend; a fallback applies to the entire profile and never mixes measured and fixed costs. Profiles that do not
+    # use a cost basis (quality-first, or no measured-cost policy) print nothing, so their reports are unchanged.
+    param($Result)
+    $basis = Get-ObjectMemberValue $Result.selection "costBasis"
+    $reasons = @(Get-ObjectMemberValue $basis "reasons" | Where-Object { $null -ne $_ })
+    if ($null -eq $basis -or $Result.selection.strategy -ne "value_balanced" -or $reasons -contains "measured_cost_disabled") { return @() }
+    $workload = Format-ModelReportValue (Get-ObjectMemberValue $basis "workloadId")
+    if ((Get-ObjectMemberValue $basis "mode") -eq "measured_workload") {
+        return @("**Cost basis: measured benchmark workload** (``$workload``). Every qualified configuration has valid, fresh, comparable measured input/output token totals on the same workload, repriced as uncached tokens at current GitHub rates; output already includes reasoning. This is an external benchmark-workload cost proxy, not predicted Copilot task spend, latency or cache behavior. Task-specific quality bands are separate from this whole-suite cost workload.")
+    }
+    if (-not [bool](Get-ObjectMemberValue $basis "fallback")) {
+        return @("**Cost basis: fixed reference basket.** No qualified configuration was ranked, so no measured comparison applies.")
+    }
+    $lines = [System.Collections.Generic.List[string]]::new()
+    $lines.Add("**Cost basis: fixed reference basket (profile fallback).** Measured benchmark-workload usage (``$workload``) is unavailable or not comparable for at least one qualified configuration ($($reasons -join ', ')), so the entire profile is ranked on the fixed basket. Measured and fixed costs are never mixed, and no qualified configuration is dropped to improve coverage.")
+    $unavailable = @(Get-ObjectMemberValue $basis "unavailable" | Where-Object { $null -ne $_ })
+    if ($unavailable.Count) {
+        $details = @($unavailable | ForEach-Object { "$(Format-ModelReportConfiguration $_) ($(@($_.reasons) -join ', '))" })
+        $lines.Add("Qualified configurations without valid measured usage: $($details -join '; ').")
+    }
+    return @($lines)
+}
+
 function Get-ProfileReviewReportLines {
     param($Result)
     $r = $Result
@@ -174,6 +199,7 @@ function Get-ProfileReviewReportLines {
     $leader = Format-ModelReportConfiguration $r.selection.qualityWinner
     $source = Format-ModelReportValue $r.selection.decidingSource
     $fallback = Format-ModelReportValue $r.fallback
+    $measuredBasis = (Get-ObjectMemberValue (Get-ObjectMemberValue $r.selection "costBasis") "mode") -eq "measured_workload"
 
     $lines.Add("")
     $lines.Add("### $($r.key)")
@@ -181,6 +207,7 @@ function Get-ProfileReviewReportLines {
     $lines.Add("Budget: **$mode**, input $($r.requirement.inputCeilingPerMillion) / output $($r.requirement.outputCeilingPerMillion) USD per million. Deciding source: $source.")
     $lines.Add("Quality leader before hard-budget exclusions: $leader. Family fallback (informational, not a winner): $fallback.")
     $lines.Add("Strategy: **$($r.selection.strategy)**.")
+    $lines.AddRange([string[]]@(Get-CostBasisReportLines -Result $r))
     $routes = @($r.selection.evidenceRoutes | ForEach-Object { $r.selection.metricDefinitions[$_].label })
     $lines.Add("Authorized deciding routes, strongest first: **$($routes -join ' > ')**. Supporting metrics are informational only.")
     $lines.Add("Task fit: external-harness proxy, not a measurement of Copilot CLI task success.")
@@ -206,8 +233,13 @@ function Get-ProfileReviewReportLines {
         $incumbentAic = Format-ModelReportNumber $r.selection.incumbentReferenceAic
         $efforts = $r.selection.allowedEfforts -join ", "
         $lines.Add("Configuration selection: **automatic bounded effort**; authorized efforts: $efforts. Models without effort controls use their native configuration; context remains fixed.")
-        $lines.Add("Reference usage: candidate **$candidateAic AIC**; incumbent **$incumbentAic AIC**.")
-        $lines.Add("Reference AIC uses a fixed token basket, not measured consumption. Effort-related changes in token usage, task cost and latency are unknown; equal reference AIC does not establish equal task cost.")
+        if ($measuredBasis) {
+            $lines.Add("Benchmark-workload usage: candidate **$candidateAic AIC**; incumbent **$incumbentAic AIC**.")
+            $lines.Add("Benchmark-workload AIC reprices each configuration's own measured input/output tokens at current GitHub rates, uncached, with reasoning already inside output. It compares configurations on one external benchmark workload; it does not predict Copilot task cost or latency.")
+        } else {
+            $lines.Add("Reference usage: candidate **$candidateAic AIC**; incumbent **$incumbentAic AIC**.")
+            $lines.Add("Reference AIC uses a fixed token basket, not measured consumption. Effort-related changes in token usage, task cost and latency are unknown; equal reference AIC does not establish equal task cost.")
+        }
     }
     if ($null -ne $r.selection.valueDecision) {
         $value = $r.selection.valueDecision
@@ -218,10 +250,12 @@ function Get-ProfileReviewReportLines {
         $candidateAic = Format-ModelReportNumber $value.referenceAic
         $incumbentAic = Format-ModelReportNumber $value.incumbentReferenceAic
         $lines.Add("Eligible quality reference: $referenceModel ($referenceScore). Candidate gap: **$gap / $maximum** absolute $($value.qualityReference.metric) score points.")
+        $costWording = if ($measuredBasis) { "measured benchmark-workload cost" } else { "reference cost" }
+        $usageLabel = if ($measuredBasis) { "Benchmark-workload usage" } else { "Reference usage" }
         $ranking = if ($null -ne $recovery -and -not $recovery.roleQualified) {
-            "Retirement recovery uses lowest reference cost within the primary metric's quality band, not full role qualification"
-        } else { "Lowest reference cost among configurations passing every required band wins" }
-        $lines.Add("$ranking; equal-cost model ties prefer the newest verified release. Reference usage: candidate **$candidateAic AIC**; incumbent **$incumbentAic AIC** (1 AIC = USD 0.01).")
+            "Retirement recovery uses lowest $costWording within the primary metric's quality band, not full role qualification"
+        } else { "Lowest $costWording among configurations passing every required band wins" }
+        $lines.Add("$ranking; equal-cost model ties prefer the newest verified release. ${usageLabel}: candidate **$candidateAic AIC**; incumbent **$incumbentAic AIC** (1 AIC = USD 0.01).")
         $recency = Get-ObjectMemberValue $value "recencyDecision"
         if ($null -ne $recency -and $recency.status -ne "not_needed") {
             $explanation = switch ($recency.status) {
@@ -244,7 +278,11 @@ function Get-ProfileReviewReportLines {
         $costChange = Format-ModelReportNumber $value.costIncreasePercent
         $lines.Add("Candidate cost change: **$costChange%** (informational, not an incumbent-relative limit). Fixed hard ceilings authorize spending; they never rise automatically. A percentage is n/a when incumbent cost is unknown or a free incumbent would become paid.")
         if ($null -eq $value.incumbentReferenceAic) {
-            $lines.Add("**Cost comparison unavailable:** fresh, valid incumbent pricing is missing; savings or a premium cannot be established. The candidate's own fresh pricing and hard-budget eligibility still govern promotion.")
+            if ($measuredBasis) {
+                $lines.Add("**Cost comparison unavailable:** the incumbent has no valid measured usage on the benchmark workload (or its fresh pricing is missing); savings or a premium cannot be established, and measured costs are never compared with fixed-basket costs. The candidate's own fresh pricing and hard-budget eligibility still govern promotion.")
+            } else {
+                $lines.Add("**Cost comparison unavailable:** fresh, valid incumbent pricing is missing; savings or a premium cannot be established. The candidate's own fresh pricing and hard-budget eligibility still govern promotion.")
+            }
         }
         if ($value.incumbentEvidenceAvailable) {
             $incumbentScore = Format-ModelReportNumber $value.incumbentScore
@@ -381,6 +419,9 @@ function Get-TaskProfileReviewReport {
     $lines.Add("Normal recommendations require the intersection of each profile's explicit qualification dimensions, not one global model ranking. Price decides only among configurations passing every required band. Every comparison needs at least two distinct eligible models; multiple efforts do not inflate coverage. Empty intersections or insufficient evidence retain a non-retired current configuration without certifying it. Supporting-only scores never blend, rank or veto; overlapping benchmark lineage is not independent corroboration. Unknown publication age, cached evidence, single-source coverage and external harnesses reduce confidence. A context capability is not a benchmark measurement at that context length.")
     $lines.Add("An effectively retired incumbent triggers mandatory recovery without waiting for confirmation or comparable incumbent evidence: a fully qualified winner first, otherwise the existing primary benchmark/value rules, otherwise an exact GitHub-suggested successor. Emergency migrations are not certified role-qualified winners. All hard admissibility and authorized configuration limits remain binding; no safe replacement fails the review instead of publishing a retained retired model.")
     $lines.Add("Value-balanced profiles minimize reference AIC within a source-specific gap of their best eligible score, under fixed hard input/output price ceilings. Bands are policy tolerances, not capability percentages or proof of task success. Token-price ceilings are not total session-spend limits.")
+    if ($null -ne (Get-ObjectMemberValue $Policy.selectionPolicy "measuredCost")) {
+        $lines.Add("Cost basis is decided per profile, once, over its qualified configurations: when every one has valid, fresh, comparable measured input/output token totals on the same pinned benchmark workload, ranking uses those totals repriced as uncached tokens at current GitHub rates (reasoning is already inside output; no effort multiplier). If any qualified configuration lacks such usage, the entire profile uses the fixed reference basket and says why; measured and fixed costs are never mixed, and unqualified configurations cannot disable measured ranking. Measured cost is an external benchmark-workload proxy, not predicted Copilot task spend, latency or cache behavior. It never lowers a quality band or bypasses a safeguard.")
+    }
     $lines.Add("Orchestrator workflow metrics allow a 0.03 absolute gap; Mechanical allows 0.01. For normal optimization every other required dimension must also pass, so the intersection may be empty. These are policy tolerances, not statistical significance claims. Missing incumbent evidence reduces confidence, not candidate requirements, and does not alone block a qualified fallback replacement. An established stronger primary or qualification basis remains protected.")
     $lines.Add("Configuration cells show model / effective effort / context; 'none' means the model exposes no effort control. Allowed effort ranges are standing authorization: model and effort changes apply together after confirmation, except mandatory retirement recovery. Force bypasses only the normal confirmation wait, never hard budgets, allowed ranges, availability, capabilities or evidence requirements.")
     $lines.Add("")
@@ -391,6 +432,10 @@ function Get-TaskProfileReviewReport {
     $lines.Add("- Freshness limit: $($Policy.consensusPolicy.pricingFreshnessDays) days. Missing rows retain their original timestamps. Capabilities are never refreshed by pricing.")
     $lines.Add("- Reference-cost comparison: $($Policy.selectionPolicy.referenceUsageDescription)")
     $lines.Add("- Reference tokens: input $($Policy.selectionPolicy.referenceInputTokens), output $($Policy.selectionPolicy.referenceOutputTokens).")
+    $measuredPolicy = Get-ObjectMemberValue $Policy.selectionPolicy "measuredCost"
+    if ($null -ne $measuredPolicy) {
+        $lines.Add("- Measured-cost basis: $(if ($measuredPolicy.enabled) { "enabled" } else { "disabled" }); workload ``$($measuredPolicy.workload)``; missing-usage policy ``$($measuredPolicy.missingUsagePolicy)`` (the fixed reference basket above applies to the entire profile). $($measuredPolicy.description)")
+    }
     $lines.Add("")
     $lines.Add("| Changed model | Tier | Previous input / output USD per M | Current input / output USD per M | Previous cached input / cache write | Current cached input / cache write |")
     $lines.Add("|---|---|---|---|---|---|")
