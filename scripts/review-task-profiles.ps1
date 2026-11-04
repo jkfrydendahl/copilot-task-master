@@ -176,7 +176,8 @@ function Invoke-TaskProfileReview {
         $evidence = Get-ProfileBenchmarkEvidence -Profile $profile -Configurations $evidenceConfigurations -Sources $resolvedSources `
             -Aliases $aliases -Capabilities $capabilities -Policy $policy -NowUtc $NowUtc
         $evidence.diagnostics = @($candidates.diagnostics) + @($evidence.diagnostics)
-        $selection = Get-ProfileSelection -Profile $profile -Evidence $evidence.records -Verdicts $verdicts -Policy $policy -Aliases $aliases
+        $selection = Get-ProfileSelection -Profile $profile -Evidence $evidence.records -Verdicts $verdicts -Policy $policy -Aliases $aliases `
+            -Usage (Get-ObjectMemberValue $evidence "usage")
         $evidence.diagnostics += @($selection.roleDiagnostics)
         $oldProfiles = Get-ObjectMemberValue (Get-ObjectMemberValue $previous "consensus") "profiles"
         $oldState = Get-ObjectMemberValue $oldProfiles $profile.key

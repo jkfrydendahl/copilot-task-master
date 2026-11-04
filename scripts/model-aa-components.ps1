@@ -11,6 +11,7 @@ function Get-AAComponentData {
     $url = if ($anchor.Count) { "https://artificialanalysis.ai/models/$($anchor[0])" } else { $null }
     $result = [ordered]@{
         status="unavailable"; message="No valid AA model identity for the bulk component page."; models=@{}; releases=@{}; identities=@{}
+        usage=$null
         sourceUrl=$url; sourceDate=$null; fetchedAtUtc=[datetime]::UtcNow.ToString("o")
         sourceVersion=$null; metricVersions=@{}; diagnostics=@(); observationSchemaVersion=1
         publicationDateKind="unknown"; evaluationDate=$null
@@ -30,7 +31,7 @@ function Get-AAComponentData {
         return [pscustomobject]$result
     }
     $parsed = ConvertFrom-AAComponentPage $fetch.content -IncludeVersionedBenchmarks:$IncludeVersionedBenchmarks
-    foreach ($field in @("status","message","models","releases","identities","diagnostics")) { $result[$field] = $parsed.$field }
+    foreach ($field in @("status","message","models","releases","identities","usage","diagnostics")) { $result[$field] = $parsed.$field }
     if ($parsed.status -eq "ok") {
         $metrics = @($script:AAComponentProperties.Keys)
         if ($IncludeVersionedBenchmarks) { $metrics += @($script:AAVersionedComponentDefinitions.Keys) }

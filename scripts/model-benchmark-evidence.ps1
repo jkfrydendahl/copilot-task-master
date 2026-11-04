@@ -3,6 +3,7 @@ Set-StrictMode -Version Latest
 . (Join-Path $PSScriptRoot "model-agent-identity.ps1")
 . (Join-Path $PSScriptRoot "model-role-evidence.ps1")
 . (Join-Path $PSScriptRoot "model-release-data.ps1")
+. (Join-Path $PSScriptRoot "model-usage-evidence.ps1")
 
 function Get-SourceMetricObservation {
     param($Source, $Definition)
@@ -209,5 +210,7 @@ function Get-ProfileBenchmarkEvidence {
     return [pscustomobject]@{
         records = @($records)
         diagnostics = @($diagnostics)
+        usage = Get-ProfileUsageEvidence -Configurations $Configurations -Aliases $Aliases -Policy $Policy -NowUtc $NowUtc `
+            -Source (Get-ObjectMemberValue $Sources "artificialAnalysisComponents")
     }
 }

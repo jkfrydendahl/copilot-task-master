@@ -530,4 +530,127 @@ Run-Test "Duplicate public rows cannot hide composite or unresolvable effort ide
         Assert-True ($r.status -eq "unavailable" -and $r.diagnostics -match "identity") "Duplicate row hid an ambiguous identity"
     }
 }
+# Deliberately independent of the production constant: the pin test below fails if either copy drifts.
+$script:UsageTasks=[ordered]@{"aa-briefcase"=91;"automationbench-aa"=657;"terminalbench-4-0"=66;"frontiercode-2-0"=132;
+    "omniscience"=3000;"gdp-pdf"=100;"hle-diamond"=1000;"critpt-v2-hard"=40;"terminal-bench-science"=70}
+function Usage-Row {
+    # Output = sum(tasks x output tokens per task), split into answer + reasoning, exactly as AA publishes it.
+    param($Slug,$Effort,$Release="one",[long]$InputTokens=1000000,[long]$Reasoning=300000,[long]$PerTask=1000,$Name="One")
+    $evaluations=@(foreach($task in $script:UsageTasks.Keys) { @{slug=$task;score=0.5;outputTokensPerTask=$PerTask;costPerTask=1.5;timePerTask=10} })
+    $output=[long]($PerTask*(($script:UsageTasks.Values | Measure-Object -Sum).Sum))
+    return @{
+        slug=$Slug;name=$Name;effort=@{slug=$Effort};release=@{slug=$Release};lcr=0.8
+        canonicalIntelligenceIndexTokenCount=@{input=$InputTokens;output=$output;answer=($output-$Reasoning);reasoning=$Reasoning}
+        intelligenceIndexEvaluations=$evaluations
+    }
+}
+Run-Test "AA usage workload identity is pinned independently of the parser constant" {
+    . (Join-Path $PSScriptRoot "model-aa-component-data.ps1")
+    $pinned=$script:AAUsageWorkload
+    Assert-True ($pinned.id -eq "aa-intelligence-index-canonical-v1" -and $pinned.evaluations.Count -eq 9) "Workload id or evaluation count drifted"
+    foreach ($task in $script:UsageTasks.Keys) {
+        Assert-True ($pinned.evaluations[$task] -eq $script:UsageTasks[$task]) "Pinned task count drifted for $task"
+    }
+    Assert-True ($pinned.fingerprint -eq (Get-ModelDataFingerprint @{id=$pinned.id;evaluations=$script:UsageTasks})) "Workload fingerprint is not derived from the id and task counts"
+}
+Run-Test "AA usage retains verified canonical totals independently of scores and the versioned switch" {
+    . (Join-Path $PSScriptRoot "model-aa-component-data.ps1")
+    $row=Usage-Row "one-xhigh" "xhigh" -InputTokens 1612933044 -Reasoning 19088821 -PerTask 6456
+    $scoreless=Usage-Row "two-max" "max" -Release "two"
+    $scoreless.Remove("lcr")
+    $r=ConvertFrom-AAComponentPage (Component-Html @{initialModels=@($row,$scoreless)})
+    Assert-True ($r.status -eq "ok" -and $r.usage.schemaVersion -eq 1 -and $r.usage.workload.id -eq "aa-intelligence-index-canonical-v1" -and
+        -not [string]::IsNullOrWhiteSpace($r.usage.workload.fingerprint)) "Usage section or workload identity missing"
+    $u=$r.usage.models["one-xhigh"]
+    Assert-True ($u.status -eq "verified" -and $u.inputTokens -eq 1612933044 -and $u.outputTokens -eq 33287136 -and
+        $u.answerTokens -eq 33287136-19088821 -and $u.reasoningTokens -eq 19088821 -and
+        ($u.answerTokens+$u.reasoningTokens) -eq $u.outputTokens -and $u.effort -eq "xhigh" -and $u.releaseId -eq "one" -and
+        $u.workloadFingerprint -eq $r.usage.workload.fingerprint) "Verified usage lost or reasoning recounted"
+    Assert-True ($r.usage.models["two-max"].status -eq "verified" -and -not $r.models.Contains("two-max")) "Consumption depended on a quality score"
+    $versioned=ConvertFrom-AAComponentPage (Component-Html @{initialModels=@($row,$scoreless)}) -IncludeVersionedBenchmarks
+    Assert-True ((Get-ModelDataFingerprint $versioned.usage) -eq (Get-ModelDataFingerprint $r.usage)) "Usage depends on the versioned benchmark switch"
+}
+Run-Test "AA usage rejects invalid, fractional and non-decomposing counts without losing scores" {
+    . (Join-Path $PSScriptRoot "model-aa-component-data.ps1")
+    $mutations=[ordered]@{
+        negative_input={param($c) $c.input=-1}
+        zero_input={param($c) $c.input=0}
+        fractional_input={param($c) $c.input=1.5}
+        string_input={param($c) $c.input="1000000"}
+        missing_input={param($c) $c.Remove("input")}
+        null_output={param($c) $c.output=$null}
+        oversized_output={param($c) $c.output=2e15}
+        negative_reasoning={param($c) $c.reasoning=-5}
+        split_not_summing={param($c) $c.answer+=1}
+    }
+    foreach ($name in $mutations.Keys) {
+        $row=Usage-Row "one-high" "high"
+        & $mutations[$name] $row.canonicalIntelligenceIndexTokenCount
+        $r=ConvertFrom-AAComponentPage (Component-Html @{models=@($row)})
+        $u=$r.usage.models["one-high"]
+        Assert-True ($r.status -eq "ok" -and $r.models["one-high"].lcr -eq 0.8 -and $u.status -eq "invalid" -and
+            $u.reasons -contains "usage_counts_invalid" -and -not $u.Contains("inputTokens")) "$name was accepted as usage or discarded the quality score"
+    }
+}
+Run-Test "AA usage requires the pinned workload and an exact per-task decomposition" {
+    . (Join-Path $PSScriptRoot "model-aa-component-data.ps1")
+    $mutations=[ordered]@{
+        missing_evaluation={param($row) $row.intelligenceIndexEvaluations=@($row.intelligenceIndexEvaluations[0..7])}
+        extra_evaluation={param($row) $row.intelligenceIndexEvaluations+=@(@{slug="new-benchmark";score=0.5;outputTokensPerTask=1000})}
+        renamed_evaluation={param($row) $row.intelligenceIndexEvaluations[0].slug="aa-briefcase-v2"}
+        duplicate_evaluation={param($row) $row.intelligenceIndexEvaluations[1].slug=$row.intelligenceIndexEvaluations[0].slug}
+        changed_per_task={param($row) $row.intelligenceIndexEvaluations[4].outputTokensPerTask+=1}
+        output_off_by_one={param($row) $c=$row.canonicalIntelligenceIndexTokenCount; $c.output+=1; $c.answer+=1}
+        negative_per_task={param($row) $row.intelligenceIndexEvaluations[2].outputTokensPerTask=-1}
+        missing_per_task={param($row) $row.intelligenceIndexEvaluations[2].Remove("outputTokensPerTask")}
+        not_an_array={param($row) $row.intelligenceIndexEvaluations="none"}
+    }
+    foreach ($name in $mutations.Keys) {
+        $row=Usage-Row "one-high" "high"
+        & $mutations[$name] $row
+        $r=ConvertFrom-AAComponentPage (Component-Html @{models=@($row)})
+        $u=$r.usage.models["one-high"]
+        Assert-True ($r.status -eq "ok" -and $u.status -eq "invalid" -and $u.reasons -contains "usage_workload_mismatch" -and
+            -not $u.Contains("outputTokens")) "$name was priced as the pinned workload"
+    }
+}
+Run-Test "AA usage duplicates must agree and unverifiable or fallback rows carry no verified identity" {
+    . (Join-Path $PSScriptRoot "model-aa-component-data.ps1")
+    $row=Usage-Row "one-high" "high"
+    $renamed=Usage-Row "one-high" "high" -Name "One renamed"
+    $r=ConvertFrom-AAComponentPage (Component-Html @{currentModel=$row;models=@($renamed)})
+    Assert-True ($r.usage.models["one-high"].status -eq "verified") "Identical usage with another display name was rejected"
+    $other=Usage-Row "one-high" "high" -InputTokens 2000000
+    $broken=Usage-Row "one-high" "high"
+    $broken.canonicalIntelligenceIndexTokenCount.input=-1
+    foreach ($pair in @(@($row,$other),@($other,$row),@($broken,$row),@($row,$broken))) {
+        $r=ConvertFrom-AAComponentPage (Component-Html @{currentModel=$pair[0];models=@($pair[1])})
+        Assert-True ($r.status -eq "ok" -and $r.usage.models["one-high"].status -eq "invalid" -and
+            $r.usage.models["one-high"].reasons -contains "usage_conflicting") "Contradictory duplicate usage was accepted or a duplicate revived invalid data"
+    }
+    $fallback=Usage-Row "one-max" "max" -Name "One (Max, Default Fallback)"
+    $ambiguousEffort=Usage-Row "two-high" "high"
+    $ambiguousEffort.effort=@{level=40}
+    $noEffort=Usage-Row "three" "high"
+    $noEffort.Remove("effort")
+    $noRelease=Usage-Row "four-high" "high"
+    $noRelease.Remove("release")
+    $r=ConvertFrom-AAComponentPage (Component-Html @{models=@($fallback,$ambiguousEffort,$noEffort,$noRelease)})
+    Assert-True (-not $r.usage.models.Contains("one-max") -and -not $r.usage.models.Contains("two-high")) "Fallback or ambiguous-effort usage was retained"
+    Assert-True ($null -eq $r.usage.models["three"].effort -and $null -eq $r.usage.models["four-high"].releaseId) "Missing effort or release was invented for usage"
+}
+Run-Test "AA usage is captured by acquisition without becoming a benchmark observation" {
+    . (Join-Path $PSScriptRoot "model-aa-components.ps1")
+    $row=Usage-Row "one-high" "high"
+    $fetch={param($u) @{status="ok";content=(Component-Html @{models=@($row)})}}
+    $first=Get-AAComponentData -ModelSlugs @("one-high") -FetchText $fetch
+    $row.canonicalIntelligenceIndexTokenCount.input+=123456
+    $second=Get-AAComponentData -ModelSlugs @("one-high") -FetchText $fetch
+    Assert-True ($first.usage.models["one-high"].status -eq "verified" -and
+        $second.usage.models["one-high"].inputTokens -eq $first.usage.models["one-high"].inputTokens+123456) "Acquisition lost or froze the usage section"
+    Assert-True ($first.sourceVersion -and $first.sourceVersion -eq $second.sourceVersion -and
+        (Get-ModelDataFingerprint $first.metricVersions) -eq (Get-ModelDataFingerprint $second.metricVersions)) "Usage changed a benchmark observation fingerprint"
+    $bad=Get-AAComponentData -ModelSlugs @("one-high") -FetchText {param($u) @{status="error";error="HTTP503"}}
+    Assert-True ($bad.status -eq "error" -and $null -eq $bad.usage) "A failed fetch produced usage"
+}
 if ($script:Failed) { exit 1 }

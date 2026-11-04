@@ -139,6 +139,14 @@ function Test-ModelScore {
         [double]::IsFinite([double]$Score) -and $Score -ge $Minimum -and $Score -le $Maximum
 }
 
+function Test-ModelTokenCount {
+    # Token totals are exact non-negative integers; fractions, NaN/Infinity and absurd magnitudes are not counts.
+    param($Value, [switch]$AllowZero)
+    return ($Value -is [int] -or $Value -is [long] -or $Value -is [double] -or $Value -is [decimal]) -and
+        [double]::IsFinite([double]$Value) -and $Value -ge $(if ($AllowZero) { 0 } else { 1 }) -and
+        $Value -le 1e15 -and [math]::Floor([double]$Value) -eq [double]$Value
+}
+
 function Get-StructuredJsonText {
     param([string]$Text, [int]$Start)
     $opening = $Text[$Start]

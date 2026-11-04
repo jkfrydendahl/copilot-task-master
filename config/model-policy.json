@@ -60,11 +60,17 @@
     "benchmarkMaxPublicationAgeDays": 90
   },
   "selectionPolicy": {
-    "version": 18,
+    "version": 19,
     "costTieBreak": "newest_verified_release",
     "referenceInputTokens": 1000000,
     "referenceOutputTokens": 100000,
     "referenceUsageDescription": "Aggregate uncached usage across requests within the selected context tier, not a single 1M-token request or predicted task cost. Cache reads/writes are excluded.",
+    "measuredCost": {
+      "enabled": true,
+      "workload": "aa-intelligence-index-canonical-v1",
+      "missingUsagePolicy": "profile_fallback",
+      "description": "Among configurations that already pass every quality requirement, rank by the measured input/output tokens each consumed on one common Artificial Analysis whole-suite benchmark workload, repriced uncached at current GitHub rates (reasoning is already part of output and is not charged again). This is an external benchmark-workload cost proxy, not predicted Copilot task spend, latency or quality, and it never relaxes a quality band. If any qualified competitor lacks valid, fresh, comparable measured usage, the entire profile uses the fixed reference basket instead; measured and fixed costs are never mixed."
+    },
     "profiles": {
       "orchestrator": {
         "strategy": "value_balanced",

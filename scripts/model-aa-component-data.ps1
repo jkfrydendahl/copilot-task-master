@@ -30,6 +30,89 @@ $script:AAVersionedComponentDefinitions = [ordered]@{
     }
 }
 
+# Common whole-suite cost workload. AA publishes no workload or index-version field beside its token totals, so the
+# identity is this pinned evaluation -> task-count definition. A usage row is comparable only if its published
+# per-evaluation output tokens decompose over it exactly (sum of tasks x tokens per task == output total). Different
+# evaluation sets or totals inconsistent with this definition are unusable. It is a cost workload,
+# separate from the task-specific quality metrics, and none of its component scores are consulted here.
+# Task counts: AA Intelligence Index v5.0.1, https://artificialanalysis.ai/methodology/intelligence-benchmarking.
+$script:AAUsageWorkload = [ordered]@{
+    id = "aa-intelligence-index-canonical-v1"
+    evaluations = [ordered]@{
+        "aa-briefcase" = 91
+        "automationbench-aa" = 657
+        "terminalbench-4-0" = 66
+        "frontiercode-2-0" = 132
+        "omniscience" = 3000
+        "gdp-pdf" = 100
+        "hle-diamond" = 1000
+        "critpt-v2-hard" = 40
+        "terminal-bench-science" = 70
+    }
+}
+$script:AAUsageWorkload.fingerprint = Get-ModelDataFingerprint @{
+    id = $script:AAUsageWorkload.id
+    evaluations = $script:AAUsageWorkload.evaluations
+}
+
+function ConvertTo-AAUsageObservation {
+    param([System.Collections.IDictionary]$Row, [string]$Name, $Effort, $ReleaseId)
+    $workload = $script:AAUsageWorkload
+    $observation = [ordered]@{status="verified";name=$Name;effort=$Effort;releaseId=$ReleaseId}
+    $reasons = [System.Collections.Generic.List[string]]::new()
+    $counts = Get-ObjectMemberValue $Row "canonicalIntelligenceIndexTokenCount"
+    $values = @{}
+    foreach ($field in @("input","output","answer","reasoning")) {
+        $value = Get-ObjectMemberValue $counts $field
+        if (Test-ModelTokenCount $value -AllowZero:($field -in @("answer","reasoning"))) { $values[$field] = [decimal]$value }
+    }
+    # Output already contains reasoning; the split exists only to prove it is not charged twice.
+    if ($values.Count -ne 4 -or $values.answer + $values.reasoning -ne $values.output) {
+        $reasons.Add("usage_counts_invalid")
+    } else {
+        $evaluations = Get-ObjectMemberValue $Row "intelligenceIndexEvaluations"
+        $expected = @($workload.evaluations.Keys)
+        $matched = $evaluations -is [System.Collections.IList] -and $evaluations.Count -eq $expected.Count
+        $weighted = [double]0
+        $seen = @{}
+        if ($matched) {
+            foreach ($evaluation in $evaluations) {
+                $benchmark = Get-ObjectMemberValue $evaluation "slug"
+                $perTask = Get-ObjectMemberValue $evaluation "outputTokensPerTask"
+                if ($benchmark -isnot [string] -or $benchmark -cnotin $expected -or $seen.ContainsKey($benchmark) -or
+                    -not (Test-ModelScore $perTask 0 1e15)) {
+                    $matched = $false
+                    break
+                }
+                $seen[$benchmark] = $true
+                $weighted += [double]$workload.evaluations[$benchmark] * [double]$perTask
+            }
+        }
+        if ($matched) { $matched = [math]::Abs($weighted - [double]$values.output) -le 1e-9 * [double]$values.output }
+        if (-not $matched) { $reasons.Add("usage_workload_mismatch") }
+    }
+    if ($reasons.Count) {
+        $observation.status = "invalid"
+        $observation.reasons = @($reasons)
+        return $observation
+    }
+    $observation.inputTokens = [long]$values.input
+    $observation.outputTokens = [long]$values.output
+    $observation.answerTokens = [long]$values.answer
+    $observation.reasoningTokens = [long]$values.reasoning
+    $observation.workloadFingerprint = $workload.fingerprint
+    return $observation
+}
+
+function New-AAUsageSection {
+    param([System.Collections.IDictionary]$Models = @{})
+    return [ordered]@{
+        schemaVersion = 1
+        workload = [ordered]@{id=$script:AAUsageWorkload.id;fingerprint=$script:AAUsageWorkload.fingerprint}
+        models = $Models
+    }
+}
+
 function ConvertFrom-AAComponentPage {
     param(
         [AllowEmptyString()][string]$Html,
@@ -46,6 +129,7 @@ function ConvertFrom-AAComponentPage {
     $models = @{}
     $releases = @{}
     $identities = @{}
+    $usage = @{}
     $blockedModels = @{}
     $blockedScores = @{}
     $diagnostics = [System.Collections.Generic.List[string]]::new()
@@ -95,6 +179,23 @@ function ConvertFrom-AAComponentPage {
                     (Get-ModelDataFingerprint $identities[$slug]) -ne (Get-ModelDataFingerprint $identity)) {
                     $identities[$slug] = @{status="conflicting";releaseId=$releaseId;effort=$effort}
                 } else { $identities[$slug] = $identity }
+            }
+            if ($row.Contains("canonicalIntelligenceIndexTokenCount")) {
+                # Usage is independent of component scores: a row without any score still carries consumption.
+                $observation = ConvertTo-AAUsageObservation $row $name $effort $releaseId
+                if ($usage.ContainsKey($slug)) {
+                    $existing = $usage[$slug]
+                    # Names may differ between page containers; identity, counts and workload may not.
+                    $comparable = {
+                        param($value)
+                        $copy = ConvertTo-CanonicalModelData $value
+                        $copy.Remove("name")
+                        Get-ModelDataFingerprint $copy
+                    }
+                    if ((& $comparable $existing) -ne (& $comparable $observation)) {
+                        $usage[$slug] = [ordered]@{status="invalid";name=$existing.name;reasons=@("usage_conflicting")}
+                    }
+                } else { $usage[$slug] = $observation }
             }
             $record = [ordered]@{ name = $name; effort = $effort }
             $versionedScores = @{}
@@ -169,11 +270,12 @@ function ConvertFrom-AAComponentPage {
             }
         }
     } catch [System.ArgumentException], [System.FormatException], [System.InvalidOperationException] {
-        return [pscustomobject]@{ status="unavailable"; message=$_.Exception.Message; models=@{}; releases=@{}; identities=@{}; sourceDate=$null; diagnostics=@($diagnostics) }
+        return [pscustomobject]@{ status="unavailable"; message=$_.Exception.Message; models=@{}; releases=@{}; identities=@{}; usage=(New-AAUsageSection); sourceDate=$null; diagnostics=@($diagnostics) }
     }
     foreach ($slug in $blockedModels.Keys) {
         $releases[$slug] = @(@{blocked=$true})
         $identities[$slug] = @{status="blocked"}
+        $usage.Remove($slug)
     }
     foreach ($slug in @($models.Keys)) {
         if ($blockedModels.ContainsKey($slug)) { $models.Remove($slug); continue }
@@ -196,6 +298,7 @@ function ConvertFrom-AAComponentPage {
         models = $models
         releases = $releases
         identities = $identities
+        usage = (New-AAUsageSection $usage)
         sourceDate = $null
         diagnostics = @($diagnostics)
     }
