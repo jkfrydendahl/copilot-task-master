@@ -19,7 +19,7 @@ Run-Test "All profiles enforce the approved fixed hard budgets" {
     $ceilings=@{
         quick=@(2,10);mechanical=@(2,10);triage=@(2,10);orchestrator=@(3,15)
         "default-development"=@(4,20);"visual-ui"=@(5,25);review=@(5,30)
-        "agentic-implementation"=@(10,50);"deep-reasoning"=@(10,45)
+        "agentic-implementation"=@(10,50);"deep-reasoning"=@(20,75)
     }
     foreach ($key in $ceilings.Keys) {
         $req=$p.profileRequirements[$key]
@@ -54,6 +54,26 @@ Run-Test "All profiles use explicit source-specific value bands without incumben
         }
     }
     Assert-True ($p.selectionPolicy.profiles["agentic-implementation"].qualityBands["artificialAnalysisCodingAgents.codingAgentIndex"] -eq 0.03) "Agent index band used the wrong scale"
+}
+Run-Test "Deep admits premium long-context pricing without relaxing Orchestrator's budget" {
+    $p=Get-ModelPolicyConfig (Join-Path $repo "config\model-policy.json")
+    $price=@{verifiedAtUtc="2026-09-09";tiers=@{
+        default=@{inputPerMillion=10;outputPerMillion=50}
+        long_context=@{inputPerMillion=20;outputPerMillion=75}
+    }}
+    $cap=@{asOf="2026-09-09";supportedContexts=@("default","long_context");supportedEfforts=@("max")}
+    $options=@{
+        ModelId="premium";AvailabilityVerified=$true;AvailableModels=@("premium")
+        CapabilityRecord=$cap;PricingRecord=$price;ProfileEffort="max";NowUtc=[datetime]"2026-09-09Z"
+    }
+    $deep=Get-ModelAdmissibilityVerdict @options -ProfileKey deep-reasoning `
+        -ProfileRequirement $p.profileRequirements["deep-reasoning"] -ProfileContextTier long_context
+    Assert-True ($deep.admissible -and $deep.pricing.tier -eq "long_context") "Approved premium long-context pricing was excluded from Deep"
+    $orchestrator=Get-ModelAdmissibilityVerdict @options -ProfileKey orchestrator `
+        -ProfileRequirement $p.profileRequirements.orchestrator -ProfileContextTier default
+    Assert-True (-not $orchestrator.admissible -and
+        $orchestrator.reasonCodes -contains "pricing_input_exceeds_ceiling" -and
+        $orchestrator.reasonCodes -contains "pricing_output_exceeds_ceiling") "Deep's premium allowance leaked into Orchestrator"
 }
 Run-Test "Long-document calibration leaves every other qualification band unchanged" {
     $p = Get-ModelPolicyConfig (Join-Path $repo "config\model-policy.json")
@@ -251,7 +271,7 @@ Run-Test "Published and runtime-verified vision admit the configured Visual/UI v
 }
 Run-Test "Every profile permits evidence-backed selection across all native efforts" {
     $p=Get-ModelPolicyConfig (Join-Path $repo "config\model-policy.json")
-    Assert-True ($p.selectionPolicy.version -eq 19 -and $p.schemaVersion -eq 4) "Selection policy not versioned"
+    Assert-True ($p.selectionPolicy.version -eq 20 -and $p.schemaVersion -eq 4) "Selection policy not versioned"
     Assert-True ($p.consensusPolicy.discoveryFreshnessDays -eq 7) "Local discovery validity changed"
     Assert-True ($p.selectionPolicy.costTieBreak -eq "newest_verified_release") "Recency tie policy missing"
     foreach ($key in @("orchestrator","default-development")) {
