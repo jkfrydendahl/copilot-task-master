@@ -50,7 +50,7 @@
     "visual-ui": { "inputCeilingPerMillion": 5, "outputCeilingPerMillion": 25, "requiresVision": true, "requiresCliAgent": true, "costSensitive": true },
     "review": { "inputCeilingPerMillion": 5, "outputCeilingPerMillion": 30, "requiresVision": false, "requiresCliAgent": true, "costSensitive": true },
     "agentic-implementation": { "inputCeilingPerMillion": 10, "outputCeilingPerMillion": 50, "requiresVision": false, "requiresCliAgent": true, "costSensitive": true },
-    "deep-reasoning": { "inputCeilingPerMillion": 10, "outputCeilingPerMillion": 45, "requiresVision": false, "requiresCliAgent": true, "costSensitive": true }
+    "deep-reasoning": { "inputCeilingPerMillion": 20, "outputCeilingPerMillion": 75, "requiresVision": false, "requiresCliAgent": true, "costSensitive": true }
   },
   "consensusPolicy": {
     "discoveryFreshnessDays": 7,
@@ -60,7 +60,7 @@
     "benchmarkMaxPublicationAgeDays": 90
   },
   "selectionPolicy": {
-    "version": 19,
+    "version": 20,
     "costTieBreak": "newest_verified_release",
     "referenceInputTokens": 1000000,
     "referenceOutputTokens": 100000,

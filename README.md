@@ -310,9 +310,11 @@ Every profile has **hard input/output price ceilings**, configured in `profileRe
 | Visual/UI | $5 / $25 |
 | Review | $5 / $30 |
 | Agentic Implementation | $10 / $50 |
-| Deep Reasoning | $10 / $45 |
+| Deep Reasoning | $20 / $75 |
 
 These are fixed standing authorization limits, not spending targets. They do not grow with the incumbent's price or benchmark rank, and only an explicit policy edit changes them.
+
+Selection policy 20 raises only Deep Reasoning's ceilings from $10 / $45 to $20 / $75 to admit premium long-context configurations into its quality comparison. Its value-balanced strategy, 3-point intelligence band and long-document requirement remain unchanged. A newly eligible quality leader can raise the minimum score and change the selected effort; the budget edit does not directly rewrite active profiles.
 
 Cost comparisons use a configurable aggregate reference basket of 1M uncached input and 100K output tokens across requests within the selected context tier. Reports express this as AI credits (AIC), using GitHub's conversion of **1 AIC = $0.01**. The basket excludes caching and is **not** a predicted task cost or a single oversized prompt. Actual consumption also depends on token use, reasoning, retries and cache reuse; a cheaper basket does not guarantee a cheaper completed task.
 
