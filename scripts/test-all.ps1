@@ -21,7 +21,8 @@ $testFiles = @(
     (Join-Path $PSScriptRoot "test-role-qualification.ps1"),
     (Join-Path $PSScriptRoot "test-model-review.ps1"),
     (Join-Path $PSScriptRoot "test-model-launch-args.ps1"),
-    (Join-Path $PSScriptRoot "test-orchestration-evaluation.mjs")
+    (Join-Path $PSScriptRoot "test-orchestration-evaluation.mjs"),
+    (Join-Path $PSScriptRoot "test-review-dispatch.mjs")
 )
 
 $failedFiles = [System.Collections.Generic.List[string]]::new()

@@ -12,6 +12,7 @@ It owns model routing, generated task-class agents and session tooling, not the 
 | `scripts/workbench-setup.ps1` | Ownership-checked task-class agent generation and launch-baseline kickoff. Importing it performs no setup. |
 | `scripts/Migrate-PersonalSkills.ps1` | One-time migration off the legacy `~/.copilot/skills` whole-root junction. Plan-only unless `-Apply` is given. See [Skills and migration](#skills-and-migration). |
 | `scripts/workbench-session.ps1` | Session markers, shared usage-record formatting, completion logging and abandoned-session recovery. |
+| `scripts/review-dispatch.mjs` | Complete evidence preparation and result freshness checks for native reviews; see [the handoff](docs/review-dispatch.md). |
 | `repos.json` | Registry of your working repos (`name`, `type`, `path`). |
 | `task-profiles.json` | Maps each task class → `{ model, effort, context }`. The source of truth for model selection. |
 | `usage-log.csv` | Silent session log: start/end time, duration, repo name+type (created on first run, git-ignored). |
@@ -115,6 +116,20 @@ If your work is mixed/evolving and you want one session to pick the right model 
 These agent profiles pin the class model in frontmatter (`model: ...`), so the orchestrator can route self-contained work that benefits from separate context without restarting the session. The active delivery stage and approved plan still own delivery; non-trivial work alone does not require delegation. The caller must also pass `model`, `reasoning_effort` (when supported) and `context_tier` explicitly from the current approved profile. Generated descriptions include those arguments, but Markdown does not enforce execution effort/context, and inherited orchestrator settings are not a substitute. If the task tool cannot express the required configuration, use the direct profile launcher instead. This is additive: for long, interactive single-class work, the normal per-process launch class still gives the cleanest workflow.
 
 > Cost note: routing/delegation can improve quality and context isolation, but can also increase total AI-credit usage (more independent LLM round-trips). It's not automatically cheaper.
+
+### Native review evidence handoff
+
+Before delegating a review, the orchestrator follows the
+[native evidence handoff](docs/review-dispatch.md): prepare the complete changes
+and context, supply them to the normal native reviewer at launch, then check
+freshness when recording the result. The review stage keeps its scope, axes,
+prompts and native roles; inline reviews remain inline. No skill provider or
+repository setup is required.
+
+The helper does not launch an SDK runtime or intercept native task calls.
+Orchestrator instructions coordinate the handoff; recorded invocation settings
+and agent declarations are not independent proof of effective native model/tools.
+Packets, launch material and results stay outside the target project.
 
 ### Controlled orchestration evaluation
 

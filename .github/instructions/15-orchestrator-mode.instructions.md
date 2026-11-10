@@ -50,6 +50,12 @@ the configured model/effort/context was used; prompt text alone is not evidence 
 4. Ask a focused question if uncertainty materially affects routing or delivery.
 5. Keep routing visible without restarting planning or bypassing approval gates.
 
+Before delegating a review, follow the native evidence handoff in
+`docs\review-dispatch.md` under the configured workbench root. Supply complete
+evidence at launch and check freshness before accepting results. This applies
+to normal review requests and stage-owned reviewers; preserve the stage's
+scope, axes, prompts and native roles. Keep inline reviews inline.
+
 Use this line at the top of your first substantive response:
 
 `Routing: [inline or @<agent-key>] — [one-sentence reason]`
