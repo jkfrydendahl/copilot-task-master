@@ -1,8 +1,6 @@
 {
   "schemaVersion": 4,
-  "denylist": [
-    "claude-fable-5"
-  ],
+  "denylist": [],
   "familyPatterns": {
     "sonnet-family": "claude-sonnet-\\d",
     "haiku-family": "claude-haiku-\\d",
@@ -60,7 +58,7 @@
     "benchmarkMaxPublicationAgeDays": 90
   },
   "selectionPolicy": {
-    "version": 20,
+    "version": 21,
     "costTieBreak": "newest_verified_release",
     "referenceInputTokens": 1000000,
     "referenceOutputTokens": 100000,
@@ -127,7 +125,7 @@
         "qualification": {
           "minimumModels": 2,
           "dimensions": [
-            { "key": "instruction-following", "evidenceRoutes": ["liveBench.instructionFollowing", "artificialAnalysisComponents.ifbench"], "qualityBands": { "artificialAnalysisComponents.ifbench": 0.03, "liveBench.instructionFollowing": 3 } }
+            { "key": "instruction-following", "evidenceRoutes": ["liveBench.instructionFollowing", "artificialAnalysisComponents.ifbench"], "qualityBands": { "artificialAnalysisComponents.ifbench": 0.03, "liveBench.instructionFollowing": 4 } }
           ]
         },
         "configurationSelection": { "mode": "bounded_effort", "allowedEfforts": ["none", "minimal", "low", "medium", "high", "xhigh", "max"], "effortChangePolicy": "automatic" },

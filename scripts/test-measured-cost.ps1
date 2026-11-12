@@ -125,6 +125,18 @@ function New-AgreeingSpecs {
 $maxId = Config-Id alpha max
 $xhighId = Config-Id alpha xhigh
 
+Run-Test "Measured monetary ties retain the incumbent with fractional and scientific-notation rates" {
+    foreach ($rates in @(@{alpha=0.3;beta=0.1;betaTokens=9},@{alpha=1e-7;beta=3e-7;betaTokens=1})) {
+        $f = New-CostFixture @(
+            @{model="alpha";effort="high";score=80;in=$rates.alpha;out=0;usage=@{in=3;out=1}}
+            @{model="beta";effort="high";score=78;in=$rates.beta;out=0;usage=@{in=$rates.betaTokens;out=1}}
+        )
+        $s = Select-Cost $f
+        Assert-True ($s.costBasis.mode -eq "measured_workload" -and $s.winner.model -eq "beta" -and
+            $s.candidateReferenceAic -eq $s.incumbentReferenceAic -and
+            $s.valueDecision.costIncreasePercent -eq 0) "Equal measured costs caused churn or false savings"
+    }
+}
 Run-Test "Same-model xhigh and max at one GitHub rate: lower measured consumption wins even when max scores higher in the band" {
     $f = New-CostFixture (New-EffortPairSpecs) -IncumbentModel alpha -IncumbentEffort max
     Assert-True ($f.Usage.configurations[$maxId].answerTokens + $f.Usage.configurations[$maxId].reasoningTokens -eq $maxUsage.out -and

@@ -4,6 +4,16 @@ Set-StrictMode -Version Latest
 . (Join-Path $PSScriptRoot "model-release-data.ps1")
 . (Join-Path $PSScriptRoot "model-usage-evidence.ps1")
 
+function ConvertTo-ModelPriceDecimal {
+    param($Value)
+    if ($Value -is [double]) {
+        # Direct casts can retain binary noise; round-trip text preserves the decimal rate.
+        $culture = [Globalization.CultureInfo]::InvariantCulture
+        return [decimal]::Parse($Value.ToString("R", $culture), [Globalization.NumberStyles]::Float, $culture)
+    }
+    return [decimal]$Value
+}
+
 function Get-ModelWorkloadCost {
     # Uncached price of one input/output token workload at the verdict's own GitHub rates. Output tokens already
     # include reasoning, so reasoning is never charged a second time.
@@ -13,8 +23,10 @@ function Get-ModelWorkloadCost {
         $_ -in @("pricing_missing", "pricing_invalid", "pricing_stale")
     })
     if ($null -eq $price -or $priceErrors.Count) { return $null }
-    return [decimal]$price.inputPerMillion * [decimal]$InputTokens / 1000000 +
-        [decimal]$price.outputPerMillion * [decimal]$OutputTokens / 1000000
+    $inputPrice = ConvertTo-ModelPriceDecimal $price.inputPerMillion
+    $outputPrice = ConvertTo-ModelPriceDecimal $price.outputPerMillion
+    return $inputPrice * [decimal]$InputTokens / 1000000 +
+        $outputPrice * [decimal]$OutputTokens / 1000000
 }
 
 function Get-ModelReferenceCost {

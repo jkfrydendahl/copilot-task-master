@@ -13,7 +13,6 @@ function Run-Test($Name,[scriptblock]$Action) {
 }
 Run-Test "All profiles enforce the approved fixed hard budgets" {
     $p=Get-ModelPolicyConfig (Join-Path $repo "config\model-policy.json")
-    Assert-True ($p.denylist -contains "claude-fable-5") "Denylist"
     $hard=@($p.profileRequirements.Keys | Where-Object {$p.profileRequirements[$_].costSensitive})
     Assert-True ($hard.Count -eq 9) "Budget modes"
     $ceilings=@{
@@ -75,7 +74,7 @@ Run-Test "Deep admits premium long-context pricing without relaxing Orchestrator
         $orchestrator.reasonCodes -contains "pricing_input_exceeds_ceiling" -and
         $orchestrator.reasonCodes -contains "pricing_output_exceeds_ceiling") "Deep's premium allowance leaked into Orchestrator"
 }
-Run-Test "Long-document calibration leaves every other qualification band unchanged" {
+Run-Test "Approved qualification tolerances remain profile- and metric-specific" {
     $p = Get-ModelPolicyConfig (Join-Path $repo "config\model-policy.json")
     $longDocumentProfiles = @()
     foreach ($key in $p.selectionPolicy.profiles.Keys) {
@@ -84,6 +83,8 @@ Run-Test "Long-document calibration leaves every other qualification band unchan
                 $expected = if ($metric -eq "artificialAnalysisComponents.lcr") {
                     $longDocumentProfiles += $key
                     0.05
+                } elseif ($key -eq "default-development" -and $metric -eq "liveBench.instructionFollowing") {
+                    4
                 } elseif ($p.evidenceMetrics[$metric].max -eq 1) { 0.03 } else { 3 }
                 Assert-True ($dimension.qualityBands[$metric] -eq $expected) "Wrong qualification tolerance: $key $metric"
             }
@@ -250,6 +251,25 @@ Run-Test "All capability, availability and denylist gates report independently" 
         Assert-True ($v.reasonCodes -contains $reason) "Missing gate $reason"
     }
 }
+Run-Test "Removing the explicit exclusion preserves availability requirements" {
+    $policy=Get-ModelPolicyConfig (Join-Path $repo "config\model-policy.json")
+    $cap=@{asOf="2026-09-09";vision=$true;supportedContexts=@("default");supportedEfforts=@("low")}
+    $price=@{verifiedAtUtc="2026-09-09";tiers=@{default=@{inputPerMillion=2;outputPerMillion=10}}}
+    foreach ($availability in @(
+        @{verified=$true;models=@("claude-fable-5");reason=$null},
+        @{verified=$true;models=@();reason="not_available"},
+        @{verified=$false;models=@("claude-fable-5");reason="unverified_availability_freezes_promotion"}
+    )) {
+        $verdict=Get-ModelAdmissibilityVerdict -ModelId "claude-fable-5" -ProfileKey "quick" `
+            -Denylist $policy.denylist -AvailabilityVerified $availability.verified -AvailableModels $availability.models `
+            -CapabilityRecord $cap -PricingRecord $price -ProfileRequirement $policy.profileRequirements.quick `
+            -ProfileContextTier "default" -ProfileEffort "low" -NowUtc ([datetime]"2026-09-09Z")
+        Assert-True ($verdict.admissible -eq ($null -eq $availability.reason)) "Availability admission changed unexpectedly"
+        if ($null -ne $availability.reason) {
+            Assert-True ($verdict.reasonCodes -contains $availability.reason) "Missing availability gate: $($availability.reason)"
+        }
+    }
+}
 Run-Test "Published and runtime-verified vision admit the configured Visual/UI variant" {
     $policy = Get-ModelPolicyConfig (Join-Path $repo "config\model-policy.json")
     foreach($observation in @(
@@ -271,7 +291,7 @@ Run-Test "Published and runtime-verified vision admit the configured Visual/UI v
 }
 Run-Test "Every profile permits evidence-backed selection across all native efforts" {
     $p=Get-ModelPolicyConfig (Join-Path $repo "config\model-policy.json")
-    Assert-True ($p.selectionPolicy.version -eq 20 -and $p.schemaVersion -eq 4) "Selection policy not versioned"
+    Assert-True ($p.selectionPolicy.version -eq 21 -and $p.schemaVersion -eq 4) "Selection policy not versioned"
     Assert-True ($p.consensusPolicy.discoveryFreshnessDays -eq 7) "Local discovery validity changed"
     Assert-True ($p.selectionPolicy.costTieBreak -eq "newest_verified_release") "Recency tie policy missing"
     foreach ($key in @("orchestrator","default-development")) {

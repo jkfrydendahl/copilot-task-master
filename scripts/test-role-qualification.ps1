@@ -77,6 +77,25 @@ Run-Test "All nine production contracts qualify before price selection" {
         Assert-True (Resolve-ProfileSelectionState -CurrentModel incumbent -Selection $s -ForceImmediateApply).applied "Qualified $key did not apply"
     }
 }
+Run-Test "Default Development admits a four-point instruction-following gap without relaxing coding" {
+    $f=New-QualificationFixture "default-development"
+    Set-FixtureScore $f cheap instructionFollowing 76
+    $s=Get-ProfileSelection @f
+    $instruction=$s.qualification.dimensions | Where-Object key -eq "instruction-following"
+    Assert-True ($instruction.reference.score -eq 80 -and $instruction.minimumScore -eq 76 -and
+        $s.winner.model -eq "cheap") "Exact instruction-following boundary rejected"
+    Set-FixtureScore $f cheap instructionFollowing 75.999999
+    $s=Get-ProfileSelection @f
+    $candidate=$s.qualification.candidates | Where-Object model -eq cheap
+    Assert-True ($s.winner.model -eq "strong" -and -not $candidate.qualified -and
+        ($candidate.checks | Where-Object dimension -eq "instruction-following").status -eq "outside_quality_band") "Instruction-following band exceeded"
+    Set-FixtureScore $f cheap instructionFollowing 76
+    Set-FixtureScore $f cheap coding 76.999999
+    $s=Get-ProfileSelection @f
+    $candidate=$s.qualification.candidates | Where-Object model -eq cheap
+    Assert-True ($s.winner.model -eq "strong" -and -not $candidate.qualified -and
+        ($candidate.checks | Where-Object dimension -eq primary).status -eq "outside_quality_band") "Wider instruction-following band relaxed coding"
+}
 Run-Test "Review and Visual/UI coding bands include exactly 12 points, never more" {
     foreach ($key in @("review","visual-ui")) {
         $f=New-QualificationFixture $key
