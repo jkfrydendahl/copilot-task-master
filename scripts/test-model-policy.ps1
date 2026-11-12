@@ -13,7 +13,6 @@ function Run-Test($Name,[scriptblock]$Action) {
 }
 Run-Test "All profiles enforce the approved fixed hard budgets" {
     $p=Get-ModelPolicyConfig (Join-Path $repo "config\model-policy.json")
-    Assert-True ($p.denylist -contains "claude-fable-5") "Denylist"
     $hard=@($p.profileRequirements.Keys | Where-Object {$p.profileRequirements[$_].costSensitive})
     Assert-True ($hard.Count -eq 9) "Budget modes"
     $ceilings=@{
@@ -250,6 +249,25 @@ Run-Test "All capability, availability and denylist gates report independently" 
         -CapabilityRecord $cap -PricingRecord $price -ProfileRequirement $req -ProfileContextTier "long_context" -ProfileEffort "high" -NowUtc $now
     foreach($reason in @("denylisted","not_available","unverified_availability_freezes_promotion","cli_agent_incompatible","capabilities_stale","vision_unknown","context_unsupported","effort_unsupported","pricing_stale","pricing_input_exceeds_ceiling","pricing_output_exceeds_ceiling")) {
         Assert-True ($v.reasonCodes -contains $reason) "Missing gate $reason"
+    }
+}
+Run-Test "Removing the explicit exclusion preserves availability requirements" {
+    $policy=Get-ModelPolicyConfig (Join-Path $repo "config\model-policy.json")
+    $cap=@{asOf="2026-09-09";vision=$true;supportedContexts=@("default");supportedEfforts=@("low")}
+    $price=@{verifiedAtUtc="2026-09-09";tiers=@{default=@{inputPerMillion=2;outputPerMillion=10}}}
+    foreach ($availability in @(
+        @{verified=$true;models=@("claude-fable-5");reason=$null},
+        @{verified=$true;models=@();reason="not_available"},
+        @{verified=$false;models=@("claude-fable-5");reason="unverified_availability_freezes_promotion"}
+    )) {
+        $verdict=Get-ModelAdmissibilityVerdict -ModelId "claude-fable-5" -ProfileKey "quick" `
+            -Denylist $policy.denylist -AvailabilityVerified $availability.verified -AvailableModels $availability.models `
+            -CapabilityRecord $cap -PricingRecord $price -ProfileRequirement $policy.profileRequirements.quick `
+            -ProfileContextTier "default" -ProfileEffort "low" -NowUtc ([datetime]"2026-09-09Z")
+        Assert-True ($verdict.admissible -eq ($null -eq $availability.reason)) "Availability admission changed unexpectedly"
+        if ($null -ne $availability.reason) {
+            Assert-True ($verdict.reasonCodes -contains $availability.reason) "Missing availability gate: $($availability.reason)"
+        }
     }
 }
 Run-Test "Published and runtime-verified vision admit the configured Visual/UI variant" {

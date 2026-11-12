@@ -1,8 +1,6 @@
 {
   "schemaVersion": 4,
-  "denylist": [
-    "claude-fable-5"
-  ],
+  "denylist": [],
   "familyPatterns": {
     "sonnet-family": "claude-sonnet-\\d",
     "haiku-family": "claude-haiku-\\d",
