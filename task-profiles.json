@@ -22,8 +22,8 @@
     "label": "Default development",
     "description": "Ordinary bug fixes, normal feature work, straightforward refactors, small D365 changes.",
     "hint": "Describe what you want to fix or build; follow the active user/project delivery policy.",
-    "model": "gemini-3.8-flash",
-    "effort": "high",
+    "model": "claude-sonnet-5.5",
+    "effort": "xhigh",
     "context": "default"
   },
   {
