@@ -13,31 +13,26 @@
       "claude-haiku-5.5",
       "claude-haiku-4.5",
       "gpt-6.1-sol",
+      "gpt-6.1-terra",
       "gpt-6-sol",
       "gpt-6-luna",
       "gpt-6-astra",
       "gpt-5.6-sol",
       "gpt-5.6-terra",
       "gpt-5.6-luna",
-      "gpt-5.5",
-      "gpt-5.4",
-      "gpt-5.4-mini",
       "gpt-5.3-codex",
-      "gpt-5-mini",
       "mai-code-1.1-flash",
       "gemini-4-argon",
       "gemini-3.8-flash",
-      "gemini-3.7-flash",
       "grok-4.7",
       "grok-4.6",
-      "grok-4.5",
       "kimi-k3"
     ],
     "source": "locally captured CLI help",
     "verified": true
   },
   "lifecycle": {
-    "fetchedAtUtc": "2026-11-04T12:31:38.4483076Z",
+    "fetchedAtUtc": "2026-11-12T08:21:47.0593930Z",
     "models": {
       "Claude Opus 4": {
         "exceptionNotes": [],
@@ -291,10 +286,10 @@
     "sourceUrl": "https://docs.github.com/en/copilot/reference/ai-models/supported-models",
     "status": "ok"
   },
-  "observedAtUtc": "2026-11-04T12:31:37.443Z",
+  "observedAtUtc": "2026-11-12T08:21:43.184Z",
   "runtime": {
     "authenticated": true,
-    "fetchedAtUtc": "2026-11-04T12:31:37.443Z",
+    "fetchedAtUtc": "2026-11-12T08:21:43.184Z",
     "models": [
       {
         "id": "auto",
@@ -608,6 +603,40 @@
           },
           "maxPromptTokens": 272000,
           "outputPrice": 1000
+        },
+        "toolCalls": true,
+        "vision": true
+      },
+      {
+        "id": "gpt-6.1-terra",
+        "maxContextTokens": 1000000,
+        "name": "GPT-6.1 Terra",
+        "reasoningEffort": true,
+        "supportedReasoningEfforts": [
+          "low",
+          "medium",
+          "high",
+          "xhigh",
+          "max"
+        ],
+        "tokenPrices": {
+          "batchSize": 1000000,
+          "cachePrice": 5,
+          "cacheReadPrice": 5,
+          "cacheWritePrice": 125,
+          "contextMax": 272000,
+          "inputPrice": 100,
+          "longContext": {
+            "cachePrice": 10,
+            "cacheReadPrice": 10,
+            "cacheWritePrice": 250,
+            "contextMax": 1000000,
+            "inputPrice": 200,
+            "maxPromptTokens": 1000000,
+            "outputPrice": 750
+          },
+          "maxPromptTokens": 272000,
+          "outputPrice": 500
         },
         "toolCalls": true,
         "vision": true
@@ -942,41 +971,30 @@
         "vision": true
       },
       {
-        "id": "gpt-6.1-terra",
+        "id": "gemini-4-carbon",
         "maxContextTokens": 1000000,
-        "name": "GPT-6.1 Terra",
+        "name": "Gemini 4 Carbon",
         "reasoningEffort": true,
         "supportedReasoningEfforts": [
           "low",
           "medium",
-          "high",
-          "xhigh",
-          "max"
+          "high"
         ],
         "tokenPrices": {
           "batchSize": 1000000,
-          "cachePrice": 5,
-          "cacheReadPrice": 5,
-          "cacheWritePrice": 125,
-          "contextMax": 272000,
-          "inputPrice": 100,
-          "longContext": {
-            "cachePrice": 10,
-            "cacheReadPrice": 10,
-            "cacheWritePrice": 250,
-            "contextMax": 1000000,
-            "inputPrice": 200,
-            "maxPromptTokens": 1000000,
-            "outputPrice": 750
-          },
-          "maxPromptTokens": 272000,
-          "outputPrice": 500
+          "cachePrice": 10,
+          "cacheReadPrice": 10,
+          "cacheWritePrice": 0,
+          "contextMax": 936000,
+          "inputPrice": 200,
+          "maxPromptTokens": 936000,
+          "outputPrice": 1000
         },
         "toolCalls": true,
         "vision": true
       }
     ],
-    "runtimeVersion": "1.0.105",
+    "runtimeVersion": "1.0.106",
     "source": "copilot-sdk models.list; captured locally",
     "status": "ok"
   },
