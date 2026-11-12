@@ -75,7 +75,7 @@ Run-Test "Deep admits premium long-context pricing without relaxing Orchestrator
         $orchestrator.reasonCodes -contains "pricing_input_exceeds_ceiling" -and
         $orchestrator.reasonCodes -contains "pricing_output_exceeds_ceiling") "Deep's premium allowance leaked into Orchestrator"
 }
-Run-Test "Long-document calibration leaves every other qualification band unchanged" {
+Run-Test "Approved qualification tolerances remain profile- and metric-specific" {
     $p = Get-ModelPolicyConfig (Join-Path $repo "config\model-policy.json")
     $longDocumentProfiles = @()
     foreach ($key in $p.selectionPolicy.profiles.Keys) {
@@ -84,6 +84,8 @@ Run-Test "Long-document calibration leaves every other qualification band unchan
                 $expected = if ($metric -eq "artificialAnalysisComponents.lcr") {
                     $longDocumentProfiles += $key
                     0.05
+                } elseif ($key -eq "default-development" -and $metric -eq "liveBench.instructionFollowing") {
+                    4
                 } elseif ($p.evidenceMetrics[$metric].max -eq 1) { 0.03 } else { 3 }
                 Assert-True ($dimension.qualityBands[$metric] -eq $expected) "Wrong qualification tolerance: $key $metric"
             }
@@ -271,7 +273,7 @@ Run-Test "Published and runtime-verified vision admit the configured Visual/UI v
 }
 Run-Test "Every profile permits evidence-backed selection across all native efforts" {
     $p=Get-ModelPolicyConfig (Join-Path $repo "config\model-policy.json")
-    Assert-True ($p.selectionPolicy.version -eq 20 -and $p.schemaVersion -eq 4) "Selection policy not versioned"
+    Assert-True ($p.selectionPolicy.version -eq 21 -and $p.schemaVersion -eq 4) "Selection policy not versioned"
     Assert-True ($p.consensusPolicy.discoveryFreshnessDays -eq 7) "Local discovery validity changed"
     Assert-True ($p.selectionPolicy.costTieBreak -eq "newest_verified_release") "Recency tie policy missing"
     foreach ($key in @("orchestrator","default-development")) {

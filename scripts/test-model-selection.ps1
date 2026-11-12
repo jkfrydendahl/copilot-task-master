@@ -351,6 +351,14 @@ Run-Test "Equal monetary costs do not churn because of floating-point arithmetic
     $s = Select-Models @((Record one 70),(Record two 67)) @($one,$two) $current value_balanced
     Assert-True ($s.winner.model -eq "two") "Equal 90-AIC prices triggered a false saving"
 }
+Run-Test "Small genuine monetary savings are not rounded into an incumbent tie" {
+    $one = Verdict; $one.pricing.inputPerMillion = 0.3; $one.pricing.outputPerMillion = 6
+    $two = Verdict; $two.modelId = "two"; $two.pricing.inputPerMillion = 0.8000000000000001; $two.pricing.outputPerMillion = 1
+    $current = @{key="test";model="two";effort="medium";context="default"}
+    $s = Select-Models @((Record one 67),(Record two 70)) @($one,$two) $current value_balanced
+    Assert-True ($s.winner.model -eq "one" -and
+        $s.valueDecision.referenceAic -lt $s.valueDecision.incumbentReferenceAic) "A genuine saving was rounded into a quality or incumbent tie"
+}
 Run-Test "Zero incumbent cost is known but does not veto a preauthorized paid candidate" {
     $one = Verdict; $one.pricing.inputPerMillion = 0; $one.pricing.outputPerMillion = 0
     $two = Verdict; $two.modelId = "two"
