@@ -3,6 +3,7 @@
     "models": [
       "claude-sonnet-5.5",
       "claude-sonnet-5",
+      "claude-fable-5.2",
       "claude-fable-5.1",
       "claude-fable-5",
       "claude-opus-5.5",
@@ -12,6 +13,8 @@
       "claude-sonnet-4.6",
       "claude-haiku-5.5",
       "claude-haiku-4.5",
+      "gpt-6.2-sol",
+      "gpt-6.2-astra",
       "gpt-6.1-sol",
       "gpt-6.1-terra",
       "gpt-6-sol",
@@ -22,6 +25,7 @@
       "gpt-5.6-luna",
       "gpt-5.3-codex",
       "mai-code-1.1-flash",
+      "gemini-4-carbon",
       "gemini-4-argon",
       "gemini-3.8-flash",
       "grok-4.7",
@@ -32,7 +36,7 @@
     "verified": true
   },
   "lifecycle": {
-    "fetchedAtUtc": "2026-11-12T08:21:47.0593930Z",
+    "fetchedAtUtc": "2026-11-20T09:13:59.1053275Z",
     "models": {
       "Claude Opus 4": {
         "exceptionNotes": [],
@@ -67,6 +71,20 @@
       "Claude Opus 4.7": {
         "exceptionNotes": [],
         "retirementDate": "2026-10-02",
+        "scope": "all",
+        "suggestedAlternative": "Latest Claude Opus model"
+      },
+      "Claude Opus 4.8": {
+        "exceptionNotes": [
+          "Claude Opus 4.8 remains available to individual Copilot subscribers on annual plans. The retirement of Claude Opus 4.8 does not apply to these subscribers."
+        ],
+        "retirementDate": "2026-11-16",
+        "scope": "conditional",
+        "suggestedAlternative": "Latest Claude Opus model"
+      },
+      "Claude Opus 5": {
+        "exceptionNotes": [],
+        "retirementDate": "2026-11-16",
         "scope": "all",
         "suggestedAlternative": "Latest Claude Opus model"
       },
@@ -234,6 +252,12 @@
         "scope": "all",
         "suggestedAlternative": "Latest GPT Sol model"
       },
+      "GPT-5.6 Terra": {
+        "exceptionNotes": [],
+        "retirementDate": "2026-11-16",
+        "scope": "all",
+        "suggestedAlternative": "Latest GPT Terra model"
+      },
       "Grok Code Fast 1": {
         "exceptionNotes": [],
         "retirementDate": "2026-05-15",
@@ -286,52 +310,15 @@
     "sourceUrl": "https://docs.github.com/en/copilot/reference/ai-models/supported-models",
     "status": "ok"
   },
-  "observedAtUtc": "2026-11-12T08:21:43.184Z",
+  "observedAtUtc": "2026-11-20T09:13:58.416Z",
   "runtime": {
     "authenticated": true,
-    "fetchedAtUtc": "2026-11-12T08:21:43.184Z",
+    "fetchedAtUtc": "2026-11-20T09:13:58.416Z",
     "models": [
       {
         "id": "auto",
         "maxContextTokens": 0,
         "name": "Auto"
-      },
-      {
-        "id": "claude-sonnet-5.5",
-        "maxContextTokens": 1000000,
-        "name": "Claude Sonnet 5.5",
-        "policyState": "enabled",
-        "reasoningEffort": true,
-        "supportedReasoningEfforts": [
-          "low",
-          "medium",
-          "high",
-          "xhigh",
-          "max"
-        ],
-        "tokenPrices": {
-          "batchSize": 1000000,
-          "cachePrice": 10,
-          "cacheReadPrice": 10,
-          "cacheWrite1hPrice": 400,
-          "cacheWritePrice": 250,
-          "contextMax": 200000,
-          "inputPrice": 200,
-          "longContext": {
-            "cachePrice": 10,
-            "cacheReadPrice": 10,
-            "cacheWrite1hPrice": 400,
-            "cacheWritePrice": 250,
-            "contextMax": 936000,
-            "inputPrice": 200,
-            "maxPromptTokens": 936000,
-            "outputPrice": 1000
-          },
-          "maxPromptTokens": 200000,
-          "outputPrice": 1000
-        },
-        "toolCalls": true,
-        "vision": true
       },
       {
         "id": "claude-sonnet-5",
@@ -366,117 +353,6 @@
           },
           "maxPromptTokens": 200000,
           "outputPrice": 1000
-        },
-        "toolCalls": true,
-        "vision": true
-      },
-      {
-        "id": "claude-opus-5.5",
-        "maxContextTokens": 1000000,
-        "name": "Claude Opus 5.5",
-        "policyState": "enabled",
-        "reasoningEffort": true,
-        "supportedReasoningEfforts": [
-          "low",
-          "medium",
-          "high",
-          "xhigh",
-          "max"
-        ],
-        "tokenPrices": {
-          "batchSize": 1000000,
-          "cachePrice": 20,
-          "cacheReadPrice": 20,
-          "cacheWrite1hPrice": 800,
-          "cacheWritePrice": 500,
-          "contextMax": 200000,
-          "inputPrice": 400,
-          "longContext": {
-            "cachePrice": 20,
-            "cacheReadPrice": 20,
-            "cacheWrite1hPrice": 800,
-            "cacheWritePrice": 500,
-            "contextMax": 1000000,
-            "inputPrice": 400,
-            "maxPromptTokens": 1000000,
-            "outputPrice": 2000
-          },
-          "maxPromptTokens": 200000,
-          "outputPrice": 2000
-        },
-        "toolCalls": true,
-        "vision": true
-      },
-      {
-        "id": "claude-opus-5",
-        "maxContextTokens": 1000000,
-        "name": "Claude Opus 5",
-        "policyState": "enabled",
-        "reasoningEffort": true,
-        "supportedReasoningEfforts": [
-          "low",
-          "medium",
-          "high",
-          "xhigh",
-          "max"
-        ],
-        "tokenPrices": {
-          "batchSize": 1000000,
-          "cachePrice": 50,
-          "cacheReadPrice": 50,
-          "cacheWrite1hPrice": 1000,
-          "cacheWritePrice": 625,
-          "contextMax": 200000,
-          "inputPrice": 500,
-          "longContext": {
-            "cachePrice": 50,
-            "cacheReadPrice": 50,
-            "cacheWrite1hPrice": 1000,
-            "cacheWritePrice": 625,
-            "contextMax": 936000,
-            "inputPrice": 500,
-            "maxPromptTokens": 936000,
-            "outputPrice": 2500
-          },
-          "maxPromptTokens": 200000,
-          "outputPrice": 2500
-        },
-        "toolCalls": true,
-        "vision": true
-      },
-      {
-        "id": "claude-opus-4.8",
-        "maxContextTokens": 1000000,
-        "name": "Claude Opus 4.8",
-        "policyState": "enabled",
-        "reasoningEffort": true,
-        "supportedReasoningEfforts": [
-          "low",
-          "medium",
-          "high",
-          "xhigh",
-          "max"
-        ],
-        "tokenPrices": {
-          "batchSize": 1000000,
-          "cachePrice": 50,
-          "cacheReadPrice": 50,
-          "cacheWrite1hPrice": 1000,
-          "cacheWritePrice": 625,
-          "contextMax": 200000,
-          "inputPrice": 500,
-          "longContext": {
-            "cachePrice": 50,
-            "cacheReadPrice": 50,
-            "cacheWrite1hPrice": 1000,
-            "cacheWritePrice": 625,
-            "contextMax": 936000,
-            "inputPrice": 500,
-            "maxPromptTokens": 936000,
-            "outputPrice": 2500
-          },
-          "maxPromptTokens": 200000,
-          "outputPrice": 2500
         },
         "toolCalls": true,
         "vision": true
@@ -519,43 +395,6 @@
         "vision": true
       },
       {
-        "id": "claude-haiku-5.5",
-        "maxContextTokens": 1000000,
-        "name": "Claude Haiku 5.5",
-        "policyState": "enabled",
-        "reasoningEffort": true,
-        "supportedReasoningEfforts": [
-          "low",
-          "medium",
-          "high",
-          "xhigh",
-          "max"
-        ],
-        "tokenPrices": {
-          "batchSize": 1000000,
-          "cachePrice": 1,
-          "cacheReadPrice": 1,
-          "cacheWrite1hPrice": 20,
-          "cacheWritePrice": 12.5,
-          "contextMax": 100000,
-          "inputPrice": 10,
-          "longContext": {
-            "cachePrice": 5,
-            "cacheReadPrice": 5,
-            "cacheWrite1hPrice": 100,
-            "cacheWritePrice": 62.5,
-            "contextMax": 936000,
-            "inputPrice": 50,
-            "maxPromptTokens": 936000,
-            "outputPrice": 250
-          },
-          "maxPromptTokens": 100000,
-          "outputPrice": 50
-        },
-        "toolCalls": true,
-        "vision": true
-      },
-      {
         "id": "claude-haiku-4.5",
         "maxContextTokens": 200000,
         "name": "Claude Haiku 4.5",
@@ -568,147 +407,6 @@
           "cacheWritePrice": 125,
           "inputPrice": 100,
           "outputPrice": 500
-        },
-        "toolCalls": true,
-        "vision": true
-      },
-      {
-        "id": "gpt-6.1-sol",
-        "maxContextTokens": 1050000,
-        "name": "GPT-6.1 Sol",
-        "policyState": "enabled",
-        "reasoningEffort": true,
-        "supportedReasoningEfforts": [
-          "low",
-          "medium",
-          "high",
-          "xhigh",
-          "max"
-        ],
-        "tokenPrices": {
-          "batchSize": 1000000,
-          "cachePrice": 10,
-          "cacheReadPrice": 10,
-          "cacheWritePrice": 250,
-          "contextMax": 272000,
-          "inputPrice": 200,
-          "longContext": {
-            "cachePrice": 20,
-            "cacheReadPrice": 20,
-            "cacheWritePrice": 500,
-            "contextMax": 922000,
-            "inputPrice": 400,
-            "maxPromptTokens": 922000,
-            "outputPrice": 1500
-          },
-          "maxPromptTokens": 272000,
-          "outputPrice": 1000
-        },
-        "toolCalls": true,
-        "vision": true
-      },
-      {
-        "id": "gpt-6.1-terra",
-        "maxContextTokens": 1000000,
-        "name": "GPT-6.1 Terra",
-        "reasoningEffort": true,
-        "supportedReasoningEfforts": [
-          "low",
-          "medium",
-          "high",
-          "xhigh",
-          "max"
-        ],
-        "tokenPrices": {
-          "batchSize": 1000000,
-          "cachePrice": 5,
-          "cacheReadPrice": 5,
-          "cacheWritePrice": 125,
-          "contextMax": 272000,
-          "inputPrice": 100,
-          "longContext": {
-            "cachePrice": 10,
-            "cacheReadPrice": 10,
-            "cacheWritePrice": 250,
-            "contextMax": 1000000,
-            "inputPrice": 200,
-            "maxPromptTokens": 1000000,
-            "outputPrice": 750
-          },
-          "maxPromptTokens": 272000,
-          "outputPrice": 500
-        },
-        "toolCalls": true,
-        "vision": true
-      },
-      {
-        "id": "gpt-6-sol",
-        "maxContextTokens": 1000000,
-        "name": "GPT-6 Sol",
-        "policyState": "enabled",
-        "reasoningEffort": true,
-        "supportedReasoningEfforts": [
-          "none",
-          "low",
-          "medium",
-          "high",
-          "xhigh",
-          "max"
-        ],
-        "tokenPrices": {
-          "batchSize": 1000000,
-          "cachePrice": 20,
-          "cacheReadPrice": 20,
-          "cacheWritePrice": 250,
-          "contextMax": 272000,
-          "inputPrice": 200,
-          "longContext": {
-            "cachePrice": 40,
-            "cacheReadPrice": 40,
-            "cacheWritePrice": 500,
-            "contextMax": 872000,
-            "inputPrice": 400,
-            "maxPromptTokens": 872000,
-            "outputPrice": 1500
-          },
-          "maxPromptTokens": 272000,
-          "outputPrice": 1000
-        },
-        "toolCalls": true,
-        "vision": true
-      },
-      {
-        "id": "gpt-6-luna",
-        "maxContextTokens": 1000000,
-        "name": "GPT-6 Luna",
-        "policyState": "enabled",
-        "reasoningEffort": true,
-        "supportedReasoningEfforts": [
-          "none",
-          "low",
-          "medium",
-          "high",
-          "xhigh",
-          "max"
-        ],
-        "tokenPrices": {
-          "batchSize": 1000000,
-          "cachePrice": 1,
-          "cacheReadPrice": 1,
-          "cacheWritePrice": 12.5,
-          "contextMax": 272000,
-          "inputPrice": 10,
-          "longContext": {
-            "cachePrice": 2,
-            "cacheReadPrice": 2,
-            "cacheWritePrice": 25,
-            "contextMax": 872000,
-            "inputPrice": 20,
-            "maxPromptTokens": 872000,
-            "outputPrice": 75
-          },
-          "maxPromptTokens": 272000,
-          "outputPrice": 50
         },
         "toolCalls": true,
         "vision": true
@@ -780,42 +478,6 @@
           },
           "maxPromptTokens": 272000,
           "outputPrice": 2000
-        },
-        "toolCalls": true,
-        "vision": true
-      },
-      {
-        "id": "gpt-5.6-terra",
-        "maxContextTokens": 1050000,
-        "name": "GPT-5.6 Terra",
-        "policyState": "enabled",
-        "reasoningEffort": true,
-        "supportedReasoningEfforts": [
-          "none",
-          "low",
-          "medium",
-          "high",
-          "xhigh",
-          "max"
-        ],
-        "tokenPrices": {
-          "batchSize": 1000000,
-          "cachePrice": 20,
-          "cacheReadPrice": 20,
-          "cacheWritePrice": 250,
-          "contextMax": 272000,
-          "inputPrice": 200,
-          "longContext": {
-            "cachePrice": 40,
-            "cacheReadPrice": 40,
-            "cacheWritePrice": 500,
-            "contextMax": 922000,
-            "inputPrice": 400,
-            "maxPromptTokens": 922000,
-            "outputPrice": 1800
-          },
-          "maxPromptTokens": 272000,
-          "outputPrice": 1200
         },
         "toolCalls": true,
         "vision": true
@@ -905,34 +567,441 @@
         "vision": true
       },
       {
-        "id": "grok-4.7",
-        "maxContextTokens": 500000,
-        "name": "Grok 4.7",
+        "id": "claude-haiku-5.5",
+        "maxContextTokens": 1000000,
+        "name": "Claude Haiku 5.5",
+        "policyState": "enabled",
         "reasoningEffort": true,
         "supportedReasoningEfforts": [
           "low",
           "medium",
           "high",
-          "xhigh"
+          "xhigh",
+          "max"
         ],
         "tokenPrices": {
           "batchSize": 1000000,
-          "cachePrice": 50,
-          "cacheReadPrice": 50,
+          "cachePrice": 1,
+          "cacheReadPrice": 1,
+          "cacheWrite1hPrice": 20,
+          "cacheWritePrice": 12.5,
+          "contextMax": 100000,
+          "inputPrice": 10,
+          "longContext": {
+            "cachePrice": 5,
+            "cacheReadPrice": 5,
+            "cacheWrite1hPrice": 100,
+            "cacheWritePrice": 62.5,
+            "contextMax": 936000,
+            "inputPrice": 50,
+            "maxPromptTokens": 936000,
+            "outputPrice": 250
+          },
+          "maxPromptTokens": 100000,
+          "outputPrice": 50
+        },
+        "toolCalls": true,
+        "vision": true
+      },
+      {
+        "id": "claude-opus-5.5",
+        "maxContextTokens": 1000000,
+        "name": "Claude Opus 5.5",
+        "policyState": "enabled",
+        "reasoningEffort": true,
+        "supportedReasoningEfforts": [
+          "low",
+          "medium",
+          "high",
+          "xhigh",
+          "max"
+        ],
+        "tokenPrices": {
+          "batchSize": 1000000,
+          "cachePrice": 20,
+          "cacheReadPrice": 20,
+          "cacheWrite1hPrice": 800,
+          "cacheWritePrice": 500,
+          "contextMax": 200000,
+          "inputPrice": 400,
+          "longContext": {
+            "cachePrice": 20,
+            "cacheReadPrice": 20,
+            "cacheWrite1hPrice": 800,
+            "cacheWritePrice": 500,
+            "contextMax": 1000000,
+            "inputPrice": 400,
+            "maxPromptTokens": 1000000,
+            "outputPrice": 2000
+          },
+          "maxPromptTokens": 200000,
+          "outputPrice": 2000
+        },
+        "toolCalls": true,
+        "vision": true
+      },
+      {
+        "id": "claude-sonnet-5.5",
+        "maxContextTokens": 1000000,
+        "name": "Claude Sonnet 5.5",
+        "policyState": "enabled",
+        "reasoningEffort": true,
+        "supportedReasoningEfforts": [
+          "low",
+          "medium",
+          "high",
+          "xhigh",
+          "max"
+        ],
+        "tokenPrices": {
+          "batchSize": 1000000,
+          "cachePrice": 10,
+          "cacheReadPrice": 10,
+          "cacheWrite1hPrice": 400,
+          "cacheWritePrice": 250,
+          "contextMax": 200000,
+          "inputPrice": 200,
+          "longContext": {
+            "cachePrice": 10,
+            "cacheReadPrice": 10,
+            "cacheWrite1hPrice": 400,
+            "cacheWritePrice": 250,
+            "contextMax": 936000,
+            "inputPrice": 200,
+            "maxPromptTokens": 936000,
+            "outputPrice": 1000
+          },
+          "maxPromptTokens": 200000,
+          "outputPrice": 1000
+        },
+        "toolCalls": true,
+        "vision": true
+      },
+      {
+        "id": "gemini-4-argon",
+        "maxContextTokens": 1048576,
+        "name": "Gemini 4 Argon",
+        "policyState": "enabled",
+        "reasoningEffort": true,
+        "supportedReasoningEfforts": [
+          "low",
+          "medium",
+          "high"
+        ],
+        "tokenPrices": {
+          "batchSize": 1000000,
+          "cachePrice": 10,
+          "cacheReadPrice": 10,
           "cacheWritePrice": 0,
           "contextMax": 200000,
           "inputPrice": 200,
           "longContext": {
-            "cachePrice": 100,
-            "cacheReadPrice": 100,
+            "cachePrice": 10,
+            "cacheReadPrice": 10,
             "cacheWritePrice": 0,
-            "contextMax": 500000,
-            "inputPrice": 400,
-            "maxPromptTokens": 500000,
-            "outputPrice": 1200
+            "contextMax": 983040,
+            "inputPrice": 200,
+            "maxPromptTokens": 983040,
+            "outputPrice": 1000
           },
           "maxPromptTokens": 200000,
-          "outputPrice": 600
+          "outputPrice": 1000
+        },
+        "toolCalls": true,
+        "vision": true
+      },
+      {
+        "id": "gemini-4-carbon",
+        "maxContextTokens": 1000000,
+        "name": "Gemini 4 Carbon",
+        "reasoningEffort": true,
+        "supportedReasoningEfforts": [
+          "low",
+          "medium",
+          "high"
+        ],
+        "tokenPrices": {
+          "batchSize": 1000000,
+          "cachePrice": 10,
+          "cacheReadPrice": 10,
+          "cacheWritePrice": 0,
+          "contextMax": 200000,
+          "inputPrice": 200,
+          "longContext": {
+            "cachePrice": 10,
+            "cacheReadPrice": 10,
+            "cacheWritePrice": 0,
+            "contextMax": 936000,
+            "inputPrice": 200,
+            "maxPromptTokens": 936000,
+            "outputPrice": 1000
+          },
+          "maxPromptTokens": 200000,
+          "outputPrice": 1000
+        },
+        "toolCalls": true,
+        "vision": true
+      },
+      {
+        "id": "gemini-4-hydrogen",
+        "maxContextTokens": 1048576,
+        "name": "Gemini 4 Hydrogen",
+        "reasoningEffort": true,
+        "supportedReasoningEfforts": [
+          "low",
+          "medium",
+          "high"
+        ],
+        "tokenPrices": {
+          "batchSize": 1000000,
+          "cachePrice": 7.5,
+          "cacheReadPrice": 7.5,
+          "cacheWritePrice": 0,
+          "contextMax": 983040,
+          "inputPrice": 150,
+          "maxPromptTokens": 983040,
+          "outputPrice": 750
+        },
+        "toolCalls": true,
+        "vision": true
+      },
+      {
+        "id": "gemini-4-neon",
+        "maxContextTokens": 1048576,
+        "name": "Gemini 4 Neon",
+        "reasoningEffort": true,
+        "supportedReasoningEfforts": [
+          "low",
+          "medium",
+          "high"
+        ],
+        "tokenPrices": {
+          "batchSize": 1000000,
+          "cachePrice": 15,
+          "cacheReadPrice": 15,
+          "cacheWritePrice": 0,
+          "contextMax": 200000,
+          "inputPrice": 300,
+          "longContext": {
+            "cachePrice": 15,
+            "cacheReadPrice": 15,
+            "cacheWritePrice": 0,
+            "contextMax": 983040,
+            "inputPrice": 300,
+            "maxPromptTokens": 983040,
+            "outputPrice": 1500
+          },
+          "maxPromptTokens": 200000,
+          "outputPrice": 1500
+        },
+        "toolCalls": true,
+        "vision": true
+      },
+      {
+        "id": "gpt-6.1-sol",
+        "maxContextTokens": 1050000,
+        "name": "GPT-6.1 Sol",
+        "policyState": "enabled",
+        "reasoningEffort": true,
+        "supportedReasoningEfforts": [
+          "low",
+          "medium",
+          "high",
+          "xhigh",
+          "max"
+        ],
+        "tokenPrices": {
+          "batchSize": 1000000,
+          "cachePrice": 10,
+          "cacheReadPrice": 10,
+          "cacheWritePrice": 250,
+          "contextMax": 272000,
+          "inputPrice": 200,
+          "longContext": {
+            "cachePrice": 20,
+            "cacheReadPrice": 20,
+            "cacheWritePrice": 500,
+            "contextMax": 922000,
+            "inputPrice": 400,
+            "maxPromptTokens": 922000,
+            "outputPrice": 1500
+          },
+          "maxPromptTokens": 272000,
+          "outputPrice": 1000
+        },
+        "toolCalls": true,
+        "vision": true
+      },
+      {
+        "id": "gpt-6.1-terra",
+        "maxContextTokens": 1000000,
+        "name": "GPT-6.1 Terra",
+        "reasoningEffort": true,
+        "supportedReasoningEfforts": [
+          "low",
+          "medium",
+          "high",
+          "xhigh",
+          "max"
+        ],
+        "tokenPrices": {
+          "batchSize": 1000000,
+          "cachePrice": 5,
+          "cacheReadPrice": 5,
+          "cacheWritePrice": 125,
+          "contextMax": 272000,
+          "inputPrice": 100,
+          "longContext": {
+            "cachePrice": 10,
+            "cacheReadPrice": 10,
+            "cacheWritePrice": 250,
+            "contextMax": 1000000,
+            "inputPrice": 200,
+            "maxPromptTokens": 1000000,
+            "outputPrice": 750
+          },
+          "maxPromptTokens": 272000,
+          "outputPrice": 500
+        },
+        "toolCalls": true,
+        "vision": true
+      },
+      {
+        "id": "gpt-6-luna",
+        "maxContextTokens": 1000000,
+        "name": "GPT-6 Luna",
+        "policyState": "enabled",
+        "reasoningEffort": true,
+        "supportedReasoningEfforts": [
+          "none",
+          "low",
+          "medium",
+          "high",
+          "xhigh",
+          "max"
+        ],
+        "tokenPrices": {
+          "batchSize": 1000000,
+          "cachePrice": 1,
+          "cacheReadPrice": 1,
+          "cacheWritePrice": 12.5,
+          "contextMax": 272000,
+          "inputPrice": 10,
+          "longContext": {
+            "cachePrice": 2,
+            "cacheReadPrice": 2,
+            "cacheWritePrice": 25,
+            "contextMax": 872000,
+            "inputPrice": 20,
+            "maxPromptTokens": 872000,
+            "outputPrice": 75
+          },
+          "maxPromptTokens": 272000,
+          "outputPrice": 50
+        },
+        "toolCalls": true,
+        "vision": true
+      },
+      {
+        "id": "gpt-6-sol",
+        "maxContextTokens": 1000000,
+        "name": "GPT-6 Sol",
+        "policyState": "enabled",
+        "reasoningEffort": true,
+        "supportedReasoningEfforts": [
+          "none",
+          "low",
+          "medium",
+          "high",
+          "xhigh",
+          "max"
+        ],
+        "tokenPrices": {
+          "batchSize": 1000000,
+          "cachePrice": 20,
+          "cacheReadPrice": 20,
+          "cacheWritePrice": 250,
+          "contextMax": 272000,
+          "inputPrice": 200,
+          "longContext": {
+            "cachePrice": 40,
+            "cacheReadPrice": 40,
+            "cacheWritePrice": 500,
+            "contextMax": 872000,
+            "inputPrice": 400,
+            "maxPromptTokens": 872000,
+            "outputPrice": 1500
+          },
+          "maxPromptTokens": 272000,
+          "outputPrice": 1000
+        },
+        "toolCalls": true,
+        "vision": true
+      },
+      {
+        "id": "gpt-6.2-astra",
+        "maxContextTokens": 1050000,
+        "name": "GPT-6.2 Astra",
+        "reasoningEffort": true,
+        "supportedReasoningEfforts": [
+          "low",
+          "medium",
+          "high",
+          "xhigh",
+          "max"
+        ],
+        "tokenPrices": {
+          "batchSize": 1000000,
+          "cachePrice": 40,
+          "cacheReadPrice": 40,
+          "cacheWritePrice": 1000,
+          "contextMax": 272000,
+          "inputPrice": 800,
+          "longContext": {
+            "cachePrice": 80,
+            "cacheReadPrice": 80,
+            "cacheWritePrice": 2000,
+            "contextMax": 1050000,
+            "inputPrice": 1600,
+            "maxPromptTokens": 1050000,
+            "outputPrice": 6000
+          },
+          "maxPromptTokens": 272000,
+          "outputPrice": 4000
+        },
+        "toolCalls": true,
+        "vision": true
+      },
+      {
+        "id": "gpt-6.2-sol",
+        "maxContextTokens": 1050000,
+        "name": "GPT-6.2 Sol",
+        "reasoningEffort": true,
+        "supportedReasoningEfforts": [
+          "low",
+          "medium",
+          "high",
+          "xhigh",
+          "max"
+        ],
+        "tokenPrices": {
+          "batchSize": 1000000,
+          "cachePrice": 10,
+          "cacheReadPrice": 10,
+          "cacheWritePrice": 250,
+          "contextMax": 272000,
+          "inputPrice": 200,
+          "longContext": {
+            "cachePrice": 20,
+            "cacheReadPrice": 20,
+            "cacheWritePrice": 500,
+            "contextMax": 1050000,
+            "inputPrice": 400,
+            "maxPromptTokens": 1050000,
+            "outputPrice": 1500
+          },
+          "maxPromptTokens": 272000,
+          "outputPrice": 1000
         },
         "toolCalls": true,
         "vision": true
@@ -971,9 +1040,9 @@
         "vision": true
       },
       {
-        "id": "gemini-4-carbon",
-        "maxContextTokens": 1000000,
-        "name": "Gemini 4 Carbon",
+        "id": "grok-4.7",
+        "maxContextTokens": 500000,
+        "name": "Grok 4.7",
         "reasoningEffort": true,
         "supportedReasoningEfforts": [
           "low",
@@ -982,19 +1051,72 @@
         ],
         "tokenPrices": {
           "batchSize": 1000000,
-          "cachePrice": 10,
-          "cacheReadPrice": 10,
+          "cachePrice": 50,
+          "cacheReadPrice": 50,
           "cacheWritePrice": 0,
-          "contextMax": 936000,
+          "contextMax": 200000,
           "inputPrice": 200,
-          "maxPromptTokens": 936000,
-          "outputPrice": 1000
+          "longContext": {
+            "cachePrice": 100,
+            "cacheReadPrice": 100,
+            "cacheWritePrice": 0,
+            "contextMax": 500000,
+            "inputPrice": 400,
+            "maxPromptTokens": 500000,
+            "outputPrice": 1200
+          },
+          "maxPromptTokens": 200000,
+          "outputPrice": 600
+        },
+        "toolCalls": true,
+        "vision": true
+      },
+      {
+        "id": "mai-code-2-flash",
+        "maxContextTokens": 1050000,
+        "name": "MAI Code 2 Flash",
+        "policyState": "enabled",
+        "reasoningEffort": true,
+        "supportedReasoningEfforts": [
+          "low",
+          "medium",
+          "high"
+        ],
+        "tokenPrices": {
+          "batchSize": 1000000,
+          "cachePrice": 1,
+          "cacheReadPrice": 1,
+          "cacheWritePrice": 0,
+          "inputPrice": 10,
+          "outputPrice": 50
+        },
+        "toolCalls": true,
+        "vision": true
+      },
+      {
+        "id": "mai-code-2",
+        "maxContextTokens": 1050000,
+        "name": "MAI Code 2",
+        "policyState": "enabled",
+        "reasoningEffort": true,
+        "supportedReasoningEfforts": [
+          "low",
+          "medium",
+          "high"
+        ],
+        "tokenPrices": {
+          "batchSize": 1000000,
+          "cachePrice": 5,
+          "cacheReadPrice": 5,
+          "cacheWritePrice": 0,
+          "inputPrice": 100,
+          "outputPrice": 500
         },
         "toolCalls": true,
         "vision": true
       }
     ],
-    "runtimeVersion": "1.0.106",
+    "runtimeVersion": "1.0.85",
     "source": "copilot-sdk models.list; captured locally",
     "status": "ok"
   },
