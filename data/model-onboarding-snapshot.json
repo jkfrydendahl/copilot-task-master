@@ -1,1288 +1,1295 @@
 {
-  "rejectedMappings": [],
-  "schemaVersion": 1,
-  "runtimeVersion": "1.0.85",
   "runtimeFetchedAtUtc": "2026-11-20T09:13:58.416Z",
-  "unmappedBenchmarkVariants": [
-    {
-      "status": "unmapped_variant; not proof of Copilot availability",
-      "alias": "claude-4-5-haiku-reasoning",
-      "source": "artificialAnalysisComponents"
-    },
-    {
-      "status": "unmapped_variant; not proof of Copilot availability",
-      "alias": "gemini-4-carbon",
-      "source": "artificialAnalysisComponents"
-    },
-    {
-      "status": "unmapped_variant; not proof of Copilot availability",
-      "alias": "gemini-4-carbon-low",
-      "source": "artificialAnalysisComponents"
-    },
-    {
-      "status": "unmapped_variant; not proof of Copilot availability",
-      "alias": "gemini-4-carbon-medium",
-      "source": "artificialAnalysisComponents"
-    },
-    {
-      "status": "unmapped_variant; not proof of Copilot availability",
-      "alias": "gemini-4-hydrogen",
-      "source": "artificialAnalysisComponents"
-    },
-    {
-      "status": "unmapped_variant; not proof of Copilot availability",
-      "alias": "gemini-4-hydrogen-high",
-      "source": "artificialAnalysisComponents"
-    },
-    {
-      "status": "unmapped_variant; not proof of Copilot availability",
-      "alias": "gemini-4-neon",
-      "source": "artificialAnalysisComponents"
-    },
-    {
-      "status": "unmapped_variant; not proof of Copilot availability",
-      "alias": "gemini-4-neon-high",
-      "source": "artificialAnalysisComponents"
-    },
-    {
-      "status": "unmapped_variant; not proof of Copilot availability",
-      "alias": "gemini-4-neon-medium",
-      "source": "artificialAnalysisComponents"
-    },
-    {
-      "status": "unmapped_variant; not proof of Copilot availability",
-      "alias": "gpt-6-1-terra",
-      "source": "artificialAnalysisComponents"
-    },
-    {
-      "status": "unmapped_variant; not proof of Copilot availability",
-      "alias": "gpt-6-2-astra",
-      "source": "artificialAnalysisComponents"
-    },
-    {
-      "status": "unmapped_variant; not proof of Copilot availability",
-      "alias": "gpt-6-2-astra-high",
-      "source": "artificialAnalysisComponents"
-    },
-    {
-      "status": "unmapped_variant; not proof of Copilot availability",
-      "alias": "gpt-6-2-astra-medium",
-      "source": "artificialAnalysisComponents"
-    },
-    {
-      "status": "unmapped_variant; not proof of Copilot availability",
-      "alias": "gpt-6-2-astra-xhigh",
-      "source": "artificialAnalysisComponents"
-    },
-    {
-      "status": "unmapped_variant; not proof of Copilot availability",
-      "alias": "gpt-6-2-sol",
-      "source": "artificialAnalysisComponents"
-    },
-    {
-      "status": "unmapped_variant; not proof of Copilot availability",
-      "alias": "gpt-6-2-sol-high",
-      "source": "artificialAnalysisComponents"
-    },
-    {
-      "status": "unmapped_variant; not proof of Copilot availability",
-      "alias": "gpt-6-2-sol-medium",
-      "source": "artificialAnalysisComponents"
-    },
-    {
-      "status": "unmapped_variant; not proof of Copilot availability",
-      "alias": "gpt-6-2-sol-xhigh",
-      "source": "artificialAnalysisComponents"
-    },
-    {
-      "status": "unmapped_variant; not proof of Copilot availability",
-      "alias": "claude-fable-5-1-max-effort",
-      "source": "liveBench"
-    },
-    {
-      "status": "unmapped_variant; not proof of Copilot availability",
-      "alias": "claude-fable-5-max-effort",
-      "source": "liveBench"
-    },
-    {
-      "status": "unmapped_variant; not proof of Copilot availability",
-      "alias": "claude-opus-4-5-20251101-thinking-64k-high-effort",
-      "source": "liveBench"
-    },
-    {
-      "status": "unmapped_variant; not proof of Copilot availability",
-      "alias": "claude-opus-4-6-thinking-auto-high-effort",
-      "source": "liveBench"
-    },
-    {
-      "status": "unmapped_variant; not proof of Copilot availability",
-      "alias": "deepseek-v4-flash",
-      "source": "liveBench"
-    },
-    {
-      "status": "unmapped_variant; not proof of Copilot availability",
-      "alias": "deepseek-v4-flash-0731",
-      "source": "liveBench"
-    },
-    {
-      "status": "unmapped_variant; not proof of Copilot availability",
-      "alias": "deepseek-v4-flash-vision-exp",
-      "source": "liveBench"
-    },
-    {
-      "status": "unmapped_variant; not proof of Copilot availability",
-      "alias": "deepseek-v4-pro",
-      "source": "liveBench"
-    },
-    {
-      "status": "unmapped_variant; not proof of Copilot availability",
-      "alias": "deepseek-v4-pro-0813",
-      "source": "liveBench"
-    },
-    {
-      "status": "unmapped_variant; not proof of Copilot availability",
-      "alias": "deepseek-v4.1-flash-max",
-      "source": "liveBench"
-    },
-    {
-      "status": "unmapped_variant; not proof of Copilot availability",
-      "alias": "gemini-3.1-pro-preview-high",
-      "source": "liveBench"
-    },
-    {
-      "status": "unmapped_variant; not proof of Copilot availability",
-      "alias": "gemini-3.5-flash-lite-high",
-      "source": "liveBench"
-    },
-    {
-      "status": "unmapped_variant; not proof of Copilot availability",
-      "alias": "glm-5.2",
-      "source": "liveBench"
-    },
-    {
-      "status": "unmapped_variant; not proof of Copilot availability",
-      "alias": "glm-5.3",
-      "source": "liveBench"
-    },
-    {
-      "status": "unmapped_variant; not proof of Copilot availability",
-      "alias": "glm-5.3-flash",
-      "source": "liveBench"
-    },
-    {
-      "status": "unmapped_variant; not proof of Copilot availability",
-      "alias": "gpt-5.2-2025-12-11-high",
-      "source": "liveBench"
-    },
-    {
-      "status": "unmapped_variant; not proof of Copilot availability",
-      "alias": "gpt-5.2-codex",
-      "source": "liveBench"
-    },
-    {
-      "status": "unmapped_variant; not proof of Copilot availability",
-      "alias": "gpt-5.4-nano-xhigh",
-      "source": "liveBench"
-    },
-    {
-      "status": "unmapped_variant; not proof of Copilot availability",
-      "alias": "grok-4.3",
-      "source": "liveBench"
-    },
-    {
-      "status": "unmapped_variant; not proof of Copilot availability",
-      "alias": "grok-4.5",
-      "source": "liveBench"
-    },
-    {
-      "status": "unmapped_variant; not proof of Copilot availability",
-      "alias": "grok-4.6",
-      "source": "liveBench"
-    },
-    {
-      "status": "unmapped_variant; not proof of Copilot availability",
-      "alias": "grok-4.7-xhigh",
-      "source": "liveBench"
-    },
-    {
-      "status": "unmapped_variant; not proof of Copilot availability",
-      "alias": "grok-build-0.1",
-      "source": "liveBench"
-    },
-    {
-      "status": "unmapped_variant; not proof of Copilot availability",
-      "alias": "inkling-xhigh",
-      "source": "liveBench"
-    },
-    {
-      "status": "unmapped_variant; not proof of Copilot availability",
-      "alias": "kimi-k2.6-thinking",
-      "source": "liveBench"
-    },
-    {
-      "status": "unmapped_variant; not proof of Copilot availability",
-      "alias": "kimi-k2.7-code",
-      "source": "liveBench"
-    },
-    {
-      "status": "unmapped_variant; not proof of Copilot availability",
-      "alias": "kimi-k3",
-      "source": "liveBench"
-    },
-    {
-      "status": "unmapped_variant; not proof of Copilot availability",
-      "alias": "minimax-m3",
-      "source": "liveBench"
-    },
-    {
-      "status": "unmapped_variant; not proof of Copilot availability",
-      "alias": "mistral-large-4-high",
-      "source": "liveBench"
-    },
-    {
-      "status": "unmapped_variant; not proof of Copilot availability",
-      "alias": "muse-spark-1.1-xhigh",
-      "source": "liveBench"
-    },
-    {
-      "status": "unmapped_variant; not proof of Copilot availability",
-      "alias": "muse-spark-1.2-xhigh",
-      "source": "liveBench"
-    },
-    {
-      "status": "unmapped_variant; not proof of Copilot availability",
-      "alias": "muse-spark-1.3-xhigh",
-      "source": "liveBench"
-    },
-    {
-      "status": "unmapped_variant; not proof of Copilot availability",
-      "alias": "muse-wonder-1.0-max",
-      "source": "liveBench"
-    },
-    {
-      "status": "unmapped_variant; not proof of Copilot availability",
-      "alias": "nemotron-3-ultra-550b-a55b",
-      "source": "liveBench"
-    },
-    {
-      "status": "unmapped_variant; not proof of Copilot availability",
-      "alias": "nemotron-3.5-lightning-30b-a3b",
-      "source": "liveBench"
-    },
-    {
-      "status": "unmapped_variant; not proof of Copilot availability",
-      "alias": "ox-alpha-max",
-      "source": "liveBench"
-    },
-    {
-      "status": "unmapped_variant; not proof of Copilot availability",
-      "alias": "qwen3.6-27b",
-      "source": "liveBench"
-    },
-    {
-      "status": "unmapped_variant; not proof of Copilot availability",
-      "alias": "qwen3.6-plus",
-      "source": "liveBench"
-    },
-    {
-      "status": "unmapped_variant; not proof of Copilot availability",
-      "alias": "qwen3.7-max",
-      "source": "liveBench"
-    },
-    {
-      "status": "unmapped_variant; not proof of Copilot availability",
-      "alias": "qwen3.8-27b",
-      "source": "liveBench"
-    },
-    {
-      "status": "unmapped_variant; not proof of Copilot availability",
-      "alias": "qwen3.8-flash-next",
-      "source": "liveBench"
-    },
-    {
-      "status": "unmapped_variant; not proof of Copilot availability",
-      "alias": "qwen3.8-max",
-      "source": "liveBench"
-    },
-    {
-      "status": "unmapped_variant; not proof of Copilot availability",
-      "alias": "smaug-agentic",
-      "source": "liveBench"
-    },
-    {
-      "status": "unmapped_variant; not proof of Copilot availability",
-      "alias": "smaug-flash",
-      "source": "liveBench"
-    },
-    {
-      "status": "unmapped_variant; not proof of Copilot availability",
-      "alias": "smaug-mini",
-      "source": "liveBench"
-    }
-  ],
+  "runtimeStatus": "ok",
   "diagnostics": [
     "claude-opus-4.8-fast: conflicting runtime/pricing identities; retirement scope is not assumed."
   ],
-  "runtimeAuthenticated": true,
   "discoverySnapshot": {
-    "status": "valid",
-    "observedAtUtc": "2026-11-20T09:13:58.416Z",
+    "maxAgeDays": 7,
     "message": "Local model-discovery snapshot is valid (validity: 7 days).",
-    "maxAgeDays": 7
+    "observedAtUtc": "2026-11-20T09:13:58.416Z",
+    "status": "valid"
   },
+  "runtimeAuthenticated": true,
+  "runtimeVersion": "1.0.85",
   "models": [
     {
       "runtimeListed": true,
-      "model": "auto",
       "lifecycle": {
+        "sourceUrl": "https://docs.github.com/en/copilot/reference/ai-models/supported-models",
         "status": "not_listed",
         "fetchedAtUtc": "2026-11-20T09:13:59.1053275Z",
-        "sourceUrl": "https://docs.github.com/en/copilot/reference/ai-models/supported-models",
         "name": "Auto"
       },
-      "helpListed": false,
-      "status": "blocked",
       "reasons": [
         "denylisted_disabled_virtual_or_ambiguous",
         "capabilities_missing",
         "pricing_alias_missing",
         "benchmark_aliases_missing; structured agent evidence is resolved separately"
-      ]
+      ],
+      "helpListed": false,
+      "model": "auto",
+      "status": "blocked"
     },
     {
       "runtimeListed": false,
-      "model": "claude-fable-5",
       "lifecycle": {
+        "sourceUrl": "https://docs.github.com/en/copilot/reference/ai-models/supported-models",
         "status": "not_listed",
         "fetchedAtUtc": "2026-11-20T09:13:59.1053275Z",
-        "sourceUrl": "https://docs.github.com/en/copilot/reference/ai-models/supported-models",
         "name": "Claude Fable 5"
       },
-      "helpListed": true,
-      "status": "partial",
       "reasons": [
         "enabled_runtime_metadata_missing; existing facts retain their original verification dates",
         "benchmark_aliases_missing; structured agent evidence is resolved separately"
-      ]
+      ],
+      "helpListed": true,
+      "model": "claude-fable-5",
+      "status": "partial"
     },
     {
       "runtimeListed": false,
-      "model": "claude-fable-5.1",
       "lifecycle": {
+        "sourceUrl": "https://docs.github.com/en/copilot/reference/ai-models/supported-models",
         "status": "not_listed",
         "fetchedAtUtc": "2026-11-20T09:13:59.1053275Z",
-        "sourceUrl": "https://docs.github.com/en/copilot/reference/ai-models/supported-models",
         "name": "Claude Fable 5.1"
       },
-      "helpListed": true,
-      "status": "blocked",
       "reasons": [
         "enabled_runtime_metadata_missing; existing facts retain their original verification dates",
         "capabilities_missing",
         "benchmark_aliases_missing; structured agent evidence is resolved separately"
-      ]
+      ],
+      "helpListed": true,
+      "model": "claude-fable-5.1",
+      "status": "blocked"
     },
     {
       "runtimeListed": false,
-      "model": "claude-fable-5.2",
       "lifecycle": {
         "status": "unknown"
       },
-      "helpListed": true,
-      "status": "blocked",
       "reasons": [
         "enabled_runtime_metadata_missing; existing facts retain their original verification dates",
         "capabilities_missing",
         "pricing_alias_missing",
         "benchmark_aliases_missing; structured agent evidence is resolved separately"
-      ]
+      ],
+      "helpListed": true,
+      "model": "claude-fable-5.2",
+      "status": "blocked"
     },
     {
       "runtimeListed": true,
-      "model": "claude-haiku-4.5",
       "lifecycle": {
+        "sourceUrl": "https://docs.github.com/en/copilot/reference/ai-models/supported-models",
         "status": "not_listed",
         "fetchedAtUtc": "2026-11-20T09:13:59.1053275Z",
-        "sourceUrl": "https://docs.github.com/en/copilot/reference/ai-models/supported-models",
         "name": "Claude Haiku 4.5"
       },
+      "reasons": [],
       "helpListed": true,
-      "status": "ready_for_comparison",
-      "reasons": []
+      "model": "claude-haiku-4.5",
+      "status": "ready_for_comparison"
     },
     {
       "runtimeListed": true,
-      "model": "claude-haiku-5.5",
       "lifecycle": {
+        "sourceUrl": "https://docs.github.com/en/copilot/reference/ai-models/supported-models",
         "status": "not_listed",
         "fetchedAtUtc": "2026-11-20T09:13:59.1053275Z",
-        "sourceUrl": "https://docs.github.com/en/copilot/reference/ai-models/supported-models",
         "name": "Claude Haiku 5.5"
       },
+      "reasons": [],
       "helpListed": true,
-      "status": "ready_for_comparison",
-      "reasons": []
+      "model": "claude-haiku-5.5",
+      "status": "ready_for_comparison"
     },
     {
       "runtimeListed": false,
+      "lifecycle": {
+        "status": "unknown"
+      },
+      "reasons": [
+        "enabled_runtime_metadata_missing; existing facts retain their original verification dates",
+        "pricing_alias_missing",
+        "benchmark_aliases_missing; structured agent evidence is resolved separately"
+      ],
+      "helpListed": false,
       "model": "claude-opus-4.5",
+      "status": "partial"
+    },
+    {
+      "runtimeListed": false,
       "lifecycle": {
         "status": "unknown"
       },
-      "helpListed": false,
-      "status": "partial",
       "reasons": [
         "enabled_runtime_metadata_missing; existing facts retain their original verification dates",
         "pricing_alias_missing",
         "benchmark_aliases_missing; structured agent evidence is resolved separately"
-      ]
-    },
-    {
-      "runtimeListed": false,
+      ],
+      "helpListed": false,
       "model": "claude-opus-4.6",
-      "lifecycle": {
-        "status": "unknown"
-      },
-      "helpListed": false,
-      "status": "partial",
-      "reasons": [
-        "enabled_runtime_metadata_missing; existing facts retain their original verification dates",
-        "pricing_alias_missing",
-        "benchmark_aliases_missing; structured agent evidence is resolved separately"
-      ]
+      "status": "partial"
     },
     {
       "runtimeListed": false,
-      "model": "claude-opus-4.7",
       "lifecycle": {
+        "fetchedAtUtc": "2026-11-20T09:13:59.1053275Z",
+        "name": "Claude Opus 4.7",
         "exceptionNotes": [],
         "suggestedAlternative": "Latest Claude Opus model",
-        "name": "Claude Opus 4.7",
-        "sourceUrl": "https://docs.github.com/en/copilot/reference/ai-models/supported-models",
         "status": "retired",
-        "retirementDate": "2026-10-02",
-        "fetchedAtUtc": "2026-11-20T09:13:59.1053275Z"
+        "sourceUrl": "https://docs.github.com/en/copilot/reference/ai-models/supported-models",
+        "retirementDate": "2026-10-02"
       },
-      "helpListed": false,
-      "status": "blocked",
       "reasons": [
         "officially_retired_on_2026-10-02"
-      ]
+      ],
+      "helpListed": false,
+      "model": "claude-opus-4.7",
+      "status": "blocked"
     },
     {
       "runtimeListed": false,
-      "model": "claude-opus-4.8",
       "lifecycle": {
+        "fetchedAtUtc": "2026-11-20T09:13:59.1053275Z",
+        "name": "Claude Opus 4.8",
         "exceptionNotes": [
           "Claude Opus 4.8 remains available to individual Copilot subscribers on annual plans. The retirement of Claude Opus 4.8 does not apply to these subscribers."
         ],
         "suggestedAlternative": "Latest Claude Opus model",
-        "name": "Claude Opus 4.8",
-        "sourceUrl": "https://docs.github.com/en/copilot/reference/ai-models/supported-models",
         "status": "conditional",
-        "retirementDate": "2026-11-16",
-        "fetchedAtUtc": "2026-11-20T09:13:59.1053275Z"
+        "sourceUrl": "https://docs.github.com/en/copilot/reference/ai-models/supported-models",
+        "retirementDate": "2026-11-16"
       },
-      "helpListed": true,
-      "status": "partial",
       "reasons": [
         "retirement_scope_unconfirmed; Claude Opus 4.8 remains available to individual Copilot subscribers on annual plans. The retirement of Claude Opus 4.8 does not apply to these subscribers.",
         "enabled_runtime_metadata_missing; existing facts retain their original verification dates"
-      ]
+      ],
+      "helpListed": true,
+      "model": "claude-opus-4.8",
+      "status": "partial"
     },
     {
       "runtimeListed": true,
-      "model": "claude-opus-4.8-fast",
       "lifecycle": {
         "status": "unknown"
       },
-      "helpListed": true,
-      "status": "partial",
       "reasons": [
         "exact_pricing_identity_missing_or_conflicting",
         "benchmark_aliases_missing; structured agent evidence is resolved separately"
-      ]
+      ],
+      "helpListed": true,
+      "model": "claude-opus-4.8-fast",
+      "status": "partial"
     },
     {
       "runtimeListed": false,
-      "model": "claude-opus-5",
       "lifecycle": {
+        "fetchedAtUtc": "2026-11-20T09:13:59.1053275Z",
+        "name": "Claude Opus 5",
         "exceptionNotes": [],
         "suggestedAlternative": "Latest Claude Opus model",
-        "name": "Claude Opus 5",
-        "sourceUrl": "https://docs.github.com/en/copilot/reference/ai-models/supported-models",
         "status": "retired",
-        "retirementDate": "2026-11-16",
-        "fetchedAtUtc": "2026-11-20T09:13:59.1053275Z"
+        "sourceUrl": "https://docs.github.com/en/copilot/reference/ai-models/supported-models",
+        "retirementDate": "2026-11-16"
       },
-      "helpListed": true,
-      "status": "blocked",
       "reasons": [
         "officially_retired_on_2026-11-16"
-      ]
+      ],
+      "helpListed": true,
+      "model": "claude-opus-5",
+      "status": "blocked"
     },
     {
       "runtimeListed": true,
-      "model": "claude-opus-5.5",
       "lifecycle": {
+        "sourceUrl": "https://docs.github.com/en/copilot/reference/ai-models/supported-models",
         "status": "not_listed",
         "fetchedAtUtc": "2026-11-20T09:13:59.1053275Z",
-        "sourceUrl": "https://docs.github.com/en/copilot/reference/ai-models/supported-models",
         "name": "Claude Opus 5.5"
       },
+      "reasons": [],
       "helpListed": true,
-      "status": "ready_for_comparison",
-      "reasons": []
+      "model": "claude-opus-5.5",
+      "status": "ready_for_comparison"
     },
     {
       "runtimeListed": false,
-      "model": "claude-sonnet-4.5",
       "lifecycle": {
         "status": "unknown"
       },
-      "helpListed": false,
-      "status": "partial",
       "reasons": [
         "enabled_runtime_metadata_missing; existing facts retain their original verification dates",
         "pricing_alias_missing",
         "benchmark_aliases_missing; structured agent evidence is resolved separately"
-      ]
+      ],
+      "helpListed": false,
+      "model": "claude-sonnet-4.5",
+      "status": "partial"
     },
     {
       "runtimeListed": false,
-      "model": "claude-sonnet-4.6",
       "lifecycle": {
+        "fetchedAtUtc": "2026-11-20T09:13:59.1053275Z",
+        "name": "Claude Sonnet 4.6",
         "exceptionNotes": [
           "Claude Sonnet 4.6 remains available to individual Copilot subscribers on annual plans. The retirement of Claude Sonnet 4.6 does not apply to these subscribers."
         ],
         "suggestedAlternative": "Latest Claude Sonnet model",
-        "name": "Claude Sonnet 4.6",
-        "sourceUrl": "https://docs.github.com/en/copilot/reference/ai-models/supported-models",
         "status": "conditional",
-        "retirementDate": "2026-09-01",
-        "fetchedAtUtc": "2026-11-20T09:13:59.1053275Z"
+        "sourceUrl": "https://docs.github.com/en/copilot/reference/ai-models/supported-models",
+        "retirementDate": "2026-09-01"
       },
-      "helpListed": true,
-      "status": "partial",
       "reasons": [
         "retirement_scope_unconfirmed; Claude Sonnet 4.6 remains available to individual Copilot subscribers on annual plans. The retirement of Claude Sonnet 4.6 does not apply to these subscribers.",
         "enabled_runtime_metadata_missing; existing facts retain their original verification dates"
-      ]
+      ],
+      "helpListed": true,
+      "model": "claude-sonnet-4.6",
+      "status": "partial"
     },
     {
       "runtimeListed": true,
-      "model": "claude-sonnet-5",
       "lifecycle": {
+        "sourceUrl": "https://docs.github.com/en/copilot/reference/ai-models/supported-models",
         "status": "not_listed",
         "fetchedAtUtc": "2026-11-20T09:13:59.1053275Z",
-        "sourceUrl": "https://docs.github.com/en/copilot/reference/ai-models/supported-models",
         "name": "Claude Sonnet 5"
       },
+      "reasons": [],
       "helpListed": true,
-      "status": "ready_for_comparison",
-      "reasons": []
+      "model": "claude-sonnet-5",
+      "status": "ready_for_comparison"
     },
     {
       "runtimeListed": true,
-      "model": "claude-sonnet-5.5",
       "lifecycle": {
+        "sourceUrl": "https://docs.github.com/en/copilot/reference/ai-models/supported-models",
         "status": "not_listed",
         "fetchedAtUtc": "2026-11-20T09:13:59.1053275Z",
-        "sourceUrl": "https://docs.github.com/en/copilot/reference/ai-models/supported-models",
         "name": "Claude Sonnet 5.5"
       },
+      "reasons": [],
       "helpListed": true,
-      "status": "ready_for_comparison",
-      "reasons": []
+      "model": "claude-sonnet-5.5",
+      "status": "ready_for_comparison"
     },
     {
       "runtimeListed": false,
-      "model": "gemini-3.1-pro-preview",
       "lifecycle": {
         "status": "unknown"
       },
-      "helpListed": false,
-      "status": "partial",
       "reasons": [
         "enabled_runtime_metadata_missing; existing facts retain their original verification dates",
         "pricing_alias_missing",
         "benchmark_aliases_missing; structured agent evidence is resolved separately"
-      ]
+      ],
+      "helpListed": false,
+      "model": "gemini-3.1-pro-preview",
+      "status": "partial"
     },
     {
       "runtimeListed": false,
-      "model": "gemini-3.5-flash",
       "lifecycle": {
-        "exceptionNotes": [],
-        "suggestedAlternative": "Latest Gemini Flash model",
+        "fetchedAtUtc": "2026-11-20T09:13:59.1053275Z",
         "name": "Gemini 3.5 Flash",
-        "sourceUrl": "https://docs.github.com/en/copilot/reference/ai-models/supported-models",
+        "exceptionNotes": [],
+        "suggestedAlternative": "Latest Gemini Flash model",
         "status": "retired",
-        "retirementDate": "2026-10-02",
-        "fetchedAtUtc": "2026-11-20T09:13:59.1053275Z"
+        "sourceUrl": "https://docs.github.com/en/copilot/reference/ai-models/supported-models",
+        "retirementDate": "2026-10-02"
       },
-      "helpListed": false,
-      "status": "blocked",
       "reasons": [
         "officially_retired_on_2026-10-02"
-      ]
+      ],
+      "helpListed": false,
+      "model": "gemini-3.5-flash",
+      "status": "blocked"
     },
     {
       "runtimeListed": false,
-      "model": "gemini-3.6-flash",
       "lifecycle": {
-        "exceptionNotes": [],
-        "suggestedAlternative": "Latest Gemini Flash model",
+        "fetchedAtUtc": "2026-11-20T09:13:59.1053275Z",
         "name": "Gemini 3.6 Flash",
-        "sourceUrl": "https://docs.github.com/en/copilot/reference/ai-models/supported-models",
+        "exceptionNotes": [],
+        "suggestedAlternative": "Latest Gemini Flash model",
         "status": "retired",
-        "retirementDate": "2026-10-02",
-        "fetchedAtUtc": "2026-11-20T09:13:59.1053275Z"
+        "sourceUrl": "https://docs.github.com/en/copilot/reference/ai-models/supported-models",
+        "retirementDate": "2026-10-02"
       },
-      "helpListed": false,
-      "status": "blocked",
       "reasons": [
         "officially_retired_on_2026-10-02"
-      ]
+      ],
+      "helpListed": false,
+      "model": "gemini-3.6-flash",
+      "status": "blocked"
     },
     {
       "runtimeListed": false,
-      "model": "gemini-3.7-flash",
       "lifecycle": {
+        "fetchedAtUtc": "2026-11-20T09:13:59.1053275Z",
+        "name": "Gemini 3.7 Flash",
         "exceptionNotes": [],
         "suggestedAlternative": "Latest Gemini Flash model",
-        "name": "Gemini 3.7 Flash",
-        "sourceUrl": "https://docs.github.com/en/copilot/reference/ai-models/supported-models",
         "status": "retired",
-        "retirementDate": "2026-10-19",
-        "fetchedAtUtc": "2026-11-20T09:13:59.1053275Z"
+        "sourceUrl": "https://docs.github.com/en/copilot/reference/ai-models/supported-models",
+        "retirementDate": "2026-10-19"
       },
-      "helpListed": false,
-      "status": "blocked",
       "reasons": [
         "officially_retired_on_2026-10-19"
-      ]
+      ],
+      "helpListed": false,
+      "model": "gemini-3.7-flash",
+      "status": "blocked"
     },
     {
       "runtimeListed": false,
-      "model": "gemini-3.8-flash",
       "lifecycle": {
+        "sourceUrl": "https://docs.github.com/en/copilot/reference/ai-models/supported-models",
         "status": "not_listed",
         "fetchedAtUtc": "2026-11-20T09:13:59.1053275Z",
-        "sourceUrl": "https://docs.github.com/en/copilot/reference/ai-models/supported-models",
         "name": "Gemini 3.8 Flash"
       },
-      "helpListed": true,
-      "status": "partial",
       "reasons": [
         "enabled_runtime_metadata_missing; existing facts retain their original verification dates"
-      ]
+      ],
+      "helpListed": true,
+      "model": "gemini-3.8-flash",
+      "status": "partial"
     },
     {
       "runtimeListed": true,
-      "model": "gemini-4-argon",
       "lifecycle": {
+        "sourceUrl": "https://docs.github.com/en/copilot/reference/ai-models/supported-models",
         "status": "not_listed",
         "fetchedAtUtc": "2026-11-20T09:13:59.1053275Z",
-        "sourceUrl": "https://docs.github.com/en/copilot/reference/ai-models/supported-models",
         "name": "Gemini 4 Argon"
       },
-      "helpListed": true,
-      "status": "partial",
       "reasons": [
         "benchmark_aliases_missing; structured agent evidence is resolved separately"
-      ]
+      ],
+      "helpListed": true,
+      "model": "gemini-4-argon",
+      "status": "partial"
     },
     {
       "runtimeListed": true,
-      "model": "gemini-4-carbon",
       "lifecycle": {
+        "sourceUrl": "https://docs.github.com/en/copilot/reference/ai-models/supported-models",
         "status": "not_listed",
         "fetchedAtUtc": "2026-11-20T09:13:59.1053275Z",
-        "sourceUrl": "https://docs.github.com/en/copilot/reference/ai-models/supported-models",
         "name": "Gemini 4 Carbon"
       },
-      "helpListed": true,
-      "status": "blocked",
       "reasons": [
         "enabled_runtime_metadata_missing; existing facts retain their original verification dates",
         "capabilities_missing",
         "pricing_alias_missing",
         "benchmark_aliases_missing; structured agent evidence is resolved separately"
-      ]
+      ],
+      "helpListed": true,
+      "model": "gemini-4-carbon",
+      "status": "blocked"
     },
     {
       "runtimeListed": true,
-      "model": "gemini-4-hydrogen",
       "lifecycle": {
+        "sourceUrl": "https://docs.github.com/en/copilot/reference/ai-models/supported-models",
         "status": "not_listed",
         "fetchedAtUtc": "2026-11-20T09:13:59.1053275Z",
-        "sourceUrl": "https://docs.github.com/en/copilot/reference/ai-models/supported-models",
         "name": "Gemini 4 Hydrogen"
       },
-      "helpListed": false,
-      "status": "blocked",
       "reasons": [
         "enabled_runtime_metadata_missing; existing facts retain their original verification dates",
         "capabilities_missing",
         "pricing_alias_missing",
         "benchmark_aliases_missing; structured agent evidence is resolved separately"
-      ]
+      ],
+      "helpListed": false,
+      "model": "gemini-4-hydrogen",
+      "status": "blocked"
     },
     {
       "runtimeListed": true,
-      "model": "gemini-4-neon",
       "lifecycle": {
+        "sourceUrl": "https://docs.github.com/en/copilot/reference/ai-models/supported-models",
         "status": "not_listed",
         "fetchedAtUtc": "2026-11-20T09:13:59.1053275Z",
-        "sourceUrl": "https://docs.github.com/en/copilot/reference/ai-models/supported-models",
         "name": "Gemini 4 Neon"
       },
-      "helpListed": false,
-      "status": "blocked",
       "reasons": [
         "enabled_runtime_metadata_missing; existing facts retain their original verification dates",
         "capabilities_missing",
         "pricing_alias_missing",
         "benchmark_aliases_missing; structured agent evidence is resolved separately"
-      ]
+      ],
+      "helpListed": false,
+      "model": "gemini-4-neon",
+      "status": "blocked"
     },
     {
       "runtimeListed": false,
-      "model": "gpt-5-mini",
       "lifecycle": {
+        "fetchedAtUtc": "2026-11-20T09:13:59.1053275Z",
+        "name": "GPT-5 mini",
         "exceptionNotes": [],
         "suggestedAlternative": "Latest GPT Luna model",
-        "name": "GPT-5 mini",
-        "sourceUrl": "https://docs.github.com/en/copilot/reference/ai-models/supported-models",
         "status": "retired",
-        "retirementDate": "2026-10-19",
-        "fetchedAtUtc": "2026-11-20T09:13:59.1053275Z"
+        "sourceUrl": "https://docs.github.com/en/copilot/reference/ai-models/supported-models",
+        "retirementDate": "2026-10-19"
       },
-      "helpListed": false,
-      "status": "blocked",
       "reasons": [
         "officially_retired_on_2026-10-19",
         "benchmark_aliases_missing; structured agent evidence is resolved separately"
-      ]
+      ],
+      "helpListed": false,
+      "model": "gpt-5-mini",
+      "status": "blocked"
     },
     {
       "runtimeListed": false,
+      "lifecycle": {
+        "status": "unknown"
+      },
+      "reasons": [
+        "enabled_runtime_metadata_missing; existing facts retain their original verification dates",
+        "pricing_alias_missing",
+        "benchmark_aliases_missing; structured agent evidence is resolved separately"
+      ],
+      "helpListed": false,
       "model": "gpt-5.2",
-      "lifecycle": {
-        "status": "unknown"
-      },
-      "helpListed": false,
-      "status": "partial",
-      "reasons": [
-        "enabled_runtime_metadata_missing; existing facts retain their original verification dates",
-        "pricing_alias_missing",
-        "benchmark_aliases_missing; structured agent evidence is resolved separately"
-      ]
+      "status": "partial"
     },
     {
       "runtimeListed": false,
-      "model": "gpt-5.2-codex",
       "lifecycle": {
         "status": "unknown"
       },
-      "helpListed": false,
-      "status": "partial",
       "reasons": [
         "enabled_runtime_metadata_missing; existing facts retain their original verification dates",
         "pricing_alias_missing",
         "benchmark_aliases_missing; structured agent evidence is resolved separately"
-      ]
+      ],
+      "helpListed": false,
+      "model": "gpt-5.2-codex",
+      "status": "partial"
     },
     {
       "runtimeListed": true,
-      "model": "gpt-5.3-codex",
       "lifecycle": {
+        "sourceUrl": "https://docs.github.com/en/copilot/reference/ai-models/supported-models",
         "status": "not_listed",
         "fetchedAtUtc": "2026-11-20T09:13:59.1053275Z",
-        "sourceUrl": "https://docs.github.com/en/copilot/reference/ai-models/supported-models",
         "name": "GPT-5.3-Codex"
       },
-      "helpListed": true,
-      "status": "partial",
       "reasons": [
         "enabled_runtime_metadata_missing; existing facts retain their original verification dates"
-      ]
+      ],
+      "helpListed": true,
+      "model": "gpt-5.3-codex",
+      "status": "partial"
     },
     {
       "runtimeListed": false,
-      "model": "gpt-5.4",
       "lifecycle": {
+        "fetchedAtUtc": "2026-11-20T09:13:59.1053275Z",
+        "name": "GPT-5.4",
         "exceptionNotes": [],
         "suggestedAlternative": "Latest GPT Sol model",
-        "name": "GPT-5.4",
-        "sourceUrl": "https://docs.github.com/en/copilot/reference/ai-models/supported-models",
         "status": "retired",
-        "retirementDate": "2026-10-19",
-        "fetchedAtUtc": "2026-11-20T09:13:59.1053275Z"
+        "sourceUrl": "https://docs.github.com/en/copilot/reference/ai-models/supported-models",
+        "retirementDate": "2026-10-19"
       },
-      "helpListed": false,
-      "status": "blocked",
       "reasons": [
         "officially_retired_on_2026-10-19"
-      ]
+      ],
+      "helpListed": false,
+      "model": "gpt-5.4",
+      "status": "blocked"
     },
     {
       "runtimeListed": false,
-      "model": "gpt-5.4-mini",
       "lifecycle": {
+        "fetchedAtUtc": "2026-11-20T09:13:59.1053275Z",
+        "name": "GPT-5.4 mini",
         "exceptionNotes": [],
         "suggestedAlternative": "Latest GPT Luna model",
-        "name": "GPT-5.4 mini",
-        "sourceUrl": "https://docs.github.com/en/copilot/reference/ai-models/supported-models",
         "status": "retired",
-        "retirementDate": "2026-10-19",
-        "fetchedAtUtc": "2026-11-20T09:13:59.1053275Z"
+        "sourceUrl": "https://docs.github.com/en/copilot/reference/ai-models/supported-models",
+        "retirementDate": "2026-10-19"
       },
-      "helpListed": false,
-      "status": "blocked",
       "reasons": [
         "officially_retired_on_2026-10-19"
-      ]
+      ],
+      "helpListed": false,
+      "model": "gpt-5.4-mini",
+      "status": "blocked"
     },
     {
       "runtimeListed": false,
-      "model": "gpt-5.5",
       "lifecycle": {
+        "fetchedAtUtc": "2026-11-20T09:13:59.1053275Z",
+        "name": "GPT-5.5",
         "exceptionNotes": [],
         "suggestedAlternative": "Latest GPT Sol model",
-        "name": "GPT-5.5",
-        "sourceUrl": "https://docs.github.com/en/copilot/reference/ai-models/supported-models",
         "status": "retired",
-        "retirementDate": "2026-10-19",
-        "fetchedAtUtc": "2026-11-20T09:13:59.1053275Z"
+        "sourceUrl": "https://docs.github.com/en/copilot/reference/ai-models/supported-models",
+        "retirementDate": "2026-10-19"
       },
-      "helpListed": false,
-      "status": "blocked",
       "reasons": [
         "officially_retired_on_2026-10-19"
-      ]
+      ],
+      "helpListed": false,
+      "model": "gpt-5.5",
+      "status": "blocked"
     },
     {
       "runtimeListed": true,
-      "model": "gpt-5.6-luna",
       "lifecycle": {
+        "sourceUrl": "https://docs.github.com/en/copilot/reference/ai-models/supported-models",
         "status": "not_listed",
         "fetchedAtUtc": "2026-11-20T09:13:59.1053275Z",
-        "sourceUrl": "https://docs.github.com/en/copilot/reference/ai-models/supported-models",
         "name": "GPT-5.6 Luna"
       },
+      "reasons": [],
       "helpListed": true,
-      "status": "ready_for_comparison",
-      "reasons": []
+      "model": "gpt-5.6-luna",
+      "status": "ready_for_comparison"
     },
     {
       "runtimeListed": true,
-      "model": "gpt-5.6-sol",
       "lifecycle": {
+        "sourceUrl": "https://docs.github.com/en/copilot/reference/ai-models/supported-models",
         "status": "not_listed",
         "fetchedAtUtc": "2026-11-20T09:13:59.1053275Z",
-        "sourceUrl": "https://docs.github.com/en/copilot/reference/ai-models/supported-models",
         "name": "GPT-5.6 Sol"
       },
+      "reasons": [],
       "helpListed": true,
-      "status": "ready_for_comparison",
-      "reasons": []
+      "model": "gpt-5.6-sol",
+      "status": "ready_for_comparison"
     },
     {
       "runtimeListed": false,
-      "model": "gpt-5.6-terra",
       "lifecycle": {
+        "fetchedAtUtc": "2026-11-20T09:13:59.1053275Z",
+        "name": "GPT-5.6 Terra",
         "exceptionNotes": [],
         "suggestedAlternative": "Latest GPT Terra model",
-        "name": "GPT-5.6 Terra",
-        "sourceUrl": "https://docs.github.com/en/copilot/reference/ai-models/supported-models",
         "status": "retired",
-        "retirementDate": "2026-11-16",
-        "fetchedAtUtc": "2026-11-20T09:13:59.1053275Z"
+        "sourceUrl": "https://docs.github.com/en/copilot/reference/ai-models/supported-models",
+        "retirementDate": "2026-11-16"
       },
-      "helpListed": true,
-      "status": "blocked",
       "reasons": [
         "officially_retired_on_2026-11-16"
-      ]
+      ],
+      "helpListed": true,
+      "model": "gpt-5.6-terra",
+      "status": "blocked"
     },
     {
       "runtimeListed": true,
-      "model": "gpt-6-astra",
       "lifecycle": {
+        "sourceUrl": "https://docs.github.com/en/copilot/reference/ai-models/supported-models",
         "status": "not_listed",
         "fetchedAtUtc": "2026-11-20T09:13:59.1053275Z",
-        "sourceUrl": "https://docs.github.com/en/copilot/reference/ai-models/supported-models",
         "name": "GPT-6 Astra"
       },
+      "reasons": [],
       "helpListed": true,
-      "status": "ready_for_comparison",
-      "reasons": []
+      "model": "gpt-6-astra",
+      "status": "ready_for_comparison"
     },
     {
       "runtimeListed": true,
-      "model": "gpt-6-luna",
       "lifecycle": {
+        "sourceUrl": "https://docs.github.com/en/copilot/reference/ai-models/supported-models",
         "status": "not_listed",
         "fetchedAtUtc": "2026-11-20T09:13:59.1053275Z",
-        "sourceUrl": "https://docs.github.com/en/copilot/reference/ai-models/supported-models",
         "name": "GPT-6 Luna"
       },
+      "reasons": [],
       "helpListed": true,
-      "status": "ready_for_comparison",
-      "reasons": []
+      "model": "gpt-6-luna",
+      "status": "ready_for_comparison"
     },
     {
       "runtimeListed": true,
-      "model": "gpt-6-sol",
       "lifecycle": {
+        "sourceUrl": "https://docs.github.com/en/copilot/reference/ai-models/supported-models",
         "status": "not_listed",
         "fetchedAtUtc": "2026-11-20T09:13:59.1053275Z",
-        "sourceUrl": "https://docs.github.com/en/copilot/reference/ai-models/supported-models",
         "name": "GPT-6 Sol"
       },
+      "reasons": [],
       "helpListed": true,
-      "status": "ready_for_comparison",
-      "reasons": []
+      "model": "gpt-6-sol",
+      "status": "ready_for_comparison"
     },
     {
       "runtimeListed": true,
-      "model": "gpt-6.1-sol",
       "lifecycle": {
+        "sourceUrl": "https://docs.github.com/en/copilot/reference/ai-models/supported-models",
         "status": "not_listed",
         "fetchedAtUtc": "2026-11-20T09:13:59.1053275Z",
-        "sourceUrl": "https://docs.github.com/en/copilot/reference/ai-models/supported-models",
         "name": "GPT-6.1 Sol"
       },
+      "reasons": [],
       "helpListed": true,
-      "status": "ready_for_comparison",
-      "reasons": []
+      "model": "gpt-6.1-sol",
+      "status": "ready_for_comparison"
     },
     {
       "runtimeListed": true,
-      "model": "gpt-6.1-terra",
       "lifecycle": {
+        "sourceUrl": "https://docs.github.com/en/copilot/reference/ai-models/supported-models",
         "status": "not_listed",
         "fetchedAtUtc": "2026-11-20T09:13:59.1053275Z",
-        "sourceUrl": "https://docs.github.com/en/copilot/reference/ai-models/supported-models",
         "name": "GPT-6.1 Terra"
       },
-      "helpListed": true,
-      "status": "blocked",
       "reasons": [
         "enabled_runtime_metadata_missing; existing facts retain their original verification dates",
         "capabilities_missing",
         "pricing_alias_missing",
         "benchmark_aliases_missing; structured agent evidence is resolved separately"
-      ]
+      ],
+      "helpListed": true,
+      "model": "gpt-6.1-terra",
+      "status": "blocked"
     },
     {
       "runtimeListed": true,
-      "model": "gpt-6.2-astra",
       "lifecycle": {
+        "sourceUrl": "https://docs.github.com/en/copilot/reference/ai-models/supported-models",
         "status": "not_listed",
         "fetchedAtUtc": "2026-11-20T09:13:59.1053275Z",
-        "sourceUrl": "https://docs.github.com/en/copilot/reference/ai-models/supported-models",
         "name": "GPT-6.2 Astra"
       },
-      "helpListed": true,
-      "status": "blocked",
       "reasons": [
         "enabled_runtime_metadata_missing; existing facts retain their original verification dates",
         "capabilities_missing",
         "pricing_alias_missing",
         "benchmark_aliases_missing; structured agent evidence is resolved separately"
-      ]
+      ],
+      "helpListed": true,
+      "model": "gpt-6.2-astra",
+      "status": "blocked"
     },
     {
       "runtimeListed": true,
-      "model": "gpt-6.2-sol",
       "lifecycle": {
+        "sourceUrl": "https://docs.github.com/en/copilot/reference/ai-models/supported-models",
         "status": "not_listed",
         "fetchedAtUtc": "2026-11-20T09:13:59.1053275Z",
-        "sourceUrl": "https://docs.github.com/en/copilot/reference/ai-models/supported-models",
         "name": "GPT-6.2 Sol"
       },
-      "helpListed": true,
-      "status": "blocked",
       "reasons": [
         "enabled_runtime_metadata_missing; existing facts retain their original verification dates",
         "capabilities_missing",
         "pricing_alias_missing",
         "benchmark_aliases_missing; structured agent evidence is resolved separately"
-      ]
+      ],
+      "helpListed": true,
+      "model": "gpt-6.2-sol",
+      "status": "blocked"
     },
     {
       "runtimeListed": false,
-      "model": "grok-4.5",
       "lifecycle": {
+        "sourceUrl": "https://docs.github.com/en/copilot/reference/ai-models/supported-models",
         "status": "not_listed",
         "fetchedAtUtc": "2026-11-20T09:13:59.1053275Z",
-        "sourceUrl": "https://docs.github.com/en/copilot/reference/ai-models/supported-models",
         "name": "Grok 4.5"
       },
-      "helpListed": false,
-      "status": "partial",
       "reasons": [
         "enabled_runtime_metadata_missing; existing facts retain their original verification dates"
-      ]
+      ],
+      "helpListed": false,
+      "model": "grok-4.5",
+      "status": "partial"
     },
     {
       "runtimeListed": true,
-      "model": "grok-4.6",
       "lifecycle": {
+        "sourceUrl": "https://docs.github.com/en/copilot/reference/ai-models/supported-models",
         "status": "not_listed",
         "fetchedAtUtc": "2026-11-20T09:13:59.1053275Z",
-        "sourceUrl": "https://docs.github.com/en/copilot/reference/ai-models/supported-models",
         "name": "Grok 4.6"
       },
-      "helpListed": true,
-      "status": "partial",
       "reasons": [
         "enabled_runtime_metadata_missing; existing facts retain their original verification dates"
-      ]
+      ],
+      "helpListed": true,
+      "model": "grok-4.6",
+      "status": "partial"
     },
     {
       "runtimeListed": true,
-      "model": "grok-4.7",
       "lifecycle": {
+        "sourceUrl": "https://docs.github.com/en/copilot/reference/ai-models/supported-models",
         "status": "not_listed",
         "fetchedAtUtc": "2026-11-20T09:13:59.1053275Z",
-        "sourceUrl": "https://docs.github.com/en/copilot/reference/ai-models/supported-models",
         "name": "Grok 4.7"
       },
-      "helpListed": true,
-      "status": "blocked",
       "reasons": [
         "enabled_runtime_metadata_missing; existing facts retain their original verification dates",
         "capabilities_missing",
         "pricing_alias_missing",
         "benchmark_aliases_missing; structured agent evidence is resolved separately"
-      ]
+      ],
+      "helpListed": true,
+      "model": "grok-4.7",
+      "status": "blocked"
     },
     {
       "runtimeListed": false,
-      "model": "kimi-k3",
       "lifecycle": {
+        "sourceUrl": "https://docs.github.com/en/copilot/reference/ai-models/supported-models",
         "status": "not_listed",
         "fetchedAtUtc": "2026-11-20T09:13:59.1053275Z",
-        "sourceUrl": "https://docs.github.com/en/copilot/reference/ai-models/supported-models",
         "name": "Kimi K3"
       },
-      "helpListed": true,
-      "status": "blocked",
       "reasons": [
         "enabled_runtime_metadata_missing; existing facts retain their original verification dates",
         "capabilities_missing",
         "benchmark_aliases_missing; structured agent evidence is resolved separately"
-      ]
+      ],
+      "helpListed": true,
+      "model": "kimi-k3",
+      "status": "blocked"
     },
     {
       "runtimeListed": false,
-      "model": "mai-code-1-flash-picker",
       "lifecycle": {
+        "fetchedAtUtc": "2026-11-20T09:13:59.1053275Z",
+        "name": "MAI-Code-1-Flash",
         "exceptionNotes": [],
         "suggestedAlternative": "Latest MAI-Code model",
-        "name": "MAI-Code-1-Flash",
-        "sourceUrl": "https://docs.github.com/en/copilot/reference/ai-models/supported-models",
         "status": "retired",
-        "retirementDate": "2026-09-10",
-        "fetchedAtUtc": "2026-11-20T09:13:59.1053275Z"
+        "sourceUrl": "https://docs.github.com/en/copilot/reference/ai-models/supported-models",
+        "retirementDate": "2026-09-10"
       },
-      "helpListed": false,
-      "status": "blocked",
       "reasons": [
         "officially_retired_on_2026-09-10",
         "benchmark_aliases_missing; structured agent evidence is resolved separately"
-      ]
+      ],
+      "helpListed": false,
+      "model": "mai-code-1-flash-picker",
+      "status": "blocked"
     },
     {
       "runtimeListed": true,
-      "model": "mai-code-1.1-flash",
       "lifecycle": {
+        "sourceUrl": "https://docs.github.com/en/copilot/reference/ai-models/supported-models",
         "status": "not_listed",
         "fetchedAtUtc": "2026-11-20T09:13:59.1053275Z",
-        "sourceUrl": "https://docs.github.com/en/copilot/reference/ai-models/supported-models",
         "name": "MAI-Code-1.1-Flash"
       },
-      "helpListed": true,
-      "status": "partial",
       "reasons": [
         "benchmark_aliases_missing; structured agent evidence is resolved separately"
-      ]
+      ],
+      "helpListed": true,
+      "model": "mai-code-1.1-flash",
+      "status": "partial"
     },
     {
       "runtimeListed": true,
-      "model": "mai-code-2",
       "lifecycle": {
+        "sourceUrl": "https://docs.github.com/en/copilot/reference/ai-models/supported-models",
         "status": "not_listed",
         "fetchedAtUtc": "2026-11-20T09:13:59.1053275Z",
-        "sourceUrl": "https://docs.github.com/en/copilot/reference/ai-models/supported-models",
         "name": "MAI Code 2"
       },
-      "helpListed": false,
-      "status": "partial",
       "reasons": [
         "benchmark_aliases_missing; structured agent evidence is resolved separately"
-      ]
+      ],
+      "helpListed": false,
+      "model": "mai-code-2",
+      "status": "partial"
     },
     {
       "runtimeListed": true,
-      "model": "mai-code-2-flash",
       "lifecycle": {
+        "sourceUrl": "https://docs.github.com/en/copilot/reference/ai-models/supported-models",
         "status": "not_listed",
         "fetchedAtUtc": "2026-11-20T09:13:59.1053275Z",
-        "sourceUrl": "https://docs.github.com/en/copilot/reference/ai-models/supported-models",
         "name": "MAI Code 2 Flash"
       },
-      "helpListed": false,
-      "status": "partial",
       "reasons": [
         "benchmark_aliases_missing; structured agent evidence is resolved separately"
-      ]
+      ],
+      "helpListed": false,
+      "model": "mai-code-2-flash",
+      "status": "partial"
     },
     {
-      "status": "discovered_only",
       "reasons": [
         "unmapped_public_pricing_identity; runtime identity required"
       ],
+      "helpListed": false,
       "model": "Claude Fable 5.2",
-      "runtimeListed": false,
-      "helpListed": false
+      "status": "discovered_only",
+      "runtimeListed": false
     },
     {
-      "status": "discovered_only",
       "reasons": [
         "unmapped_public_pricing_identity; runtime identity required"
       ],
+      "helpListed": false,
       "model": "Claude Sonnet 4",
-      "runtimeListed": false,
-      "helpListed": false
+      "status": "discovered_only",
+      "runtimeListed": false
     },
     {
-      "status": "discovered_only",
       "reasons": [
         "unmapped_public_pricing_identity; runtime identity required"
       ],
+      "helpListed": false,
       "model": "Gemini 4 Carbon",
-      "runtimeListed": false,
-      "helpListed": false
+      "status": "discovered_only",
+      "runtimeListed": false
     },
     {
-      "status": "discovered_only",
       "reasons": [
         "unmapped_public_pricing_identity; runtime identity required"
       ],
+      "helpListed": false,
       "model": "Gemini 4 Hydrogen",
-      "runtimeListed": false,
-      "helpListed": false
+      "status": "discovered_only",
+      "runtimeListed": false
     },
     {
-      "status": "discovered_only",
       "reasons": [
         "unmapped_public_pricing_identity; runtime identity required"
       ],
+      "helpListed": false,
       "model": "Gemini 4 Neon",
-      "runtimeListed": false,
-      "helpListed": false
+      "status": "discovered_only",
+      "runtimeListed": false
     },
     {
-      "status": "discovered_only",
       "reasons": [
         "unmapped_public_pricing_identity; runtime identity required"
       ],
+      "helpListed": false,
       "model": "GPT-5.4 nano",
-      "runtimeListed": false,
-      "helpListed": false
+      "status": "discovered_only",
+      "runtimeListed": false
     },
     {
-      "status": "discovered_only",
       "reasons": [
         "unmapped_public_pricing_identity; runtime identity required"
       ],
+      "helpListed": false,
       "model": "GPT-6.1 Terra",
-      "runtimeListed": false,
-      "helpListed": false
+      "status": "discovered_only",
+      "runtimeListed": false
     },
     {
-      "status": "discovered_only",
       "reasons": [
         "unmapped_public_pricing_identity; runtime identity required"
       ],
+      "helpListed": false,
       "model": "GPT-6.2 Astra",
-      "runtimeListed": false,
-      "helpListed": false
+      "status": "discovered_only",
+      "runtimeListed": false
     },
     {
-      "status": "discovered_only",
       "reasons": [
         "unmapped_public_pricing_identity; runtime identity required"
       ],
+      "helpListed": false,
       "model": "GPT-6.2 Sol",
-      "runtimeListed": false,
-      "helpListed": false
+      "status": "discovered_only",
+      "runtimeListed": false
     },
     {
-      "status": "discovered_only",
       "reasons": [
         "unmapped_public_pricing_identity; runtime identity required"
       ],
+      "helpListed": false,
       "model": "Grok 4.7",
-      "runtimeListed": false,
-      "helpListed": false
+      "status": "discovered_only",
+      "runtimeListed": false
     }
   ],
+  "generatedAtUtc": "2026-11-25T07:19:29.2825622Z",
+  "lifecycle": {
+    "sourceUrl": "https://docs.github.com/en/copilot/reference/ai-models/supported-models",
+    "status": "ok",
+    "fetchedAtUtc": "2026-11-20T09:13:59.1053275Z"
+  },
+  "changes": [],
+  "unmappedBenchmarkVariants": [
+    {
+      "alias": "claude-4-5-haiku-reasoning",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "gemini-4-carbon",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "gemini-4-carbon-low",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "gemini-4-carbon-medium",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "gemini-4-hydrogen",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "gemini-4-hydrogen-high",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "gemini-4-neon",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "gemini-4-neon-high",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "gemini-4-neon-medium",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "gpt-6-1-terra",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "gpt-6-2-astra",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "gpt-6-2-astra-high",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "gpt-6-2-astra-medium",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "gpt-6-2-astra-xhigh",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "gpt-6-2-sol",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "gpt-6-2-sol-high",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "gpt-6-2-sol-medium",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "gpt-6-2-sol-xhigh",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "artificialAnalysisComponents"
+    },
+    {
+      "alias": "claude-fable-5-1-max-effort",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "liveBench"
+    },
+    {
+      "alias": "claude-fable-5-max-effort",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "liveBench"
+    },
+    {
+      "alias": "claude-opus-4-5-20251101-thinking-64k-high-effort",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "liveBench"
+    },
+    {
+      "alias": "claude-opus-4-6-thinking-auto-high-effort",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "liveBench"
+    },
+    {
+      "alias": "deepseek-v4-flash",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "liveBench"
+    },
+    {
+      "alias": "deepseek-v4-flash-0731",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "liveBench"
+    },
+    {
+      "alias": "deepseek-v4-flash-vision-exp",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "liveBench"
+    },
+    {
+      "alias": "deepseek-v4-pro",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "liveBench"
+    },
+    {
+      "alias": "deepseek-v4-pro-0813",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "liveBench"
+    },
+    {
+      "alias": "deepseek-v4.1-flash-max",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "liveBench"
+    },
+    {
+      "alias": "gemini-3.1-pro-preview-high",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "liveBench"
+    },
+    {
+      "alias": "gemini-3.5-flash-lite-high",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "liveBench"
+    },
+    {
+      "alias": "glm-5.2",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "liveBench"
+    },
+    {
+      "alias": "glm-5.3",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "liveBench"
+    },
+    {
+      "alias": "glm-5.3-flash",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "liveBench"
+    },
+    {
+      "alias": "gpt-5.2-2025-12-11-high",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "liveBench"
+    },
+    {
+      "alias": "gpt-5.2-codex",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "liveBench"
+    },
+    {
+      "alias": "gpt-5.4-nano-xhigh",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "liveBench"
+    },
+    {
+      "alias": "grok-4.3",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "liveBench"
+    },
+    {
+      "alias": "grok-4.5",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "liveBench"
+    },
+    {
+      "alias": "grok-4.6",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "liveBench"
+    },
+    {
+      "alias": "grok-4.7-xhigh",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "liveBench"
+    },
+    {
+      "alias": "grok-build-0.1",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "liveBench"
+    },
+    {
+      "alias": "inkling-xhigh",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "liveBench"
+    },
+    {
+      "alias": "kimi-k2.6-thinking",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "liveBench"
+    },
+    {
+      "alias": "kimi-k2.7-code",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "liveBench"
+    },
+    {
+      "alias": "kimi-k3",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "liveBench"
+    },
+    {
+      "alias": "minimax-m3",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "liveBench"
+    },
+    {
+      "alias": "mistral-large-4-high",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "liveBench"
+    },
+    {
+      "alias": "muse-spark-1.1-xhigh",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "liveBench"
+    },
+    {
+      "alias": "muse-spark-1.2-xhigh",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "liveBench"
+    },
+    {
+      "alias": "muse-spark-1.3-xhigh",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "liveBench"
+    },
+    {
+      "alias": "muse-wonder-1.0-max",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "liveBench"
+    },
+    {
+      "alias": "nemotron-3-ultra-550b-a55b",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "liveBench"
+    },
+    {
+      "alias": "nemotron-3.5-lightning-30b-a3b",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "liveBench"
+    },
+    {
+      "alias": "ox-alpha-max",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "liveBench"
+    },
+    {
+      "alias": "qwen3.6-27b",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "liveBench"
+    },
+    {
+      "alias": "qwen3.6-plus",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "liveBench"
+    },
+    {
+      "alias": "qwen3.7-max",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "liveBench"
+    },
+    {
+      "alias": "qwen3.8-27b",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "liveBench"
+    },
+    {
+      "alias": "qwen3.8-flash-next",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "liveBench"
+    },
+    {
+      "alias": "qwen3.8-max",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "liveBench"
+    },
+    {
+      "alias": "smaug-agentic",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "liveBench"
+    },
+    {
+      "alias": "smaug-flash",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "liveBench"
+    },
+    {
+      "alias": "smaug-mini",
+      "status": "unmapped_variant; not proof of Copilot availability",
+      "source": "liveBench"
+    }
+  ],
+  "rejectedMappings": [],
+  "schemaVersion": 1,
   "runtimeModels": [
     {
-      "id": "auto",
       "maxContextTokens": 0,
+      "id": "auto",
       "name": "Auto"
     },
     {
-      "policyState": "enabled",
-      "toolCalls": true,
-      "id": "claude-haiku-4.5",
-      "name": "Claude Haiku 4.5",
-      "tokenPrices": {
-        "batchSize": 1000000,
-        "outputPrice": 500,
-        "inputPrice": 100,
-        "cachePrice": 10,
-        "cacheReadPrice": 10,
-        "cacheWritePrice": 125
-      },
       "vision": true,
+      "tokenPrices": {
+        "outputPrice": 500,
+        "batchSize": 1000000,
+        "cachePrice": 10,
+        "cacheWritePrice": 125,
+        "inputPrice": 100,
+        "cacheReadPrice": 10
+      },
+      "maxContextTokens": 200000,
       "reasoningEffort": false,
-      "maxContextTokens": 200000
+      "toolCalls": true,
+      "policyState": "enabled",
+      "name": "Claude Haiku 4.5",
+      "id": "claude-haiku-4.5"
     },
     {
-      "policyState": "enabled",
-      "toolCalls": true,
-      "id": "claude-haiku-5.5",
-      "name": "Claude Haiku 5.5",
+      "vision": true,
       "tokenPrices": {
-        "cacheWrite1hPrice": 20,
-        "batchSize": 1000000,
+        "maxPromptTokens": 100000,
+        "outputPrice": 50,
         "longContext": {
-          "cacheWrite1hPrice": 100,
-          "maxPromptTokens": 936000,
           "outputPrice": 250,
           "contextMax": 936000,
-          "inputPrice": 50,
           "cachePrice": 5,
-          "cacheReadPrice": 5,
-          "cacheWritePrice": 62.5
+          "cacheWritePrice": 62.5,
+          "cacheWrite1hPrice": 100,
+          "inputPrice": 50,
+          "maxPromptTokens": 936000,
+          "cacheReadPrice": 5
         },
-        "outputPrice": 50,
-        "contextMax": 100000,
-        "inputPrice": 10,
+        "batchSize": 1000000,
         "cachePrice": 1,
-        "cacheReadPrice": 1,
         "cacheWritePrice": 12.5,
-        "maxPromptTokens": 100000
+        "cacheWrite1hPrice": 20,
+        "inputPrice": 10,
+        "contextMax": 100000,
+        "cacheReadPrice": 1
       },
-      "vision": true,
+      "maxContextTokens": 1000000,
+      "reasoningEffort": true,
+      "toolCalls": true,
       "supportedReasoningEfforts": [
         "low",
         "medium",
@@ -1290,36 +1297,36 @@
         "xhigh",
         "max"
       ],
-      "reasoningEffort": true,
-      "maxContextTokens": 1000000
+      "name": "Claude Haiku 5.5",
+      "policyState": "enabled",
+      "id": "claude-haiku-5.5"
     },
     {
-      "policyState": "enabled",
-      "toolCalls": true,
-      "id": "claude-opus-4.8-fast",
-      "name": "Claude Opus 4.8 (fast mode)",
+      "vision": true,
       "tokenPrices": {
-        "cacheWrite1hPrice": 2000,
-        "batchSize": 1000000,
+        "maxPromptTokens": 200000,
+        "outputPrice": 5000,
         "longContext": {
-          "cacheWrite1hPrice": 2000,
-          "maxPromptTokens": 936000,
           "outputPrice": 5000,
           "contextMax": 936000,
-          "inputPrice": 1000,
           "cachePrice": 100,
-          "cacheReadPrice": 100,
-          "cacheWritePrice": 1250
+          "cacheWritePrice": 1250,
+          "cacheWrite1hPrice": 2000,
+          "inputPrice": 1000,
+          "maxPromptTokens": 936000,
+          "cacheReadPrice": 100
         },
-        "outputPrice": 5000,
-        "contextMax": 200000,
-        "inputPrice": 1000,
+        "batchSize": 1000000,
         "cachePrice": 100,
-        "cacheReadPrice": 100,
         "cacheWritePrice": 1250,
-        "maxPromptTokens": 200000
+        "cacheWrite1hPrice": 2000,
+        "inputPrice": 1000,
+        "contextMax": 200000,
+        "cacheReadPrice": 100
       },
-      "vision": true,
+      "maxContextTokens": 1000000,
+      "reasoningEffort": true,
+      "toolCalls": true,
       "supportedReasoningEfforts": [
         "low",
         "medium",
@@ -1327,36 +1334,36 @@
         "xhigh",
         "max"
       ],
-      "reasoningEffort": true,
-      "maxContextTokens": 1000000
+      "name": "Claude Opus 4.8 (fast mode)",
+      "policyState": "enabled",
+      "id": "claude-opus-4.8-fast"
     },
     {
-      "policyState": "enabled",
-      "toolCalls": true,
-      "id": "claude-opus-5.5",
-      "name": "Claude Opus 5.5",
+      "vision": true,
       "tokenPrices": {
-        "cacheWrite1hPrice": 800,
-        "batchSize": 1000000,
+        "maxPromptTokens": 200000,
+        "outputPrice": 2000,
         "longContext": {
-          "cacheWrite1hPrice": 800,
-          "maxPromptTokens": 1000000,
           "outputPrice": 2000,
           "contextMax": 1000000,
+          "cachePrice": 20,
+          "cacheWritePrice": 500,
+          "cacheWrite1hPrice": 800,
           "inputPrice": 400,
-          "cachePrice": 20,
-          "cacheReadPrice": 20,
-          "cacheWritePrice": 500
+          "maxPromptTokens": 1000000,
+          "cacheReadPrice": 20
         },
-        "outputPrice": 2000,
-        "contextMax": 200000,
-        "inputPrice": 400,
+        "batchSize": 1000000,
         "cachePrice": 20,
-        "cacheReadPrice": 20,
         "cacheWritePrice": 500,
-        "maxPromptTokens": 200000
+        "cacheWrite1hPrice": 800,
+        "inputPrice": 400,
+        "contextMax": 200000,
+        "cacheReadPrice": 20
       },
-      "vision": true,
+      "maxContextTokens": 1000000,
+      "reasoningEffort": true,
+      "toolCalls": true,
       "supportedReasoningEfforts": [
         "low",
         "medium",
@@ -1364,36 +1371,36 @@
         "xhigh",
         "max"
       ],
-      "reasoningEffort": true,
-      "maxContextTokens": 1000000
+      "name": "Claude Opus 5.5",
+      "policyState": "enabled",
+      "id": "claude-opus-5.5"
     },
     {
-      "policyState": "enabled",
-      "toolCalls": true,
-      "id": "claude-sonnet-5",
-      "name": "Claude Sonnet 5",
+      "vision": true,
       "tokenPrices": {
-        "cacheWrite1hPrice": 400,
-        "batchSize": 1000000,
+        "maxPromptTokens": 200000,
+        "outputPrice": 1000,
         "longContext": {
-          "cacheWrite1hPrice": 400,
-          "maxPromptTokens": 936000,
           "outputPrice": 1000,
           "contextMax": 936000,
-          "inputPrice": 200,
           "cachePrice": 20,
-          "cacheReadPrice": 20,
-          "cacheWritePrice": 250
+          "cacheWritePrice": 250,
+          "cacheWrite1hPrice": 400,
+          "inputPrice": 200,
+          "maxPromptTokens": 936000,
+          "cacheReadPrice": 20
         },
-        "outputPrice": 1000,
-        "contextMax": 200000,
-        "inputPrice": 200,
+        "batchSize": 1000000,
         "cachePrice": 20,
-        "cacheReadPrice": 20,
         "cacheWritePrice": 250,
-        "maxPromptTokens": 200000
+        "cacheWrite1hPrice": 400,
+        "inputPrice": 200,
+        "contextMax": 200000,
+        "cacheReadPrice": 20
       },
-      "vision": true,
+      "maxContextTokens": 1000000,
+      "reasoningEffort": true,
+      "toolCalls": true,
       "supportedReasoningEfforts": [
         "low",
         "medium",
@@ -1401,36 +1408,36 @@
         "xhigh",
         "max"
       ],
-      "reasoningEffort": true,
-      "maxContextTokens": 1000000
+      "name": "Claude Sonnet 5",
+      "policyState": "enabled",
+      "id": "claude-sonnet-5"
     },
     {
-      "policyState": "enabled",
-      "toolCalls": true,
-      "id": "claude-sonnet-5.5",
-      "name": "Claude Sonnet 5.5",
+      "vision": true,
       "tokenPrices": {
-        "cacheWrite1hPrice": 400,
-        "batchSize": 1000000,
+        "maxPromptTokens": 200000,
+        "outputPrice": 1000,
         "longContext": {
-          "cacheWrite1hPrice": 400,
-          "maxPromptTokens": 936000,
           "outputPrice": 1000,
           "contextMax": 936000,
-          "inputPrice": 200,
           "cachePrice": 10,
-          "cacheReadPrice": 10,
-          "cacheWritePrice": 250
+          "cacheWritePrice": 250,
+          "cacheWrite1hPrice": 400,
+          "inputPrice": 200,
+          "maxPromptTokens": 936000,
+          "cacheReadPrice": 10
         },
-        "outputPrice": 1000,
-        "contextMax": 200000,
-        "inputPrice": 200,
+        "batchSize": 1000000,
         "cachePrice": 10,
-        "cacheReadPrice": 10,
         "cacheWritePrice": 250,
-        "maxPromptTokens": 200000
+        "cacheWrite1hPrice": 400,
+        "inputPrice": 200,
+        "contextMax": 200000,
+        "cacheReadPrice": 10
       },
-      "vision": true,
+      "maxContextTokens": 1000000,
+      "reasoningEffort": true,
+      "toolCalls": true,
       "supportedReasoningEfforts": [
         "low",
         "medium",
@@ -1438,178 +1445,178 @@
         "xhigh",
         "max"
       ],
-      "reasoningEffort": true,
-      "maxContextTokens": 1000000
+      "name": "Claude Sonnet 5.5",
+      "policyState": "enabled",
+      "id": "claude-sonnet-5.5"
     },
     {
-      "policyState": "enabled",
-      "toolCalls": true,
-      "id": "gemini-4-argon",
-      "name": "Gemini 4 Argon",
+      "vision": true,
       "tokenPrices": {
+        "maxPromptTokens": 200000,
+        "outputPrice": 1000,
+        "batchSize": 1000000,
+        "cachePrice": 10,
+        "cacheWritePrice": 0,
         "longContext": {
-          "maxPromptTokens": 983040,
           "outputPrice": 1000,
           "contextMax": 983040,
-          "inputPrice": 200,
           "cachePrice": 10,
-          "cacheReadPrice": 10,
-          "cacheWritePrice": 0
+          "cacheWritePrice": 0,
+          "inputPrice": 200,
+          "maxPromptTokens": 983040,
+          "cacheReadPrice": 10
         },
-        "batchSize": 1000000,
-        "outputPrice": 1000,
-        "contextMax": 200000,
         "inputPrice": 200,
-        "cachePrice": 10,
-        "cacheReadPrice": 10,
-        "cacheWritePrice": 0,
-        "maxPromptTokens": 200000
+        "contextMax": 200000,
+        "cacheReadPrice": 10
       },
-      "vision": true,
+      "maxContextTokens": 1048576,
+      "reasoningEffort": true,
+      "toolCalls": true,
       "supportedReasoningEfforts": [
         "low",
         "medium",
         "high"
       ],
-      "reasoningEffort": true,
-      "maxContextTokens": 1048576
+      "name": "Gemini 4 Argon",
+      "policyState": "enabled",
+      "id": "gemini-4-argon"
     },
     {
-      "toolCalls": true,
-      "id": "gemini-4-carbon",
-      "name": "Gemini 4 Carbon",
+      "vision": true,
       "tokenPrices": {
+        "maxPromptTokens": 200000,
+        "outputPrice": 1000,
+        "batchSize": 1000000,
+        "cachePrice": 10,
+        "cacheWritePrice": 0,
         "longContext": {
-          "maxPromptTokens": 936000,
           "outputPrice": 1000,
           "contextMax": 936000,
-          "inputPrice": 200,
           "cachePrice": 10,
-          "cacheReadPrice": 10,
-          "cacheWritePrice": 0
+          "cacheWritePrice": 0,
+          "inputPrice": 200,
+          "maxPromptTokens": 936000,
+          "cacheReadPrice": 10
         },
-        "batchSize": 1000000,
-        "outputPrice": 1000,
-        "contextMax": 200000,
         "inputPrice": 200,
-        "cachePrice": 10,
-        "cacheReadPrice": 10,
-        "cacheWritePrice": 0,
-        "maxPromptTokens": 200000
+        "contextMax": 200000,
+        "cacheReadPrice": 10
       },
-      "vision": true,
+      "maxContextTokens": 1000000,
+      "reasoningEffort": true,
+      "toolCalls": true,
       "supportedReasoningEfforts": [
         "low",
         "medium",
         "high"
       ],
-      "reasoningEffort": true,
-      "maxContextTokens": 1000000
+      "name": "Gemini 4 Carbon",
+      "id": "gemini-4-carbon"
     },
     {
-      "toolCalls": true,
-      "id": "gemini-4-hydrogen",
-      "name": "Gemini 4 Hydrogen",
+      "vision": true,
       "tokenPrices": {
-        "batchSize": 1000000,
+        "maxPromptTokens": 983040,
         "outputPrice": 750,
-        "contextMax": 983040,
-        "inputPrice": 150,
+        "batchSize": 1000000,
         "cachePrice": 7.5,
-        "cacheReadPrice": 7.5,
         "cacheWritePrice": 0,
-        "maxPromptTokens": 983040
+        "inputPrice": 150,
+        "contextMax": 983040,
+        "cacheReadPrice": 7.5
       },
-      "vision": true,
+      "maxContextTokens": 1048576,
+      "reasoningEffort": true,
+      "toolCalls": true,
       "supportedReasoningEfforts": [
         "low",
         "medium",
         "high"
       ],
-      "reasoningEffort": true,
-      "maxContextTokens": 1048576
+      "name": "Gemini 4 Hydrogen",
+      "id": "gemini-4-hydrogen"
     },
     {
-      "toolCalls": true,
-      "id": "gemini-4-neon",
-      "name": "Gemini 4 Neon",
+      "vision": true,
       "tokenPrices": {
+        "maxPromptTokens": 200000,
+        "outputPrice": 1500,
+        "batchSize": 1000000,
+        "cachePrice": 15,
+        "cacheWritePrice": 0,
         "longContext": {
-          "maxPromptTokens": 983040,
           "outputPrice": 1500,
           "contextMax": 983040,
-          "inputPrice": 300,
           "cachePrice": 15,
-          "cacheReadPrice": 15,
-          "cacheWritePrice": 0
+          "cacheWritePrice": 0,
+          "inputPrice": 300,
+          "maxPromptTokens": 983040,
+          "cacheReadPrice": 15
         },
-        "batchSize": 1000000,
-        "outputPrice": 1500,
-        "contextMax": 200000,
         "inputPrice": 300,
-        "cachePrice": 15,
-        "cacheReadPrice": 15,
-        "cacheWritePrice": 0,
-        "maxPromptTokens": 200000
+        "contextMax": 200000,
+        "cacheReadPrice": 15
       },
-      "vision": true,
+      "maxContextTokens": 1048576,
+      "reasoningEffort": true,
+      "toolCalls": true,
       "supportedReasoningEfforts": [
         "low",
         "medium",
         "high"
       ],
-      "reasoningEffort": true,
-      "maxContextTokens": 1048576
+      "name": "Gemini 4 Neon",
+      "id": "gemini-4-neon"
     },
     {
-      "toolCalls": true,
-      "id": "gpt-5.3-codex",
-      "name": "GPT-5.3-Codex",
-      "tokenPrices": {
-        "batchSize": 1000000,
-        "outputPrice": 1400,
-        "contextMax": 272000,
-        "inputPrice": 175,
-        "cachePrice": 17.5,
-        "cacheReadPrice": 17.5,
-        "cacheWritePrice": 0,
-        "maxPromptTokens": 272000
-      },
       "vision": true,
+      "tokenPrices": {
+        "maxPromptTokens": 272000,
+        "outputPrice": 1400,
+        "batchSize": 1000000,
+        "cachePrice": 17.5,
+        "cacheWritePrice": 0,
+        "inputPrice": 175,
+        "contextMax": 272000,
+        "cacheReadPrice": 17.5
+      },
+      "maxContextTokens": 400000,
+      "reasoningEffort": true,
+      "toolCalls": true,
       "supportedReasoningEfforts": [
         "low",
         "medium",
         "high",
         "xhigh"
       ],
-      "reasoningEffort": true,
-      "maxContextTokens": 400000
+      "name": "GPT-5.3-Codex",
+      "id": "gpt-5.3-codex"
     },
     {
-      "policyState": "enabled",
-      "toolCalls": true,
-      "id": "gpt-5.6-luna",
-      "name": "GPT-5.6 Luna",
+      "vision": true,
       "tokenPrices": {
+        "maxPromptTokens": 200000,
+        "outputPrice": 120,
+        "batchSize": 1000000,
+        "cachePrice": 2,
+        "cacheWritePrice": 25,
         "longContext": {
-          "maxPromptTokens": 922000,
           "outputPrice": 180,
           "contextMax": 922000,
-          "inputPrice": 40,
           "cachePrice": 4,
-          "cacheReadPrice": 4,
-          "cacheWritePrice": 50
+          "cacheWritePrice": 50,
+          "inputPrice": 40,
+          "maxPromptTokens": 922000,
+          "cacheReadPrice": 4
         },
-        "batchSize": 1000000,
-        "outputPrice": 120,
-        "contextMax": 200000,
         "inputPrice": 20,
-        "cachePrice": 2,
-        "cacheReadPrice": 2,
-        "cacheWritePrice": 25,
-        "maxPromptTokens": 200000
+        "contextMax": 200000,
+        "cacheReadPrice": 2
       },
-      "vision": true,
+      "maxContextTokens": 1050000,
+      "reasoningEffort": true,
+      "toolCalls": true,
       "supportedReasoningEfforts": [
         "none",
         "low",
@@ -1618,34 +1625,34 @@
         "xhigh",
         "max"
       ],
-      "reasoningEffort": true,
-      "maxContextTokens": 1050000
+      "name": "GPT-5.6 Luna",
+      "policyState": "enabled",
+      "id": "gpt-5.6-luna"
     },
     {
-      "policyState": "enabled",
-      "toolCalls": true,
-      "id": "gpt-5.6-sol",
-      "name": "GPT-5.6 Sol",
+      "vision": true,
       "tokenPrices": {
+        "maxPromptTokens": 272000,
+        "outputPrice": 2000,
+        "batchSize": 1000000,
+        "cachePrice": 40,
+        "cacheWritePrice": 500,
         "longContext": {
-          "maxPromptTokens": 922000,
           "outputPrice": 3000,
           "contextMax": 922000,
-          "inputPrice": 800,
           "cachePrice": 80,
-          "cacheReadPrice": 80,
-          "cacheWritePrice": 1000
+          "cacheWritePrice": 1000,
+          "inputPrice": 800,
+          "maxPromptTokens": 922000,
+          "cacheReadPrice": 80
         },
-        "batchSize": 1000000,
-        "outputPrice": 2000,
-        "contextMax": 272000,
         "inputPrice": 400,
-        "cachePrice": 40,
-        "cacheReadPrice": 40,
-        "cacheWritePrice": 500,
-        "maxPromptTokens": 272000
+        "contextMax": 272000,
+        "cacheReadPrice": 40
       },
-      "vision": true,
+      "maxContextTokens": 1050000,
+      "reasoningEffort": true,
+      "toolCalls": true,
       "supportedReasoningEfforts": [
         "none",
         "low",
@@ -1654,34 +1661,34 @@
         "xhigh",
         "max"
       ],
-      "reasoningEffort": true,
-      "maxContextTokens": 1050000
+      "name": "GPT-5.6 Sol",
+      "policyState": "enabled",
+      "id": "gpt-5.6-sol"
     },
     {
-      "policyState": "enabled",
-      "toolCalls": true,
-      "id": "gpt-6-astra",
-      "name": "GPT-6 Astra",
+      "vision": true,
       "tokenPrices": {
+        "maxPromptTokens": 272000,
+        "outputPrice": 5000,
+        "batchSize": 1000000,
+        "cachePrice": 100,
+        "cacheWritePrice": 1250,
         "longContext": {
-          "maxPromptTokens": 1050000,
           "outputPrice": 7500,
           "contextMax": 1050000,
-          "inputPrice": 2000,
           "cachePrice": 200,
-          "cacheReadPrice": 200,
-          "cacheWritePrice": 2500
+          "cacheWritePrice": 2500,
+          "inputPrice": 2000,
+          "maxPromptTokens": 1050000,
+          "cacheReadPrice": 200
         },
-        "batchSize": 1000000,
-        "outputPrice": 5000,
-        "contextMax": 272000,
         "inputPrice": 1000,
-        "cachePrice": 100,
-        "cacheReadPrice": 100,
-        "cacheWritePrice": 1250,
-        "maxPromptTokens": 272000
+        "contextMax": 272000,
+        "cacheReadPrice": 100
       },
-      "vision": true,
+      "maxContextTokens": 1050000,
+      "reasoningEffort": true,
+      "toolCalls": true,
       "supportedReasoningEfforts": [
         "low",
         "medium",
@@ -1689,34 +1696,34 @@
         "xhigh",
         "max"
       ],
-      "reasoningEffort": true,
-      "maxContextTokens": 1050000
+      "name": "GPT-6 Astra",
+      "policyState": "enabled",
+      "id": "gpt-6-astra"
     },
     {
-      "policyState": "enabled",
-      "toolCalls": true,
-      "id": "gpt-6-luna",
-      "name": "GPT-6 Luna",
+      "vision": true,
       "tokenPrices": {
+        "maxPromptTokens": 272000,
+        "outputPrice": 50,
+        "batchSize": 1000000,
+        "cachePrice": 1,
+        "cacheWritePrice": 12.5,
         "longContext": {
-          "maxPromptTokens": 872000,
           "outputPrice": 75,
           "contextMax": 872000,
-          "inputPrice": 20,
           "cachePrice": 2,
-          "cacheReadPrice": 2,
-          "cacheWritePrice": 25
+          "cacheWritePrice": 25,
+          "inputPrice": 20,
+          "maxPromptTokens": 872000,
+          "cacheReadPrice": 2
         },
-        "batchSize": 1000000,
-        "outputPrice": 50,
-        "contextMax": 272000,
         "inputPrice": 10,
-        "cachePrice": 1,
-        "cacheReadPrice": 1,
-        "cacheWritePrice": 12.5,
-        "maxPromptTokens": 272000
+        "contextMax": 272000,
+        "cacheReadPrice": 1
       },
-      "vision": true,
+      "maxContextTokens": 1000000,
+      "reasoningEffort": true,
+      "toolCalls": true,
       "supportedReasoningEfforts": [
         "none",
         "low",
@@ -1725,34 +1732,34 @@
         "xhigh",
         "max"
       ],
-      "reasoningEffort": true,
-      "maxContextTokens": 1000000
+      "name": "GPT-6 Luna",
+      "policyState": "enabled",
+      "id": "gpt-6-luna"
     },
     {
-      "policyState": "enabled",
-      "toolCalls": true,
-      "id": "gpt-6-sol",
-      "name": "GPT-6 Sol",
+      "vision": true,
       "tokenPrices": {
+        "maxPromptTokens": 272000,
+        "outputPrice": 1000,
+        "batchSize": 1000000,
+        "cachePrice": 20,
+        "cacheWritePrice": 250,
         "longContext": {
-          "maxPromptTokens": 872000,
           "outputPrice": 1500,
           "contextMax": 872000,
-          "inputPrice": 400,
           "cachePrice": 40,
-          "cacheReadPrice": 40,
-          "cacheWritePrice": 500
+          "cacheWritePrice": 500,
+          "inputPrice": 400,
+          "maxPromptTokens": 872000,
+          "cacheReadPrice": 40
         },
-        "batchSize": 1000000,
-        "outputPrice": 1000,
-        "contextMax": 272000,
         "inputPrice": 200,
-        "cachePrice": 20,
-        "cacheReadPrice": 20,
-        "cacheWritePrice": 250,
-        "maxPromptTokens": 272000
+        "contextMax": 272000,
+        "cacheReadPrice": 20
       },
-      "vision": true,
+      "maxContextTokens": 1000000,
+      "reasoningEffort": true,
+      "toolCalls": true,
       "supportedReasoningEfforts": [
         "none",
         "low",
@@ -1761,34 +1768,34 @@
         "xhigh",
         "max"
       ],
-      "reasoningEffort": true,
-      "maxContextTokens": 1000000
+      "name": "GPT-6 Sol",
+      "policyState": "enabled",
+      "id": "gpt-6-sol"
     },
     {
-      "policyState": "enabled",
-      "toolCalls": true,
-      "id": "gpt-6.1-sol",
-      "name": "GPT-6.1 Sol",
+      "vision": true,
       "tokenPrices": {
+        "maxPromptTokens": 272000,
+        "outputPrice": 1000,
+        "batchSize": 1000000,
+        "cachePrice": 10,
+        "cacheWritePrice": 250,
         "longContext": {
-          "maxPromptTokens": 922000,
           "outputPrice": 1500,
           "contextMax": 922000,
-          "inputPrice": 400,
           "cachePrice": 20,
-          "cacheReadPrice": 20,
-          "cacheWritePrice": 500
+          "cacheWritePrice": 500,
+          "inputPrice": 400,
+          "maxPromptTokens": 922000,
+          "cacheReadPrice": 20
         },
-        "batchSize": 1000000,
-        "outputPrice": 1000,
-        "contextMax": 272000,
         "inputPrice": 200,
-        "cachePrice": 10,
-        "cacheReadPrice": 10,
-        "cacheWritePrice": 250,
-        "maxPromptTokens": 272000
+        "contextMax": 272000,
+        "cacheReadPrice": 10
       },
-      "vision": true,
+      "maxContextTokens": 1050000,
+      "reasoningEffort": true,
+      "toolCalls": true,
       "supportedReasoningEfforts": [
         "low",
         "medium",
@@ -1796,33 +1803,34 @@
         "xhigh",
         "max"
       ],
-      "reasoningEffort": true,
-      "maxContextTokens": 1050000
+      "name": "GPT-6.1 Sol",
+      "policyState": "enabled",
+      "id": "gpt-6.1-sol"
     },
     {
-      "toolCalls": true,
-      "id": "gpt-6.1-terra",
-      "name": "GPT-6.1 Terra",
+      "vision": true,
       "tokenPrices": {
+        "maxPromptTokens": 272000,
+        "outputPrice": 500,
+        "batchSize": 1000000,
+        "cachePrice": 5,
+        "cacheWritePrice": 125,
         "longContext": {
-          "maxPromptTokens": 1000000,
           "outputPrice": 750,
           "contextMax": 1000000,
-          "inputPrice": 200,
           "cachePrice": 10,
-          "cacheReadPrice": 10,
-          "cacheWritePrice": 250
+          "cacheWritePrice": 250,
+          "inputPrice": 200,
+          "maxPromptTokens": 1000000,
+          "cacheReadPrice": 10
         },
-        "batchSize": 1000000,
-        "outputPrice": 500,
-        "contextMax": 272000,
         "inputPrice": 100,
-        "cachePrice": 5,
-        "cacheReadPrice": 5,
-        "cacheWritePrice": 125,
-        "maxPromptTokens": 272000
+        "contextMax": 272000,
+        "cacheReadPrice": 5
       },
-      "vision": true,
+      "maxContextTokens": 1000000,
+      "reasoningEffort": true,
+      "toolCalls": true,
       "supportedReasoningEfforts": [
         "low",
         "medium",
@@ -1830,33 +1838,33 @@
         "xhigh",
         "max"
       ],
-      "reasoningEffort": true,
-      "maxContextTokens": 1000000
+      "name": "GPT-6.1 Terra",
+      "id": "gpt-6.1-terra"
     },
     {
-      "toolCalls": true,
-      "id": "gpt-6.2-astra",
-      "name": "GPT-6.2 Astra",
+      "vision": true,
       "tokenPrices": {
+        "maxPromptTokens": 272000,
+        "outputPrice": 4000,
+        "batchSize": 1000000,
+        "cachePrice": 40,
+        "cacheWritePrice": 1000,
         "longContext": {
-          "maxPromptTokens": 1050000,
           "outputPrice": 6000,
           "contextMax": 1050000,
-          "inputPrice": 1600,
           "cachePrice": 80,
-          "cacheReadPrice": 80,
-          "cacheWritePrice": 2000
+          "cacheWritePrice": 2000,
+          "inputPrice": 1600,
+          "maxPromptTokens": 1050000,
+          "cacheReadPrice": 80
         },
-        "batchSize": 1000000,
-        "outputPrice": 4000,
-        "contextMax": 272000,
         "inputPrice": 800,
-        "cachePrice": 40,
-        "cacheReadPrice": 40,
-        "cacheWritePrice": 1000,
-        "maxPromptTokens": 272000
+        "contextMax": 272000,
+        "cacheReadPrice": 40
       },
-      "vision": true,
+      "maxContextTokens": 1050000,
+      "reasoningEffort": true,
+      "toolCalls": true,
       "supportedReasoningEfforts": [
         "low",
         "medium",
@@ -1864,33 +1872,33 @@
         "xhigh",
         "max"
       ],
-      "reasoningEffort": true,
-      "maxContextTokens": 1050000
+      "name": "GPT-6.2 Astra",
+      "id": "gpt-6.2-astra"
     },
     {
-      "toolCalls": true,
-      "id": "gpt-6.2-sol",
-      "name": "GPT-6.2 Sol",
+      "vision": true,
       "tokenPrices": {
+        "maxPromptTokens": 272000,
+        "outputPrice": 1000,
+        "batchSize": 1000000,
+        "cachePrice": 10,
+        "cacheWritePrice": 250,
         "longContext": {
-          "maxPromptTokens": 1050000,
           "outputPrice": 1500,
           "contextMax": 1050000,
-          "inputPrice": 400,
           "cachePrice": 20,
-          "cacheReadPrice": 20,
-          "cacheWritePrice": 500
+          "cacheWritePrice": 500,
+          "inputPrice": 400,
+          "maxPromptTokens": 1050000,
+          "cacheReadPrice": 20
         },
-        "batchSize": 1000000,
-        "outputPrice": 1000,
-        "contextMax": 272000,
         "inputPrice": 200,
-        "cachePrice": 10,
-        "cacheReadPrice": 10,
-        "cacheWritePrice": 250,
-        "maxPromptTokens": 272000
+        "contextMax": 272000,
+        "cacheReadPrice": 10
       },
-      "vision": true,
+      "maxContextTokens": 1050000,
+      "reasoningEffort": true,
+      "toolCalls": true,
       "supportedReasoningEfforts": [
         "low",
         "medium",
@@ -1898,742 +1906,141 @@
         "xhigh",
         "max"
       ],
-      "reasoningEffort": true,
-      "maxContextTokens": 1050000
+      "name": "GPT-6.2 Sol",
+      "id": "gpt-6.2-sol"
     },
     {
-      "toolCalls": true,
-      "id": "grok-4.6",
-      "name": "Grok 4.6",
+      "vision": true,
       "tokenPrices": {
+        "maxPromptTokens": 200000,
+        "outputPrice": 600,
+        "batchSize": 1000000,
+        "cachePrice": 50,
+        "cacheWritePrice": 0,
         "longContext": {
-          "maxPromptTokens": 500000,
           "outputPrice": 1200,
           "contextMax": 500000,
-          "inputPrice": 400,
           "cachePrice": 100,
-          "cacheReadPrice": 100,
-          "cacheWritePrice": 0
+          "cacheWritePrice": 0,
+          "inputPrice": 400,
+          "maxPromptTokens": 500000,
+          "cacheReadPrice": 100
         },
-        "batchSize": 1000000,
-        "outputPrice": 600,
-        "contextMax": 200000,
         "inputPrice": 200,
-        "cachePrice": 50,
-        "cacheReadPrice": 50,
-        "cacheWritePrice": 0,
-        "maxPromptTokens": 200000
+        "contextMax": 200000,
+        "cacheReadPrice": 50
       },
-      "vision": true,
+      "maxContextTokens": 500000,
+      "reasoningEffort": true,
+      "toolCalls": true,
       "supportedReasoningEfforts": [
         "low",
         "medium",
         "high",
         "xhigh"
       ],
-      "reasoningEffort": true,
-      "maxContextTokens": 500000
+      "name": "Grok 4.6",
+      "id": "grok-4.6"
     },
     {
-      "toolCalls": true,
-      "id": "grok-4.7",
-      "name": "Grok 4.7",
+      "vision": true,
       "tokenPrices": {
+        "maxPromptTokens": 200000,
+        "outputPrice": 600,
+        "batchSize": 1000000,
+        "cachePrice": 50,
+        "cacheWritePrice": 0,
         "longContext": {
-          "maxPromptTokens": 500000,
           "outputPrice": 1200,
           "contextMax": 500000,
-          "inputPrice": 400,
           "cachePrice": 100,
-          "cacheReadPrice": 100,
-          "cacheWritePrice": 0
+          "cacheWritePrice": 0,
+          "inputPrice": 400,
+          "maxPromptTokens": 500000,
+          "cacheReadPrice": 100
         },
-        "batchSize": 1000000,
-        "outputPrice": 600,
-        "contextMax": 200000,
         "inputPrice": 200,
-        "cachePrice": 50,
-        "cacheReadPrice": 50,
-        "cacheWritePrice": 0,
-        "maxPromptTokens": 200000
+        "contextMax": 200000,
+        "cacheReadPrice": 50
       },
-      "vision": true,
+      "maxContextTokens": 500000,
+      "reasoningEffort": true,
+      "toolCalls": true,
       "supportedReasoningEfforts": [
         "low",
         "medium",
         "high"
       ],
-      "reasoningEffort": true,
-      "maxContextTokens": 500000
+      "name": "Grok 4.7",
+      "id": "grok-4.7"
     },
     {
-      "policyState": "enabled",
-      "toolCalls": true,
-      "id": "mai-code-1.1-flash",
-      "name": "MAI-Code-1.1-Flash",
+      "vision": true,
       "tokenPrices": {
-        "batchSize": 1000000,
+        "maxPromptTokens": 128000,
         "outputPrice": 120,
-        "contextMax": 128000,
-        "inputPrice": 20,
+        "batchSize": 1000000,
         "cachePrice": 2,
-        "cacheReadPrice": 2,
         "cacheWritePrice": 25,
-        "maxPromptTokens": 128000
+        "inputPrice": 20,
+        "contextMax": 128000,
+        "cacheReadPrice": 2
       },
-      "vision": true,
+      "maxContextTokens": 256000,
+      "reasoningEffort": true,
+      "toolCalls": true,
       "supportedReasoningEfforts": [
         "low",
         "medium",
         "high"
       ],
-      "reasoningEffort": true,
-      "maxContextTokens": 256000
+      "name": "MAI-Code-1.1-Flash",
+      "policyState": "enabled",
+      "id": "mai-code-1.1-flash"
     },
     {
-      "policyState": "enabled",
-      "toolCalls": true,
-      "id": "mai-code-2",
-      "name": "MAI Code 2",
+      "vision": true,
       "tokenPrices": {
-        "batchSize": 1000000,
         "outputPrice": 500,
-        "inputPrice": 100,
-        "cachePrice": 5,
-        "cacheReadPrice": 5,
-        "cacheWritePrice": 0
-      },
-      "vision": true,
-      "supportedReasoningEfforts": [
-        "low",
-        "medium",
-        "high"
-      ],
-      "reasoningEffort": true,
-      "maxContextTokens": 1050000
-    },
-    {
-      "policyState": "enabled",
-      "toolCalls": true,
-      "id": "mai-code-2-flash",
-      "name": "MAI Code 2 Flash",
-      "tokenPrices": {
         "batchSize": 1000000,
-        "outputPrice": 50,
-        "inputPrice": 10,
-        "cachePrice": 1,
-        "cacheReadPrice": 1,
-        "cacheWritePrice": 0
+        "cachePrice": 5,
+        "cacheWritePrice": 0,
+        "inputPrice": 100,
+        "cacheReadPrice": 5
       },
-      "vision": true,
+      "maxContextTokens": 1050000,
+      "reasoningEffort": true,
+      "toolCalls": true,
       "supportedReasoningEfforts": [
         "low",
         "medium",
         "high"
       ],
+      "name": "MAI Code 2",
+      "policyState": "enabled",
+      "id": "mai-code-2"
+    },
+    {
+      "vision": true,
+      "tokenPrices": {
+        "outputPrice": 50,
+        "batchSize": 1000000,
+        "cachePrice": 1,
+        "cacheWritePrice": 0,
+        "inputPrice": 10,
+        "cacheReadPrice": 1
+      },
+      "maxContextTokens": 1050000,
       "reasoningEffort": true,
-      "maxContextTokens": 1050000
+      "toolCalls": true,
+      "supportedReasoningEfforts": [
+        "low",
+        "medium",
+        "high"
+      ],
+      "name": "MAI Code 2 Flash",
+      "policyState": "enabled",
+      "id": "mai-code-2-flash"
     }
-  ],
-  "generatedAtUtc": "2026-11-20T09:25:52.9066830Z",
-  "lifecycle": {
-    "status": "ok",
-    "sourceUrl": "https://docs.github.com/en/copilot/reference/ai-models/supported-models",
-    "fetchedAtUtc": "2026-11-20T09:13:59.1053275Z"
-  },
-  "changes": [
-    {
-      "current": {
-        "asOf": "2026-11-20T09:13:58.416Z",
-        "capabilitySource": "copilot-sdk models.list; authenticated runtime 1.0.85",
-        "effortMode": "unsupported",
-        "supportedContexts": [
-          "default"
-        ],
-        "supportedEfforts": [],
-        "vision": true,
-        "visionSource": "copilot-sdk models.list; authenticated runtime 1.0.85"
-      },
-      "field": "capability",
-      "model": "claude-haiku-4.5",
-      "previous": {
-        "asOf": "2026-11-12T08:21:43.184Z",
-        "capabilitySource": "copilot-sdk models.list; authenticated runtime 1.0.106",
-        "effortMode": "unsupported",
-        "supportedContexts": [
-          "default"
-        ],
-        "supportedEfforts": [],
-        "vision": true,
-        "visionSource": "copilot-sdk models.list; authenticated runtime 1.0.106"
-      }
-    },
-    {
-      "current": {
-        "asOf": "2026-11-20T09:13:58.416Z",
-        "capabilitySource": "copilot-sdk models.list; authenticated runtime 1.0.85",
-        "effortMode": "supported",
-        "supportedContexts": [
-          "default",
-          "long_context"
-        ],
-        "supportedEfforts": [
-          "low",
-          "medium",
-          "high",
-          "xhigh",
-          "max"
-        ],
-        "vision": true,
-        "visionSource": "copilot-sdk models.list; authenticated runtime 1.0.85"
-      },
-      "field": "capability",
-      "model": "claude-haiku-5.5",
-      "previous": {
-        "asOf": "2026-11-12T08:21:43.184Z",
-        "capabilitySource": "copilot-sdk models.list; authenticated runtime 1.0.106",
-        "effortMode": "supported",
-        "supportedContexts": [
-          "default",
-          "long_context"
-        ],
-        "supportedEfforts": [
-          "low",
-          "medium",
-          "high",
-          "xhigh",
-          "max"
-        ],
-        "vision": true,
-        "visionSource": "copilot-sdk models.list; authenticated runtime 1.0.106"
-      }
-    },
-    {
-      "current": {
-        "asOf": "2026-11-20T09:13:58.416Z",
-        "capabilitySource": "copilot-sdk models.list; authenticated runtime 1.0.85",
-        "effortMode": "supported",
-        "supportedContexts": [
-          "default",
-          "long_context"
-        ],
-        "supportedEfforts": [
-          "low",
-          "medium",
-          "high",
-          "xhigh",
-          "max"
-        ],
-        "vision": true,
-        "visionSource": "copilot-sdk models.list; authenticated runtime 1.0.85"
-      },
-      "field": "capability",
-      "model": "claude-opus-4.8-fast",
-      "previous": {
-        "asOf": "2026-11-12T08:21:43.184Z",
-        "capabilitySource": "copilot-sdk models.list; authenticated runtime 1.0.106",
-        "effortMode": "supported",
-        "supportedContexts": [
-          "default",
-          "long_context"
-        ],
-        "supportedEfforts": [
-          "low",
-          "medium",
-          "high",
-          "xhigh",
-          "max"
-        ],
-        "vision": true,
-        "visionSource": "copilot-sdk models.list; authenticated runtime 1.0.106"
-      }
-    },
-    {
-      "current": {
-        "asOf": "2026-11-20T09:13:58.416Z",
-        "capabilitySource": "copilot-sdk models.list; authenticated runtime 1.0.85",
-        "effortMode": "supported",
-        "supportedContexts": [
-          "default",
-          "long_context"
-        ],
-        "supportedEfforts": [
-          "low",
-          "medium",
-          "high",
-          "xhigh",
-          "max"
-        ],
-        "vision": true,
-        "visionSource": "copilot-sdk models.list; authenticated runtime 1.0.85"
-      },
-      "field": "capability",
-      "model": "claude-opus-5.5",
-      "previous": {
-        "asOf": "2026-11-12T08:21:43.184Z",
-        "capabilitySource": "copilot-sdk models.list; authenticated runtime 1.0.106",
-        "effortMode": "supported",
-        "supportedContexts": [
-          "default",
-          "long_context"
-        ],
-        "supportedEfforts": [
-          "low",
-          "medium",
-          "high",
-          "xhigh",
-          "max"
-        ],
-        "vision": true,
-        "visionSource": "copilot-sdk models.list; authenticated runtime 1.0.106"
-      }
-    },
-    {
-      "current": {
-        "asOf": "2026-11-20T09:13:58.416Z",
-        "capabilitySource": "copilot-sdk models.list; authenticated runtime 1.0.85",
-        "effortMode": "supported",
-        "supportedContexts": [
-          "default",
-          "long_context"
-        ],
-        "supportedEfforts": [
-          "low",
-          "medium",
-          "high",
-          "xhigh",
-          "max"
-        ],
-        "vision": true,
-        "visionSource": "copilot-sdk models.list; authenticated runtime 1.0.85"
-      },
-      "field": "capability",
-      "model": "claude-sonnet-5",
-      "previous": {
-        "asOf": "2026-11-12T08:21:43.184Z",
-        "capabilitySource": "copilot-sdk models.list; authenticated runtime 1.0.106",
-        "effortMode": "supported",
-        "supportedContexts": [
-          "default",
-          "long_context"
-        ],
-        "supportedEfforts": [
-          "low",
-          "medium",
-          "high",
-          "xhigh",
-          "max"
-        ],
-        "vision": true,
-        "visionSource": "copilot-sdk models.list; authenticated runtime 1.0.106"
-      }
-    },
-    {
-      "current": {
-        "asOf": "2026-11-20T09:13:58.416Z",
-        "capabilitySource": "copilot-sdk models.list; authenticated runtime 1.0.85",
-        "effortMode": "supported",
-        "supportedContexts": [
-          "default",
-          "long_context"
-        ],
-        "supportedEfforts": [
-          "low",
-          "medium",
-          "high",
-          "xhigh",
-          "max"
-        ],
-        "vision": true,
-        "visionSource": "copilot-sdk models.list; authenticated runtime 1.0.85"
-      },
-      "field": "capability",
-      "model": "claude-sonnet-5.5",
-      "previous": {
-        "asOf": "2026-11-12T08:21:43.184Z",
-        "capabilitySource": "copilot-sdk models.list; authenticated runtime 1.0.106",
-        "effortMode": "supported",
-        "supportedContexts": [
-          "default",
-          "long_context"
-        ],
-        "supportedEfforts": [
-          "low",
-          "medium",
-          "high",
-          "xhigh",
-          "max"
-        ],
-        "vision": true,
-        "visionSource": "copilot-sdk models.list; authenticated runtime 1.0.106"
-      }
-    },
-    {
-      "current": {
-        "asOf": "2026-11-20T09:13:58.416Z",
-        "capabilitySource": "copilot-sdk models.list; authenticated runtime 1.0.85",
-        "effortMode": "supported",
-        "supportedContexts": [
-          "default",
-          "long_context"
-        ],
-        "supportedEfforts": [
-          "low",
-          "medium",
-          "high"
-        ],
-        "vision": true,
-        "visionSource": "copilot-sdk models.list; authenticated runtime 1.0.85"
-      },
-      "field": "capability",
-      "model": "gemini-4-argon",
-      "previous": {
-        "asOf": "2026-10-30T08:37:00.782Z",
-        "capabilitySource": "copilot-sdk models.list; authenticated runtime 1.0.62",
-        "effortMode": "unsupported",
-        "supportedContexts": [
-          "default",
-          "long_context"
-        ],
-        "supportedEfforts": [],
-        "vision": true,
-        "visionSource": "copilot-sdk models.list; authenticated runtime 1.0.62"
-      }
-    },
-    {
-      "current": {
-        "asOf": "2026-11-20T09:13:58.416Z",
-        "capabilitySource": "copilot-sdk models.list; authenticated runtime 1.0.85",
-        "effortMode": "supported",
-        "supportedContexts": [
-          "default",
-          "long_context"
-        ],
-        "supportedEfforts": [
-          "none",
-          "low",
-          "medium",
-          "high",
-          "xhigh",
-          "max"
-        ],
-        "vision": true,
-        "visionSource": "copilot-sdk models.list; authenticated runtime 1.0.85"
-      },
-      "field": "capability",
-      "model": "gpt-5.6-luna",
-      "previous": {
-        "asOf": "2026-11-12T08:21:43.184Z",
-        "capabilitySource": "copilot-sdk models.list; authenticated runtime 1.0.106",
-        "effortMode": "supported",
-        "supportedContexts": [
-          "default",
-          "long_context"
-        ],
-        "supportedEfforts": [
-          "none",
-          "low",
-          "medium",
-          "high",
-          "xhigh",
-          "max"
-        ],
-        "vision": true,
-        "visionSource": "copilot-sdk models.list; authenticated runtime 1.0.106"
-      }
-    },
-    {
-      "current": {
-        "asOf": "2026-11-20T09:13:58.416Z",
-        "capabilitySource": "copilot-sdk models.list; authenticated runtime 1.0.85",
-        "effortMode": "supported",
-        "supportedContexts": [
-          "default",
-          "long_context"
-        ],
-        "supportedEfforts": [
-          "none",
-          "low",
-          "medium",
-          "high",
-          "xhigh",
-          "max"
-        ],
-        "vision": true,
-        "visionSource": "copilot-sdk models.list; authenticated runtime 1.0.85"
-      },
-      "field": "capability",
-      "model": "gpt-5.6-sol",
-      "previous": {
-        "asOf": "2026-11-12T08:21:43.184Z",
-        "capabilitySource": "copilot-sdk models.list; authenticated runtime 1.0.106",
-        "effortMode": "supported",
-        "supportedContexts": [
-          "default",
-          "long_context"
-        ],
-        "supportedEfforts": [
-          "none",
-          "low",
-          "medium",
-          "high",
-          "xhigh",
-          "max"
-        ],
-        "vision": true,
-        "visionSource": "copilot-sdk models.list; authenticated runtime 1.0.106"
-      }
-    },
-    {
-      "current": {
-        "asOf": "2026-11-20T09:13:58.416Z",
-        "capabilitySource": "copilot-sdk models.list; authenticated runtime 1.0.85",
-        "effortMode": "supported",
-        "supportedContexts": [
-          "default",
-          "long_context"
-        ],
-        "supportedEfforts": [
-          "low",
-          "medium",
-          "high",
-          "xhigh",
-          "max"
-        ],
-        "vision": true,
-        "visionSource": "copilot-sdk models.list; authenticated runtime 1.0.85"
-      },
-      "field": "capability",
-      "model": "gpt-6-astra",
-      "previous": {
-        "asOf": "2026-11-12T08:21:43.184Z",
-        "capabilitySource": "copilot-sdk models.list; authenticated runtime 1.0.106",
-        "effortMode": "supported",
-        "supportedContexts": [
-          "default",
-          "long_context"
-        ],
-        "supportedEfforts": [
-          "low",
-          "medium",
-          "high",
-          "xhigh",
-          "max"
-        ],
-        "vision": true,
-        "visionSource": "copilot-sdk models.list; authenticated runtime 1.0.106"
-      }
-    },
-    {
-      "current": {
-        "asOf": "2026-11-20T09:13:58.416Z",
-        "capabilitySource": "copilot-sdk models.list; authenticated runtime 1.0.85",
-        "effortMode": "supported",
-        "supportedContexts": [
-          "default",
-          "long_context"
-        ],
-        "supportedEfforts": [
-          "none",
-          "low",
-          "medium",
-          "high",
-          "xhigh",
-          "max"
-        ],
-        "vision": true,
-        "visionSource": "copilot-sdk models.list; authenticated runtime 1.0.85"
-      },
-      "field": "capability",
-      "model": "gpt-6-luna",
-      "previous": {
-        "asOf": "2026-11-12T08:21:43.184Z",
-        "capabilitySource": "copilot-sdk models.list; authenticated runtime 1.0.106",
-        "effortMode": "supported",
-        "supportedContexts": [
-          "default",
-          "long_context"
-        ],
-        "supportedEfforts": [
-          "none",
-          "low",
-          "medium",
-          "high",
-          "xhigh",
-          "max"
-        ],
-        "vision": true,
-        "visionSource": "copilot-sdk models.list; authenticated runtime 1.0.106"
-      }
-    },
-    {
-      "current": {
-        "asOf": "2026-11-20T09:13:58.416Z",
-        "capabilitySource": "copilot-sdk models.list; authenticated runtime 1.0.85",
-        "effortMode": "supported",
-        "supportedContexts": [
-          "default",
-          "long_context"
-        ],
-        "supportedEfforts": [
-          "none",
-          "low",
-          "medium",
-          "high",
-          "xhigh",
-          "max"
-        ],
-        "vision": true,
-        "visionSource": "copilot-sdk models.list; authenticated runtime 1.0.85"
-      },
-      "field": "capability",
-      "model": "gpt-6-sol",
-      "previous": {
-        "asOf": "2026-11-12T08:21:43.184Z",
-        "capabilitySource": "copilot-sdk models.list; authenticated runtime 1.0.106",
-        "effortMode": "supported",
-        "supportedContexts": [
-          "default",
-          "long_context"
-        ],
-        "supportedEfforts": [
-          "none",
-          "low",
-          "medium",
-          "high",
-          "xhigh",
-          "max"
-        ],
-        "vision": true,
-        "visionSource": "copilot-sdk models.list; authenticated runtime 1.0.106"
-      }
-    },
-    {
-      "current": {
-        "asOf": "2026-11-20T09:13:58.416Z",
-        "capabilitySource": "copilot-sdk models.list; authenticated runtime 1.0.85",
-        "effortMode": "supported",
-        "supportedContexts": [
-          "default",
-          "long_context"
-        ],
-        "supportedEfforts": [
-          "low",
-          "medium",
-          "high",
-          "xhigh",
-          "max"
-        ],
-        "vision": true,
-        "visionSource": "copilot-sdk models.list; authenticated runtime 1.0.85"
-      },
-      "field": "capability",
-      "model": "gpt-6.1-sol",
-      "previous": {
-        "asOf": "2026-11-12T08:21:43.184Z",
-        "capabilitySource": "copilot-sdk models.list; authenticated runtime 1.0.106",
-        "effortMode": "supported",
-        "supportedContexts": [
-          "default",
-          "long_context"
-        ],
-        "supportedEfforts": [
-          "low",
-          "medium",
-          "high",
-          "xhigh",
-          "max"
-        ],
-        "vision": true,
-        "visionSource": "copilot-sdk models.list; authenticated runtime 1.0.106"
-      }
-    },
-    {
-      "current": {
-        "asOf": "2026-11-20T09:13:58.416Z",
-        "capabilitySource": "copilot-sdk models.list; authenticated runtime 1.0.85",
-        "effortMode": "supported",
-        "supportedContexts": [
-          "default"
-        ],
-        "supportedEfforts": [
-          "low",
-          "medium",
-          "high"
-        ],
-        "vision": true,
-        "visionSource": "copilot-sdk models.list; authenticated runtime 1.0.85"
-      },
-      "field": "capability",
-      "model": "mai-code-1.1-flash",
-      "previous": {
-        "asOf": "2026-11-12T08:21:43.184Z",
-        "capabilitySource": "copilot-sdk models.list; authenticated runtime 1.0.106",
-        "effortMode": "supported",
-        "supportedContexts": [
-          "default"
-        ],
-        "supportedEfforts": [
-          "low",
-          "medium",
-          "high"
-        ],
-        "vision": true,
-        "visionSource": "copilot-sdk models.list; authenticated runtime 1.0.106"
-      }
-    },
-    {
-      "current": {
-        "asOf": "2026-11-20T09:13:58.416Z",
-        "capabilitySource": "copilot-sdk models.list; authenticated runtime 1.0.85",
-        "effortMode": "supported",
-        "supportedContexts": [
-          "default"
-        ],
-        "supportedEfforts": [
-          "low",
-          "medium",
-          "high"
-        ],
-        "vision": true,
-        "visionSource": "copilot-sdk models.list; authenticated runtime 1.0.85"
-      },
-      "field": "capability",
-      "model": "mai-code-2",
-      "previous": null
-    },
-    {
-      "current": "MAI Code 2",
-      "field": "pricing",
-      "model": "mai-code-2",
-      "previous": null
-    },
-    {
-      "current": {
-        "asOf": "2026-11-20T09:13:58.416Z",
-        "capabilitySource": "copilot-sdk models.list; authenticated runtime 1.0.85",
-        "effortMode": "supported",
-        "supportedContexts": [
-          "default"
-        ],
-        "supportedEfforts": [
-          "low",
-          "medium",
-          "high"
-        ],
-        "vision": true,
-        "visionSource": "copilot-sdk models.list; authenticated runtime 1.0.85"
-      },
-      "field": "capability",
-      "model": "mai-code-2-flash",
-      "previous": null
-    },
-    {
-      "current": "MAI Code 2 Flash",
-      "field": "pricing",
-      "model": "mai-code-2-flash",
-      "previous": null
-    }
-  ],
-  "runtimeStatus": "ok"
+  ]
 }
